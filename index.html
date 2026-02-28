@@ -32,10 +32,19 @@ section { padding:80px 20px; max-width:1000px; margin:0 auto; }
 .rocket p { font-size:0.95em; color:#ccc; }
 
 /* Launch Schedule */
-#launch-list { margin-top: 20px; }
+#launch-list { margin-top:20px; }
+
+/* Переменные для выравнивания колонок (по умолчанию) */
+:root {
+  --launch-rocket-align: left;
+  --launch-date-align: left;
+  --launch-time-align: left;
+  --launch-status-align: right; /* легко сдвинуть правее */
+}
+
 .launch-row { 
   display:flex; 
-  justify-content:flex-start; 
+  justify-content:space-between; 
   padding:12px 20px; 
   background:#111; 
   border-radius:8px; 
@@ -47,23 +56,73 @@ section { padding:80px 20px; max-width:1000px; margin:0 auto; }
 }
 .launch-row:hover { background:#1a1a1a; }
 
-/* Колонки */
-.launch-row div { text-align:left; }
+/* Общие настройки для всех div внутри строки */
+.launch-row div { flex:1; padding:0 10px; }
 
-/* Tooltips */
+/* Настройка каждой колонки через CSS-переменные */
+.launch-row div:nth-child(2) { 
+  flex:2; 
+  text-align: var(--launch-rocket-align); 
+}
+.launch-row div:nth-child(3) { text-align: var(--launch-date-align); }
+.launch-row div:nth-child(4) { text-align: var(--launch-time-align); }
+.launch-row div:nth-child(5) { text-align: var(--launch-status-align); }
+
+/* Right tooltip (Site) */
 .launch-tooltip-right {
-  position:absolute; top:50%; left:100%; transform:translate(20px,-50%) scale(0.95);
-  background:#111; border:1px solid #222; border-radius:10px; padding:8px 14px;
-  min-width:160px; box-shadow:0 8px 25px rgba(0,0,0,0.6); opacity:0; pointer-events:none; transition:0.25s ease; z-index:50;
+  position:absolute;
+  top:50%;
+  left:100%;
+  transform:translate(20px,-50%) scale(0.95);
+  background:#111;
+  border:1px solid #222;
+  border-radius:10px;
+  padding:8px 14px;
+  min-width:160px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.6);
+  opacity:0;
+  pointer-events:none;
+  transition:0.25s ease;
+  z-index:50;
 }
+
+/* Left tooltip (Type) */
 .launch-tooltip-left {
-  position:absolute; top:50%; right:100%; transform:translate(-20px,-50%) scale(0.95);
-  background:#111; border:1px solid #222; border-radius:10px; padding:10px 14px;
-  min-width:160px; box-shadow:0 8px 25px rgba(0,0,0,0.6); opacity:0; pointer-events:none; transition:0.25s ease; z-index:50;
+  position:absolute;
+  top:50%;
+  right:100%;
+  transform:translate(-20px,-50%) scale(0.95);
+  background:#111;
+  border:1px solid #222;
+  border-radius:10px;
+  padding:10px 14px;
+  min-width:160px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.6);
+  opacity:0;
+  pointer-events:none;
+  transition:0.25s ease;
+  z-index:50;
 }
-.launch-tooltip-right strong, .launch-tooltip-left strong { display:block; font-size:0.75em; color:#888; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px; }
-.launch-row:hover .launch-tooltip-right { opacity:1; transform:translate(12px,-50%) scale(1); }
-.launch-row:hover .launch-tooltip-left { opacity:1; transform:translate(-12px,-50%) scale(1); }
+
+.launch-tooltip-right strong,
+.launch-tooltip-left strong {
+  display:block;
+  font-size:0.75em;
+  color:#888;
+  margin-bottom:4px;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+
+.launch-row:hover .launch-tooltip-right {
+  opacity:1;
+  transform:translate(12px,-50%) scale(1);
+}
+
+.launch-row:hover .launch-tooltip-left {
+  opacity:1;
+  transform:translate(-12px,-50%) scale(1);
+}
 
 /* Contact */
 .contact p, .contact a { color:#ccc; margin-bottom:5px; }
@@ -123,7 +182,6 @@ function statusColor(status){
   }
 }
 
-// Rockets cards
 const rockets = [
   { name:'SunPower One', description:'Where it all began. The name "SunPower" was coined on the fly by Haisess.', date:'February 26, 2026' },
   { name:'SunPower II', description:'Next-generation rocket. First launch scheduled for March 7. Enhanced design for future missions.', date:'February 26, 2026' },
@@ -131,6 +189,7 @@ const rockets = [
   { name:'Trial Mission to the Moon', description:'The team is preparing for a trial run of the upcoming lunar mission.', date:'February 27, 2026' },
   { name:'Beyond Earth Orbit', description:'<p><i>“We’re ready to move beyond Earth’s pull, coming very soon.”</i></p>', date:'February 27, 2026' }
 ];
+
 document.getElementById('rocket-cards').innerHTML = rockets.map(r => `
   <div class="rocket">
     <h3>${r.name}</h3>
@@ -139,62 +198,70 @@ document.getElementById('rocket-cards').innerHTML = rockets.map(r => `
   </div>
 `).join('');
 
-// --- Launches data (easy-to-edit block with per-column pixel offsets) ---
+// --- Launches data (easy-to-edit block) ---
 const launches = [
   {
-    rocket: 'SunPower One',
+    rocket: '???',
     date: '2026-03-02 07:00',
     status: 'Planned',
     site: 'DSC Large Pad',
-    type: 'Trial Mission',
-    rocketOffset: 0,
-    dateOffset: 5,
-    timeOffset: 10,
-    statusOffset: 15
+    flights: 0,
+    description: 'Trial Mission to the Moon',
+    type: 'Trial Mission'
   },
   {
     rocket: 'SunPower One (Gen 3)',
     date: '2026-03-01 04:00',
     status: 'Delayed',
     site: 'DSC Large Pad',
-    type: 'Test',
-    rocketOffset: 2,
-    dateOffset: 7,
-    timeOffset: 12,
-    statusOffset: 15
+    flights: 0,
+    description: 'New plans. Cancelled.',
+    type: 'Test'
+  },
+  {
+    rocket: 'SunPower One (Gen 3) Block I',
+    date: '2026-03-02 07:00',
+    status: 'Delayed',
+    site: 'DSC Large Pad',
+    flights: 0,
+    description: 'New modification. Improvement.',
+    type: 'Test'
   },
   {
     rocket: 'SunPower One (Gen 4)',
     date: '2026-03-03 07:00',
     status: 'Delayed',
     site: 'DSC Large Pad',
-    type: 'Test',
-    rocketOffset: 0,
-    dateOffset: 5,
-    timeOffset: 10,
-    statusOffset: 15
+    flights: 0,
+    description: 'New plans. Cancelled.',
+    type: 'Test'
+  },
+  {
+    rocket: 'SunPower One (Gen 5)',
+    date: '2026-03-04 04:00',
+    status: 'Canceled',
+    site: 'DSC Large Pad',
+    flights: 0,
+    description: 'New plans. Cancelled.',
+    type: 'Test'
   },
   {
     rocket: 'OrbitCenter One (Gen 1)',
     date: '2026-03-06 01:00',
     status: 'Planned',
     site: 'Ali 28R',
-    type: 'Official',
-    rocketOffset: 0,
-    dateOffset: 5,
-    timeOffset: 10,
-    statusOffset: 15
+    flights: 0,
+    description: 'Mission to create a station in orbit.',
+    type: 'Official'
   },
   {
     rocket: 'SunPower II (Gen 1)',
     date: '2026-03-07 04:00',
     status: 'Concept/Plan',
     site: 'Ali 28R',
-    type: 'Official',
-    rocketOffset: 0,
-    dateOffset: 5,
-    timeOffset: 10,
-    statusOffset: 15
+    flights: 0,
+    description: 'Next-generation heavy configuration test.',
+    type: 'Official'
   }
 ];
 
@@ -205,16 +272,16 @@ launches.forEach(l=>{
   l.dateObj=new Date(year,month-1,day,hour,minute);
 });
 
-document.getElementById('launch-list').innerHTML = launches.map(l => `
+document.getElementById('launch-list').innerHTML=launches.map(l=>`
   <div class="launch-row">
     <div class="launch-tooltip-left">
       <strong>Type</strong>
       ${l.type}
     </div>
-    <div style="padding-left:${l.rocketOffset}px;"><strong>${l.rocket}</strong></div>
-    <div style="padding-left:${l.dateOffset}px;">${l.dateObj.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>
-    <div style="padding-left:${l.timeOffset}px;">${l.dateObj.getHours().toString().padStart(2,'0')}:${l.dateObj.getMinutes().toString().padStart(2,'0')} CT</div>
-    <div style="padding-left:${l.statusOffset}px; color:${statusColor(l.status)}; font-weight:600;">${l.status}</div>
+    <div><strong>${l.rocket}</strong></div>
+    <div>${l.dateObj.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>
+    <div>${l.dateObj.getHours().toString().padStart(2,'0')}:${l.dateObj.getMinutes().toString().padStart(2,'0')} CT</div>
+    <div style="color:${statusColor(l.status)}; font-weight:600;">${l.status}</div>
     <div class="launch-tooltip-right">
       <strong>Site</strong>
       ${l.site}
