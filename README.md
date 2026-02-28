@@ -1,1 +1,2 @@
-# (C) 2023-2026 OXeall, OXeall InSpace. All Rights Reserved.
+# © 2023-2026 OXeall, OXeall InSpace, OXeall Studios. All Rights Reserved.
+# Twitter: @OXeallCorp
