@@ -33,10 +33,48 @@ section { padding:80px 20px; max-width:1000px; margin:0 auto; }
 
 /* Launch Schedule vertical list */
 #launch-list { margin-top:20px; }
-.launch-row { display:flex; justify-content:space-between; padding:12px 20px; background:#111; border-radius:8px; border:1px solid #222; margin-bottom:8px; transition:0.3s; }
+.launch-row { display:flex; justify-content:space-between; padding:12px 20px; background:#111; border-radius:8px; border:1px solid #222; margin-bottom:8px; transition:0.3s; position:relative; overflow:visible; }
 .launch-row:hover { background:#1a1a1a; }
 .launch-row div { flex:1; text-align:center; }
 .launch-row div:first-child { flex:2; text-align:left; }
+
+/* Tooltip */
+.launch-tooltip {
+  position:absolute;
+  top:50%;
+  left:100%;
+  transform:translate(20px,-50%) scale(0.95);
+  background:#111;
+  border:1px solid #222;
+  border-radius:10px;
+  padding:10px 14px;
+  min-width:160px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.6);
+  opacity:0;
+  pointer-events:none;
+  transition:0.25s ease;
+  z-index:50;
+}
+.launch-tooltip strong {
+  display:block;
+  font-size:0.75em;
+  color:#888;
+  margin-bottom:4px;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+.launch-row:hover .launch-tooltip {
+  opacity:1;
+  transform:translate(12px,-50%) scale(1);
+}
+.launch-row.tooltip-left .launch-tooltip {
+  left:auto;
+  right:100%;
+  transform:translate(-20px,-50%) scale(0.95);
+}
+.launch-row.tooltip-left:hover .launch-tooltip {
+  transform:translate(-12px,-50%) scale(1);
+}
 
 /* Contact */
 .contact p, .contact a { color:#ccc; margin-bottom:5px; }
@@ -55,26 +93,22 @@ footer { text-align:center; padding:20px; border-top:1px solid #333; font-size:0
   <a onclick="scrollToSection('contact')">Contact</a>
 </header>
 
-<!-- Home -->
 <section class="hero" id="hero">
   <h1>Welcome to InSpace</h1>
   <p>Explore the SunPower series and beyond. Track upcoming launches and watch live streams of our missions.</p>
   <div class="stream-link" onclick="window.open('https://www.youtube.com/@hi9eS','_blank')">Watch Launch</div>
 </section>
 
-<!-- Rockets Info -->
 <section id="rockets">
   <h2>Latest News</h2>
   <div class="rocket-cards" id="rocket-cards"></div>
 </section>
 
-<!-- Launch Schedule -->
 <section id="schedule">
   <h2>Launch Schedule</h2>
   <div id="launch-list"></div>
 </section>
 
-<!-- Contact -->
 <section class="contact" id="contact">
   <h2>Contact</h2>
   <p>Twitter: <a href="https://x.com/OXeallCorp" target="_blank">@OXeallCorp</a></p>
@@ -86,53 +120,29 @@ footer { text-align:center; padding:20px; border-top:1px solid #333; font-size:0
 </footer>
 
 <script>
-// Скролл по разделам
 function scrollToSection(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
 
-// Статусы и цвета
 function statusColor(status){
   switch(status){
-    case 'Planned': return '#fff';       // белый
-    case 'Delayed': return '#ffcc00';    // жёлтый
-    case 'Completed': return '#00cc66';  // зелёный
-    case 'Concept/Plan': return '#00ccff'; // голубой
-    case 'Canceled': return '#ff3300';   // красный
-    case 'Coming Soon': return '#d9d9d9';   // For Moon
+    case 'Planned': return '#fff';
+    case 'Delayed': return '#ffcc00';
+    case 'Completed': return '#00cc66';
+    case 'Concept/Plan': return '#00ccff';
+    case 'Canceled': return '#ff3300';
+    case 'Coming Soon': return '#d9d9d9';
     default: return '#ccc';
   }
 }
 
-// Rockets data с датой новости
 const rockets = [
-  {
-    name:'SunPower One',
-    description:'Where it all began. The name "SunPower" was coined on the fly by Haisess.',
-    date:'February 26, 2026'
-  },
-  {
-    name:'SunPower II',
-    description:'Next-generation rocket. First launch scheduled for March 7. Enhanced design for future missions.',
-    date:'February 26, 2026'
-  },
-  {
-    name:'OrbitCenter One',
-    description:'Orbiting platform built in stages. Features docking capabilities, solar panels, and communication systems.',
-    date:'February 26, 2026'
-  },
-  {
-    name:'Trial Mission to the Moon',
-    description:'The team is preparing for a trial run of the upcoming lunar mission.',
-    date:'February 27, 2026'
-  },
-  {
-    name:'Beyond Earth Orbit',
-    description:'<p><i>“We’re ready to move beyond Earth’s pull, coming very soon.”</i></p>',
-    date:'February 27, 2026'
-  }
+  { name:'SunPower One', description:'Where it all began. The name "SunPower" was coined on the fly by Haisess.', date:'February 26, 2026' },
+  { name:'SunPower II', description:'Next-generation rocket. First launch scheduled for March 7. Enhanced design for future missions.', date:'February 26, 2026' },
+  { name:'OrbitCenter One', description:'Orbiting platform built in stages. Features docking capabilities, solar panels, and communication systems.', date:'February 26, 2026' },
+  { name:'Trial Mission to the Moon', description:'The team is preparing for a trial run of the upcoming lunar mission.', date:'February 27, 2026' },
+  { name:'Beyond Earth Orbit', description:'<p><i>“We’re ready to move beyond Earth’s pull, coming very soon.”</i></p>', date:'February 27, 2026' }
 ];
 
-const rocketContainer = document.getElementById('rocket-cards');
-rocketContainer.innerHTML = rockets.map(r => `
+document.getElementById('rocket-cards').innerHTML = rockets.map(r => `
   <div class="rocket">
     <h3>${r.name}</h3>
     <p>${r.description}</p>
@@ -140,90 +150,48 @@ rocketContainer.innerHTML = rockets.map(r => `
   </div>
 `).join('');
 
-// --- Launches data (easy-to-edit block) ---
 const launches = [
-  {
-    rocket: '???',
-    date: '2026-03-02 07:00',
-    status: 'Planned',
-    site: 'DSC Large Pad',
-    flights: 0,
-    description: 'Trial Mission to the Moon',
-    type: 'Trial Mission'
-  },
-  {
-    rocket: 'SunPower One (Gen 3)',
-    date: '2026-03-01 04:00',
-    status: 'Delayed',
-    site: 'DSC Large Pad',
-    flights: 0,
-    description: 'New plans. Cancelled.',
-    type: 'Test'
-  },
-  {
-    rocket: 'SunPower One (Gen 3) Block I',
-    date: '2026-03-02 07:00',
-    status: 'Delayed',
-    site: 'DSC Large Pad',
-    flights: 0,
-    description: 'New modification. Improvement.',
-    type: 'Test'
-  },
-  {
-    rocket: 'SunPower One (Gen 4)',
-    date: '2026-03-03 07:00',
-    status: 'Delayed',
-    site: 'DSC Large Pad',
-    flights: 0,
-    description: 'New plans. Cancelled.',
-    type: 'Test'
-  },
-  {
-    rocket: 'SunPower One (Gen 5)',
-    date: '2026-03-04 04:00',
-    status: 'Canceled',
-    site: 'DSC Large Pad',
-    flights: 0,
-    description: 'New plans. Cancelled.',
-    type: 'Test'
-  },
-  {
-    rocket: 'OrbitCenter One (Gen 1)',
-    date: '2026-03-06 07:00',
-    status: 'Planned',
-    site: 'Ali 28R',
-    flights: 0,
-    description: 'Mission to create a station in orbit.',
-    type: 'Official'
-  },
-  {
-    rocket: 'SunPower II (Gen 1)',
-    date: '2026-03-07 06:00',
-    status: 'Concept/Plan',
-    site: 'Ali 28R',
-    flights: 0,
-    description: 'Next-generation heavy configuration test.',
-    type: 'Official'
-  }
+  { rocket:'???', date:'2026-03-02 07:00', status:'Planned', site:'DSC Large Pad', flights:0, description:'Trial Mission to the Moon', type:'Trial Mission' },
+  { rocket:'SunPower One (Gen 3)', date:'2026-03-01 04:00', status:'Delayed', site:'DSC Large Pad', flights:0, description:'New plans. Cancelled.', type:'Test' },
+  { rocket:'SunPower One (Gen 3) Block I', date:'2026-03-02 07:00', status:'Delayed', site:'DSC Large Pad', flights:0, description:'New modification. Improvement.', type:'Test' },
+  { rocket:'SunPower One (Gen 4)', date:'2026-03-03 07:00', status:'Delayed', site:'DSC Large Pad', flights:0, description:'New plans. Cancelled.', type:'Test' },
+  { rocket:'SunPower One (Gen 5)', date:'2026-03-04 04:00', status:'Canceled', site:'DSC Large Pad', flights:0, description:'New plans. Cancelled.', type:'Test' },
+  { rocket:'OrbitCenter One (Gen 1)', date:'2026-03-06 07:00', status:'Planned', site:'Ali 28R', flights:0, description:'Mission to create a station in orbit.', type:'Official' },
+  { rocket:'SunPower II (Gen 1)', date:'2026-03-07 06:00', status:'Concept/Plan', site:'Ali 28R', flights:0, description:'Next-generation heavy configuration test.', type:'Official' }
 ];
-// Преобразуем строки даты в объекты Date
+
 launches.forEach(l => {
-  const [d, t] = l.date.split(' ');
-  const [year, month, day] = d.split('-').map(Number);
-  const [hour, minute] = t.split(':').map(Number);
-  l.dateObj = new Date(year, month-1, day, hour, minute); // JS month 0-indexed
+  const [d,t]=l.date.split(' ');
+  const [year,month,day]=d.split('-').map(Number);
+  const [hour,minute]=t.split(':').map(Number);
+  l.dateObj=new Date(year,month-1,day,hour,minute);
 });
 
-// Рендер Launch Schedule
-const launchList = document.getElementById('launch-list');
-launchList.innerHTML = launches.map(l => `
+const launchList=document.getElementById('launch-list');
+launchList.innerHTML=launches.map(l=>`
   <div class="launch-row">
     <div><strong>${l.rocket}</strong></div>
-    <div>${l.dateObj.toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'})}</div>
+    <div>${l.dateObj.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}</div>
     <div>${l.dateObj.getHours().toString().padStart(2,'0')}:${l.dateObj.getMinutes().toString().padStart(2,'0')} CT</div>
     <div style="color:${statusColor(l.status)}; font-weight:600;">${l.status}</div>
+    <div class="launch-tooltip">
+      <strong>Site</strong>
+      ${l.site}
+    </div>
   </div>
 `).join('');
+
+document.querySelectorAll('.launch-row').forEach(row=>{
+  row.addEventListener('mouseenter',()=>{
+    const tooltip=row.querySelector('.launch-tooltip');
+    const rect=tooltip.getBoundingClientRect();
+    if(rect.right>window.innerWidth){
+      row.classList.add('tooltip-left');
+    } else {
+      row.classList.remove('tooltip-left');
+    }
+  });
+});
 </script>
 
 </body>
