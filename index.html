@@ -32,42 +32,61 @@ section { padding:80px 20px; max-width:1000px; margin:0 auto; }
 .rocket p { font-size:0.95em; color:#ccc; }
 
 /* Launch Schedule */
-#launch-list { margin-top:20px; }
-
-/* Переменные для выравнивания колонок (по умолчанию) */
 :root {
-  --launch-rocket-align: left;
-  --launch-date-align: left;
-  --launch-time-align: left;
-  --launch-status-align: right; /* легко сдвинуть правее */
+  --launch-rocket-align: left;    /* Название ракеты */
+  --launch-date-align: left;      /* Дата */
+  --launch-time-align: left;      /* Время */
+  --launch-status-align: right;   /* Статус */
+  --launch-padding: 10px;         /* Горизонтальные отступы в колонках */
+}
+
+#launch-list { 
+  margin-top: 20px; 
 }
 
 .launch-row { 
-  display:flex; 
-  justify-content:space-between; 
-  padding:12px 20px; 
-  background:#111; 
-  border-radius:8px; 
-  border:1px solid #222; 
-  margin-bottom:8px; 
-  transition:0.3s; 
-  position:relative; 
-  overflow:visible; 
+  display: flex; 
+  justify-content: space-between; 
+  padding: 12px 20px; 
+  background: #111; 
+  border-radius: 8px; 
+  border: 1px solid #222; 
+  margin-bottom: 8px; 
+  transition: 0.3s; 
+  position: relative; 
+  overflow: visible; 
 }
-.launch-row:hover { background:#1a1a1a; }
 
-/* Общие настройки для всех div внутри строки */
-.launch-row div { flex:1; padding:0 10px; }
+.launch-row:hover { 
+  background: #1a1a1a; 
+}
 
-/* Настройка каждой колонки через CSS-переменные */
+.launch-row div { 
+  flex: 1; 
+  padding: 0 var(--launch-padding); 
+  text-align: left; /* по умолчанию для всех */
+}
+
+/* Название ракеты */
 .launch-row div:nth-child(2) { 
-  flex:2; 
+  flex: 2; 
   text-align: var(--launch-rocket-align); 
 }
-.launch-row div:nth-child(3) { text-align: var(--launch-date-align); }
-.launch-row div:nth-child(4) { text-align: var(--launch-time-align); }
-.launch-row div:nth-child(5) { text-align: var(--launch-status-align); }
 
+/* Дата */
+.launch-row div:nth-child(3) { 
+  text-align: var(--launch-date-align); 
+}
+
+/* Время */
+.launch-row div:nth-child(4) { 
+  text-align: var(--launch-time-align); 
+}
+
+/* Статус */
+.launch-row div:nth-child(5) { 
+  text-align: var(--launch-status-align); 
+}
 /* Right tooltip (Site) */
 .launch-tooltip-right {
   position:absolute;
