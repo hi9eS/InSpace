@@ -94,6 +94,8 @@ function statusColor(status){
   switch(status){
     case 'Planned': return '#fff';       // белый
     case 'Delayed': return '#ffcc00';    // жёлтый
+    case 'Delayed to 13:00 CT': return '#ffcc00';    // жёлтый
+    case 'Delayed to ': return '#ffcc00';    // жёлтый
     case 'Completed': return '#00cc66';  // зелёный
     case 'Concept/Plan': return '#00ccff'; // голубой
     case 'Canceled': return '#ff3300';   // красный
@@ -143,44 +145,26 @@ rocketContainer.innerHTML = rockets.map(r => `
 // --- Launches data (easy-to-edit block) ---
 const launches = [
   {
-    rocket: '???',
-    date: '2026-03-02 07:00',
-    status: 'Planned',
-    site: 'DSC Large Pad',
-    flights: 0,
-    description: 'Trial Mission to the Moon',
-    type: 'Trial Mission'
-  },
-  {
     rocket: 'SunPower One (Gen 3)',
     date: '2026-03-01 04:00',
-    status: 'Delayed',
+    status: 'Canceled',
     site: 'DSC Large Pad',
     flights: 0,
     description: 'New plans. Cancelled.',
     type: 'Test'
   },
   {
-    rocket: 'SunPower One (Gen 3) Block I',
-    date: '2026-03-02 07:00',
-    status: 'Delayed',
+    rocket: 'SunOrbit One (Gen 1) (B-I)',
+    date: '2026-03-02 13:00',
+    status: 'Delayed to 13:00 CT',
     site: 'DSC Large Pad',
     flights: 0,
-    description: 'New modification. Improvement.',
-    type: 'Test'
+    description: 'Trial Mission to the Moon.',
+    type: 'Trial Mission'
   },
   {
     rocket: 'SunPower One (Gen 4)',
     date: '2026-03-03 07:00',
-    status: 'Delayed',
-    site: 'DSC Large Pad',
-    flights: 0,
-    description: 'New plans. Cancelled.',
-    type: 'Test'
-  },
-  {
-    rocket: 'SunPower One (Gen 5)',
-    date: '2026-03-04 04:00',
     status: 'Canceled',
     site: 'DSC Large Pad',
     flights: 0,
@@ -228,3 +212,13 @@ launchList.innerHTML = launches.map(l => `
 
 </body>
 </html>
+
+//  {
+//    rocket: 'SunPower One (Gen 5)',
+//    date: '2026-03-04 04:00',
+//    status: 'Canceled',
+//    site: 'DSC Large Pad',
+//    flights: 0,
+//    description: 'New plans. Cancelled.',
+//    type: 'Test'
+//  },
