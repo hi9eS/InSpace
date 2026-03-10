@@ -193,6 +193,15 @@ const launches = [
     flights: 0,
     description: 'Next-generation heavy configuration test.',
     type: 'Official'
+  },
+  {
+    rocket: 'SunOrbit One (Gen 3)',
+    date: '2026-03-11 02:30',
+    status: 'Planned',
+    site: 'Main Pad',
+    flights: 0,
+    description: 'Test SO-1 Separation test',
+    type: 'SO-1 Separation and Landing Test'
   }
 ];
 // Преобразуем строки даты в объекты Date
@@ -209,7 +218,7 @@ launchList.innerHTML = launches.map(l => `
   <div class="launch-row">
     <div><strong>${l.rocket}</strong></div>
     <div>${l.dateObj.toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'})}</div>
-    <div>${l.dateObj.getHours().toString().padStart(2,'0')}:${l.dateObj.getMinutes().toString().padStart(2,'0')} CT</div>
+    <div>${l.dateObj.getHours().toString().padStart(2,'0')}:${l.dateObj.getMinutes().toString().padStart(2,'0')} CDT</div>
     <div style="color:${statusColor(l.status)}; font-weight:600;">${l.status}</div>
   </div>
 `).join('');
