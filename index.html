@@ -94,7 +94,7 @@ function statusColor(status){
   switch(status){
     case 'Planned': return '#fff';       // белый
     case 'Delayed': return '#ffcc00';    // жёлтый
-    case 'Delayed to 13:00 CT': return '#ffcc00';    // жёлтый
+    case 'Moved from 02:30 to 03:45': return '#ffcc00';    // жёлтый
     case 'Delayed to ': return '#ffcc00';    // жёлтый
     case 'Completed': return '#00cc66';  // зелёный
     case 'Concept/Plan': return '#00ccff'; // голубой
@@ -197,7 +197,7 @@ const launches = [
   {
     rocket: 'SunOrbit One (Gen 3.6)',
     date: '2026-03-11 03:30',
-    status: 'Planned',
+    status: 'Moved from 02:30 to 03:45',
     site: 'Main Pad',
     flights: 0,
     description: 'Test SO-1 Separation test',
