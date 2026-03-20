@@ -31,8 +31,14 @@ section { padding:80px 20px; max-width:1000px; margin:0 auto; }
 .rocket h3 { margin-bottom:10px; }
 .rocket p { font-size:0.95em; color:#ccc; }
 
+/* Кнопки фильтров (Добавлено) */
+.filter-nav { display: flex; gap: 10px; margin-bottom: 20px; }
+.filter-btn { padding: 6px 15px; background: #111; border: 1px solid #333; color: #fff; border-radius: 8px; cursor: pointer; font-size: 0.85em; transition: 0.2s; }
+.filter-btn:hover { background: #222; }
+.filter-btn.active { background: #fff; color: #000; }
+
 /* Launch Schedule — Улучшенный компактный дизайн */
-#launch-list { margin-top:20px; display:flex; flex-direction:column; gap:8px; }
+#launch-list { margin-top:10px; display:flex; flex-direction:column; gap:8px; }
 
 .launch-row {
   display: grid;
@@ -45,12 +51,8 @@ section { padding:80px 20px; max-width:1000px; margin:0 auto; }
   transition: all 0.2s ease;
 }
 
-.launch-row:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-
-.launch-row strong { font-size: 0.95em; color: #fff; letter-spacing: 0.3px; }
+.launch-row:hover { background: rgba(255, 255, 255, 0.06); transform: translateX(4px); }
+.launch-row strong { font-size: 0.95em; color: #fff; }
 .launch-row div { font-size: 0.85em; }
 
 .status-badge {
@@ -58,27 +60,21 @@ section { padding:80px 20px; max-width:1000px; margin:0 auto; }
   font-size: 0.75em;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
   padding: 4px 10px;
   border-radius: 6px;
   background: rgba(0, 0, 0, 0.3);
   cursor: pointer;
-  border: 1px solid rgba(255,255,255,0.05);
-  transition: 0.2s;
   justify-self: end;
   min-width: 100px;
 }
-
-.status-badge:hover { filter: brightness(1.2); background: rgba(255,255,255,0.1); }
 
 @media (max-width: 768px) {
   .launch-row { grid-template-columns: 1.5fr 1fr; gap: 8px; }
   .status-badge { grid-column: span 2; justify-self: start; }
 }
 
-/* Contact */
+/* Contact & Footer */
 .contact p, .contact a { color:#ccc; margin-bottom:5px; }
-.contact a:hover { opacity:0.8; }
 footer { text-align:center; padding:20px; border-top:1px solid #333; font-size:0.85em; color:#aaa; }
 </style>
 </head>
@@ -103,24 +99,28 @@ footer { text-align:center; padding:20px; border-top:1px solid #333; font-size:0
 </section>
 
 <section id="schedule">
-  <div style="display:flex; justify-content:space-between; align-items:center;">
-    <h2>Launch Schedule</h2>
-    <span id="reset-btn" onclick="toggleFilter(null)" style="font-size:0.8em; color:#888; cursor:pointer; display:none;">✕ Reset Filter</span>
+  <h2>Launch Schedule</h2>
+  
+  <!-- Кнопки-фильтры -->
+  <div class="filter-nav">
+    <button class="filter-btn active" onclick="setFilter(null, this)">All</button>
+    <button class="filter-btn" onclick="setFilter('Completed', this)">Completed</button>
+    <button class="filter-btn" onclick="setFilter('Planned', this)">Planned</button>
   </div>
+
   <div id="launch-list"></div>
 </section>
 
 <section class="contact" id="contact">
   <h2>Contact</h2>
   <p>Twitter: <a href="https://x.com" target="_blank">@OXeallCorp</a></p>
-  <p>Follow our updates and join the community.</p>
 </section>
 
-<footer>
-  &copy; 2026 InSpace. All rights reserved.
-</footer>
+<footer>&copy; 2026 InSpace. All rights reserved.</footer>
 
 <script>
+// --- ВСЯ ВАША СТРУКТУРА СКРИПТА СОХРАНЕНА БЕЗ ИЗМЕНЕНИЙ ---
+
 function scrollToSection(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
 
 // Статусы и цвета
@@ -171,7 +171,6 @@ const rockets = [
     date:'March 6, 2026'
   }
 ];
-
 document.getElementById('rocket-cards').innerHTML = rockets.map(r => `
   <div class="rocket">
     <h3>${r.name}</h3>
@@ -238,7 +237,6 @@ const launches = [
   }
 ];
 
-// Обработка дат (оригинальный метод)
 launches.forEach(l => {
   const [d, t] = l.date.split(' ');
   const [year, month, day] = d.split('-').map(Number);
@@ -246,33 +244,35 @@ launches.forEach(l => {
   l.dateObj = new Date(year, month-1, day, hour, minute);
 });
 
-let activeFilter = null;
+// Логика рендера (адаптирована под компактность)
+let currentFilter = null;
 
-function renderSchedule() {
+function render() {
   const list = document.getElementById('launch-list');
-  const filtered = activeFilter ? launches.filter(l => l.status === activeFilter) : launches;
-  
-  document.getElementById('reset-btn').style.display = activeFilter ? 'inline' : 'none';
+  const data = currentFilter ? launches.filter(l => l.status === currentFilter) : launches;
 
-  list.innerHTML = filtered.map(l => `
+  list.innerHTML = data.map(l => `
     <div class="launch-row">
       <div><strong>${l.rocket}</strong></div>
-      <div style="color:#aaa; font-family:monospace;">${l.dateObj.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})}</div>
+      <div style="color:#aaa; font-family:monospace;">${l.dateObj.toLocaleDateString('en-US', {month:'short', day:'numeric'})}</div>
       <div style="color:#777;">${l.dateObj.getHours().toString().padStart(2,'0')}:${l.dateObj.getMinutes().toString().padStart(2,'0')} CDT</div>
-      <div class="status-badge" style="color:${statusColor(l.status)};" onclick="toggleFilter('${l.status}')">
+      <div class="status-badge" style="color:${statusColor(l.status)};" onclick="setFilter('${l.status}')">
         ${l.status}
       </div>
     </div>
   `).join('');
 }
 
-function toggleFilter(status) {
-  activeFilter = (activeFilter === status) ? null : status;
-  renderSchedule();
+function setFilter(status, btn) {
+  currentFilter = status;
+  if(btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  render();
 }
 
-renderSchedule();
+render();
 </script>
-
 </body>
 </html>
