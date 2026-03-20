@@ -253,15 +253,16 @@ function render() {
 
   list.innerHTML = data.map(l => `
     <div class="launch-row">
-      <!-- Увеличили название ракеты (font-size: 1.1em) -->
+      <!-- Название: увеличили до 1.1em -->
       <div><strong style="font-size: 1.1em;">${l.rocket}</strong></div>
       
-      <!-- Увеличили дату (font-size: 1.15em) и сделали её полной -->
+      <!-- Дата: увеличили до 1.15em и сделали полной -->
       <div style="color:#aaa; font-family:monospace; font-size:1.15em;">
         ${l.dateObj.toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'})}
       </div>
       
-      <div style="color:#777;">
+      <!-- Время: увеличили до 1.1em -->
+      <div style="color:#777; font-size: 1.1em;">
         ${l.dateObj.getHours().toString().padStart(2,'0')}:${l.dateObj.getMinutes().toString().padStart(2,'0')} CDT
       </div>
       
