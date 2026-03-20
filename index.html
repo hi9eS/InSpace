@@ -253,21 +253,24 @@ function render() {
 
   list.innerHTML = data.map(l => `
     <div class="launch-row">
-      <div><strong>${l.rocket}</strong></div>
-      <!-- Здесь увеличен шрифт (font-size: 1.1em) и включен полный месяц и год -->
-      <div style="color:#aaa; font-family:monospace; font-size:1.1em;">
+      <!-- Увеличили название ракеты (font-size: 1.1em) -->
+      <div><strong style="font-size: 1.1em;">${l.rocket}</strong></div>
+      
+      <!-- Увеличили дату (font-size: 1.15em) и сделали её полной -->
+      <div style="color:#aaa; font-family:monospace; font-size:1.15em;">
         ${l.dateObj.toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'})}
       </div>
+      
       <div style="color:#777;">
         ${l.dateObj.getHours().toString().padStart(2,'0')}:${l.dateObj.getMinutes().toString().padStart(2,'0')} CDT
       </div>
+      
       <div class="status-badge" style="color:${statusColor(l.status)};" onclick="setFilter('${l.status}')">
         ${l.status}
       </div>
     </div>
   `).join('');
 }
-
 
 function setFilter(status, btn) {
   currentFilter = status;
