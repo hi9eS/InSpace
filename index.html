@@ -31,12 +31,99 @@ section { padding:80px 20px; max-width:1000px; margin:0 auto; }
 .rocket h3 { margin-bottom:10px; }
 .rocket p { font-size:0.95em; color:#ccc; }
 
-/* Launch Schedule vertical list */
-#launch-list { margin-top:20px; }
-.launch-row { display:flex; justify-content:space-between; padding:12px 20px; background:#111; border-radius:8px; border:1px solid #222; margin-bottom:8px; transition:0.3s; }
-.launch-row:hover { background:#1a1a1a; }
-.launch-row div { flex:1; text-align:center; }
-.launch-row div:first-child { flex:2; text-align:left; }
+/* Launch Schedule — Улучшенный дизайн */
+#launch-list {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.launch-row {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1fr;
+  align-items: center;
+  padding: 18px 25px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.launch-row:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateX(5px);
+}
+
+/* Эффект свечения слева */
+.launch-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: transparent;
+  transition: 0.3s;
+}
+
+.launch-row:hover::before {
+  background: #fff; /* Цвет полоски при наведении */
+}
+
+/* Стилизация текста внутри строк */
+.launch-row div {
+  font-size: 0.95em;
+  color: #eee;
+}
+
+.launch-row strong {
+  font-size: 1.1em;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+/* Дата и время */
+.launch-row div:nth-child(2) {
+  color: #aaa;
+  font-family: 'Courier New', monospace; /* Технологичный вид */
+}
+
+.launch-row div:nth-child(3) {
+  color: #888;
+  font-weight: 500;
+}
+
+/* Статус как бейдж */
+.launch-row div:last-child {
+  text-align: right;
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  display: inline-block;
+  width: fit-content;
+  justify-self: end;
+}
+
+/* Адаптивность для мобилок */
+@media (max-width: 768px) {
+  .launch-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 15px;
+  }
+  .launch-row div:last-child {
+    grid-column: span 2;
+    justify-self: start;
+    text-align: left;
+  }
+}
 
 /* Contact */
 .contact p, .contact a { color:#ccc; margin-bottom:5px; }
