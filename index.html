@@ -32,45 +32,11 @@ section { padding:80px 20px; max-width:1000px; margin:0 auto; }
 .rocket p { font-size:0.95em; color:#ccc; }
 
 /* Launch Schedule vertical list */
-/* Launch Schedule vertical list - redesigned */
-/* Launch Schedule - SpaceX style redesign */
-/* Launch Schedule - modern clean style */
-#launch-list { margin-top:25px; }
-
-.launch-row {
-  display: grid;
-  grid-template-columns: 2fr 1.2fr 1fr auto;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 20px;
-  background: linear-gradient(145deg, #121212, #0d0d0d); /* мягкий градиент */
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3); /* лёгкая глубина */
-  margin-bottom: 12px;
-  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
-}
-
-.launch-row:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.5);
-  background: linear-gradient(145deg, #1a1a1a, #121212);
-}
-
-.launch-row div {
-  text-align: center;
-  color: #e0e0e0;
-  font-size: 0.95em;
-}
-
-.launch-row div:first-child {
-  text-align: left;
-  font-weight: 600;
-}
-
-.launch-row div:last-child {
-  font-weight: 600;
-  color: inherit; /* цвет статуса как раньше */
-}
+#launch-list { margin-top:20px; }
+.launch-row { display:flex; justify-content:space-between; padding:12px 20px; background:#111; border-radius:8px; border:1px solid #222; margin-bottom:8px; transition:0.3s; }
+.launch-row:hover { background:#1a1a1a; }
+.launch-row div { flex:1; text-align:center; }
+.launch-row div:first-child { flex:2; text-align:left; }
 
 /* Contact */
 .contact p, .contact a { color:#ccc; margin-bottom:5px; }
