@@ -32,11 +32,39 @@ section { padding:80px 20px; max-width:1000px; margin:0 auto; }
 .rocket p { font-size:0.95em; color:#ccc; }
 
 /* Launch Schedule vertical list */
-#launch-list { margin-top:20px; }
-.launch-row { display:flex; justify-content:space-between; padding:12px 20px; background:#111; border-radius:8px; border:1px solid #222; margin-bottom:8px; transition:0.3s; }
-.launch-row:hover { background:#1a1a1a; }
-.launch-row div { flex:1; text-align:center; }
-.launch-row div:first-child { flex:2; text-align:left; }
+/* Launch Schedule vertical list - redesigned */
+#launch-list { margin-top:40px; }
+
+.launch-row {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1fr;
+  gap: 15px;
+  padding: 20px;
+  background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
+  border-radius: 12px;
+  border: 1px solid #333;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+}
+
+.launch-row:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+  background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
+}
+
+.launch-row div {
+  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
+  color: #eee;
+}
+
+.launch-row div:first-child {
+  text-align: left;
+  font-weight: 600;
+  font-size: 1.05em;
+}
 
 /* Contact */
 .contact p, .contact a { color:#ccc; margin-bottom:5px; }
