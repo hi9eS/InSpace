@@ -134,6 +134,7 @@ function statusColor(status){
     case 'Concept/Plan': return '#00ccff'; // голубой
     case 'Canceled': return '#ff3300';   // красный
     case 'Coming Soon': return '#d9d9d9';   // For Moon
+    case 'Recorded': return '#00cc66';   // красный
     default: return '#ccc';
   }
 }
@@ -230,6 +231,15 @@ const launches = [
     rocket: 'SunOrbit One (Gen 3.6)',
     date: '2026-03-11 03:45',
     status: 'Completed',
+    site: 'Main Pad',
+    flights: 0,
+    description: 'Test SO-1 Separation test',
+    type: 'SO-1 Separation and Landing Test'
+  },
+  {
+    rocket: 'SunOrbit One (Gen 75)',
+    date: '2026-03-21 05:30',
+    status: 'Recorded',
     site: 'Main Pad',
     flights: 0,
     description: 'Test SO-1 Separation test',
