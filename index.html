@@ -537,7 +537,7 @@ function openVehicle(id) {
 
   const imgHTML = v.image
     ? `<img src="${v.image}" alt="${v.name}">`
-    : `<div class="vp-img-placeholder">Image coming soon</div>`;
+    : `<div class="vp-img-placeholder">No data. Image coming soon</div>`;
 
   const specsHTML = v.specs.map(s => `
     <div class="vp-spec">
