@@ -10,7 +10,7 @@ a { color:inherit; text-decoration:none; }
 a:hover { opacity:0.7; }
 
 /* Header */
-header { position:sticky; top:0; background:#111; display:flex; justify-content:center; gap:30px; padding:20px 0; z-index:10; }
+header { position:sticky; top:0; background:#111; display:flex; justify-content:center; gap:30px; padding:20px 0; z-index:100; }
 header a { font-weight:500; cursor:pointer; font-size:1em; transition:0.2s; }
 header a:hover { transform:scale(1.05); opacity:0.7; }
 
@@ -19,6 +19,50 @@ section { padding:80px 20px; max-width:1000px; margin:0 auto; }
 .hero { text-align:center; }
 .hero h1 { font-size:2.5em; margin-bottom:20px; }
 .hero p { font-size:1.2em; max-width:700px; margin:0 auto 30px; color:#ccc; }
+
+/* Countdown */
+#countdown-wrap {
+  display:none;
+  margin: 0 auto 40px;
+  max-width: 600px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 24px 32px;
+}
+#countdown-mission {
+  font-size: 0.72em;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #888;
+  margin-bottom: 10px;
+}
+#countdown-label {
+  font-size: 0.85em;
+  color: #ccc;
+  margin-bottom: 16px;
+}
+#countdown-timer {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+.cd-unit { text-align:center; }
+.cd-num {
+  font-size: 2.8em;
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+.cd-lbl {
+  font-size: 0.65em;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #666;
+  margin-top: 4px;
+}
+.cd-sep { font-size: 2.2em; font-weight: 200; color: #444; line-height: 1.1; align-self:center; }
 
 /* Watch Launch button */
 .stream-link { font-size:1.5em; padding:15px 40px; border:2px solid #fff; border-radius:12px; cursor:pointer; transition:0.3s; color:#fff; display:inline-block; margin-bottom:60px; }
@@ -31,13 +75,22 @@ section { padding:80px 20px; max-width:1000px; margin:0 auto; }
 .rocket h3 { margin-bottom:10px; }
 .rocket p { font-size:0.95em; color:#ccc; }
 
-/* Кнопки фильтров (Добавлено) */
-.filter-nav { display: flex; gap: 10px; margin-bottom: 20px; }
-.filter-btn { padding: 6px 15px; background: #111; border: 1px solid #333; color: #fff; border-radius: 8px; cursor: pointer; font-size: 0.85em; transition: 0.2s; }
-.filter-btn:hover { background: #222; }
-.filter-btn.active { background: #fff; color: #000; }
+/* News Load More */
+#load-more-btn {
+  display:block;
+  margin: 28px auto 0;
+  padding: 10px 32px;
+  background: transparent;
+  border: 1px solid #333;
+  color: #ccc;
+  border-radius: 8px;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: 0.2s;
+}
+#load-more-btn:hover { background:#1a1a1a; color:#fff; border-color:#555; }
 
-/* Launch Schedule — Улучшенный компактный дизайн */
+/* Launch Schedule */
 #launch-list { margin-top:10px; display:flex; flex-direction:column; gap:8px; }
 
 .launch-row {
@@ -45,13 +98,12 @@ section { padding:80px 20px; max-width:1000px; margin:0 auto; }
   grid-template-columns: 2fr 1.8fr 1fr 1fr;
   align-items: center;
   padding: 12px 18px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
   border-radius: 10px;
   transition: all 0.2s ease;
 }
-
-.launch-row:hover { background: rgba(255, 255, 255, 0.06); transform: scale(1.02); }
+.launch-row:hover { background: rgba(255,255,255,0.06); transform: scale(1.02); }
 .launch-row strong { font-size: 0.95em; color: #fff; }
 .launch-row div { font-size: 0.85em; }
 
@@ -62,8 +114,7 @@ section { padding:80px 20px; max-width:1000px; margin:0 auto; }
   text-transform: uppercase;
   padding: 4px 10px;
   border-radius: 6px;
-  background: rgba(0, 0, 0, 0.3);
-  cursor: pointer;
+  background: rgba(0,0,0,0.3);
   justify-self: end;
   min-width: 100px;
 }
@@ -73,41 +124,239 @@ section { padding:80px 20px; max-width:1000px; margin:0 auto; }
   .status-badge { grid-column: span 2; justify-self: start; }
 }
 
+/* Accordion groups */
+.group-accordion { border:1px solid rgba(255,255,255,0.1); border-radius:12px; overflow:hidden; transition:box-shadow 0.3s; }
+.group-accordion:hover { box-shadow:0 4px 20px rgba(255,255,255,0.04); }
+.group-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:rgba(255,255,255,0.03); cursor:pointer; user-select:none; transition:background 0.2s; }
+.group-header:hover { background:rgba(255,255,255,0.06); }
+.group-left { display:flex; align-items:center; gap:14px; }
+.group-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.group-label { font-size:0.78em; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; }
+.group-count { font-size:0.78em; color:#555; font-weight:500; }
+.group-chevron { font-size:0.75em; color:#555; transition:transform 0.35s cubic-bezier(0.4,0,0.2,1); }
+.group-accordion.open .group-chevron { transform:rotate(180deg); }
+.group-rows { max-height:0; overflow:hidden; opacity:0; transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+
 /* Contact & Footer */
 .contact p, .contact a { color:#ccc; margin-bottom:5px; }
 footer { text-align:center; padding:20px; border-top:1px solid #333; font-size:0.85em; color:#aaa; }
+
+/* ===================== VEHICLES FLEET ===================== */
+#fleet { padding:80px 20px; max-width:1000px; margin:0 auto; }
+#fleet h2 { margin-bottom:32px; }
+
+.vehicle-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.vehicle-card {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 14px;
+  padding: 28px 24px 24px;
+  cursor: pointer;
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.vehicle-card::before {
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0;
+  height: 2px;
+  background: var(--vc, #fff);
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+.vehicle-card:hover { background:#161616; transform:translateY(-4px); box-shadow:0 8px 30px rgba(0,0,0,0.4); }
+.vehicle-card:hover::before { opacity:1; }
+.vc-name { font-size:1.3em; font-weight:600; margin-bottom:4px; }
+.vc-sub { font-size:0.78em; color:#555; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:20px; }
+.vc-stat-row { display:flex; justify-content:space-between; border-top:1px solid #1e1e1e; padding-top:16px; gap:8px; }
+.vc-stat { text-align:center; }
+.vc-stat-val { font-size:1.1em; font-weight:500; }
+.vc-stat-lbl { font-size:0.65em; color:#555; text-transform:uppercase; letter-spacing:0.08em; margin-top:2px; }
+
+/* ===================== VEHICLE PAGE OVERLAY ===================== */
+#vehicle-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #0a0a0a;
+  z-index: 200;
+  overflow-y: auto;
+}
+#vehicle-overlay.active { display:block; }
+
+.vp-header {
+  position: sticky;
+  top: 0;
+  background: rgba(10,10,10,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid #1e1e1e;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 32px;
+  z-index: 10;
+}
+.vp-back {
+  background: none;
+  border: 1px solid #333;
+  color: #ccc;
+  padding: 7px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: 0.2s;
+}
+.vp-back:hover { background:#1a1a1a; color:#fff; }
+.vp-title { font-size:1.1em; font-weight:500; }
+
+.vp-body { max-width:900px; margin:0 auto; padding:60px 24px 100px; }
+
+.vp-hero-name {
+  font-size: clamp(2.5em, 6vw, 4em);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
+.vp-hero-class {
+  font-size: 0.78em;
+  color: #555;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 48px;
+}
+
+/* Image placeholder */
+.vp-img-wrap {
+  width: 100%;
+  aspect-ratio: 16/7;
+  background: #111;
+  border: 1px solid #1e1e1e;
+  border-radius: 16px;
+  margin-bottom: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+.vp-img-wrap img { width:100%; height:100%; object-fit:cover; }
+.vp-img-placeholder {
+  font-size: 0.72em;
+  color: #333;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+/* Specs grid */
+.vp-specs-title {
+  font-size: 0.7em;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #555;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #1a1a1a;
+  padding-bottom: 12px;
+}
+.vp-specs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1px;
+  background: #1a1a1a;
+  border: 1px solid #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 52px;
+}
+.vp-spec {
+  background: #0f0f0f;
+  padding: 20px 18px;
+}
+.vp-spec-val { font-size:1.4em; font-weight:300; margin-bottom:4px; line-height:1; }
+.vp-spec-lbl { font-size:0.65em; color:#555; text-transform:uppercase; letter-spacing:0.1em; }
+
+/* Stages */
+.vp-stages { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:52px; }
+@media(max-width:600px){ .vp-stages { grid-template-columns:1fr; } }
+.vp-stage {
+  background:#111;
+  border:1px solid #1e1e1e;
+  border-radius:12px;
+  padding:24px 20px;
+}
+.vp-stage-title { font-size:0.7em; letter-spacing:0.18em; text-transform:uppercase; color:#555; margin-bottom:16px; }
+.vp-stage-row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #1a1a1a; font-size:0.9em; }
+.vp-stage-row:last-child { border-bottom:none; }
+.vp-stage-key { color:#666; }
+.vp-stage-val { font-weight:500; }
+
+/* Description */
+.vp-desc {
+  color: #888;
+  font-size: 1.0em;
+  line-height: 1.8;
+  max-width: 680px;
+}
 </style>
 </head>
 <body>
 
+<!-- VEHICLE PAGE OVERLAY -->
+<div id="vehicle-overlay">
+  <div class="vp-header">
+    <button class="vp-back" onclick="closeVehicle()">&#8592; Back</button>
+    <span class="vp-title" id="vp-header-title"></span>
+  </div>
+  <div class="vp-body" id="vp-body"></div>
+</div>
+
 <header>
-  <a onclick="scrollToSection('hero')">Home</a>
-  <a onclick="scrollToSection('rockets')">News</a>
-  <a onclick="scrollToSection('schedule')">Schedule</a>
-  <a onclick="scrollToSection('contact')">Contact</a>
+  <a onclick="closeVehicle();scrollToSection('hero')">Home</a>
+  <a onclick="closeVehicle();scrollToSection('fleet')">Vehicles</a>
+  <a onclick="closeVehicle();scrollToSection('rockets')">News</a>
+  <a onclick="closeVehicle();scrollToSection('schedule')">Schedule</a>
+  <a onclick="closeVehicle();scrollToSection('contact')">Contact</a>
 </header>
 
 <section class="hero" id="hero">
   <h1>Welcome to InSpace</h1>
   <p>Keep an eye out for updates</p>
+
+  <!-- Countdown (auto-shows when next Planned launch ≤ 24h) -->
+  <div id="countdown-wrap">
+    <div id="countdown-mission"></div>
+    <div id="countdown-label">Next launch in</div>
+    <div id="countdown-timer">
+      <div class="cd-unit"><div class="cd-num" id="cd-h">00</div><div class="cd-lbl">Hours</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-unit"><div class="cd-num" id="cd-m">00</div><div class="cd-lbl">Min</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-unit"><div class="cd-num" id="cd-s">00</div><div class="cd-lbl">Sec</div></div>
+    </div>
+  </div>
+
   <div class="stream-link" onclick="window.open('https://www.youtube.com/@hi9eS')">Watch Launch</div>
+</section>
+
+<!-- VEHICLES FLEET -->
+<section id="fleet">
+  <h2>Our Vehicles</h2>
+  <div class="vehicle-cards" id="vehicle-cards"></div>
 </section>
 
 <section id="rockets">
   <h2>Latest News</h2>
   <div class="rocket-cards" id="rocket-cards"></div>
+  <button id="load-more-btn" onclick="loadMore()" style="display:none;">Load more</button>
 </section>
 
 <section id="schedule">
   <h2>Launch Schedule</h2>
-  
-  <!-- Кнопки-фильтры -->
-  <div class="filter-nav">
-    <button class="filter-btn active" onclick="setFilter(null, this)">All</button>
-    <button class="filter-btn" onclick="setFilter('Completed', this)">Completed</button>
-    <button class="filter-btn" onclick="setFilter('Planned', this)">Planned</button>
-  </div>
-
   <div id="launch-list"></div>
 </section>
 
@@ -119,216 +368,359 @@ footer { text-align:center; padding:20px; border-top:1px solid #333; font-size:0
 <footer>&copy; 2026 InSpace. All rights reserved.</footer>
 
 <script>
-// --- ВСЯ ВАША СТРУКТУРА СКРИПТА СОХРАНЕНА БЕЗ ИЗМЕНЕНИЙ ---
-
 function scrollToSection(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
 
-// Статусы и цвета
+/* =================== STATUS COLORS =================== */
 function statusColor(status){
   switch(status){
-    case 'Planned': return '#fff';       // белый
-    case 'Delayed': return '#ffcc00';    // жёлтый
-    case 'Delayed +1h 15m': return '#ffcc00';    // жёлтый
-    case 'Delayed to ': return '#ffcc00';    // жёлтый
-    case 'Completed': return '#00cc66';  // зелёный
-    case 'Concept/Plan': return '#00ccff'; // голубой
-    case 'Canceled': return '#ff3300';   // красный
-    case 'Coming Soon': return '#d9d9d9';   // For Moon
-    case 'Recorded': return '#00cc66';   // красный
+    case 'Planned': return '#fff';
+    case 'Delayed': return '#ffcc00';
+    case 'Delayed +1h 15m': return '#ffcc00';
+    case 'Delayed to ': return '#ffcc00';
+    case 'Completed': return '#00cc66';
+    case 'Concept/Plan': return '#00ccff';
+    case 'Canceled': return '#ff3300';
+    case 'Coming Soon': return '#d9d9d9';
+    case 'Recorded': return '#00cc66';
     default: return '#ccc';
   }
 }
 
-// Rockets data с датой новости
-const rockets = [
+/* =================== VEHICLES DATA =================== */
+const vehicles = [
   {
-    name:'SunPower One',
-    description:'Where it all began. The name "SunPower" was coined on the fly by Haisess.',
-    date:'February 26, 2026'
+    id: 'sunorbit',
+    name: 'SunOrbit',
+    class: 'Interplanetary Vehicle',
+    color: '#00aaff',
+    image: null, // replace with image URL string to show photo
+    description: 'SunOrbit is InSpace\'s primary orbital platform, built in modular stages. Designed for sustained operations in low Earth orbit with docking capabilities, deployable solar arrays, and high-bandwidth communication relay systems.',
+    specs: [
+      { val: '208m', lbl: 'Height' },
+      { val: '3,270,000', lbl: 'Mass (kg)' },
+      { val: '84,6 km/s', lbl: 'Delta-V' },
+      { val: '15.06x', lbl: 'TWR' },
+      { val: 'Feb 2026', lbl: 'First Flight' },
+    ],
+    stages: [
+      {
+        title: 'Stage 1 — Booster',
+        rows: [
+          { key: 'Engines', val: '42' },
+          { key: 'Thrust (sea level)', val: '484,000 kN' },
+          { key: 'Burn time', val: '33.8 min' },
+          { key: 'Propellant', val: '2,560 t' },
+          { key: 'Recovery', val: 'Vertical landing' },
+        ]
+      },
+      {
+        title: 'Stage 2 — Upper',
+        rows: [
+          { key: 'Engines', val: '90' },
+          { key: 'Thrust (vacuum)', val: '120,000 kN' },
+          { key: 'Burn time', val: '1.6 min' },
+          { key: 'Propellant', val: '2,330 t' },
+        ]
+      }
+    ],
+    cardStats: [
+      { val: '208m', lbl: 'Height' },
+      { val: '3,270,000 kg', lbl: 'Mass' },
+      { val: '7', lbl: 'Launches' },
+    ]
   },
   {
-    name:'SunOrbit One',
-    description:'Orbiting platform built in stages. Features docking capabilities, solar panels, and communication systems.',
-    date:'February 26, 2026'
+    id: 'sunpower',
+    name: 'SunPower',
+    class: 'Earth Orbit',
+    color: '#ffaa00',
+    image: null,
+    description: 'SunPower is InSpace\'s heavy-lift workhorse. Starting from a rapid prototype, it evolved through multiple generations into a high-performance launcher capable of delivering large payloads to orbit. The name was coined on the fly by Haisess during the very first test campaign.',
+    specs: [
+      { val: '—', lbl: 'Height' },
+      { val: '—', lbl: 'Mass (kg)' },
+      { val: '—', lbl: 'Delta-V' },
+      { val: '—', lbl: 'TWR' },
+      { val: 'Feb 2026', lbl: 'First Flight' },
+    ],
+    stages: [
+      {
+        title: 'Stage 1 — Booster',
+        rows: [
+          { key: 'Engines', val: '—' },
+          { key: 'Thrust (sea level)', val: '— kN' },
+          { key: 'Burn time', val: '— s' },
+          { key: 'Propellant', val: '—' },
+          { key: 'Recovery', val: 'Vertical landing' },
+        ]
+      },
+      {
+        title: 'Stage 2 — Upper',
+        rows: [
+          { key: 'Engines', val: '—' },
+          { key: 'Thrust (vacuum)', val: '— kN' },
+          { key: 'Burn time', val: '— s' },
+          { key: 'Propellant', val: '—' },
+        ]
+      }
+    ],
+    cardStats: [
+      { val: '—', lbl: 'Height' },
+      { val: '—', lbl: 'Mass' },
+      { val: '0', lbl: 'Launches' },
+    ]
   },
   {
-    name:'Trial Mission to the Moon',
-    description:'The team is preparing for a trial run of the upcoming lunar mission.',
-    date:'February 27, 2026'
-  },
-  {
-    name:'Beyond Earth Orbit',
-    description:'<p><i>“We’re ready to move beyond Earth’s pull, coming very soon.”</i></p>',
-    date:'February 27, 2026'
-  },
-  {
-    name:'Cancelling Missions',
-    description:'Resumption is coming soon.. We are currently preparing for two targets: Mars and the Moon.',
-    date:'March 03, 2026'
-  },
-  {
-    name:'Vertical Recovery: The Mark of Precision',
-    description:'<p><i>“Where others leave a crater, we leave our mark.”</i></p>',
-    date:'March 6, 2026'
+    id: 'planetsrockets',
+    name: 'PlanetsRockets',
+    class: 'COMING SOON',
+    color: '#cc66ff',
+    image: null,
+    description: 'PlanetsRockets is InSpace\'s next-generation interplanetary vehicle, currently in the concept and planning phase. Targeting deep-space destinations including Mars and the Moon, it represents the long-term ambition of the InSpace program.',
+    specs: [
+      { val: '—', lbl: 'Height' },
+      { val: '—', lbl: 'Mass (kg)' },
+      { val: '—', lbl: 'Delta-V' },
+      { val: '—', lbl: 'TWR' },
+      { val: 'Apr 2026', lbl: 'First Flight' },
+    ],
+    stages: [
+      {
+        title: 'Stage 1 — Booster',
+        rows: [
+          { key: 'Engines', val: '—' },
+          { key: 'Thrust (sea level)', val: '— kN' },
+          { key: 'Burn time', val: '— s' },
+          { key: 'Propellant', val: '—' },
+          { key: 'Recovery', val: 'TBD' },
+        ]
+      },
+      {
+        title: 'Stage 2 — Upper',
+        rows: [
+          { key: 'Engines', val: '—' },
+          { key: 'Thrust (vacuum)', val: '— kN' },
+          { key: 'Burn time', val: '— s' },
+          { key: 'Propellant', val: '—' },
+        ]
+      }
+    ],
+    cardStats: [
+      { val: '—', lbl: 'Height' },
+      { val: '—', lbl: 'Mass' },
+      { val: '0', lbl: 'Launches' },
+    ]
   }
 ];
-document.getElementById('rocket-cards').innerHTML = rockets.map(r => `
-  <div class="rocket">
-    <h3>${r.name}</h3>
-    <p>${r.description}</p>
-    <p style="font-size:0.85em; color:#888; margin-top:8px;">${r.date}</p>
-  </div>
-`).join('');
 
-// --- Launches data (easy-to-edit block) ---
+/* Render vehicle fleet cards */
+const vcContainer = document.getElementById('vehicle-cards');
+vehicles.forEach(v => {
+  const card = document.createElement('div');
+  card.className = 'vehicle-card';
+  card.style.setProperty('--vc', v.color);
+  card.innerHTML = `
+    <div class="vc-name">${v.name}</div>
+    <div class="vc-sub">${v.class}</div>
+    <div class="vc-stat-row">
+      ${v.cardStats.map(s=>`<div class="vc-stat"><div class="vc-stat-val">${s.val}</div><div class="vc-stat-lbl">${s.lbl}</div></div>`).join('')}
+    </div>`;
+  card.addEventListener('click', () => openVehicle(v.id));
+  vcContainer.appendChild(card);
+});
+
+/* Open vehicle page */
+function openVehicle(id) {
+  const v = vehicles.find(x => x.id === id);
+  if (!v) return;
+  document.getElementById('vp-header-title').textContent = v.name;
+
+  const imgHTML = v.image
+    ? `<img src="${v.image}" alt="${v.name}">`
+    : `<div class="vp-img-placeholder">Image coming soon</div>`;
+
+  const specsHTML = v.specs.map(s => `
+    <div class="vp-spec">
+      <div class="vp-spec-val">${s.val}</div>
+      <div class="vp-spec-lbl">${s.lbl}</div>
+    </div>`).join('');
+
+  const stagesHTML = v.stages.map(st => `
+    <div class="vp-stage">
+      <div class="vp-stage-title">${st.title}</div>
+      ${st.rows.map(r=>`<div class="vp-stage-row"><span class="vp-stage-key">${r.key}</span><span class="vp-stage-val">${r.val}</span></div>`).join('')}
+    </div>`).join('');
+
+  document.getElementById('vp-body').innerHTML = `
+    <div class="vp-hero-name" style="color:${v.color}">${v.name}</div>
+    <div class="vp-hero-class">${v.class}</div>
+    <div class="vp-img-wrap">${imgHTML}</div>
+    <div class="vp-specs-title">Specifications</div>
+    <div class="vp-specs-grid">${specsHTML}</div>
+    <div class="vp-specs-title">Stages</div>
+    <div class="vp-stages">${stagesHTML}</div>
+    <div class="vp-specs-title">Overview</div>
+    <div class="vp-desc">${v.description}</div>`;
+
+  const overlay = document.getElementById('vehicle-overlay');
+  overlay.classList.add('active');
+  overlay.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeVehicle() {
+  document.getElementById('vehicle-overlay').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+/* =================== NEWS WITH LOAD MORE =================== */
+const allRockets = [
+  { name:'SunPower One', description:'Where it all began. The name "SunPower" was coined on the fly by Haisess.', date:'February 26, 2026' },
+  { name:'SunOrbit One', description:'Orbiting platform built in stages. Features docking capabilities, solar panels, and communication systems.', date:'February 26, 2026' },
+  { name:'Trial Mission to the Moon', description:'The team is preparing for a trial run of the upcoming lunar mission.', date:'February 27, 2026' },
+  { name:'Beyond Earth Orbit', description:'<i>"We\'re ready to move beyond Earth\'s pull, coming very soon."</i>', date:'February 27, 2026' },
+  { name:'Cancelling Missions', description:'Resumption is coming soon.. We are currently preparing for two targets: Mars and the Moon.', date:'March 03, 2026' },
+  { name:'Vertical Recovery: The Mark of Precision', description:'<i>"Where others leave a crater, we leave our mark."</i>', date:'March 6, 2026' },
+];
+
+const NEWS_PER_PAGE = 3;
+let newsShown = 0;
+
+function renderNews() {
+  const grid = document.getElementById('rocket-cards');
+  const btn = document.getElementById('load-more-btn');
+  const slice = allRockets.slice(newsShown, newsShown + NEWS_PER_PAGE);
+  slice.forEach(r => {
+    const card = document.createElement('div');
+    card.className = 'rocket';
+    card.innerHTML = `<h3>${r.name}</h3><p>${r.description}</p><p style="font-size:0.85em;color:#888;margin-top:8px;">${r.date}</p>`;
+    grid.appendChild(card);
+  });
+  newsShown += slice.length;
+  btn.style.display = newsShown < allRockets.length ? 'block' : 'none';
+}
+
+function loadMore() { renderNews(); }
+renderNews();
+
+/* =================== LAUNCHES DATA =================== */
 const launches = [
-  {
-    rocket: 'SunPower One (Gen 3)',
-    date: '2026-03-01 04:00',
-    status: 'Canceled',
-    site: 'DSC Large Pad',
-    flights: 0,
-    description: 'New plans. Cancelled.',
-    type: 'Test'
-  },
-  {
-    rocket: 'SunOrbit One (Gen 1) (B-I)',
-    date: '2026-03-02 13:00',
-    status: 'Canceled',
-    site: 'DSC Large Pad',
-    flights: 0,
-    description: 'Trial Mission to the Moon.',
-    type: 'Trial Mission'
-  },
-  {
-    rocket: 'SunPower One (Gen 4)',
-    date: '2026-03-03 07:00',
-    status: 'Canceled',
-    site: 'DSC Large Pad',
-    flights: 0,
-    description: 'New plans. Cancelled.',
-    type: 'Test'
-  },
-  {
-    rocket: 'SunOrbit One (Gen 1)',
-    date: '2026-03-06 01:00',
-    status: 'Canceled',
-    site: 'Ali 28R',
-    flights: 0,
-    description: 'Mission to create a station in orbit.',
-    type: 'Official'
-  },
-  {
-    rocket: 'SunPower II (Gen 1)',
-    date: '2026-03-07 04:00',
-    status: 'Canceled',
-    site: 'Ali 28R',
-    flights: 0,
-    description: 'Next-generation heavy configuration test.',
-    type: 'Official'
-  },
-  {
-    rocket: 'SunOrbit One (Gen 3.6)',
-    date: '2026-03-11 03:45',
-    status: 'Completed',
-    site: 'Main Pad',
-    flights: 0,
-    description: 'Test SO-1 Separation test',
-    type: 'SO-1 Separation and Landing Test'
-  },
-  {
-    rocket: 'SunOrbit One (Gen 75)',
-    date: '2026-03-21 06:00',
-    status: 'Completed',
-    site: 'Main Pad',
-    flights: 0,
-    description: 'Test SO-1 Separation test',
-    type: 'SO-1 Separation and Landing Test'
-  },
-  {
-    rocket: 'SunOrbit One (Gen 84.4)',
-    date: '2026-03-29 17:00',
-    status: 'Completed',
-    site: 'Main Pad',
-    flights: 0,
-    description: 'Test SO-1 Separation test',
-    type: 'SO-1 Separation and Landing Test'
-  },
-  {
-    rocket: 'SunOrbit One (Gen 84.4)',
-    date: '2026-03-29 21:30',
-    status: 'Completed',
-    site: 'Main Pad',
-    flights: 0,
-    description: 'Test SO-1 Separation test',
-    type: 'SO-1 Separation and Landing Test'
-  },
-  {
-    rocket: 'SunOrbit One (Gen 84.9)',
-    date: '2026-04-01 14:00',
-    status: 'Completed',
-    site: 'Main Pad',
-    flights: 0,
-    description: 'Test SO-1 Separation test',
-    type: 'SO-1 Separation and Landing Test'
-  },
-  {
-    rocket: 'SunOrbit One (Gen 91)',
-    date: '2026-04-13 05:00',
-    status: 'Planned',
-    site: 'Main Pad',
-    flights: 0,
-    description: 'Test SO-1 Separation test',
-    type: 'SO-1 Separation and Landing Test'
-  }
+  { rocket:'SunPower One (Gen 3)', date:'2026-03-01 04:00', status:'Canceled', site:'DSC Large Pad', flights:0, description:'New plans. Cancelled.', type:'Test' },
+  { rocket:'SunOrbit One (Gen 1) (B-I)', date:'2026-03-02 13:00', status:'Canceled', site:'DSC Large Pad', flights:0, description:'Trial Mission to the Moon.', type:'Trial Mission' },
+  { rocket:'SunPower One (Gen 4)', date:'2026-03-03 07:00', status:'Canceled', site:'DSC Large Pad', flights:0, description:'New plans. Cancelled.', type:'Test' },
+  { rocket:'SunOrbit One (Gen 1)', date:'2026-03-06 01:00', status:'Canceled', site:'Ali 28R', flights:0, description:'Mission to create a station in orbit.', type:'Official' },
+  { rocket:'SunPower II (Gen 1)', date:'2026-03-07 04:00', status:'Canceled', site:'Ali 28R', flights:0, description:'Next-generation heavy configuration test.', type:'Official' },
+  { rocket:'SunOrbit One (Gen 3.6)', date:'2026-03-11 03:45', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
+  { rocket:'SunOrbit One (Gen 75)', date:'2026-03-21 06:00', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
+  { rocket:'SunOrbit One (Gen 84.4)', date:'2026-03-29 17:00', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
+  { rocket:'SunOrbit One (Gen 84.4)', date:'2026-03-29 21:30', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
+  { rocket:'SunOrbit One (Gen 84.9)', date:'2026-04-01 14:00', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
+  { rocket:'SunOrbit One (Gen 91)', date:'2026-04-13 05:00', status:'Planned', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
+  { rocket:'SunOrbit One (Gen 92)', date:'2026-04-16 10:00', status:'Planned', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
 ];
 
 launches.forEach(l => {
-  const [d, t] = l.date.split(' ');
-  const [year, month, day] = d.split('-').map(Number);
-  const [hour, minute] = t.split(':').map(Number);
+  const [d,t] = l.date.split(' ');
+  const [year,month,day] = d.split('-').map(Number);
+  const [hour,minute] = t.split(':').map(Number);
   l.dateObj = new Date(year, month-1, day, hour, minute);
 });
 
-// Логика рендера (адаптирована под компактность)
-let currentFilter = null;
+/* =================== COUNTDOWN =================== */
+(function initCountdown(){
+  const now = new Date();
+  const next = launches
+    .filter(l => l.status === 'Planned' && l.dateObj > now)
+    .sort((a,b) => a.dateObj - b.dateObj)[0];
+  if (!next) return;
 
-function render() {
-  const list = document.getElementById('launch-list');
-  const data = currentFilter ? launches.filter(l => l.status === currentFilter) : launches;
+  const diff = next.dateObj - now;
+  const H24 = 24 * 60 * 60 * 1000;
+  if (diff > H24) return; // only show within 24h
 
-  list.innerHTML = data.map(l => `
-    <div class="launch-row">
-      <!-- Название: увеличили до 1.1em -->
-      <div><strong style="font-size: 1.1em;">${l.rocket}</strong></div>
-      
-      <!-- Дата: увеличили до 1.15em и сделали полной -->
-      <div style="color:#aaa; font-family:monospace; font-size:1.15em;">
-        ${l.dateObj.toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'})}
-      </div>
-      
-      <!-- Время: увеличили до 1.1em -->
-      <div style="color:#777; font-size: 1.0em;">
-        ${l.dateObj.getHours().toString().padStart(2,'0')}:${l.dateObj.getMinutes().toString().padStart(2,'0')} CDT
-      </div>
-      
-      <div class="status-badge" style="color:${statusColor(l.status)};" onclick="setFilter('${l.status}')">
-        ${l.status}
-      </div>
-    </div>
-  `).join('');
-}
+  const wrap = document.getElementById('countdown-wrap');
+  wrap.style.display = 'block';
+  document.getElementById('countdown-mission').textContent = next.rocket;
 
-function setFilter(status, btn) {
-  currentFilter = status;
-  if(btn) {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+  function tick(){
+    const ms = next.dateObj - new Date();
+    if (ms <= 0) {
+      document.getElementById('cd-h').textContent = '00';
+      document.getElementById('cd-m').textContent = '00';
+      document.getElementById('cd-s').textContent = '00';
+      return;
+    }
+    const h = Math.floor(ms / 3600000);
+    const m = Math.floor((ms % 3600000) / 60000);
+    const s = Math.floor((ms % 60000) / 1000);
+    document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
+    document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
+    document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
+    setTimeout(tick, 1000);
   }
-  render();
-}
+  tick();
+})();
 
-render();
+/* =================== ACCORDION GROUPS =================== */
+const groups = [
+  { status:'Planned',   color:'#ffffff' },
+  { status:'Completed', color:'#00cc66' },
+  { status:'Canceled',  color:'#ff3300' },
+];
+
+const scheduleContainer = document.getElementById('launch-list');
+
+groups.forEach(g => {
+  const items = launches.filter(l => l.status === g.status);
+  if (!items.length) return;
+
+  const acc = document.createElement('div');
+  acc.className = 'group-accordion';
+
+  const header = document.createElement('div');
+  header.className = 'group-header';
+  header.innerHTML = `
+    <div class="group-left">
+      <div class="group-dot" style="background:${g.color};box-shadow:0 0 6px ${g.color}55;"></div>
+      <span class="group-label" style="color:${g.color}">${g.status}</span>
+      <span class="group-count">${items.length} launch${items.length!==1?'es':''}</span>
+    </div>
+    <span class="group-chevron">&#9660;</span>`;
+
+  const rowsWrap = document.createElement('div');
+  rowsWrap.className = 'group-rows';
+
+  items.forEach(l => {
+    const dateStr = l.dateObj.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+    const timeStr = l.dateObj.getHours().toString().padStart(2,'0')+':'+l.dateObj.getMinutes().toString().padStart(2,'0')+' CDT';
+    const row = document.createElement('div');
+    row.className = 'launch-row';
+    row.innerHTML = `
+      <div><strong style="font-size:1.1em;">${l.rocket}</strong></div>
+      <div style="color:#aaa;font-family:monospace;font-size:1.15em;">${dateStr}</div>
+      <div style="color:#777;font-size:1.0em;">${timeStr}</div>
+      <div class="status-badge" style="color:${statusColor(l.status)};">${l.status}</div>`;
+    rowsWrap.appendChild(row);
+  });
+
+  acc.appendChild(header);
+  acc.appendChild(rowsWrap);
+  scheduleContainer.appendChild(acc);
+
+  header.addEventListener('click', () => {
+    const isOpen = acc.classList.contains('open');
+    if (isOpen) {
+      rowsWrap.style.maxHeight = rowsWrap.scrollHeight+'px';
+      requestAnimationFrame(()=>{ rowsWrap.style.maxHeight='0'; rowsWrap.style.opacity='0'; });
+      acc.classList.remove('open');
+    } else {
+      acc.classList.add('open');
+      rowsWrap.style.maxHeight = rowsWrap.scrollHeight+'px';
+      rowsWrap.style.opacity = '1';
+      rowsWrap.addEventListener('transitionend',()=>{ if(acc.classList.contains('open')) rowsWrap.style.maxHeight='none'; },{once:true});
+    }
+  });
+});
 </script>
 </body>
 </html>
