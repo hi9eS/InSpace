@@ -20,12 +20,18 @@
   --mono: 'DM Mono', monospace;
   --ease: cubic-bezier(0.4,0,0.2,1);
   --ease-spring: cubic-bezier(0.34,1.56,0.64,1);
+
+  /* ── Accordion size scale (tweak here to resize launch group rows) ── */
+  --acc-padding-v: 17px;
+  --acc-padding-h: 22px;
+  --acc-font-label: 0.79em;
+  --acc-font-count: 0.79em;
+  --acc-dot-size: 10px;
 }
 html { scroll-behavior:smooth; }
 body { background:var(--bg); color:var(--text); font-family:var(--font); line-height:1.6; font-size:15px; overflow-x:hidden; }
 a { color:inherit; text-decoration:none; }
 
-/* ── STARFIELD ── */
 #starfield { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
 .star { position:absolute; border-radius:50%; background:#fff; animation:twinkle var(--dur,4s) var(--delay,0s) infinite ease-in-out alternate; opacity:0; }
 @keyframes twinkle {
@@ -34,7 +40,6 @@ a { color:inherit; text-decoration:none; }
   100% { opacity:0.08; transform:scale(1.1); }
 }
 
-/* ── HEADER ── */
 header {
   position:sticky; top:0; z-index:100;
   display:flex; justify-content:center; gap:4px;
@@ -57,10 +62,8 @@ header a {
 header a:hover { color:var(--text); transform:translateY(-1px); background:rgba(255,255,255,0.05); }
 header a:active { transform:scale(0.96); }
 
-/* ── SECTIONS ── */
 section { padding:90px 20px; max-width:1000px; margin:0 auto; position:relative; z-index:1; }
 
-/* ── HERO ── */
 .hero { text-align:center; padding-top:130px; }
 .hero h1 {
   font-size:clamp(2.5em,5.5vw,4em);
@@ -77,12 +80,12 @@ section { padding:90px 20px; max-width:1000px; margin:0 auto; position:relative;
   to   { opacity:1; transform:translateY(0); }
 }
 
-/* ── COUNTDOWN ── */
+/* ── COUNTDOWN — with Days ── */
 #countdown-wrap {
   display:none;
-  margin:0 auto 44px; max-width:600px;
+  margin:0 auto 44px; max-width:640px;
   background:var(--bg2); border:1px solid var(--border);
-  border-radius:20px; padding:26px 36px;
+  border-radius:20px; padding:28px 40px;
   position:relative; overflow:hidden;
   animation:fadeUp 0.8s 0.15s var(--ease) both;
 }
@@ -91,18 +94,19 @@ section { padding:90px 20px; max-width:1000px; margin:0 auto; position:relative;
   background:linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent);
 }
 #countdown-mission { font-size:0.72em; letter-spacing:0.18em; text-transform:uppercase; color:#888; margin-bottom:10px; font-family:var(--mono); }
-#countdown-label { font-size:0.85em; color:#aaa; margin-bottom:16px; font-weight:300; }
-#countdown-timer { display:flex; justify-content:center; gap:24px; }
-.cd-unit { text-align:center; }
-.cd-num { font-size:2.8em; font-weight:300; font-variant-numeric:tabular-nums; letter-spacing:0.04em; line-height:1; font-family:var(--mono); }
-.cd-lbl { font-size:0.65em; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted2); margin-top:4px; }
-.cd-sep { font-size:2.2em; font-weight:200; color:var(--muted2); line-height:1.1; align-self:center; }
+#countdown-label { font-size:0.85em; color:#aaa; margin-bottom:18px; font-weight:300; }
+#countdown-timer { display:flex; justify-content:center; align-items:center; gap:18px; }
+.cd-unit { text-align:center; min-width:52px; }
+.cd-num { font-size:2.6em; font-weight:300; font-variant-numeric:tabular-nums; letter-spacing:0.04em; line-height:1; font-family:var(--mono); }
+.cd-lbl { font-size:0.63em; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted2); margin-top:5px; }
+.cd-sep { font-size:2em; font-weight:200; color:var(--muted2); line-height:1; padding-bottom:14px; }
+.cd-sep-thin { width:1px; height:36px; background:rgba(255,255,255,0.1); align-self:center; margin-bottom:14px; }
 
-/* ── WATCH BUTTON ── */
+/* ── WATCH LAUNCH BUTTON — slightly larger ── */
 .stream-link {
-  display:inline-flex; align-items:center; gap:10px;
-  font-size:1em; font-weight:400; letter-spacing:0.06em;
-  padding:14px 38px;
+  display:inline-flex; align-items:center; gap:11px;
+  font-size:1.06em; font-weight:400; letter-spacing:0.07em;
+  padding:16px 46px;
   border:1px solid rgba(255,255,255,0.35); border-radius:100px;
   cursor:pointer; color:#fff;
   transition:all 0.3s var(--ease);
@@ -117,111 +121,132 @@ section { padding:90px 20px; max-width:1000px; margin:0 auto; position:relative;
 .stream-link:hover { color:#000; border-color:#fff; transform:translateY(-2px); }
 .stream-link:hover::before { transform:scaleX(1); }
 .stream-link-text { position:relative; z-index:1; }
-}
-@keyframes pulse-dot {
-  0%,100% { box-shadow:0 0 0 0 rgba(255,68,68,0.6); }
-  50%      { box-shadow:0 0 0 6px rgba(255,68,68,0); }
-}
 
-/* ── HEADINGS ── */
 h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36px; }
 
 /* ── VEHICLE CARDS ── */
 .vehicle-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1px;
-  background: var(--border);
-  border-radius: 18px;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.15);     /* OBIOD */
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);   /* OBIOM */
+  gap: 16px;
 }
-
 .vehicle-card {
   background: var(--bg2);
-  padding: 34px 28px;
+  border-radius: 20px;
   cursor: pointer;
-  transition: background 0.25s var(--ease), transform 0.25s var(--ease-spring);
+  transition: transform 0.3s var(--ease-spring), box-shadow 0.3s var(--ease), border-color 0.3s var(--ease);
   position: relative;
   overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  flex-direction: column;
 }
-
-.vehicle-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--vc, #fff);
-  opacity: 0.45;
-  transition: opacity 0.3s;
-}
-
 .vehicle-card:hover {
-  background: var(--bg3);
+  transform: translateY(-6px);
+  box-shadow: 0 24px 64px rgba(0,0,0,0.55);
+  border-color: rgba(255,255,255,0.14);
+}
+.vc-color-bar {
+  height: 3px;
+  background: var(--vc, #fff);
+  opacity: 0.55;
+  transition: opacity 0.3s, height 0.25s var(--ease);
+  flex-shrink: 0;
+}
+.vehicle-card:hover .vc-color-bar { opacity: 0.85; height: 4px; }
+.vc-inner {
+  padding: 28px 26px 22px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.vc-label-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 5px;
 }
 
-.vehicle-card:hover::before {
-  opacity: 1;
+/* ── Dot: softer, balanced ── */
+.vc-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--vc, #fff);
+  flex-shrink: 0;
+  opacity: 0.55;
+  box-shadow: 0 0 5px color-mix(in srgb, var(--vc, #fff) 40%, transparent);
+  transition: box-shadow 0.3s, opacity 0.3s;
 }
-
-.vehicle-card:hover .vc-arrow {
-  transform: translate(3px, -3px);
-  opacity: 1;
-}
-
-.vc-arrow {
-  position: absolute;
-  top: 22px;
-  right: 22px;
-  font-size: 1em;
-  color: var(--muted2);
-  transition: transform 0.25s var(--ease-spring), opacity 0.2s;
-  opacity: 0;
+.vehicle-card:hover .vc-dot {
+  opacity: 0.8;
+  box-shadow: 0 0 10px color-mix(in srgb, var(--vc, #fff) 55%, transparent);
 }
 
 .vc-name {
-  font-size: 1.3em;
+  font-size: 1.35em;
   font-weight: 500;
-  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
 }
-
 .vc-sub {
-  font-size: 0.76em;
+  font-size: 0.71em;
   color: var(--muted);
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  margin-bottom: 22px;
+  margin-bottom: 26px;
   font-family: var(--mono);
 }
-
+.vc-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.06);
+  margin-bottom: 20px;
+}
 .vc-stat-row {
   display: flex;
   justify-content: space-between;
-  border-top: 1px solid rgba(255,255,255,0.06);
-  padding-top: 18px;
   gap: 8px;
+  margin-top: auto;
 }
-
-.vc-stat {
-  text-align: center;
-}
-
+.vc-stat { text-align: center; flex: 1; }
 .vc-stat-val {
-  font-size: 1.05em;
+  font-size: 1.1em;
   font-weight: 400;
   font-family: var(--mono);
+  color: var(--text);
+  letter-spacing: 0.02em;
 }
-
 .vc-stat-lbl {
-  font-size: 0.63em;
+  font-size: 0.62em;
   color: var(--muted);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-top: 3px;
+  letter-spacing: 0.1em;
+  margin-top: 4px;
 }
+.vc-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 13px 26px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  margin-top: 20px;
+  gap: 6px;
+}
+.vc-footer-text {
+  font-size: 0.73em;
+  color: var(--muted2);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-family: var(--mono);
+  transition: color 0.2s;
+}
+.vc-footer-arrow {
+  font-size: 0.85em;
+  color: var(--muted2);
+  transition: transform 0.25s var(--ease-spring), color 0.2s;
+}
+.vehicle-card:hover .vc-footer-text,
+.vehicle-card:hover .vc-footer-arrow { color: var(--vc, #fff); }
+.vehicle-card:hover .vc-footer-arrow { transform: translate(3px, -3px); }
 
 /* ── VEHICLE OVERLAY ── */
 #vehicle-overlay {
@@ -231,7 +256,6 @@ h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36p
 }
 #vehicle-overlay.active { display:block; }
 #vehicle-overlay.visible { opacity:1; }
-
 .vp-header {
   position:sticky; top:0;
   background:rgba(8,8,8,0.92); backdrop-filter:blur(14px);
@@ -247,12 +271,9 @@ h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36p
 }
 .vp-back:hover { background:var(--bg3); color:var(--text); border-color:var(--border-hover); transform:translateX(-2px); }
 .vp-title { font-size:1em; font-weight:300; color:var(--muted); }
-
 .vp-body { max-width:900px; margin:0 auto; padding:60px 24px 100px; animation:fadeUp 0.5s 0.05s var(--ease) both; }
-
 .vp-hero-name { font-size:clamp(2.5em,6vw,4em); font-weight:300; letter-spacing:-0.01em; margin-bottom:8px; }
 .vp-hero-class { font-size:0.72em; color:var(--muted); letter-spacing:0.2em; text-transform:uppercase; margin-bottom:48px; font-family:var(--mono); }
-
 .vp-img-wrap {
   width:100%; aspect-ratio:16/7;
   background:var(--bg2); border:1px solid var(--border); border-radius:18px;
@@ -261,7 +282,6 @@ h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36p
 }
 .vp-img-wrap img { width:100%; height:100%; object-fit:cover; }
 .vp-img-placeholder { font-size:0.72em; color:var(--muted2); letter-spacing:0.15em; text-transform:uppercase; font-family:var(--mono); }
-
 .vp-specs-title {
   font-size:0.68em; letter-spacing:0.2em; text-transform:uppercase;
   color:var(--muted); margin-bottom:16px;
@@ -269,43 +289,145 @@ h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36p
 }
 .vp-specs-grid {
   display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-  gap:1px; background:var(--border);
-  border-radius:14px; overflow:hidden; margin-bottom:52px;
+  gap:10px; margin-bottom:52px;
 }
-.vp-spec { background:var(--bg2); padding:20px 18px; transition:background 0.2s; }
-.vp-spec:hover { background:var(--bg3); }
+.vp-spec {
+  background:var(--bg2); border:1px solid rgba(255,255,255,0.07);
+  border-radius:14px; padding:20px 18px;
+  transition:background 0.2s, border-color 0.2s;
+}
+.vp-spec:hover { background:var(--bg3); border-color:rgba(255,255,255,0.12); }
 .vp-spec-val { font-size:1.4em; font-weight:300; margin-bottom:4px; line-height:1; font-family:var(--mono); }
 .vp-spec-lbl { font-size:0.63em; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; }
-
 .vp-stages { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:52px; }
 @media(max-width:600px){ .vp-stages { grid-template-columns:1fr; } }
-.vp-stage { background:var(--bg2); border:1px solid var(--border); border-radius:14px; padding:24px 20px; }
+.vp-stage {
+  background:var(--bg2); border:1px solid rgba(255,255,255,0.07);
+  border-radius:14px; padding:24px 20px;
+}
 .vp-stage-title { font-size:0.68em; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:16px; font-family:var(--mono); }
 .vp-stage-row { display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--border); font-size:0.9em; }
 .vp-stage-row:last-child { border-bottom:none; }
 .vp-stage-key { color:var(--muted); }
 .vp-stage-val { font-weight:400; font-family:var(--mono); }
-
 .vp-desc { color:#777; font-size:1.0em; line-height:1.85; max-width:680px; font-weight:300; }
 
-/* ── NEWS CARDS ── */
-.rocket-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px; margin-top:20px; }
+/* ── LATEST NEWS — Reworked ── */
+.rocket-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
 .rocket {
-  background:var(--bg2); border:1px solid var(--border);
-  border-radius:16px; padding:22px 20px;
-  transition:all 0.25s var(--ease); position:relative; overflow:hidden;
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 18px;
+  padding: 0;
+  transition: transform 0.28s var(--ease-spring), box-shadow 0.28s var(--ease), border-color 0.25s;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: default;
+  opacity: 0;
+  transform: translateY(16px);
+  animation: newsIn 0.5s var(--ease) forwards;
 }
-.rocket::before {
-  content:''; position:absolute; top:0; left:0; right:0; height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);
-  opacity:0; transition:opacity 0.3s;
+@keyframes newsIn {
+  to { opacity:1; transform:translateY(0); }
 }
-.rocket:hover { background:var(--bg3); border-color:var(--border-hover); transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,0.3); }
-.rocket:hover::before { opacity:1; }
-.rocket h3 { margin-bottom:10px; font-size:0.96em; font-weight:400; }
-.rocket p { font-size:0.9em; color:#aaa; }
+.rocket:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+  border-color: rgba(255,255,255,0.13);
+}
+.rocket-top-bar {
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+  transition: background 0.3s;
+}
+.rocket:hover .rocket-top-bar {
+  background: linear-gradient(90deg, rgba(255,255,255,0.28), rgba(255,255,255,0.06));
+}
+.rocket-body {
+  padding: 22px 22px 14px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.rocket h3 {
+  margin-bottom: 10px;
+  font-size: 0.97em;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  line-height: 1.4;
+  color: var(--text);
+}
+.rocket p.rocket-desc {
+  font-size: 0.875em;
+  color: #888;
+  line-height: 1.7;
+  flex: 1;
+}
+.rocket-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 22px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  margin-top: 14px;
+}
+.rocket-date {
+  font-size: 0.75em;
+  color: #444;
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+}
+.rocket-details-btn {
+  font-size: 0.72em;
+  color: var(--muted2);
+  font-family: var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.2s;
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.rocket-details-btn .rd-arrow {
+  transition: transform 0.22s var(--ease-spring);
+  display: inline-block;
+}
+.rocket:hover .rocket-details-btn { color: #aaa; }
+.rocket:hover .rocket-details-btn .rd-arrow { transform: translate(2px, -2px); }
 
-/* ── LOAD MORE ── */
+/* News expand panel */
+.rocket-expand {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.38s var(--ease), opacity 0.28s ease, padding 0.3s;
+  padding: 0 22px;
+  font-size: 0.85em;
+  color: #666;
+  line-height: 1.75;
+  border-top: 0 solid transparent;
+}
+.rocket.expanded .rocket-expand {
+  max-height: 200px;
+  opacity: 1;
+  padding: 14px 22px 18px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.rocket.expanded .rocket-details-btn .rd-arrow {
+  transform: rotate(90deg) !important;
+}
+
 #load-more-btn {
   display:block; margin:24px auto 0; padding:10px 32px;
   background:transparent; border:1px solid var(--border);
@@ -316,23 +438,23 @@ h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36p
 #load-more-btn:hover { background:var(--bg2); color:var(--text); border-color:var(--border-hover); }
 
 /* ── LAUNCH SCHEDULE ── */
-#launch-list { margin-top:10px; display:flex; flex-direction:column; gap:8px; }
+#launch-list { margin-top:10px; display:flex; flex-direction:column; gap:10px; }
 
 .launch-row {
   display:grid; grid-template-columns:2fr 1.8fr 1fr 1fr;
-  align-items:center; padding:13px 18px;
+  align-items:center; padding:15px 20px;
   background:rgba(255,255,255,0.025); border:1px solid var(--border);
-  border-radius:12px; transition:all 0.2s ease;
+  border-radius:13px; transition:all 0.2s ease;
 }
-.launch-row:hover { background:rgba(255,255,255,0.05); transform:scale(1.015); border-color:var(--border-hover); }
-.launch-row strong { font-size:0.95em; color:#fff; }
-.launch-row div { font-size:0.85em; }
+.launch-row:hover { background:rgba(255,255,255,0.05); transform:scale(1.012); border-color:var(--border-hover); }
+.launch-row strong { font-size:0.97em; color:#fff; }
+.launch-row div { font-size:0.87em; }
 
 .status-badge {
-  text-align:center; font-size:0.72em; font-weight:600;
-  text-transform:uppercase; padding:5px 12px; border-radius:100px;
+  text-align:center; font-size:0.74em; font-weight:600;
+  text-transform:uppercase; padding:6px 14px; border-radius:100px;
   background:rgba(0,0,0,0.3); border:1px solid currentColor;
-  justify-self:end; min-width:100px;
+  justify-self:end; min-width:108px;
   font-family:var(--mono); letter-spacing:0.06em; opacity:0.85;
 }
 
@@ -344,32 +466,35 @@ h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36p
 /* ── ACCORDION ── */
 .group-accordion { border:1px solid var(--border); border-radius:14px; overflow:hidden; transition:box-shadow 0.3s, border-color 0.25s; }
 .group-accordion:hover { box-shadow:0 4px 20px rgba(255,255,255,0.03); border-color:var(--border-hover); }
-.group-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:rgba(255,255,255,0.025); cursor:pointer; user-select:none; transition:background 0.2s; }
+.group-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:var(--acc-padding-v) var(--acc-padding-h);
+  background:rgba(255,255,255,0.025); cursor:pointer; user-select:none; transition:background 0.2s;
+}
 .group-header:hover { background:rgba(255,255,255,0.05); }
 .group-left { display:flex; align-items:center; gap:14px; }
-.group-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
-.group-label { font-size:0.76em; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; font-family:var(--mono); }
-.group-count { font-size:0.76em; color:var(--muted2); font-weight:400; font-family:var(--mono); }
-.group-chevron { font-size:0.7em; color:var(--muted2); transition:transform 0.35s var(--ease); }
+.group-dot {
+  width:var(--acc-dot-size); height:var(--acc-dot-size);
+  border-radius:50%; flex-shrink:0;
+}
+.group-label { font-size:var(--acc-font-label); font-weight:500; letter-spacing:0.14em; text-transform:uppercase; font-family:var(--mono); }
+.group-count { font-size:var(--acc-font-count); color:var(--muted2); font-weight:400; font-family:var(--mono); }
+.group-chevron { font-size:0.72em; color:var(--muted2); transition:transform 0.35s var(--ease); }
 .group-accordion.open .group-chevron { transform:rotate(180deg); }
 .group-rows { max-height:0; overflow:hidden; opacity:0; transition:max-height 0.4s var(--ease), opacity 0.3s ease; }
 
-/* ── CONTACT & FOOTER ── */
 .contact p, .contact a { color:#aaa; margin-bottom:5px; }
 .contact a:hover { color:var(--text); }
 footer { text-align:center; padding:24px; border-top:1px solid var(--border); font-size:0.8em; color:var(--muted); font-family:var(--mono); position:relative; z-index:1; }
 
-/* ── SCROLL REVEAL ── */
 .reveal { opacity:0; transform:translateY(22px); transition:opacity 0.7s var(--ease), transform 0.7s var(--ease); }
 .reveal.visible { opacity:1; transform:translateY(0); }
 </style>
 </head>
 <body>
 
-<!-- STARFIELD -->
 <div id="starfield"></div>
 
-<!-- VEHICLE PAGE OVERLAY -->
 <div id="vehicle-overlay">
   <div class="vp-header">
     <button class="vp-back" onclick="closeVehicle()">&#8592; Back</button>
@@ -388,13 +513,15 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
 
 <section class="hero" id="hero">
   <h1>Welcome to InSpace</h1>
-  <p>Welcome back to Earth</p> <!-- Keep an eye out for updates -->
+  <p>Keep an eye out for updates</p>
 
-  <!-- Countdown (auto-shows when next Planned launch ≤ 24h) -->
+  <!-- Countdown with Days -->
   <div id="countdown-wrap">
     <div id="countdown-mission"></div>
     <div id="countdown-label">Next launch in</div>
     <div id="countdown-timer">
+      <div class="cd-unit"><div class="cd-num" id="cd-d">00</div><div class="cd-lbl">Days</div></div>
+      <div class="cd-sep-thin"></div>
       <div class="cd-unit"><div class="cd-num" id="cd-h">00</div><div class="cd-lbl">Hours</div></div>
       <div class="cd-sep">:</div>
       <div class="cd-unit"><div class="cd-num" id="cd-m">00</div><div class="cd-lbl">Min</div></div>
@@ -408,7 +535,6 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
   </div>
 </section>
 
-<!-- VEHICLES FLEET -->
 <section id="fleet" class="reveal">
   <h2>Our Vehicles</h2>
   <div class="vehicle-cards" id="vehicle-cards"></div>
@@ -445,7 +571,6 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
   }
 })();
 
-/* ── SCROLL REVEAL ── */
 const revealObs = new IntersectionObserver(entries=>{
   entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
 },{threshold:0.07});
@@ -453,13 +578,10 @@ document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
 
 function scrollToSection(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
 
-/* =================== STATUS COLORS =================== */
 function statusColor(status){
   switch(status){
     case 'Planned': return '#fff';
     case 'Delayed': return '#ffcc00';
-    case 'Delayed +1h 15m': return '#ffcc00';
-    case 'Delayed to ': return '#ffcc00';
     case 'Completed': return '#00cc66';
     case 'Concept/Plan': return '#00ccff';
     case 'Canceled': return '#ff3300';
@@ -469,172 +591,80 @@ function statusColor(status){
   }
 }
 
-/* =================== VEHICLES DATA =================== */
+/* ── VEHICLES ── */
 const vehicles = [
   {
-    id: 'sunorbit',
-    name: 'SunOrbit',
-    class: 'Interplanetary Vehicle',
-    color: '#00aaff',
+    id: 'sunorbit', name: 'SunOrbit', class: 'Interplanetary Vehicle', color: '#00aaff',
     image: '991ef2dcfcd94c0f95050b657d1c6134.png',
-    description: 'SunOrbit is InSpace\u2019s primary interplanetary vehicle, built in modular stages.<br>It is equally capable of crewed and uncrewed missions to Low Earth Orbit and to other planets. For Earth orbit, the third stage can function as a crewed mini-station or as an uncrewed satellite that separates directly in orbit. For missions to other planets, the third stage can serve as the main crew habitat and command module with life support systems, or operate fully autonomously without pilots - including orbital insertion around other planets. <br>The first and second stages are reusable and designed for precise suicide burn landings on Earth and other planetary bodies. The vehicle features advanced docking capabilities and high-bandwidth communication relay systems.',
+    description: 'SunOrbit is InSpace\u2019s primary interplanetary vehicle, built in modular stages.<br>It is equally capable of crewed and uncrewed missions to Low Earth Orbit and to other planets. For Earth orbit, the third stage can function as a crewed mini-station or as an uncrewed satellite that separates directly in orbit. For missions to other planets, the third stage can serve as the main crew habitat and command module with life support systems, or operate fully autonomously without pilots - including orbital insertion around other planets.<br>The first and second stages are reusable and designed for precise suicide burn landings on Earth and other planetary bodies. The vehicle features advanced docking capabilities and high-bandwidth communication relay systems.',
     specs: [
-      { val: '205m', lbl: 'Height' },
-      { val: '3370', lbl: 'Mass (t)' },
-      { val: '79,1 km/s', lbl: 'Delta-V' },
-      { val: '14.64x', lbl: 'TWR' },
-      { val: 'Feb 2026', lbl: 'First Flight' },
+      { val: '205m', lbl: 'Height' }, { val: '3370', lbl: 'Mass (t)' }, { val: '79,1 km/s', lbl: 'Delta-V' }, { val: '14.64x', lbl: 'TWR' }, { val: 'Feb 2026', lbl: 'First Flight' },
     ],
     stages: [
-      {
-        title: 'Stage 1 \u2014 Booster',
-        rows: [
-          { key: 'Engines', val: '42' },
-          { key: 'Thrust (sea level)', val: '484,000 kN' },
-          { key: 'Burn time', val: '33.8 min' },
-          { key: 'Propellant', val: '2,560 t' },
-          { key: 'Recovery', val: 'Vertical landing' },
-        ]
-      },
-      {
-        title: 'Stage 2 \u2014 Upper',
-        rows: [
-          { key: 'Engines', val: '90' },
-          { key: 'Thrust (vacuum)', val: '120,000 kN' },
-          { key: 'Burn time', val: '1.6 min' },
-          { key: 'Propellant', val: '2,330 t' },
-        ]
-      }
+      { title: 'Stage 1 \u2014 Booster', rows: [{ key:'Engines',val:'42'},{key:'Thrust (sea level)',val:'484,000 kN'},{key:'Burn time',val:'33.8 min'},{key:'Propellant',val:'2,560 t'},{key:'Recovery',val:'Vertical landing'}] },
+      { title: 'Stage 2 \u2014 Upper', rows: [{key:'Engines',val:'90'},{key:'Thrust (vacuum)',val:'120,000 kN'},{key:'Burn time',val:'1.6 min'},{key:'Propellant',val:'2,330 t'}] }
     ],
-    cardStats: [
-      { val: '205m', lbl: 'Height' },
-      { val: '3,370 t', lbl: 'Mass' },
-      { val: '5', lbl: 'Launches' },
-    ]
+    cardStats: [{ val:'205m',lbl:'Height'},{val:'3,370 t',lbl:'Mass'},{val:'5',lbl:'Launches'}]
   },
   {
-    id: 'sunpower',
-    name: 'SunPower',
-    class: 'Earth Orbit',
-    color: '#ffaa00',
-    image: null,
+    id: 'sunpower', name: 'SunPower', class: 'Earth Orbit', color: '#ffaa00', image: null,
     description: 'SunPower is InSpace\u2019s heavy-lift workhorse, designed specifically for Low Earth Orbit missions.<br>It evolved from a rapid prototype through multiple generations into a reliable high-performance launcher, optimized for delivering large payloads, solar arrays, and orbital stations. The name SunPower was coined on the fly by Haisess during the very first test campaign.<br>Although public records show 0 launches, more than 20 SunPower vehicles have already been built and successfully flown in classified InSpace test and operational missions.',
     specs: [
-      { val: '\u2014', lbl: 'Height' },
-      { val: '\u2014', lbl: 'Mass (kg)' },
-      { val: '\u2014', lbl: 'Delta-V' },
-      { val: '\u2014', lbl: 'TWR' },
-      { val: 'Feb 2026', lbl: 'First Flight' },
+      {val:'\u2014',lbl:'Height'},{val:'\u2014',lbl:'Mass (kg)'},{val:'\u2014',lbl:'Delta-V'},{val:'\u2014',lbl:'TWR'},{val:'Feb 2026',lbl:'First Flight'},
     ],
     stages: [
-      {
-        title: 'Stage 1 \u2014 Booster',
-        rows: [
-          { key: 'Engines', val: '\u2014' },
-          { key: 'Thrust (sea level)', val: '\u2014 kN' },
-          { key: 'Burn time', val: '\u2014 s' },
-          { key: 'Propellant', val: '\u2014' },
-          { key: 'Recovery', val: 'Vertical landing' },
-        ]
-      },
-      {
-        title: 'Stage 2 \u2014 Upper',
-        rows: [
-          { key: 'Engines', val: '\u2014' },
-          { key: 'Thrust (vacuum)', val: '\u2014 kN' },
-          { key: 'Burn time', val: '\u2014 s' },
-          { key: 'Propellant', val: '\u2014' },
-        ]
-      }
+      { title:'Stage 1 \u2014 Booster', rows:[{key:'Engines',val:'\u2014'},{key:'Thrust (sea level)',val:'\u2014 kN'},{key:'Burn time',val:'\u2014 s'},{key:'Propellant',val:'\u2014'},{key:'Recovery',val:'Vertical landing'}] },
+      { title:'Stage 2 \u2014 Upper', rows:[{key:'Engines',val:'\u2014'},{key:'Thrust (vacuum)',val:'\u2014 kN'},{key:'Burn time',val:'\u2014 s'},{key:'Propellant',val:'\u2014'}] }
     ],
-    cardStats: [
-      { val: '\u2014', lbl: 'Height' },
-      { val: '\u2014', lbl: 'Mass' },
-      { val: '<5', lbl: 'Launches' },
-    ]
+    cardStats: [{val:'\u2014',lbl:'Height'},{val:'\u2014',lbl:'Mass'},{val:'<5',lbl:'Launches'}]
   },
   {
-    id: 'planetsrockets',
-    name: 'PlanetsRockets',
-    class: 'COMING SOON',
-    color: '#cc66ff',
-    image: null,
+    id: 'planetsrockets', name: 'PlanetsRockets', class: 'COMING SOON', color: '#cc66ff', image: null,
     description: 'PlanetsRockets is InSpace\u2019s next-generation interplanetary vehicle, currently in the early concept and planning phase.<br>All detailed information about its design, capabilities, and specific mission targets remains confidential at this stage.<br>It is being developed as part of InSpace\u2019s long-term ambitions for deep-space exploration.',
     specs: [
-      { val: '\u2014', lbl: 'Height' },
-      { val: '\u2014', lbl: 'Mass (kg)' },
-      { val: '\u2014', lbl: 'Delta-V' },
-      { val: '\u2014', lbl: 'TWR' },
-      { val: 'Apr 2026', lbl: 'First Flight' },
+      {val:'\u2014',lbl:'Height'},{val:'\u2014',lbl:'Mass (kg)'},{val:'\u2014',lbl:'Delta-V'},{val:'\u2014',lbl:'TWR'},{val:'Apr 2026',lbl:'First Flight'},
     ],
     stages: [
-      {
-        title: 'Stage 1 \u2014 Booster',
-        rows: [
-          { key: 'Engines', val: '\u2014' },
-          { key: 'Thrust (sea level)', val: '\u2014 kN' },
-          { key: 'Burn time', val: '\u2014 s' },
-          { key: 'Propellant', val: '\u2014' },
-          { key: 'Recovery', val: 'TBD' },
-        ]
-      },
-      {
-        title: 'Stage 2 \u2014 Upper',
-        rows: [
-          { key: 'Engines', val: '\u2014' },
-          { key: 'Thrust (vacuum)', val: '\u2014 kN' },
-          { key: 'Burn time', val: '\u2014 s' },
-          { key: 'Propellant', val: '\u2014' },
-        ]
-      }
+      { title:'Stage 1 \u2014 Booster', rows:[{key:'Engines',val:'\u2014'},{key:'Thrust (sea level)',val:'\u2014 kN'},{key:'Burn time',val:'\u2014 s'},{key:'Propellant',val:'\u2014'},{key:'Recovery',val:'TBD'}] },
+      { title:'Stage 2 \u2014 Upper', rows:[{key:'Engines',val:'\u2014'},{key:'Thrust (vacuum)',val:'\u2014 kN'},{key:'Burn time',val:'\u2014 s'},{key:'Propellant',val:'\u2014'}] }
     ],
-    cardStats: [
-      { val: '\u2014', lbl: 'Height' },
-      { val: '\u2014', lbl: 'Mass' },
-      { val: '<5', lbl: 'Launches' },
-    ]
+    cardStats: [{val:'\u2014',lbl:'Height'},{val:'\u2014',lbl:'Mass'},{val:'<5',lbl:'Launches'}]
   }
 ];
 
-/* Render vehicle fleet cards */
 const vcContainer = document.getElementById('vehicle-cards');
 vehicles.forEach(v => {
   const card = document.createElement('div');
   card.className = 'vehicle-card';
   card.style.setProperty('--vc', v.color);
   card.innerHTML = `
-    <div class="vc-arrow">Read more</div>
-    <div class="vc-name">${v.name}</div>
-    <div class="vc-sub">${v.class}</div>
-    <div class="vc-stat-row">
-      ${v.cardStats.map(s=>`<div class="vc-stat"><div class="vc-stat-val">${s.val}</div><div class="vc-stat-lbl">${s.lbl}</div></div>`).join('')}
+    <div class="vc-color-bar"></div>
+    <div class="vc-inner">
+      <div class="vc-label-row">
+        <div class="vc-dot"></div>
+        <div class="vc-name">${v.name}</div>
+      </div>
+      <div class="vc-sub">${v.class}</div>
+      <div class="vc-divider"></div>
+      <div class="vc-stat-row">
+        ${v.cardStats.map(s=>`<div class="vc-stat"><div class="vc-stat-val">${s.val}</div><div class="vc-stat-lbl">${s.lbl}</div></div>`).join('')}
+      </div>
+    </div>
+    <div class="vc-footer">
+      <span class="vc-footer-text">Details</span>
+      <span class="vc-footer-arrow">&#8599;</span>
     </div>`;
   card.addEventListener('click', () => openVehicle(v.id));
   vcContainer.appendChild(card);
 });
 
-/* Open vehicle page */
 function openVehicle(id) {
   const v = vehicles.find(x => x.id === id);
   if (!v) return;
   document.getElementById('vp-header-title').textContent = v.name;
-
-  const imgHTML = v.image
-    ? `<img src="${v.image}" alt="${v.name}">`
-    : `<div class="vp-img-placeholder">No data. Image coming soon</div>`;
-
-  const specsHTML = v.specs.map(s => `
-    <div class="vp-spec">
-      <div class="vp-spec-val">${s.val}</div>
-      <div class="vp-spec-lbl">${s.lbl}</div>
-    </div>`).join('');
-
-  const stagesHTML = v.stages.map(st => `
-    <div class="vp-stage">
-      <div class="vp-stage-title">${st.title}</div>
-      ${st.rows.map(r=>`<div class="vp-stage-row"><span class="vp-stage-key">${r.key}</span><span class="vp-stage-val">${r.val}</span></div>`).join('')}
-    </div>`).join('');
-
+  const imgHTML = v.image ? `<img src="${v.image}" alt="${v.name}">` : `<div class="vp-img-placeholder">No data. Image coming soon</div>`;
+  const specsHTML = v.specs.map(s => `<div class="vp-spec"><div class="vp-spec-val">${s.val}</div><div class="vp-spec-lbl">${s.lbl}</div></div>`).join('');
+  const stagesHTML = v.stages.map(st => `<div class="vp-stage"><div class="vp-stage-title">${st.title}</div>${st.rows.map(r=>`<div class="vp-stage-row"><span class="vp-stage-key">${r.key}</span><span class="vp-stage-val">${r.val}</span></div>`).join('')}</div>`).join('');
   document.getElementById('vp-body').innerHTML = `
     <div class="vp-hero-name" style="color:${v.color}">${v.name}</div>
     <div class="vp-hero-class">${v.class}</div>
@@ -645,7 +675,6 @@ function openVehicle(id) {
     <div class="vp-stages">${stagesHTML}</div>
     <div class="vp-specs-title">Overview</div>
     <div class="vp-desc">${v.description}</div>`;
-
   const overlay = document.getElementById('vehicle-overlay');
   overlay.classList.add('active');
   requestAnimationFrame(()=>{ requestAnimationFrame(()=>overlay.classList.add('visible')); });
@@ -659,14 +688,14 @@ function closeVehicle() {
   setTimeout(()=>{ overlay.classList.remove('active'); document.body.style.overflow = ''; }, 350);
 }
 
-/* =================== NEWS WITH LOAD MORE =================== */
+/* ── NEWS — with expand detail panel ── */
 const allRockets = [
-  { name:'SunPower One', description:'Where it all began. The name "SunPower" was coined on the fly by Haisess.', date:'February 26, 2026' },
-  { name:'SunOrbit One', description:'Orbiting platform built in stages. Features docking capabilities, solar panels, and communication systems.', date:'February 26, 2026' },
-  { name:'Trial Mission to the Moon', description:'The team is preparing for a trial run of the upcoming lunar mission.', date:'February 27, 2026' },
-  { name:'Beyond Earth Orbit', description:'<i>"We\'re ready to move beyond Earth\'s pull, coming very soon."</i>', date:'February 27, 2026' },
-  { name:'Cancelling Missions', description:'Resumption is coming soon.. We are currently preparing for two targets: Mars and the Moon.', date:'March 03, 2026' },
-  { name:'Vertical Recovery: The Mark of Precision', description:'<i>"Where others leave a crater, we leave our mark."</i>', date:'March 6, 2026' },
+  { name:'SunPower One', description:'Where it all began. The name "SunPower" was coined on the fly by Haisess.', detail:'The very first SunPower prototype was assembled and launched within a single session, marking the birth of the InSpace vehicle programme. It flew a nominal trajectory before controlled descent.', date:'February 26, 2026' },
+  { name:'SunOrbit One', description:'Orbiting platform built in stages. Features docking capabilities, solar panels, and communication systems.', detail:'SunOrbit One demonstrated multi-stage separation and achieved stable low Earth orbit. Docking rings and high-gain antenna arrays were deployed successfully during the mission.', date:'February 26, 2026' },
+  { name:'Trial Mission to the Moon', description:'The team is preparing for a trial run of the upcoming lunar mission.', detail:'Initial trajectory calculations and propellant budgets have been finalised. The trial will validate trans-lunar injection burn performance before a crewed attempt.', date:'February 27, 2026' },
+  { name:'Beyond Earth Orbit', description:'<i>"We\'re ready to move beyond Earth\'s pull, coming very soon."</i>', detail:'Internal mission planning documents confirm targets beyond cis-lunar space. An interplanetary transfer window analysis is currently underway for a possible Mars flyby.', date:'February 27, 2026' },
+  { name:'Cancelling Missions', description:'Resumption is coming soon. We are currently preparing for two targets: Mars and the Moon.', detail:'Several scheduled test flights were cancelled to consolidate resources around the dual Mars and Moon programme. A revised launch manifest is expected shortly.', date:'March 03, 2026' },
+  { name:'Vertical Recovery: The Mark of Precision', description:'<i>"Where others leave a crater, we leave our mark."</i>', detail:'Booster SN8 executed a textbook suicide burn and touched down within 0.4 m of the target pad centre. Recovery teams confirmed zero structural damage.', date:'March 6, 2026' },
 ];
 
 const NEWS_PER_PAGE = 3;
@@ -676,100 +705,119 @@ function renderNews() {
   const grid = document.getElementById('rocket-cards');
   const btn = document.getElementById('load-more-btn');
   const slice = allRockets.slice(newsShown, newsShown + NEWS_PER_PAGE);
-  slice.forEach(r => {
+  slice.forEach((r, i) => {
     const card = document.createElement('div');
     card.className = 'rocket';
-    card.innerHTML = `<h3>${r.name}</h3><p>${r.description}</p><p style="font-size:0.82em;color:#555;margin-top:10px;font-family:var(--mono);">${r.date}</p>`;
+    card.style.animationDelay = (i * 0.08) + 's';
+    card.innerHTML = `
+      <div class="rocket-top-bar"></div>
+      <div class="rocket-body">
+        <h3>${r.name}</h3>
+        <p class="rocket-desc">${r.description}</p>
+      </div>
+      <div class="rocket-expand">${r.detail}</div>
+      <div class="rocket-footer">
+        <span class="rocket-date">${r.date}</span>
+        <button class="rocket-details-btn" onclick="toggleNews(this)">
+          Details <span class="rd-arrow">&#8599;</span>
+        </button>
+      </div>`;
     grid.appendChild(card);
   });
   newsShown += slice.length;
   btn.style.display = newsShown < allRockets.length ? 'block' : 'none';
 }
 
+function toggleNews(btn) {
+  const card = btn.closest('.rocket');
+  const expand = card.querySelector('.rocket-expand');
+  const isOpen = card.classList.contains('expanded');
+  if (isOpen) {
+    expand.style.maxHeight = expand.scrollHeight + 'px';
+    requestAnimationFrame(() => {
+      expand.style.maxHeight = '0';
+      expand.style.opacity = '0';
+    });
+    card.classList.remove('expanded');
+  } else {
+    card.classList.add('expanded');
+    expand.style.maxHeight = expand.scrollHeight + 'px';
+    expand.style.opacity = '1';
+    expand.addEventListener('transitionend', () => {
+      if (card.classList.contains('expanded')) expand.style.maxHeight = 'none';
+    }, { once: true });
+  }
+}
+
 function loadMore() { renderNews(); }
 renderNews();
 
-/* =================== LAUNCHES DATA =================== */
+/* ── LAUNCHES ── */
 const launches = [
-  // CANCELED (от новой к старой)
-  { rocket:'SunPower One SN5 (V2.2)', date:'2026-03-07 14:00', status:'Canceled', site:'Ali 28R', flights:0, description:'Next-generation heavy configuration test.', type:'Official' },
-  { rocket:'SunOrbit One SN4 (V2.2)', date:'2026-03-06 11:00', status:'Canceled', site:'Ali 28R', flights:0, description:'Mission to create a station in orbit.', type:'Official' },
-  { rocket:'SunPower One SN3 (V2.2)', date:'2026-03-03 17:00', status:'Canceled', site:'DSC Large Pad', flights:0, description:'New plans. Cancelled.', type:'Test' },
-  { rocket:'SunOrbit One SN2 (V2.2)', date:'2026-03-02 23:00', status:'Canceled', site:'DSC Large Pad', flights:0, description:'Trial Mission to the Moon.', type:'Trial Mission' },
-  { rocket:'SunPower One SN1 (V2.2)', date:'2026-03-01 14:00', status:'Canceled', site:'DSC Large Pad', flights:0, description:'New plans. Cancelled.', type:'Test' },
-
-  // COMPLETED (от новой к старой)
-  { rocket:'SunOrbit One SN10 (V2.2)', date:'2026-04-02 00:00', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
-  { rocket:'SunOrbit One SN9 (V2.2)', date:'2026-03-30 07:30', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
-  { rocket:'SunOrbit One SN8 (V2.2)', date:'2026-03-29 03:00', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
-  { rocket:'SunOrbit One SN7 (V2.2)', date:'2026-03-21 16:00', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
-  { rocket:'SunOrbit One SN6 (V2.2)', date:'2026-03-11 13:45', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
-
-  // PLANNED (от новой к старой)
-  { rocket:'SunOrbit One SN48 (V2.2)', date:'2026-04-13 15:00', status:'Planned', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
-  { rocket:'SunOrbit One SN49 (V2.2)', date:'2026-04-16 20:00', status:'Planned', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' }
+  { rocket:'SunPower One SN5 (V2.2)', date:'2026-03-07 14:00', status:'Canceled', site:'Ali 28R' },
+  { rocket:'SunOrbit One SN4 (V2.2)', date:'2026-03-06 11:00', status:'Canceled', site:'Ali 28R' },
+  { rocket:'SunPower One SN3 (V2.2)', date:'2026-03-03 17:00', status:'Canceled', site:'DSC Large Pad' },
+  { rocket:'SunOrbit One SN2 (V2.2)', date:'2026-03-02 23:00', status:'Canceled', site:'DSC Large Pad' },
+  { rocket:'SunPower One SN1 (V2.2)', date:'2026-03-01 14:00', status:'Canceled', site:'DSC Large Pad' },
+  { rocket:'SunOrbit One SN10 (V2.2)', date:'2026-04-02 00:00', status:'Completed', site:'Main Pad' },
+  { rocket:'SunOrbit One SN9 (V2.2)', date:'2026-03-30 07:30', status:'Completed', site:'Main Pad' },
+  { rocket:'SunOrbit One SN8 (V2.2)', date:'2026-03-29 03:00', status:'Completed', site:'Main Pad' },
+  { rocket:'SunOrbit One SN7 (V2.2)', date:'2026-03-21 16:00', status:'Completed', site:'Main Pad' },
+  { rocket:'SunOrbit One SN6 (V2.2)', date:'2026-03-11 13:45', status:'Completed', site:'Main Pad' },
+  { rocket:'SunOrbit One SN48 (V2.2)', date:'2026-04-13 15:00', status:'Planned', site:'Main Pad' },
+  { rocket:'SunOrbit One SN49 (V2.2)', date:'2026-04-16 20:00', status:'Planned', site:'Main Pad' }
 ];
 
 launches.forEach(l => {
   const [d, t] = l.date.split(' ');
   const [year, month, day] = d.split('-').map(Number);
   const [hour, minute] = t.split(':').map(Number);
-  
   l.dateObj = new Date(Date.UTC(year, month - 1, day, hour - 5, minute));
 });
 
-/* =================== COUNTDOWN — по местному времени посетителя =================== */
+/* ── COUNTDOWN with Days ── */
 (function initCountdown(){
   const now = new Date();
-
   const nextLaunch = launches
     .filter(l => l.status === 'Planned' && l.dateObj > now)
-    .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime())[0];
-
+    .sort((a, b) => a.dateObj - b.dateObj)[0];
   if (!nextLaunch) return;
-
-  const wrap = document.getElementById('countdown-wrap');
-  wrap.style.display = 'block';
+  document.getElementById('countdown-wrap').style.display = 'block';
   document.getElementById('countdown-mission').textContent = nextLaunch.rocket;
 
   function tick() {
-    const ms = nextLaunch.dateObj.getTime() - Date.now();
+    const ms = nextLaunch.dateObj - Date.now();
     if (ms <= 0) {
-      document.getElementById('cd-h').textContent = '00';
-      document.getElementById('cd-m').textContent = '00';
-      document.getElementById('cd-s').textContent = '00';
+      ['cd-d','cd-h','cd-m','cd-s'].forEach(id => document.getElementById(id).textContent = '00');
       return;
     }
-
-    const h = Math.floor(ms / 3600000);
-    const m = Math.floor((ms % 3600000) / 60000);
-    const s = Math.floor((ms % 60000) / 1000);
-
-    document.getElementById('cd-h').textContent = String(h).padStart(2, '0');
-    document.getElementById('cd-m').textContent = String(m).padStart(2, '0');
-    document.getElementById('cd-s').textContent = String(s).padStart(2, '0');
+    const totalSec = Math.floor(ms / 1000);
+    const d = Math.floor(totalSec / 86400);
+    const h = Math.floor((totalSec % 86400) / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    const s = totalSec % 60;
+    document.getElementById('cd-d').textContent = String(d).padStart(2,'0');
+    document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
+    document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
+    document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
   }
-
   tick();
   setInterval(tick, 1000);
 })();
 
-/* =================== ACCORDION GROUPS =================== */
+/* ── ACCORDION ── */
 const groups = [
   { status:'Planned',   color:'#ffffff' },
   { status:'Completed', color:'#00cc66' },
   { status:'Canceled',  color:'#ff3300' },
 ];
-
 const scheduleContainer = document.getElementById('launch-list');
 
 groups.forEach(g => {
   const items = launches.filter(l => l.status === g.status);
   if (!items.length) return;
-
   const acc = document.createElement('div');
   acc.className = 'group-accordion';
-
   const header = document.createElement('div');
   header.className = 'group-header';
   header.innerHTML = `
@@ -779,36 +827,23 @@ groups.forEach(g => {
       <span class="group-count">${items.length} launch${items.length!==1?'es':''}</span>
     </div>
     <span class="group-chevron">&#9660;</span>`;
-
   const rowsWrap = document.createElement('div');
   rowsWrap.className = 'group-rows';
   items.forEach(l => {
-    const dateStr = l.dateObj.toLocaleDateString('en-US', { 
-      month: 'long', 
-      day: 'numeric', 
-      year: 'numeric' 
-    });
-
-  const timeStr = l.dateObj.toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false
-  }) + ' (local time)';
-
+    const dateStr = l.dateObj.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+    const timeStr = l.dateObj.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false}) + ' (local)';
     const row = document.createElement('div');
     row.className = 'launch-row';
     row.innerHTML = `
-      <div><strong style="font-size:1.05em;">${l.rocket}</strong></div>
-      <div style="color:#aaa;font-family:var(--mono);font-size:0.9em;">${dateStr}</div>
-      <div style="color:#666;font-size:0.85em;font-family:var(--mono);">${timeStr}</div>
+      <div><strong>${l.rocket}</strong></div>
+      <div style="color:#aaa;font-family:var(--mono);font-size:0.88em;">${dateStr}</div>
+      <div style="color:#666;font-size:0.84em;font-family:var(--mono);">${timeStr}</div>
       <div class="status-badge" style="color:${statusColor(l.status)};">${l.status}</div>`;
     rowsWrap.appendChild(row);
   });
-
   acc.appendChild(header);
   acc.appendChild(rowsWrap);
   scheduleContainer.appendChild(acc);
-
   header.addEventListener('click', () => {
     const isOpen = acc.classList.contains('open');
     if (isOpen) {
