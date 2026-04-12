@@ -653,10 +653,7 @@ launches.forEach(l => {
     .filter(l => l.status === 'Planned' && l.dateObj > now)
     .sort((a, b) => a.dateObj - b.dateObj)[0];
 
-  if (!nextLaunch) {
-    console.log("Нет planned запусков");
-    return;
-  }
+  if (!nextLaunch) return;
 
   const wrap = document.getElementById('countdown-wrap');
   wrap.style.display = 'block';
@@ -664,6 +661,7 @@ launches.forEach(l => {
 
   function tick() {
     const ms = nextLaunch.dateObj.getTime() - Date.now();
+
     if (ms <= 0) {
       document.getElementById('cd-h').textContent = '00';
       document.getElementById('cd-m').textContent = '00';
@@ -675,11 +673,13 @@ launches.forEach(l => {
     const m = Math.floor((ms % 3600000) / 60000);
     const s = Math.floor((ms % 60000) / 1000);
 
+    // Обновляем цифры
     document.getElementById('cd-h').textContent = String(h).padStart(2, '0');
     document.getElementById('cd-m').textContent = String(m).padStart(2, '0');
     document.getElementById('cd-s').textContent = String(s).padStart(2, '0');
   }
 
+  // Первый запуск + обновление каждую секунду
   tick();
   setInterval(tick, 1000);
 })();
