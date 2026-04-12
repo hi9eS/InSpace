@@ -132,28 +132,100 @@ h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36p
 
 /* ── VEHICLE CARDS ── */
 .vehicle-cards {
-  display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:1px; background:var(--border); border-radius:18px; overflow:hidden;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border-radius: 18px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.05);     /* OBIOD */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);   /* OBIOM */
 }
+
 .vehicle-card {
-  background:var(--bg2); padding:30px 26px;
-  cursor:pointer; transition:background 0.25s var(--ease), transform 0.25s var(--ease-spring);
-  position:relative; overflow:hidden;
+  background: var(--bg2);
+  padding: 34px 28px;
+  cursor: pointer;
+  transition: background 0.25s var(--ease), transform 0.25s var(--ease-spring);
+  position: relative;
+  overflow: hidden;
 }
+
 .vehicle-card::before {
-  content:''; position:absolute; top:0; left:0; right:0; height:2px;
-  background:var(--vc,#fff); opacity:0.45; transition:opacity 0.3s;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--vc, #fff);
+  opacity: 0.45;
+  transition: opacity 0.3s;
 }
-.vehicle-card:hover { background:var(--bg3); }
-.vehicle-card:hover::before { opacity:1; }
-.vehicle-card:hover .vc-arrow { transform:translate(3px,-3px); opacity:1; }
-.vc-arrow { position:absolute; top:22px; right:22px; font-size:1em; color:var(--muted2); transition:transform 0.25s var(--ease-spring), opacity 0.2s; opacity:0; }
-.vc-name { font-size:1.3em; font-weight:500; margin-bottom:4px; }
-.vc-sub { font-size:0.76em; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:22px; font-family:var(--mono); }
-.vc-stat-row { display:flex; justify-content:space-between; border-top:1px solid rgba(255,255,255,0.06); padding-top:18px; gap:8px; }
-.vc-stat { text-align:center; }
-.vc-stat-val { font-size:1.05em; font-weight:400; font-family:var(--mono); }
-.vc-stat-lbl { font-size:0.63em; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-top:3px; }
+
+.vehicle-card:hover {
+  background: var(--bg3);
+}
+
+.vehicle-card:hover::before {
+  opacity: 1;
+}
+
+.vehicle-card:hover .vc-arrow {
+  transform: translate(3px, -3px);
+  opacity: 1;
+}
+
+.vc-arrow {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  font-size: 1em;
+  color: var(--muted2);
+  transition: transform 0.25s var(--ease-spring), opacity 0.2s;
+  opacity: 0;
+}
+
+.vc-name {
+  font-size: 1.3em;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.vc-sub {
+  font-size: 0.76em;
+  color: var(--muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 22px;
+  font-family: var(--mono);
+}
+
+.vc-stat-row {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  padding-top: 18px;
+  gap: 8px;
+}
+
+.vc-stat {
+  text-align: center;
+}
+
+.vc-stat-val {
+  font-size: 1.05em;
+  font-weight: 400;
+  font-family: var(--mono);
+}
+
+.vc-stat-lbl {
+  font-size: 0.63em;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 3px;
+}
 
 /* ── VEHICLE OVERLAY ── */
 #vehicle-overlay {
@@ -624,28 +696,34 @@ renderNews();
 
 /* =================== LAUNCHES DATA =================== */
 const launches = [
-  { rocket:'SunPower One (Gen 3)', date:'2026-03-01 04:00', status:'Canceled', site:'DSC Large Pad', flights:0, description:'New plans. Cancelled.', type:'Test' },
-  { rocket:'SunOrbit One (Gen 1) (B-I)', date:'2026-03-02 13:00', status:'Canceled', site:'DSC Large Pad', flights:0, description:'Trial Mission to the Moon.', type:'Trial Mission' },
-  { rocket:'SunPower One (Gen 4)', date:'2026-03-03 07:00', status:'Canceled', site:'DSC Large Pad', flights:0, description:'New plans. Cancelled.', type:'Test' },
-  { rocket:'SunOrbit One (Gen 1)', date:'2026-03-06 01:00', status:'Canceled', site:'Ali 28R', flights:0, description:'Mission to create a station in orbit.', type:'Official' },
-  { rocket:'SunPower II (Gen 1)', date:'2026-03-07 04:00', status:'Canceled', site:'Ali 28R', flights:0, description:'Next-generation heavy configuration test.', type:'Official' },
-  { rocket:'SunOrbit One (Gen 3.6)', date:'2026-03-11 03:45', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
-  { rocket:'SunOrbit One (Gen 75)', date:'2026-03-21 06:00', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
-  { rocket:'SunOrbit One (Gen 84.4)', date:'2026-03-29 17:00', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
-  { rocket:'SunOrbit One (Gen 84.4)', date:'2026-03-29 21:30', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
-  { rocket:'SunOrbit One (Gen 84.9)', date:'2026-04-01 14:00', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
-  { rocket:'SunOrbit SN49 (V2.2)', date:'2026-04-12 07:30', status:'Planned', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
-  { rocket:'SunOrbit SN48 (V2.2)', date:'2026-04-13 05:00', status:'Planned', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' }
+  // CANCELED (от новой к старой)
+  { rocket:'SunPower One SN3 (V2.2)', date:'2026-03-03 17:00', status:'Canceled', site:'DSC Large Pad', flights:0, description:'New plans. Cancelled.', type:'Test' },
+  { rocket:'SunPower One SN1 (V2.2)', date:'2026-03-01 14:00', status:'Canceled', site:'DSC Large Pad', flights:0, description:'New plans. Cancelled.', type:'Test' },
+  { rocket:'SunOrbit One SN2 (V2.2)', date:'2026-03-02 23:00', status:'Canceled', site:'DSC Large Pad', flights:0, description:'Trial Mission to the Moon.', type:'Trial Mission' },
+  { rocket:'SunOrbit One SN4 (V2.2)', date:'2026-03-06 11:00', status:'Canceled', site:'Ali 28R', flights:0, description:'Mission to create a station in orbit.', type:'Official' },
+  { rocket:'SunPower One SN5 (V2.2)', date:'2026-03-07 14:00', status:'Canceled', site:'Ali 28R', flights:0, description:'Next-generation heavy configuration test.', type:'Official' },
+
+  // COMPLETED (от новой к старой)
+  { rocket:'SunOrbit One SN10 (V2.2)', date:'2026-04-02 00:00', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
+  { rocket:'SunOrbit One SN9 (V2.2)', date:'2026-03-30 07:30', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
+  { rocket:'SunOrbit One SN8 (V2.2)', date:'2026-03-29 03:00', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
+  { rocket:'SunOrbit One SN7 (V2.2)', date:'2026-03-21 16:00', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
+  { rocket:'SunOrbit One SN6 (V2.2)', date:'2026-03-11 13:45', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
+
+  // PLANNED (от новой к старой)
+  { rocket:'SunOrbit One SN48 (V2.2)', date:'2026-04-13 15:00', status:'Planned', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
+  { rocket:'SunOrbit One SN49 (V2.2)', date:'2026-04-16 20:00', status:'Planned', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' }
 ];
 
 launches.forEach(l => {
-  const [d,t] = l.date.split(' ');
-  const [year,month,day] = d.split('-').map(Number);
-  const [hour,minute] = t.split(':').map(Number);
-  l.dateObj = new Date(Date.UTC(year, month-1, day, hour, minute));  // ← вот это важно
+  const [d, t] = l.date.split(' ');
+  const [year, month, day] = d.split('-').map(Number);
+  const [hour, minute] = t.split(':').map(Number);
+  
+  l.dateObj = new Date(Date.UTC(year, month - 1, day, hour - 5, minute));
 });
 
-/* =================== COUNTDOWN (правильно, одинаково для всех) =================== */
+/* =================== COUNTDOWN — по местному времени посетителя =================== */
 (function initCountdown(){
   const now = new Date();
 
@@ -716,12 +794,11 @@ groups.forEach(g => {
       year: 'numeric' 
     });
 
-    // Это покажет время по местному часовому поясу посетителя
-    const timeStr = l.dateObj.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false   // 24-часовой формат
-    }) + ' (local time)';
+  const timeStr = l.dateObj.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  }) + ' (local time)';
 
     const row = document.createElement('div');
     row.className = 'launch-row';
