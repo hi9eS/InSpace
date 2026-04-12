@@ -147,9 +147,9 @@ h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36p
   position:relative; overflow:hidden;
   border:1px solid rgba(255,255,255,0.07); display:flex; flex-direction:column;
 }
-.vehicle-card:hover { transform:translateY(-6px); box-shadow:0 24px 64px rgba(0,0,0,0.55); border-color:rgba(255,255,255,0.14); }
+.vehicle-card:hover { transform:scale(1);; box-shadow:0 24px 64px rgba(0,0,0,0.55); border-color:rgba(255,255,255,0.14); }
 .vc-color-bar { height:3px; background:var(--vc,#fff); opacity:0.55; transition:opacity 0.3s, height 0.25s var(--ease); flex-shrink:0; }
-.vehicle-card:hover .vc-color-bar { opacity:0.85; height:4px; }
+.vehicle-card:hover .vc-color-bar { opacity:1; height:3px; }
 .vc-inner { padding:28px 26px 22px; display:flex; flex-direction:column; flex:1; }
 .vc-label-row { display:flex; align-items:center; gap:10px; margin-bottom:5px; }
 .vc-dot { width:8px; height:8px; border-radius:50%; background:var(--vc,#fff); flex-shrink:0; opacity:0.55; box-shadow:0 0 5px color-mix(in srgb, var(--vc,#fff) 40%, transparent); transition:box-shadow 0.3s, opacity 0.3s; }
@@ -321,7 +321,7 @@ h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36p
 .np-date-tag { font-size:0.7em; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); font-family:var(--mono); margin-bottom:18px; }
 .np-title { font-size:clamp(1.8em,4vw,2.8em); font-weight:300; letter-spacing:-0.01em; margin-bottom:32px; line-height:1.25; }
 .np-divider { height:1px; background:var(--border); margin-bottom:36px; }
-.np-text { color:#888; font-size:1.0em; line-height:1.9; font-weight:300; }
+.np-text { color:#aaa; font-size:1.0em; line-height:1.9; font-weight:300; }
 
 /* ── LAUNCH SCHEDULE ── */
 #launch-list { margin-top:10px; display:flex; flex-direction:column; gap:10px; }
@@ -413,7 +413,7 @@ h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36p
   max-height:0;
   opacity:0;
   transition: max-height 0.65s cubic-bezier(1,0,0.2,1),
-              opacity 0.65s cubic-bezier(0.4,0,0.2,1),
+              opacity 1.00s cubic-bezier(0.4,0,0.2,1),
               padding 0.65s cubic-bezier(0.4,0,0.2,1);
   padding-top:0;
   padding-bottom:0;
