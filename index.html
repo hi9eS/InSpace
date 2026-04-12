@@ -23,7 +23,7 @@
 
   --hero-title-from: #ffffff;
   --hero-title-to: #a0c8ff;
-  --hero-title-glow: rgba(120,180,255,0.23);
+  --hero-title-glow: rgba(120,180,255,0.18);
 
   --hero-sub-brightness: 1.38;
   --hero-sub-color: #888;
@@ -745,18 +745,19 @@ function closeNews() {
 
 /* ── LAUNCHES ── */
 const launches = [
-  { rocket:'SunPower One SN5 (V2.2)', date:'2026-03-07 14:00', status:'Canceled', site:'Ali 28R', type:'Heavy Configuration Test', duration:'~12 min', target:'LEO — 400 km', vehicle:'SunPower One (V2.2)', desc:'Next-generation heavy configuration test. Cancelled due to revised mission planning priorities.' },
-  { rocket:'SunOrbit One SN4 (V2.2)', date:'2026-03-06 11:00', status:'Canceled', site:'Ali 28R', type:'Orbital Station Mission', duration:'~45 min', target:'LEO Station Orbit', vehicle:'SunOrbit One (V2.2)', desc:'Mission to deploy and assemble a crewed station in orbit. Cancelled due to schedule restructuring.' },
-  { rocket:'SunPower One SN3 (V2.2)', date:'2026-03-03 17:00', status:'Canceled', site:'DSC Large Pad', type:'Performance Test', duration:'~10 min', target:'Suborbital', vehicle:'SunPower One (V2.2)', desc:'New plans emerged. Mission cancelled ahead of launch.' },
-  { rocket:'SunOrbit One SN2 (V2.2)', date:'2026-03-02 23:00', status:'Canceled', site:'DSC Large Pad', type:'Lunar Trial', duration:'~3 days', target:'Lunar vicinity', vehicle:'SunOrbit One (V2.2)', desc:'Trial mission to the Moon. Cancelled to allow further ground testing.' },
-  { rocket:'SunPower One SN1 (V2.2)', date:'2026-03-01 14:00', status:'Canceled', site:'DSC Large Pad', type:'Booster Test', duration:'~8 min', target:'Suborbital', vehicle:'SunPower One (V2.2)', desc:'First SN1 booster test. New plans required mission cancellation.' },
-  { rocket:'SunOrbit One SN10 (V2.2)', date:'2026-04-02 00:00', status:'Completed', site:'Main Pad', type:'SO-1 Separation & Landing Test', duration:'~18 min', target:'Low staging altitude', vehicle:'SunOrbit One (V2.2)', desc:'Stage separation test with booster recovery. Both stages performed nominally.' },
-  { rocket:'SunOrbit One SN9 (V2.2)', date:'2026-03-30 07:30', status:'Completed', site:'Main Pad', type:'SO-1 Separation & Landing Test', duration:'~17 min', target:'Low staging altitude', vehicle:'SunOrbit One (V2.2)', desc:'Continued separation and recovery campaign. Successful booster landing.' },
-  { rocket:'SunOrbit One SN8 (V2.2)', date:'2026-03-29 03:00', status:'Completed', site:'Main Pad', type:'SO-1 Separation & Landing Test', duration:'~16 min', target:'Low staging altitude', vehicle:'SunOrbit One (V2.2)', desc:'Record precision landing — booster touched down within 0.4 m of target centre.' },
-  { rocket:'SunOrbit One SN7 (V2.2)', date:'2026-03-21 16:00', status:'Completed', site:'Main Pad', type:'SO-1 Separation & Landing Test', duration:'~17 min', target:'Low staging altitude', vehicle:'SunOrbit One (V2.2)', desc:'Fourth separation test. Minor upper-stage telemetry anomaly, otherwise nominal.' },
-  { rocket:'SunOrbit One SN6 (V2.2)', date:'2026-03-11 13:45', status:'Completed', site:'Main Pad', type:'SO-1 Separation & Landing Test', duration:'~16 min', target:'Low staging altitude', vehicle:'SunOrbit One (V2.2)', desc:'First successful separation test in the current campaign series.' },
-  { rocket:'SunOrbit One SN48 (V2.2)', date:'2026-04-13 15:00', status:'Planned', site:'Main Pad', type:'SO-1 Separation & Landing Test', duration:'~18 min', target:'Low staging altitude', vehicle:'SunOrbit One (V2.2)', desc:'Upcoming separation and booster recovery test, continuing the SN series campaign.' },
-  { rocket:'SunOrbit One SN49 (V2.2)', date:'2026-04-16 20:00', status:'Planned', site:'Main Pad', type:'SO-1 Separation & Landing Test', duration:'~18 min', target:'Low staging altitude', vehicle:'SunOrbit One (V2.2)', desc:'Follow-on planned flight after SN48. Mission parameters to be confirmed post-SN48 review.' }
+  { rocket:'SunPower One SN5 (V2.2)', date:'2026-03-07 14:00', status:'Canceled', site:'Ali 28R', type:'Heavy Configuration Test', duration:'~2 min', target:'Suicide Burn Test', vehicle:'SunPower One SN5 (V2.2)', desc:'Booster landing test using precision Suicide Burn' },
+  { rocket:'SunPower One SN3 (V2.2)', date:'2026-03-03 17:00', status:'Canceled', site:'Miami, FL (RSS)', type:'Performance Test', duration:'~2 min', target:'Suicide Burn Test (OLD)', vehicle:'SunPower One SN3 (V2.2)', desc:'Booster landing test using precision Suicide Burn' },
+  { rocket:'SunOrbit One SN2 (V2.2)', date:'2026-03-02 23:00', status:'Canceled', site:'Vandenberg SFB (RSS)', type:'Lunar Trial', duration:'~2 min', target:'Suicide Burn Test', vehicle:'SunOrbit One SN2 (V2.2)', desc:'Booster landing test using precision Suicide Burn' },
+  { rocket:'SunPower One SN1 (V2.2)', date:'2026-03-01 14:00', status:'Canceled', site:'Vandenberg SFB (RSS)', type:'Booster Test', duration:'~2 min', target:'Suicide Burn Test', vehicle:'SunPower One SN1 (V2.2)', desc:'First SN1 booster test. New plans required mission cancellation. Booster landing test using precision Suicide Burn' },
+  { rocket:'SunOrbit One SN10 (V2.2)', date:'2026-04-02 00:00', status:'Completed', site:'Vandenberg SFB (RSS)', type:'7th Flight: Booster Separation & Landing Test', duration:'~2 min', target:'Suicide Burn Test', vehicle:'SunOrbit One SN10 (V2.2)', desc:'Booster landing test using precision Suicide Burn' },
+  { rocket:'SunOrbit One SN9 (V2.2)', date:'2026-03-30 07:30', status:'Completed', site:'Vandenberg SFB (RSS)', type:'6th Flight: Booster Separation & Landing Test', duration:'~2 min', target:'Suicide Burn Test', vehicle:'SunOrbit One SN9 (V2.2)', desc:'Booster landing test using precision Suicide Burn' },
+  { rocket:'SunOrbit One SN8 (V2.2)', date:'2026-03-30 03:00', status:'Completed', site:'Vandenberg SFB (RSS)', type:'5th Flight: Booster Separation & Landing Test', duration:'~5 min', target:'Suicide Burn Test', vehicle:'SunOrbit One SN8 (V2.2)', desc:'Booster landing test using precision Suicide Burn' },
+  { rocket:'SunOrbit One SN7 (V2.2)', date:'2026-03-21 16:00', status:'Completed', site:'Vandenberg SFB (RSS)', type:'4th Flight: Booster Separation & Landing Test', duration:'~2 min', target:'Suicide Burn Test', vehicle:'SunOrbit One SN7 (V2.2)', desc:'Booster landing test using precision Suicide Burn' },
+  { rocket:'SunOrbit One SN7 (V2.2)', date:'2026-03-19 14:30', status:'Completed', site:'Vandenberg SFB (RSS)', type:'3th Flight: Booster Separation & Landing Test', duration:'~2 min', target:'Suicide Burn Test', vehicle:'SunOrbit One SN7 (V2.2)', desc:'Booster landing test using precision Suicide Burn' },
+  { rocket:'SunOrbit One SN6 (V2.2)', date:'2026-03-11 13:45', status:'Completed', site:'Vandenberg SFB (RSS)', type:'2th Flight: Booster Separation & Landing Test', duration:'~2 min', target:'Suicide Burn Test', vehicle:'SunOrbit One SN6 (V2.2)', desc:'Booster landing test using precision Suicide Burn' },
+  { rocket:'SunOrbit One SN4 (V2.2)', date:'2026-03-06 11:00', status:'Completed', site:'Miami, FL (RSS)', type:'1th Flight: Booster Separation & Landing Test', duration:'~2 min', target:'Suicide Burn Test', vehicle:'SunOrbit One SN4 (V2.2)', desc:'Booster landing test using precision Suicide Burn' },
+  { rocket:'SunOrbit One SN48 (V2.2)', date:'2026-04-13 15:00', status:'Planned', site:'Vandenberg SFB (RSS)', type:'Booster Separation & Landing Test', duration:'~1 min', target:'Suicide Burn Test', vehicle:'SunOrbit One SN48 (V2.2)', desc:'Booster landing test using precision Suicide Burn' },
+  { rocket:'SunOrbit One SN49 (V2.2)', date:'2026-04-16 20:00', status:'Planned', site:'Vandenberg SFB (RSS)', type:'Booster Separation & Landing Test', duration:'~1 min', target:'Suicide Burn Test', vehicle:'SunOrbit One SN49 (V2.2)', desc:'Booster landing test using precision Suicide Burn' }
 ];
 
 launches.forEach(l => {
