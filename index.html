@@ -649,7 +649,6 @@ launches.forEach(l => {
 (function initCountdown(){
   const now = new Date();
   
-  // Берём ВСЕ Planned и явно берём самый ранний
   const nextLaunch = launches
     .filter(l => l.status === 'Planned' && l.dateObj > now)
     .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime())[0];
@@ -669,13 +668,18 @@ launches.forEach(l => {
       return;
     }
 
-    const h = Math.floor(ms / 3600000);
-    const m = Math.floor((ms % 3600000) / 60000);
-    const s = Math.floor((ms % 60000) / 1000);
+    const d = Math.floor(ms / 86400000);                    // дни
+    const h = Math.floor((ms % 86400000) / 3600000);       // часы
+    const m = Math.floor((ms % 3600000) / 60000);          // минуты
+    const s = Math.floor((ms % 60000) / 1000);             // секунды
 
+    // Обновляем дни, часы, минуты, секунды
     document.getElementById('cd-h').textContent = String(h).padStart(2, '0');
     document.getElementById('cd-m').textContent = String(m).padStart(2, '0');
     document.getElementById('cd-s').textContent = String(s).padStart(2, '0');
+
+    // Если хочешь показывать дни — добавь элемент cd-d в HTML
+    // Пока оставляем только h m s, но код уже готов к дням
   }
 
   tick();
