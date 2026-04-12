@@ -4,307 +4,302 @@
 <meta charset="UTF-8">
 <title>InSpace</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', sans-serif; }
-body { background:#0a0a0a; color:#fff; line-height:1.6; scroll-behavior:smooth; }
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@300;400&display=swap');
+
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --bg: #080808;
+  --bg2: #0f0f0f;
+  --bg3: #141414;
+  --border: rgba(255,255,255,0.08);
+  --border-hover: rgba(255,255,255,0.18);
+  --text: #f0f0f0;
+  --muted: #666;
+  --muted2: #444;
+  --font: 'DM Sans', 'Segoe UI', sans-serif;
+  --mono: 'DM Mono', monospace;
+  --ease: cubic-bezier(0.4,0,0.2,1);
+  --ease-spring: cubic-bezier(0.34,1.56,0.64,1);
+}
+html { scroll-behavior:smooth; }
+body { background:var(--bg); color:var(--text); font-family:var(--font); line-height:1.6; font-size:15px; overflow-x:hidden; }
 a { color:inherit; text-decoration:none; }
-a:hover { opacity:0.7; }
 
-/* Header */
-header { position:sticky; top:0; background:#111; display:flex; justify-content:center; gap:30px; padding:20px 0; z-index:100; }
-header a { font-weight:500; cursor:pointer; font-size:1em; transition:0.2s; }
-header a:hover { transform:scale(1.05); opacity:0.7; }
+/* ── STARFIELD ── */
+#starfield { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+.star { position:absolute; border-radius:50%; background:#fff; animation:twinkle var(--dur,4s) var(--delay,0s) infinite ease-in-out alternate; opacity:0; }
+@keyframes twinkle {
+  0%   { opacity:0; transform:scale(0.8); }
+  50%  { opacity:var(--op,0.5); }
+  100% { opacity:0.08; transform:scale(1.1); }
+}
 
-/* Sections */
-section { padding:80px 20px; max-width:1000px; margin:0 auto; }
-.hero { text-align:center; }
-.hero h1 { font-size:2.5em; margin-bottom:20px; }
-.hero p { font-size:1.2em; max-width:700px; margin:0 auto 30px; color:#ccc; }
+/* ── HEADER ── */
+header {
+  position:sticky; top:0; z-index:100;
+  display:flex; justify-content:center; gap:4px;
+  padding:14px 0;
+  background:rgba(8,8,8,0.88);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+}
+header::after {
+  content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+  width:180px; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
+}
+header a {
+  font-size:0.85em; font-weight:400; letter-spacing:0.04em;
+  padding:7px 16px; border-radius:8px; cursor:pointer;
+  color:var(--muted);
+  transition:color 0.2s, background 0.2s, transform 0.15s var(--ease-spring);
+}
+header a:hover { color:var(--text); transform:translateY(-1px); background:rgba(255,255,255,0.05); }
+header a:active { transform:scale(0.96); }
 
-/* Countdown */
+/* ── SECTIONS ── */
+section { padding:90px 20px; max-width:1000px; margin:0 auto; position:relative; z-index:1; }
+
+/* ── HERO ── */
+.hero { text-align:center; padding-top:130px; }
+.hero h1 {
+  font-size:clamp(2.5em,5.5vw,4em);
+  font-weight:300; letter-spacing:-0.02em; margin-bottom:20px;
+  animation:fadeUp 0.8s var(--ease) both;
+}
+.hero p {
+  font-size:1.1em; max-width:600px; margin:0 auto 36px;
+  color:var(--muted); font-weight:300;
+  animation:fadeUp 0.8s 0.1s var(--ease) both;
+}
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(18px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ── COUNTDOWN ── */
 #countdown-wrap {
   display:none;
-  margin: 0 auto 40px;
-  max-width: 600px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 16px;
-  padding: 24px 32px;
+  margin:0 auto 44px; max-width:600px;
+  background:var(--bg2); border:1px solid var(--border);
+  border-radius:20px; padding:26px 36px;
+  position:relative; overflow:hidden;
+  animation:fadeUp 0.8s 0.15s var(--ease) both;
 }
-#countdown-mission {
-  font-size: 0.72em;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #888;
-  margin-bottom: 10px;
+#countdown-wrap::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent);
 }
-#countdown-label {
-  font-size: 0.85em;
-  color: #ccc;
-  margin-bottom: 16px;
-}
-#countdown-timer {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-}
+#countdown-mission { font-size:0.72em; letter-spacing:0.18em; text-transform:uppercase; color:#888; margin-bottom:10px; font-family:var(--mono); }
+#countdown-label { font-size:0.85em; color:#aaa; margin-bottom:16px; font-weight:300; }
+#countdown-timer { display:flex; justify-content:center; gap:24px; }
 .cd-unit { text-align:center; }
-.cd-num {
-  font-size: 2.8em;
-  font-weight: 300;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.04em;
-  line-height: 1;
+.cd-num { font-size:2.8em; font-weight:300; font-variant-numeric:tabular-nums; letter-spacing:0.04em; line-height:1; font-family:var(--mono); }
+.cd-lbl { font-size:0.65em; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted2); margin-top:4px; }
+.cd-sep { font-size:2.2em; font-weight:200; color:var(--muted2); line-height:1.1; align-self:center; }
+
+/* ── WATCH BUTTON ── */
+.stream-link {
+  display:inline-flex; align-items:center; gap:10px;
+  font-size:1em; font-weight:400; letter-spacing:0.06em;
+  padding:14px 38px;
+  border:1px solid rgba(255,255,255,0.35); border-radius:100px;
+  cursor:pointer; color:#fff;
+  transition:all 0.3s var(--ease);
+  margin-bottom:70px; position:relative; overflow:hidden;
+  animation:fadeUp 0.8s 0.2s var(--ease) both;
 }
-.cd-lbl {
-  font-size: 0.65em;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: #666;
-  margin-top: 4px;
+.stream-link::before {
+  content:''; position:absolute; inset:0;
+  background:#fff; transform:scaleX(0); transform-origin:left;
+  transition:transform 0.35s var(--ease); border-radius:100px;
 }
-.cd-sep { font-size: 2.2em; font-weight: 200; color: #444; line-height: 1.1; align-self:center; }
+.stream-link:hover { color:#000; border-color:#fff; transform:translateY(-2px); }
+.stream-link:hover::before { transform:scaleX(1); }
+.stream-link-text { position:relative; z-index:1; }
+.stream-dot {
+  width:7px; height:7px; border-radius:50%; background:#ff4444;
+  animation:pulse-dot 1.8s ease-in-out infinite;
+  position:relative; z-index:1; flex-shrink:0;
+}
+@keyframes pulse-dot {
+  0%,100% { box-shadow:0 0 0 0 rgba(255,68,68,0.6); }
+  50%      { box-shadow:0 0 0 6px rgba(255,68,68,0); }
+}
 
-/* Watch Launch button */
-.stream-link { font-size:1.5em; padding:15px 40px; border:2px solid #fff; border-radius:12px; cursor:pointer; transition:0.3s; color:#fff; display:inline-block; margin-bottom:60px; }
-.stream-link:hover { background:#fff; color:#0a0a0a; transform:scale(1.05); }
+/* ── HEADINGS ── */
+h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36px; }
 
-/* Rockets cards */
-.rocket-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; margin-top:20px; }
-.rocket { background:#111; border:1px solid #222; border-radius:10px; padding:20px; transition:0.3s; }
-.rocket:hover { background:#1a1a1a; transform:translateY(-5px); box-shadow:0 5px 15px rgba(255,255,255,0.05); }
-.rocket h3 { margin-bottom:10px; }
-.rocket p { font-size:0.95em; color:#ccc; }
+/* ── VEHICLE CARDS ── */
+.vehicle-cards {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:1px; background:var(--border); border-radius:18px; overflow:hidden;
+}
+.vehicle-card {
+  background:var(--bg2); padding:30px 26px;
+  cursor:pointer; transition:background 0.25s var(--ease), transform 0.25s var(--ease-spring);
+  position:relative; overflow:hidden;
+}
+.vehicle-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:var(--vc,#fff); opacity:0.45; transition:opacity 0.3s;
+}
+.vehicle-card:hover { background:var(--bg3); }
+.vehicle-card:hover::before { opacity:1; }
+.vehicle-card:hover .vc-arrow { transform:translate(3px,-3px); opacity:1; }
+.vc-arrow { position:absolute; top:22px; right:22px; font-size:1em; color:var(--muted2); transition:transform 0.25s var(--ease-spring), opacity 0.2s; opacity:0; }
+.vc-name { font-size:1.3em; font-weight:500; margin-bottom:4px; }
+.vc-sub { font-size:0.76em; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; margin-bottom:22px; font-family:var(--mono); }
+.vc-stat-row { display:flex; justify-content:space-between; border-top:1px solid rgba(255,255,255,0.06); padding-top:18px; gap:8px; }
+.vc-stat { text-align:center; }
+.vc-stat-val { font-size:1.05em; font-weight:400; font-family:var(--mono); }
+.vc-stat-lbl { font-size:0.63em; color:var(--muted); text-transform:uppercase; letter-spacing:0.08em; margin-top:3px; }
 
-/* News Load More */
+/* ── VEHICLE OVERLAY ── */
+#vehicle-overlay {
+  display:none; position:fixed; inset:0;
+  background:var(--bg); z-index:200; overflow-y:auto;
+  opacity:0; transition:opacity 0.35s var(--ease);
+}
+#vehicle-overlay.active { display:block; }
+#vehicle-overlay.visible { opacity:1; }
+
+.vp-header {
+  position:sticky; top:0;
+  background:rgba(8,8,8,0.92); backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:20px;
+  padding:18px 32px; z-index:10;
+}
+.vp-back {
+  background:none; border:1px solid var(--border); color:var(--muted);
+  padding:8px 20px; border-radius:100px; cursor:pointer;
+  font-size:0.82em; font-family:var(--font);
+  transition:all 0.2s var(--ease);
+}
+.vp-back:hover { background:var(--bg3); color:var(--text); border-color:var(--border-hover); transform:translateX(-2px); }
+.vp-title { font-size:1em; font-weight:300; color:var(--muted); }
+
+.vp-body { max-width:900px; margin:0 auto; padding:60px 24px 100px; animation:fadeUp 0.5s 0.05s var(--ease) both; }
+
+.vp-hero-name { font-size:clamp(2.5em,6vw,4em); font-weight:300; letter-spacing:-0.01em; margin-bottom:8px; }
+.vp-hero-class { font-size:0.72em; color:var(--muted); letter-spacing:0.2em; text-transform:uppercase; margin-bottom:48px; font-family:var(--mono); }
+
+.vp-img-wrap {
+  width:100%; aspect-ratio:16/7;
+  background:var(--bg2); border:1px solid var(--border); border-radius:18px;
+  margin-bottom:60px; display:flex; align-items:center; justify-content:center;
+  overflow:hidden; position:relative;
+}
+.vp-img-wrap img { width:100%; height:100%; object-fit:cover; }
+.vp-img-placeholder { font-size:0.72em; color:var(--muted2); letter-spacing:0.15em; text-transform:uppercase; font-family:var(--mono); }
+
+.vp-specs-title {
+  font-size:0.68em; letter-spacing:0.2em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:16px;
+  border-bottom:1px solid var(--border); padding-bottom:12px; font-family:var(--mono);
+}
+.vp-specs-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:1px; background:var(--border);
+  border-radius:14px; overflow:hidden; margin-bottom:52px;
+}
+.vp-spec { background:var(--bg2); padding:20px 18px; transition:background 0.2s; }
+.vp-spec:hover { background:var(--bg3); }
+.vp-spec-val { font-size:1.4em; font-weight:300; margin-bottom:4px; line-height:1; font-family:var(--mono); }
+.vp-spec-lbl { font-size:0.63em; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; }
+
+.vp-stages { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:52px; }
+@media(max-width:600px){ .vp-stages { grid-template-columns:1fr; } }
+.vp-stage { background:var(--bg2); border:1px solid var(--border); border-radius:14px; padding:24px 20px; }
+.vp-stage-title { font-size:0.68em; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); margin-bottom:16px; font-family:var(--mono); }
+.vp-stage-row { display:flex; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--border); font-size:0.9em; }
+.vp-stage-row:last-child { border-bottom:none; }
+.vp-stage-key { color:var(--muted); }
+.vp-stage-val { font-weight:400; font-family:var(--mono); }
+
+.vp-desc { color:#777; font-size:1.0em; line-height:1.85; max-width:680px; font-weight:300; }
+
+/* ── NEWS CARDS ── */
+.rocket-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px; margin-top:20px; }
+.rocket {
+  background:var(--bg2); border:1px solid var(--border);
+  border-radius:16px; padding:22px 20px;
+  transition:all 0.25s var(--ease); position:relative; overflow:hidden;
+}
+.rocket::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);
+  opacity:0; transition:opacity 0.3s;
+}
+.rocket:hover { background:var(--bg3); border-color:var(--border-hover); transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,0.3); }
+.rocket:hover::before { opacity:1; }
+.rocket h3 { margin-bottom:10px; font-size:0.96em; font-weight:400; }
+.rocket p { font-size:0.9em; color:#aaa; }
+
+/* ── LOAD MORE ── */
 #load-more-btn {
-  display:block;
-  margin: 28px auto 0;
-  padding: 10px 32px;
-  background: transparent;
-  border: 1px solid #333;
-  color: #ccc;
-  border-radius: 8px;
-  font-size: 0.9em;
-  cursor: pointer;
-  transition: 0.2s;
+  display:block; margin:24px auto 0; padding:10px 32px;
+  background:transparent; border:1px solid var(--border);
+  color:var(--muted); border-radius:100px;
+  font-size:0.85em; font-family:var(--font); cursor:pointer;
+  transition:all 0.2s var(--ease);
 }
-#load-more-btn:hover { background:#1a1a1a; color:#fff; border-color:#555; }
+#load-more-btn:hover { background:var(--bg2); color:var(--text); border-color:var(--border-hover); }
 
-/* Launch Schedule */
+/* ── LAUNCH SCHEDULE ── */
 #launch-list { margin-top:10px; display:flex; flex-direction:column; gap:8px; }
 
 .launch-row {
-  display: grid;
-  grid-template-columns: 2fr 1.8fr 1fr 1fr;
-  align-items: center;
-  padding: 12px 18px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 10px;
-  transition: all 0.2s ease;
+  display:grid; grid-template-columns:2fr 1.8fr 1fr 1fr;
+  align-items:center; padding:13px 18px;
+  background:rgba(255,255,255,0.025); border:1px solid var(--border);
+  border-radius:12px; transition:all 0.2s ease;
 }
-.launch-row:hover { background: rgba(255,255,255,0.06); transform: scale(1.02); }
-.launch-row strong { font-size: 0.95em; color: #fff; }
-.launch-row div { font-size: 0.85em; }
+.launch-row:hover { background:rgba(255,255,255,0.05); transform:scale(1.015); border-color:var(--border-hover); }
+.launch-row strong { font-size:0.95em; color:#fff; }
+.launch-row div { font-size:0.85em; }
 
 .status-badge {
-  text-align: center;
-  font-size: 0.75em;
-  font-weight: 700;
-  text-transform: uppercase;
-  padding: 4px 10px;
-  border-radius: 6px;
-  background: rgba(0,0,0,0.3);
-  justify-self: end;
-  min-width: 100px;
+  text-align:center; font-size:0.72em; font-weight:600;
+  text-transform:uppercase; padding:5px 12px; border-radius:100px;
+  background:rgba(0,0,0,0.3); border:1px solid currentColor;
+  justify-self:end; min-width:100px;
+  font-family:var(--mono); letter-spacing:0.06em; opacity:0.85;
 }
 
-@media (max-width: 768px) {
-  .launch-row { grid-template-columns: 1.5fr 1fr; gap: 8px; }
-  .status-badge { grid-column: span 2; justify-self: start; }
+@media(max-width:768px){
+  .launch-row { grid-template-columns:1.5fr 1fr; gap:8px; }
+  .status-badge { grid-column:span 2; justify-self:start; }
 }
 
-/* Accordion groups */
-.group-accordion { border:1px solid rgba(255,255,255,0.1); border-radius:12px; overflow:hidden; transition:box-shadow 0.3s; }
-.group-accordion:hover { box-shadow:0 4px 20px rgba(255,255,255,0.04); }
-.group-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:rgba(255,255,255,0.03); cursor:pointer; user-select:none; transition:background 0.2s; }
-.group-header:hover { background:rgba(255,255,255,0.06); }
+/* ── ACCORDION ── */
+.group-accordion { border:1px solid var(--border); border-radius:14px; overflow:hidden; transition:box-shadow 0.3s, border-color 0.25s; }
+.group-accordion:hover { box-shadow:0 4px 20px rgba(255,255,255,0.03); border-color:var(--border-hover); }
+.group-header { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:rgba(255,255,255,0.025); cursor:pointer; user-select:none; transition:background 0.2s; }
+.group-header:hover { background:rgba(255,255,255,0.05); }
 .group-left { display:flex; align-items:center; gap:14px; }
-.group-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
-.group-label { font-size:0.78em; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; }
-.group-count { font-size:0.78em; color:#555; font-weight:500; }
-.group-chevron { font-size:0.75em; color:#555; transition:transform 0.35s cubic-bezier(0.4,0,0.2,1); }
+.group-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+.group-label { font-size:0.76em; font-weight:500; letter-spacing:0.14em; text-transform:uppercase; font-family:var(--mono); }
+.group-count { font-size:0.76em; color:var(--muted2); font-weight:400; font-family:var(--mono); }
+.group-chevron { font-size:0.7em; color:var(--muted2); transition:transform 0.35s var(--ease); }
 .group-accordion.open .group-chevron { transform:rotate(180deg); }
-.group-rows { max-height:0; overflow:hidden; opacity:0; transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s ease; }
+.group-rows { max-height:0; overflow:hidden; opacity:0; transition:max-height 0.4s var(--ease), opacity 0.3s ease; }
 
-/* Contact & Footer */
-.contact p, .contact a { color:#ccc; margin-bottom:5px; }
-footer { text-align:center; padding:20px; border-top:1px solid #333; font-size:0.85em; color:#aaa; }
+/* ── CONTACT & FOOTER ── */
+.contact p, .contact a { color:#aaa; margin-bottom:5px; }
+.contact a:hover { color:var(--text); }
+footer { text-align:center; padding:24px; border-top:1px solid var(--border); font-size:0.8em; color:var(--muted); font-family:var(--mono); position:relative; z-index:1; }
 
-/* ===================== VEHICLES FLEET ===================== */
-#fleet { padding:80px 20px; max-width:1000px; margin:0 auto; }
-#fleet h2 { margin-bottom:32px; }
-
-.vehicle-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 16px;
-}
-
-.vehicle-card {
-  background: #111;
-  border: 1px solid #222;
-  border-radius: 14px;
-  padding: 28px 24px 24px;
-  cursor: pointer;
-  transition: 0.3s;
-  position: relative;
-  overflow: hidden;
-}
-.vehicle-card::before {
-  content:'';
-  position:absolute;
-  top:0; left:0; right:0;
-  height: 2px;
-  background: var(--vc, #fff);
-  opacity: 0.5;
-  transition: opacity 0.3s;
-}
-.vehicle-card:hover { background:#161616; transform:translateY(-4px); box-shadow:0 8px 30px rgba(0,0,0,0.4); }
-.vehicle-card:hover::before { opacity:1; }
-.vc-name { font-size:1.3em; font-weight:600; margin-bottom:4px; }
-.vc-sub { font-size:0.78em; color:#555; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:20px; }
-.vc-stat-row { display:flex; justify-content:space-between; border-top:1px solid #1e1e1e; padding-top:16px; gap:8px; }
-.vc-stat { text-align:center; }
-.vc-stat-val { font-size:1.1em; font-weight:500; }
-.vc-stat-lbl { font-size:0.65em; color:#555; text-transform:uppercase; letter-spacing:0.08em; margin-top:2px; }
-
-/* ===================== VEHICLE PAGE OVERLAY ===================== */
-#vehicle-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: #0a0a0a;
-  z-index: 200;
-  overflow-y: auto;
-}
-#vehicle-overlay.active { display:block; }
-
-.vp-header {
-  position: sticky;
-  top: 0;
-  background: rgba(10,10,10,0.95);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid #1e1e1e;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 18px 32px;
-  z-index: 10;
-}
-.vp-back {
-  background: none;
-  border: 1px solid #333;
-  color: #ccc;
-  padding: 7px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 0.85em;
-  transition: 0.2s;
-}
-.vp-back:hover { background:#1a1a1a; color:#fff; }
-.vp-title { font-size:1.1em; font-weight:500; }
-
-.vp-body { max-width:900px; margin:0 auto; padding:60px 24px 100px; }
-
-.vp-hero-name {
-  font-size: clamp(2.5em, 6vw, 4em);
-  font-weight: 300;
-  letter-spacing: -0.01em;
-  margin-bottom: 8px;
-}
-.vp-hero-class {
-  font-size: 0.78em;
-  color: #555;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  margin-bottom: 48px;
-}
-
-/* Image placeholder */
-.vp-img-wrap {
-  width: 100%;
-  aspect-ratio: 16/7;
-  background: #111;
-  border: 1px solid #1e1e1e;
-  border-radius: 16px;
-  margin-bottom: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  position: relative;
-}
-.vp-img-wrap img { width:100%; height:100%; object-fit:cover; }
-.vp-img-placeholder {
-  font-size: 0.72em;
-  color: #333;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-}
-
-/* Specs grid */
-.vp-specs-title {
-  font-size: 0.7em;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #555;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #1a1a1a;
-  padding-bottom: 12px;
-}
-.vp-specs-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 1px;
-  background: #1a1a1a;
-  border: 1px solid #1a1a1a;
-  border-radius: 12px;
-  overflow: hidden;
-  margin-bottom: 52px;
-}
-.vp-spec {
-  background: #0f0f0f;
-  padding: 20px 18px;
-}
-.vp-spec-val { font-size:1.4em; font-weight:300; margin-bottom:4px; line-height:1; }
-.vp-spec-lbl { font-size:0.65em; color:#555; text-transform:uppercase; letter-spacing:0.1em; }
-
-/* Stages */
-.vp-stages { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:52px; }
-@media(max-width:600px){ .vp-stages { grid-template-columns:1fr; } }
-.vp-stage {
-  background:#111;
-  border:1px solid #1e1e1e;
-  border-radius:12px;
-  padding:24px 20px;
-}
-.vp-stage-title { font-size:0.7em; letter-spacing:0.18em; text-transform:uppercase; color:#555; margin-bottom:16px; }
-.vp-stage-row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #1a1a1a; font-size:0.9em; }
-.vp-stage-row:last-child { border-bottom:none; }
-.vp-stage-key { color:#666; }
-.vp-stage-val { font-weight:500; }
-
-/* Description */
-.vp-desc {
-  color: #888;
-  font-size: 1.0em;
-  line-height: 1.8;
-  max-width: 680px;
-}
+/* ── SCROLL REVEAL ── */
+.reveal { opacity:0; transform:translateY(22px); transition:opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+.reveal.visible { opacity:1; transform:translateY(0); }
 </style>
 </head>
 <body>
+
+<!-- STARFIELD -->
+<div id="starfield"></div>
 
 <!-- VEHICLE PAGE OVERLAY -->
 <div id="vehicle-overlay">
@@ -340,27 +335,30 @@ footer { text-align:center; padding:20px; border-top:1px solid #333; font-size:0
     </div>
   </div>
 
-  <div class="stream-link" onclick="window.open('https://www.youtube.com/@hi9eS')">Watch Launch</div>
+  <div class="stream-link" onclick="window.open('https://www.youtube.com/@hi9eS')">
+    <span class="stream-dot"></span>
+    <span class="stream-link-text">Watch Launch</span>
+  </div>
 </section>
 
 <!-- VEHICLES FLEET -->
-<section id="fleet">
+<section id="fleet" class="reveal">
   <h2>Our Vehicles</h2>
   <div class="vehicle-cards" id="vehicle-cards"></div>
 </section>
 
-<section id="rockets">
+<section id="rockets" class="reveal">
   <h2>Latest News</h2>
   <div class="rocket-cards" id="rocket-cards"></div>
   <button id="load-more-btn" onclick="loadMore()" style="display:none;">Load more</button>
 </section>
 
-<section id="schedule">
+<section id="schedule" class="reveal">
   <h2>Launch Schedule</h2>
   <div id="launch-list"></div>
 </section>
 
-<section class="contact" id="contact">
+<section class="contact reveal" id="contact">
   <h2>Contact</h2>
   <p>Twitter: <a href="https://x.com" target="_blank">@OXeallCorp</a></p>
 </section>
@@ -368,6 +366,24 @@ footer { text-align:center; padding:20px; border-top:1px solid #333; font-size:0
 <footer>&copy; 2026 InSpace. All rights reserved.</footer>
 
 <script>
+/* ── STARFIELD ── */
+(function(){
+  const sf = document.getElementById('starfield');
+  for(let i=0;i<110;i++){
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random()*1.8+0.3;
+    s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--op:${Math.random()*0.45+0.1};--dur:${Math.random()*5+3}s;--delay:${Math.random()*6}s;`;
+    sf.appendChild(s);
+  }
+})();
+
+/* ── SCROLL REVEAL ── */
+const revealObs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.07});
+document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+
 function scrollToSection(id){ document.getElementById(id).scrollIntoView({behavior:'smooth'}); }
 
 /* =================== STATUS COLORS =================== */
@@ -393,8 +409,8 @@ const vehicles = [
     name: 'SunOrbit',
     class: 'Interplanetary Vehicle',
     color: '#00aaff',
-    image: '991ef2dcfcd94c0f95050b657d1c6134.png', // replace with image URL string to show photo
-    description: 'SunOrbit is InSpace’s primary interplanetary vehicle, built in modular stages.<br>It is equally capable of crewed and uncrewed missions to Low Earth Orbit and to other planets. For Earth orbit, the third stage can function as a crewed mini-station or as an uncrewed satellite that separates directly in orbit. For missions to other planets, the third stage can serve as the main crew habitat and command module with life support systems, or operate fully autonomously without pilots - including orbital insertion around other planets. <br>The first and second stages are reusable and designed for precise suicide burn landings on Earth and other planetary bodies. The vehicle features advanced docking capabilities and high-bandwidth communication relay systems.',
+    image: '991ef2dcfcd94c0f95050b657d1c6134.png',
+    description: 'SunOrbit is InSpace\u2019s primary interplanetary vehicle, built in modular stages.<br>It is equally capable of crewed and uncrewed missions to Low Earth Orbit and to other planets. For Earth orbit, the third stage can function as a crewed mini-station or as an uncrewed satellite that separates directly in orbit. For missions to other planets, the third stage can serve as the main crew habitat and command module with life support systems, or operate fully autonomously without pilots - including orbital insertion around other planets. <br>The first and second stages are reusable and designed for precise suicide burn landings on Earth and other planetary bodies. The vehicle features advanced docking capabilities and high-bandwidth communication relay systems.',
     specs: [
       { val: '205m', lbl: 'Height' },
       { val: '3,370,000', lbl: 'Mass (kg)' },
@@ -404,7 +420,7 @@ const vehicles = [
     ],
     stages: [
       {
-        title: 'Stage 1 — Booster',
+        title: 'Stage 1 \u2014 Booster',
         rows: [
           { key: 'Engines', val: '42' },
           { key: 'Thrust (sea level)', val: '484,000 kN' },
@@ -414,7 +430,7 @@ const vehicles = [
         ]
       },
       {
-        title: 'Stage 2 — Upper',
+        title: 'Stage 2 \u2014 Upper',
         rows: [
           { key: 'Engines', val: '90' },
           { key: 'Thrust (vacuum)', val: '120,000 kN' },
@@ -435,38 +451,38 @@ const vehicles = [
     class: 'Earth Orbit',
     color: '#ffaa00',
     image: null,
-    description: 'SunPower is InSpace’s heavy-lift workhorse, designed specifically for Low Earth Orbit missions.<br>It evolved from a rapid prototype through multiple generations into a reliable high-performance launcher, optimized for delivering large payloads, solar arrays, and orbital stations. The name SunPower was coined on the fly by Haisess during the very first test campaign.<br>Although public records show 0 launches, more than 20 SunPower vehicles have already been built and successfully flown in classified InSpace test and operational missions.',
+    description: 'SunPower is InSpace\u2019s heavy-lift workhorse, designed specifically for Low Earth Orbit missions.<br>It evolved from a rapid prototype through multiple generations into a reliable high-performance launcher, optimized for delivering large payloads, solar arrays, and orbital stations. The name SunPower was coined on the fly by Haisess during the very first test campaign.<br>Although public records show 0 launches, more than 20 SunPower vehicles have already been built and successfully flown in classified InSpace test and operational missions.',
     specs: [
-      { val: '—', lbl: 'Height' },
-      { val: '—', lbl: 'Mass (kg)' },
-      { val: '—', lbl: 'Delta-V' },
-      { val: '—', lbl: 'TWR' },
+      { val: '\u2014', lbl: 'Height' },
+      { val: '\u2014', lbl: 'Mass (kg)' },
+      { val: '\u2014', lbl: 'Delta-V' },
+      { val: '\u2014', lbl: 'TWR' },
       { val: 'Feb 2026', lbl: 'First Flight' },
     ],
     stages: [
       {
-        title: 'Stage 1 — Booster',
+        title: 'Stage 1 \u2014 Booster',
         rows: [
-          { key: 'Engines', val: '—' },
-          { key: 'Thrust (sea level)', val: '— kN' },
-          { key: 'Burn time', val: '— s' },
-          { key: 'Propellant', val: '—' },
+          { key: 'Engines', val: '\u2014' },
+          { key: 'Thrust (sea level)', val: '\u2014 kN' },
+          { key: 'Burn time', val: '\u2014 s' },
+          { key: 'Propellant', val: '\u2014' },
           { key: 'Recovery', val: 'Vertical landing' },
         ]
       },
       {
-        title: 'Stage 2 — Upper',
+        title: 'Stage 2 \u2014 Upper',
         rows: [
-          { key: 'Engines', val: '—' },
-          { key: 'Thrust (vacuum)', val: '— kN' },
-          { key: 'Burn time', val: '— s' },
-          { key: 'Propellant', val: '—' },
+          { key: 'Engines', val: '\u2014' },
+          { key: 'Thrust (vacuum)', val: '\u2014 kN' },
+          { key: 'Burn time', val: '\u2014 s' },
+          { key: 'Propellant', val: '\u2014' },
         ]
       }
     ],
     cardStats: [
-      { val: '—', lbl: 'Height' },
-      { val: '—', lbl: 'Mass' },
+      { val: '\u2014', lbl: 'Height' },
+      { val: '\u2014', lbl: 'Mass' },
       { val: '0', lbl: 'Launches' },
     ]
   },
@@ -476,38 +492,38 @@ const vehicles = [
     class: 'COMING SOON',
     color: '#cc66ff',
     image: null,
-    description: 'PlanetsRockets is InSpace’s next-generation interplanetary vehicle, currently in the early concept and planning phase.<br>All detailed information about its design, capabilities, and specific mission targets remains confidential at this stage.<br>It is being developed as part of InSpace’s long-term ambitions for deep-space exploration.',
+    description: 'PlanetsRockets is InSpace\u2019s next-generation interplanetary vehicle, currently in the early concept and planning phase.<br>All detailed information about its design, capabilities, and specific mission targets remains confidential at this stage.<br>It is being developed as part of InSpace\u2019s long-term ambitions for deep-space exploration.',
     specs: [
-      { val: '—', lbl: 'Height' },
-      { val: '—', lbl: 'Mass (kg)' },
-      { val: '—', lbl: 'Delta-V' },
-      { val: '—', lbl: 'TWR' },
+      { val: '\u2014', lbl: 'Height' },
+      { val: '\u2014', lbl: 'Mass (kg)' },
+      { val: '\u2014', lbl: 'Delta-V' },
+      { val: '\u2014', lbl: 'TWR' },
       { val: 'Apr 2026', lbl: 'First Flight' },
     ],
     stages: [
       {
-        title: 'Stage 1 — Booster',
+        title: 'Stage 1 \u2014 Booster',
         rows: [
-          { key: 'Engines', val: '—' },
-          { key: 'Thrust (sea level)', val: '— kN' },
-          { key: 'Burn time', val: '— s' },
-          { key: 'Propellant', val: '—' },
+          { key: 'Engines', val: '\u2014' },
+          { key: 'Thrust (sea level)', val: '\u2014 kN' },
+          { key: 'Burn time', val: '\u2014 s' },
+          { key: 'Propellant', val: '\u2014' },
           { key: 'Recovery', val: 'TBD' },
         ]
       },
       {
-        title: 'Stage 2 — Upper',
+        title: 'Stage 2 \u2014 Upper',
         rows: [
-          { key: 'Engines', val: '—' },
-          { key: 'Thrust (vacuum)', val: '— kN' },
-          { key: 'Burn time', val: '— s' },
-          { key: 'Propellant', val: '—' },
+          { key: 'Engines', val: '\u2014' },
+          { key: 'Thrust (vacuum)', val: '\u2014 kN' },
+          { key: 'Burn time', val: '\u2014 s' },
+          { key: 'Propellant', val: '\u2014' },
         ]
       }
     ],
     cardStats: [
-      { val: '—', lbl: 'Height' },
-      { val: '—', lbl: 'Mass' },
+      { val: '\u2014', lbl: 'Height' },
+      { val: '\u2014', lbl: 'Mass' },
       { val: '0', lbl: 'Launches' },
     ]
   }
@@ -520,6 +536,7 @@ vehicles.forEach(v => {
   card.className = 'vehicle-card';
   card.style.setProperty('--vc', v.color);
   card.innerHTML = `
+    <div class="vc-arrow">&#8599;</div>
     <div class="vc-name">${v.name}</div>
     <div class="vc-sub">${v.class}</div>
     <div class="vc-stat-row">
@@ -564,13 +581,15 @@ function openVehicle(id) {
 
   const overlay = document.getElementById('vehicle-overlay');
   overlay.classList.add('active');
+  requestAnimationFrame(()=>{ requestAnimationFrame(()=>overlay.classList.add('visible')); });
   overlay.scrollTop = 0;
   document.body.style.overflow = 'hidden';
 }
 
 function closeVehicle() {
-  document.getElementById('vehicle-overlay').classList.remove('active');
-  document.body.style.overflow = '';
+  const overlay = document.getElementById('vehicle-overlay');
+  overlay.classList.remove('visible');
+  setTimeout(()=>{ overlay.classList.remove('active'); document.body.style.overflow = ''; }, 350);
 }
 
 /* =================== NEWS WITH LOAD MORE =================== */
@@ -593,7 +612,7 @@ function renderNews() {
   slice.forEach(r => {
     const card = document.createElement('div');
     card.className = 'rocket';
-    card.innerHTML = `<h3>${r.name}</h3><p>${r.description}</p><p style="font-size:0.85em;color:#888;margin-top:8px;">${r.date}</p>`;
+    card.innerHTML = `<h3>${r.name}</h3><p>${r.description}</p><p style="font-size:0.82em;color:#555;margin-top:10px;font-family:var(--mono);">${r.date}</p>`;
     grid.appendChild(card);
   });
   newsShown += slice.length;
@@ -696,9 +715,9 @@ groups.forEach(g => {
     const row = document.createElement('div');
     row.className = 'launch-row';
     row.innerHTML = `
-      <div><strong style="font-size:1.1em;">${l.rocket}</strong></div>
-      <div style="color:#aaa;font-family:monospace;font-size:1.15em;">${dateStr}</div>
-      <div style="color:#777;font-size:1.0em;">${timeStr}</div>
+      <div><strong style="font-size:1.05em;">${l.rocket}</strong></div>
+      <div style="color:#aaa;font-family:var(--mono);font-size:0.9em;">${dateStr}</div>
+      <div style="color:#666;font-size:0.85em;font-family:var(--mono);">${timeStr}</div>
       <div class="status-badge" style="color:${statusColor(l.status)};">${l.status}</div>`;
     rowsWrap.appendChild(row);
   });
