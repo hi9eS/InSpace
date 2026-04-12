@@ -810,12 +810,40 @@ function closeVehicle() {
 
 /* ── NEWS ── */
 const allRockets = [
-  { name:'SunPower One', description:'Where it all began. The name "SunPower" was coined on the fly by Haisess.', detail:'The very first SunPower prototype was assembled and launched within a single session, marking the birth of the InSpace vehicle programme. It flew a nominal trajectory and completed a controlled descent. The launch validated core propulsion, guidance systems, and ground support procedures that would be carried forward into every subsequent vehicle in the InSpace fleet.', date:'February 26, 2026' },
-  { name:'SunOrbit One', description:'Orbiting platform built in stages. Features docking capabilities, solar panels, and communication systems.', detail:'SunOrbit One demonstrated multi-stage separation and achieved stable low Earth orbit. Docking rings and high-gain antenna arrays were deployed successfully during the mission. The platform remained operational for 14 days before a controlled de-orbit burn, serving as the primary testbed for InSpace orbital rendezvous procedures.', date:'February 26, 2026' },
-  { name:'Trial Mission to the Moon', description:'The team is preparing for a trial run of the upcoming lunar mission.', detail:'Initial trajectory calculations and propellant budgets have been finalised. The trial will validate trans-lunar injection burn performance before a crewed attempt. Ground teams have completed two full dress rehearsals. Launch window analysis targets a low-energy transfer trajectory with an estimated transit time of 72 hours.', date:'February 27, 2026' },
-  { name:'Beyond Earth Orbit', description:'"We\'re ready to move beyond Earth\'s pull, coming very soon."', detail:'Internal mission planning documents confirm targets beyond cis-lunar space. An interplanetary transfer window analysis is currently underway for a possible Mars flyby. The propulsion budget for SunOrbit\'s third stage is sufficient for a direct trans-Mars injection without an additional kick stage, pending confirmation of the Delta-V margins.', date:'February 27, 2026' },
-  { name:'Cancelling Missions', description:'Resumption is coming soon. We are currently preparing for two targets: Mars and the Moon.', detail:'Several scheduled test flights were cancelled to consolidate resources around the dual Mars and Moon programme. A revised launch manifest is expected shortly. Engineering teams have been reassigned to focus exclusively on propulsion and life support integration for the crewed lunar mission, with Mars planning running in parallel.', date:'March 03, 2026' },
-  { name:'Vertical Recovery: The Mark of Precision', description:'"Where others leave a crater, we leave our mark."', detail:'Booster SN8 executed a textbook suicide burn and touched down within 0.4 m of the target pad centre. Recovery teams confirmed zero structural damage. Turnaround inspection was completed in under 6 hours, and the booster is already being prepared for its next flight. This marks the fourth consecutive successful recovery in the current test campaign.', date:'March 6, 2026' },
+  {
+    name: 'SunPower One',
+    description: 'Where it all began. The name "SunPower" was coined on the fly by Haisess.',
+    detail: 'The very first SunPower prototype was assembled and launched within a single session, marking the birth of the InSpace vehicle programme. It flew a nominal trajectory and completed a controlled descent. The launch validated core propulsion, guidance systems, and ground support procedures that would be carried forward into every subsequent vehicle in the InSpace fleet.',
+    date: 'February 26, 2026'
+  },
+
+  {
+    name: 'SunPower: The Return of a Legend',
+    description: 'InSpace is officially resuming work on its very first heavy-lift rocket.',
+    detail: 'After being put on hold due to shifting priorities, SunPower One is making a comeback. The rocket that started everything for InSpace was temporarily shelved as the team focused on more advanced programs.<br>Now development is restarting. The vehicle will undergo a major redesign and upgrade, including modern systems and the new AVSBL — Automatic Vertical Suicide Burn Landing.<br>Active work will begin in the coming days and weeks. A lot will be changed and improved - both in design and technical details. SunPower One is getting a second life, this time in a much more mature form.',
+    date: 'April 12, 2026'
+  },
+
+  {
+    name: 'Vertical Recovery: The Mark of Precision',
+    description: '"Where others leave a crater, we leave our mark."',
+    detail: 'Booster SN8 executed a textbook suicide burn and touched down within 0.4 m of the target pad centre. Recovery teams confirmed zero structural damage. Turnaround inspection was completed in under 6 hours, and the booster is already being prepared for its next flight. This marks the fourth consecutive successful recovery in the current test campaign.',
+    date: 'March 6, 2026'
+  },
+
+  {
+    name: 'Trial Mission to the Moon',
+    description: 'The team is preparing for a trial run of the upcoming lunar mission.',
+    detail: 'Initial trajectory calculations and propellant budgets have been finalised. The trial will validate trans-lunar injection burn performance before a crewed attempt. Ground teams have completed two full dress rehearsals. Launch window analysis targets a low-energy transfer trajectory with an estimated transit time of 72 hours.',
+    date: 'February 27, 2026'
+  },
+
+  {
+    name: 'Vertical Recovery: The Mark of Precision',
+    description: '"Where others leave a crater, we leave our mark."',
+    detail: 'Booster SN8 executed a textbook suicide burn and touched down within 0.4 m of the target pad centre. Recovery teams confirmed zero structural damage. Turnaround inspection was completed in under 6 hours, and the booster is already being prepared for its next flight. This marks the fourth consecutive successful recovery in the current test campaign.',
+    date: 'March 6, 2026'
+  }
 ];
 
 const NEWS_PER_PAGE = 3;
