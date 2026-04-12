@@ -395,17 +395,15 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
   <p>Keep an eye out for updates</p>
 
   <!-- Countdown (auto-shows when next Planned launch ≤ 24h) -->
-  <div id="countdown-wrap">
-    <div id="countdown-mission"></div>
-    <div id="countdown-label">Next launch in</div>
-    <div id="countdown-timer">
-      <div class="cd-unit"><div class="cd-num" id="cd-h">00</div><div class="cd-lbl">Hours</div></div>
-      <div class="cd-sep">:</div>
-      <div class="cd-unit"><div class="cd-num" id="cd-m">00</div><div class="cd-lbl">Min</div></div>
-      <div class="cd-sep">:</div>
-      <div class="cd-unit"><div class="cd-num" id="cd-s">00</div><div class="cd-lbl">Sec</div></div>
-    </div>
-  </div>
+<div id="countdown-timer">
+  <div class="cd-unit"><div class="cd-num" id="cd-d">00</div><div class="cd-lbl">Days</div></div>
+  <div class="cd-sep">:</div>
+  <div class="cd-unit"><div class="cd-num" id="cd-h">00</div><div class="cd-lbl">Hours</div></div>
+  <div class="cd-sep">:</div>
+  <div class="cd-unit"><div class="cd-num" id="cd-m">00</div><div class="cd-lbl">Min</div></div>
+  <div class="cd-sep">:</div>
+  <div class="cd-unit"><div class="cd-num" id="cd-s">00</div><div class="cd-lbl">Sec</div></div>
+</div>
 
   <div class="stream-link" onclick="window.open('https://www.youtube.com/@hi9eS')">
     <span class="stream-dot"></span>
@@ -740,16 +738,19 @@ launches.forEach(l => {
   function tick() {
     const ms = nextLaunch.dateObj.getTime() - Date.now();
     if (ms <= 0) {
+      document.getElementById('cd-d').textContent = '00';
       document.getElementById('cd-h').textContent = '00';
       document.getElementById('cd-m').textContent = '00';
       document.getElementById('cd-s').textContent = '00';
       return;
     }
 
-    const h = Math.floor(ms / 3600000);
+    const d = Math.floor(ms / 86400000);
+    const h = Math.floor((ms % 86400000) / 3600000);
     const m = Math.floor((ms % 3600000) / 60000);
     const s = Math.floor((ms % 60000) / 1000);
 
+    document.getElementById('cd-d').textContent = String(d).padStart(2, '0');
     document.getElementById('cd-h').textContent = String(h).padStart(2, '0');
     document.getElementById('cd-m').textContent = String(m).padStart(2, '0');
     document.getElementById('cd-s').textContent = String(s).padStart(2, '0');
