@@ -649,12 +649,12 @@ launches.forEach(l => {
 (function initCountdown(){
   const now = new Date();
   
-  // Явно берём самый ранний Planned запуск
-  const plannedLaunches = launches.filter(l => l.status === 'Planned' && l.dateObj > now);
-  
-  if (plannedLaunches.length === 0) return;
+  // Берём ВСЕ Planned и явно берём самый ранний
+  const nextLaunch = launches
+    .filter(l => l.status === 'Planned' && l.dateObj > now)
+    .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime())[0];
 
-  const nextLaunch = plannedLaunches.sort((a, b) => a.dateObj - b.dateObj)[0];
+  if (!nextLaunch) return;
 
   const wrap = document.getElementById('countdown-wrap');
   wrap.style.display = 'block';
