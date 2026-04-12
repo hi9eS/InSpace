@@ -649,18 +649,26 @@ launches.forEach(l => {
 /* =================== COUNTDOWN =================== */
 (function initCountdown(){
   const now = new Date();
+  
+  // Берём самый ближайший Planned запуск
   const nextLaunch = launches
     .filter(l => l.status === 'Planned' && l.dateObj > now)
-    .sort((a,b) => a.dateObj - b.dateObj)[0];
+    .sort((a, b) => a.dateObj - b.dateObj)[0];
 
-  if (!nextLaunch) return;
+  if (!nextLaunch) {
+    console.log("Нет запланированных запусков");
+    return;
+  }
 
   const wrap = document.getElementById('countdown-wrap');
-  wrap.style.display = 'block';                    // ← показываем всегда
-  document.getElementById('countdown-mission').textContent = nextLaunch.rocket;
+  const missionEl = document.getElementById('countdown-mission');
 
-  function tick(){
-    const ms = nextLaunch.dateObj - new Date();
+  wrap.style.display = 'block';
+  missionEl.textContent = nextLaunch.rocket;
+
+  function tick() {
+    const ms = nextLaunch.dateObj.getTime() - Date.now();
+
     if (ms <= 0) {
       document.getElementById('cd-h').textContent = '00';
       document.getElementById('cd-m').textContent = '00';
@@ -678,15 +686,8 @@ launches.forEach(l => {
   }
 
   tick();
-  setInterval(tick, 1000);   // обновляем каждую секунду
+  setInterval(tick, 1000);        // обновляем каждую секунду
 })();
-
-/* =================== ACCORDION GROUPS =================== */
-const groups = [
-  { status:'Planned',   color:'#ffffff' },
-  { status:'Completed', color:'#00cc66' },
-  { status:'Canceled',  color:'#ff3300' },
-];
 
 const scheduleContainer = document.getElementById('launch-list');
 
