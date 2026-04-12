@@ -649,36 +649,36 @@ launches.forEach(l => {
 /* =================== COUNTDOWN =================== */
 (function initCountdown(){
   const now = new Date();
-  const next = launches
+  const nextLaunch = launches
     .filter(l => l.status === 'Planned' && l.dateObj > now)
     .sort((a,b) => a.dateObj - b.dateObj)[0];
-  if (!next) return;
 
-  const diff = next.dateObj - now;
-  const H24 = 24 * 60 * 60 * 1000;
-  if (diff > H24) return; // only show within 24h
+  if (!nextLaunch) return;
 
   const wrap = document.getElementById('countdown-wrap');
-  wrap.style.display = 'block';
-  document.getElementById('countdown-mission').textContent = next.rocket;
+  wrap.style.display = 'block';                    // ← показываем всегда
+  document.getElementById('countdown-mission').textContent = nextLaunch.rocket;
 
   function tick(){
-    const ms = next.dateObj - new Date();
+    const ms = nextLaunch.dateObj - new Date();
     if (ms <= 0) {
       document.getElementById('cd-h').textContent = '00';
       document.getElementById('cd-m').textContent = '00';
       document.getElementById('cd-s').textContent = '00';
       return;
     }
+
     const h = Math.floor(ms / 3600000);
     const m = Math.floor((ms % 3600000) / 60000);
     const s = Math.floor((ms % 60000) / 1000);
-    document.getElementById('cd-h').textContent = String(h).padStart(2,'0');
-    document.getElementById('cd-m').textContent = String(m).padStart(2,'0');
-    document.getElementById('cd-s').textContent = String(s).padStart(2,'0');
-    setTimeout(tick, 1000);
+
+    document.getElementById('cd-h').textContent = String(h).padStart(2, '0');
+    document.getElementById('cd-m').textContent = String(m).padStart(2, '0');
+    document.getElementById('cd-s').textContent = String(s).padStart(2, '0');
   }
+
   tick();
+  setInterval(tick, 1000);   // обновляем каждую секунду
 })();
 
 /* =================== ACCORDION GROUPS =================== */
