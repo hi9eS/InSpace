@@ -649,7 +649,6 @@ launches.forEach(l => {
 (function initCountdown(){
   const now = new Date();
   
-  // Берём самый ранний Planned запуск
   const nextLaunch = launches
     .filter(l => l.status === 'Planned' && l.dateObj > now)
     .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime())[0];
