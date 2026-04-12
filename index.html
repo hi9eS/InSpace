@@ -642,14 +642,13 @@ launches.forEach(l => {
   const [d,t] = l.date.split(' ');
   const [year,month,day] = d.split('-').map(Number);
   const [hour,minute] = t.split(':').map(Number);
-  l.dateObj = new Date(year, month-1, day, hour, minute);
+  l.dateObj = new Date(Date.UTC(year, month-1, day, hour, minute));  // ← вот это важно
 });
 
-/* =================== COUNTDOWN (по ЕКБ → локальное время пользователя) =================== */
+/* =================== COUNTDOWN (правильно, одинаково для всех) =================== */
 (function initCountdown(){
-  const EKB_OFFSET = 5; // ЕКБ = UTC + 5
-
   const now = new Date();
+
   const nextLaunch = launches
     .filter(l => l.status === 'Planned' && l.dateObj > now)
     .sort((a, b) => a.dateObj.getTime() - b.dateObj.getTime())[0];
@@ -681,6 +680,7 @@ launches.forEach(l => {
   tick();
   setInterval(tick, 1000);
 })();
+
 /* =================== ACCORDION GROUPS =================== */
 const groups = [
   { status:'Planned',   color:'#ffffff' },
