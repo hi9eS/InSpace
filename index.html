@@ -321,7 +321,7 @@ h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36p
 .np-date-tag { font-size:0.7em; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); font-family:var(--mono); margin-bottom:18px; }
 .np-title { font-size:clamp(1.8em,4vw,2.8em); font-weight:300; letter-spacing:-0.01em; margin-bottom:32px; line-height:1.25; }
 .np-divider { height:1px; background:var(--border); margin-bottom:36px; }
-.np-text { color:#aaa; font-size:1.0em; line-height:1.9; font-weight:300; }
+.np-text { color:#ccc; font-size:1.0em; line-height:1.9; font-weight:300; }
 
 /* ── LAUNCH SCHEDULE ── */
 #launch-list { margin-top:10px; display:flex; flex-direction:column; gap:10px; }
@@ -428,9 +428,17 @@ h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36p
 .contact p, .contact a { color:#aaa; margin-bottom:5px; }
 .contact a:hover { color:var(--text); }
 footer { text-align:center; padding:24px; border-top:1px solid var(--border); font-size:0.8em; color:var(--muted); font-family:var(--mono); position:relative; z-index:1; }
-
 .reveal { opacity:0; transform:translateY(22px); transition:opacity 0.7s var(--ease), transform 0.7s var(--ease); }
 .reveal.visible { opacity:1; transform:translateY(0); }
+
+#news-starfield {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
 </style>
 </head>
 <body>
@@ -450,9 +458,13 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
 <!-- NEWS ARTICLE OVERLAY -->
 <div id="news-overlay">
   <div class="np-header">
-    <button class="np-back" onclick="closeNews()">&#8592; Back</button>
+    <button class="np-back" onclick="closeNews()">← Back</button>
     <span class="np-header-title" id="np-header-title">Latest News</span>
   </div>
+  
+  <!-- news backgr -->
+  <div id="news-starfield"></div>
+  
   <div class="np-body" id="np-body"></div>
 </div>
 
@@ -1056,6 +1068,36 @@ groups.forEach(g => {
 </script>
 
 <script>
+  /* ── NEWS STARFIELD ── */
+  let newsStarsCreated = false;
+
+  function ensureNewsStars() {
+    if (newsStarsCreated) return;
+    createStars(document.getElementById('news-starfield'), 80);
+    newsStarsCreated = true;
+  }
+
+  function openNews(idx) {
+    const r = allRockets[idx];
+    
+    ensureNewsStars();
+
+    document.getElementById('np-header-title').textContent = r.name;
+    document.getElementById('np-body').innerHTML = `
+      <div class="np-date-tag">${r.date}</div>
+      <div class="np-title">${r.name}</div>
+      <div class="np-divider"></div>
+      <div class="np-text">${r.detail}</div>`;
+    
+    const overlay = document.getElementById('news-overlay');
+    overlay.classList.add('active');
+    requestAnimationFrame(() => { 
+      requestAnimationFrame(() => overlay.classList.add('visible')); 
+    });
+    overlay.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+  }
+
   document.documentElement.style.zoom = "1.08";
 </script>
 
