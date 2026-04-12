@@ -711,7 +711,7 @@ const launches = [
   { rocket:'SunOrbit One SN6 (V2.2)', date:'2026-03-11 13:45', status:'Completed', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
 
   // PLANNED (от новой к старой)
-  { rocket:'SunOrbit One SN48 (V2.2)', date:'2026-04-15 09:07', status:'Planned', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
+  { rocket:'SunOrbit One SN48 (V2.2)', date:'2026-04-15 07:11', status:'Planned', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' },
   { rocket:'SunOrbit One SN49 (V2.2)', date:'2026-04-16 20:00', status:'Planned', site:'Main Pad', flights:0, description:'Test SO-1 Separation test', type:'SO-1 Separation and Landing Test' }
 ];
 
@@ -719,8 +719,8 @@ launches.forEach(l => {
   const [d, t] = l.date.split(' ');
   const [year, month, day] = d.split('-').map(Number);
   const [hour, minute] = t.split(':').map(Number);
-  
-  l.dateObj = new Date(Date.UTC(year, month - 1, day, hour - 5, minute));
+ 
+  l.dateObj = new Date(year, month - 1, day, hour, minute);   // Time Here
 });
 
 /* =================== COUNTDOWN — по местному времени посетителя =================== */
