@@ -412,16 +412,17 @@ h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36p
   overflow:hidden;
   max-height:0;
   opacity:0;
-  transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1),
-              opacity 0.35s cubic-bezier(0.4,0,0.2,1),
-              padding 0.35s cubic-bezier(0.4,0,0.2,1);
+  transition: max-height 0.65s cubic-bezier(1,0,0.2,1),
+              opacity 0.65s cubic-bezier(0.4,0,0.2,1),
+              padding 0.65s cubic-bezier(0.4,0,0.2,1);
   padding-top:0;
   padding-bottom:0;
 }
 .group-rows.open {
-  opacity:1;
-  padding-top:6px;
-  padding-bottom:6px;
+  opacity: 1;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  max-height: 3000px !important;     /* ← */
 }
 
 .contact p, .contact a { color:#aaa; margin-bottom:5px; }
@@ -878,8 +879,8 @@ const launches = [
   { rocket:'SunOrbit One SN2 (V2.2)', date:'2026-03-02 23:00', status:'Canceled', site:'Vandenberg SFB (RSS)', type:'-', duration:'~2 min', target:'Suicide Burn Test', vehicle:'SunOrbit SN2 (V2.2)', desc:'New plans required mission cancellation. Booster landing test using precision Suicide Burn' },
   { rocket:'SunPower One SN1 (V2.2)', date:'2026-03-01 14:00', status:'Canceled', site:'Vandenberg SFB (RSS)', type:'-', duration:'~2 min', target:'Suicide Burn Test', vehicle:'SunPower SN1 (V2.2)', desc:'First SN1 booster test. New plans required mission cancellation. Booster landing test using precision Suicide Burn' },
   { rocket:'SunOrbit One SN10 (V2.2)', date:'2026-04-02 00:00', status:'Completed', site:'Vandenberg SFB (RSS)', type:'-', duration:'~2 min', target:'Suicide Burn Test', vehicle:'SunOrbit SN10 (V2.2)', desc:'7th Flight: Booster Separation & Landing Test' },
-  { rocket:'SunOrbit One SN9 (V2.2)', date:'2026-03-30 07:30', status:'Completed', site:'Vandenberg SFB (RSS)', type:'-', duration:'~2 min', target:'Suicide Burn Test', vehicle:'SunOrbit SN9 (V2.2)', desc:'6th Flight: Booster Separation & Landing Test' },
-  { rocket:'SunOrbit One SN8 (V2.2)', date:'2026-03-30 03:00', status:'Completed', site:'Vandenberg SFB (RSS)', type:'-', duration:'~5 min', target:'Suicide Burn Test', vehicle:'SunOrbit SN8 (V2.2)', desc:'5th Flight: Booster Separation & Landing Test' },
+  { rocket:'SunOrbit One SN9 (V2.2)', date:'2026-03-29 07:30', status:'Completed', site:'Vandenberg SFB (RSS)', type:'-', duration:'~2 min', target:'Suicide Burn Test', vehicle:'SunOrbit SN9 (V2.2)', desc:'6th Flight: Booster Separation & Landing Test' },
+  { rocket:'SunOrbit One SN8 (V2.2)', date:'2026-03-29 03:00', status:'Completed', site:'Vandenberg SFB (RSS)', type:'-', duration:'~5 min', target:'Suicide Burn Test', vehicle:'SunOrbit SN8 (V2.2)', desc:'5th Flight: Booster Separation & Landing Test' },
   { rocket:'SunOrbit One SN7 (V2.2)', date:'2026-03-21 16:00', status:'Completed', site:'Vandenberg SFB (RSS)', type:'-', duration:'~2 min', target:'Suicide Burn Test', vehicle:'SunOrbit SN7 (V2.2)', desc:'4th Flight: Booster Separation & Landing Test' },
   { rocket:'SunOrbit One SN7 (V2.2)', date:'2026-03-19 14:30', status:'Completed', site:'Vandenberg SFB (RSS)', type:'-', duration:'~2 min', target:'Suicide Burn Test', vehicle:'SunOrbit SN7 (V2.2)', desc:'3th Flight: Booster Separation & Landing Test' },
   { rocket:'SunOrbit One SN6 (V2.2)', date:'2026-03-11 13:45', status:'Completed', site:'Vandenberg SFB (RSS)', type:'-', duration:'~2 min', target:'Suicide Burn Test', vehicle:'SunOrbit SN6 (V2.2)', desc:'2th Flight: Booster Separation & Landing Test' },
