@@ -766,7 +766,7 @@ function launchCountFor(nameId) {
   const text = document.getElementById('days-since-text');
 
   const label = diffDays === 0 
-    ? 'Last launch: today' 
+    ? '<1 Days since last launch' 
     : `${diffDays} day${diffDays !== 1 ? 's' : ''} since last launch`;
 
   text.textContent = label;
