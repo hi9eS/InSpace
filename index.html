@@ -5,7 +5,10 @@
 <title>InSpace</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@300;400&display=swap');
+/* Made by InSpace */
+/* This website is for informational purposes only and does NOT engage in any commercial activity. */
 
+/* Accordion load-more button */
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 :root {
   --bg: #080808;
@@ -33,19 +36,16 @@
   --acc-font-count: 0.79em;
   --acc-dot-size: 10px;
 
-  /* Launch Modal size — adjust here */
   --lm-width: 600px;
   --lm-cell-padding: 18px 22px;
   --lm-cell-val-size: 1.1em;
 
-  /* News text brightness — adjust here (1 = default, 1.2 = brighter) */
   --news-text-brightness: 1.15;
 }
 html { scroll-behavior:smooth; }
 body { background:var(--bg); color:var(--text); font-family:var(--font); line-height:1.6; font-size:15px; overflow-x:hidden; }
 a { color:inherit; text-decoration:none; }
 
-/* ── STARFIELD ── */
 #starfield, #vp-starfield { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
 #vp-starfield { z-index:0; }
 #news-starfield { position:absolute; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
@@ -69,83 +69,81 @@ header::after {
   width:180px; height:1px;
   background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
 }
-
-/* Left side: local time */
-.header-left {
-  position:absolute; left:24px;
-  display:flex; align-items:center; gap:8px;
-}
+.header-left { position:absolute; left:24px; display:flex; align-items:center; gap:6px; }
 .header-clock {
-  font-family:var(--mono); font-size:0.78em; font-weight:300;
-  color:var(--muted); letter-spacing:0.06em;
-  white-space:nowrap;
+  font-family:var(--mono); font-weight:300;
+  letter-spacing:0.06em; white-space:nowrap;
 }
-.header-clock-tz {
-  font-family:var(--mono); font-size:0.68em;
-  color:var(--muted2); letter-spacing:0.04em;
-}
+.header-clock-tz { font-family:var(--mono); letter-spacing:0.04em; }
 
-/* Center: nav links */
 .header-nav { display:flex; gap:4px; }
 .header-nav a {
   font-size:0.85em; font-weight:400; letter-spacing:0.04em;
-  padding:7px 16px; border-radius:8px; cursor:pointer; color:var(--muted);
+  padding:7px 16px; border-radius:8px; cursor:pointer;
   transition:color 0.2s, background 0.2s, transform 0.15s var(--ease-spring);
 }
-.header-nav a:hover { color:var(--text); transform:translateY(-1px); background:rgba(255,255,255,0.05); }
+.header-nav a:hover { transform:translateY(-1px); background:rgba(255,255,255,0.05); }
 .header-nav a:active { transform:scale(0.96); }
 
-/* Right side: social buttons */
-.header-right {
-  position:absolute; right:24px;
-  display:flex; align-items:center; gap:8px;
-}
+.header-right { position:absolute; right:24px; display:flex; align-items:center; gap:8px; }
+/* ── SOCIAL BUTTONS ── */
 .social-btn {
-  width:32px; height:32px; border-radius:50%;
-  border:1px solid rgba(255,255,255,0.15);
-  background:rgba(255,255,255,0.03);
-  display:flex; align-items:center; justify-content:center;
-  cursor:pointer; color:var(--muted);
-  font-size:0.78em; font-weight:500; font-family:var(--mono);
-  transition:color 0.2s, border-color 0.2s, background 0.2s, transform 0.15s var(--ease-spring);
-  text-decoration:none;
+  border-radius:100px;
+  border:1px solid rgba(255,255,255,0.18);
+  background:rgba(255,255,255,0.04);
+  display:inline-flex; 
+  align-items:center; 
+  justify-content:center;
+  padding:7px 16px;
+  cursor:pointer;
+  font-weight:500; 
+  font-family:var(--mono);
+  font-size:0.76em;
+  color:#aaa;
+  transition:all 0.28s var(--ease-spring);
+  text-decoration:none; 
+  white-space:nowrap;
   flex-shrink:0;
+  gap:7px;
 }
-.social-btn:hover { 
-  color:var(--text); 
-  border-color:rgba(255,255,255,0.35); 
-  background:rgba(255,255,255,0.07); 
-  transform: scale(1.08);
+.social-btn:hover {
+  border-color:rgba(255,255,255,0.4); 
+  background:rgba(255,255,255,0.09);
+  color:#f0f0f0;
+  transform:scale(1.04) translateY(-1px);
 }
-header a:hover { color:var(--text); transform:translateY(-1px); background:rgba(255,255,255,0.05); }
-header a:active { transform:scale(0.96); }
+.social-btn img { 
+  width:18px; 
+  height:18px; 
+  object-fit:contain; 
+  filter:brightness(0.65); 
+  transition:filter 0.25s; 
+}
+.social-btn:hover img { 
+  filter:brightness(1.1); 
+}
 
 section { padding:90px 20px; max-width:1000px; margin:0 auto; position:relative; z-index:1; }
 
-/* ── HERO ── */
 .hero { text-align:center; padding-top:130px; }
 .hero h1 {
-  font-size:clamp(2.5em,5.5vw,4em);
-  font-weight:300; letter-spacing:-0.02em; margin-bottom:20px;
+  font-size:clamp(2.5em,5.5vw,4em); font-weight:300; letter-spacing:-0.02em; margin-bottom:20px;
   animation:fadeUp 0.8s var(--ease) both;
-  background: linear-gradient(135deg, var(--hero-title-from) 0%, var(--hero-title-to) 100%);
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-  filter: drop-shadow(0 0 26px var(--hero-title-glow)) drop-shadow(0 0 8px var(--hero-title-glow));
+  background:linear-gradient(135deg,var(--hero-title-from) 0%,var(--hero-title-to) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  filter:drop-shadow(0 0 26px var(--hero-title-glow)) drop-shadow(0 0 8px var(--hero-title-glow));
 }
 .hero p {
   font-size:1.1em; max-width:600px; margin:0 auto 36px;
-  color:var(--hero-sub-color); font-weight:300;
-  filter: brightness(var(--hero-sub-brightness));
+  color:var(--hero-sub-color); font-weight:300; filter:brightness(var(--hero-sub-brightness));
   animation:fadeUp 0.8s 0.1s var(--ease) both;
 }
 @keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
 
-/* ── COUNTDOWN ── */
 #countdown-wrap {
   display:none; margin:0 auto 9px; max-width:640px;
   background:var(--bg2); border:1px solid var(--border);
-  border-radius:20px; padding:28px 40px;
-  position:relative; overflow:hidden;
+  border-radius:20px; padding:28px 40px; position:relative; overflow:hidden;
   animation:fadeUp 0.8s 0.15s var(--ease) both;
 }
 #countdown-wrap::before {
@@ -159,36 +157,24 @@ section { padding:90px 20px; max-width:1000px; margin:0 auto; position:relative;
 .cd-num { font-size:2.6em; font-weight:300; font-variant-numeric:tabular-nums; letter-spacing:0.04em; line-height:1; font-family:var(--mono); }
 .cd-lbl { font-size:0.63em; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted2); margin-top:5px; }
 .cd-sep { font-size:2em; font-weight:200; color:var(--muted2); line-height:1; padding-bottom:14px; }
+/* separator between Days and Hours — toggled by JS */
 .cd-sep-thin { width:1px; height:36px; background:rgba(255,255,255,0.1); align-self:center; margin-bottom:14px; }
+.cd-sep-colon { font-size:2em; font-weight:200; color:var(--muted2); line-height:1; padding-bottom:14px; }
 
-/* ── DAYS SINCE LAST LAUNCH ── */
-#days-since-wrap {
-  display:none;
-  margin:0 auto 13px; max-width:640px;
-  text-align:center;
-  animation:fadeUp 0.8s 0.18s var(--ease) both;
-}
-#days-since-text {
-  font-size:0.72em; letter-spacing:0.14em;
-  text-transform:uppercase; color:var(--muted2);
-  font-family:var(--mono);
-}
+#days-since-wrap { display:none; margin:0 auto 13px; max-width:640px; text-align:center; animation:fadeUp 0.8s 0.18s var(--ease) both; }
+#days-since-text { font-size:0.72em; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted2); font-family:var(--mono); }
 
-/* ── WATCH BUTTON ── */
 .stream-link {
   display:inline-flex; align-items:center; gap:11px;
-  font-size:1.06em; font-weight:400; letter-spacing:0.07em;
-  padding:16px 46px;
+  font-size:1.06em; font-weight:400; letter-spacing:0.07em; padding:16px 46px;
   border:1px solid rgba(255,255,255,0.35); border-radius:100px;
-  cursor:pointer; color:#fff;
-  transition:all 0.3s var(--ease);
+  cursor:pointer; color:#fff; transition:all 0.3s var(--ease);
   margin-bottom:70px; position:relative; overflow:hidden;
   animation:fadeUp 0.8s 0.2s var(--ease) both;
 }
 .stream-link::before {
-  content:''; position:absolute; inset:0;
-  background:#fff; transform:scaleX(0); transform-origin:left;
-  transition:transform 0.35s var(--ease); border-radius:100px;
+  content:''; position:absolute; inset:0; background:#fff;
+  transform:scaleX(0); transform-origin:left; transition:transform 0.35s var(--ease); border-radius:100px;
 }
 .stream-link:hover { color:#000; border-color:#fff; transform:translateY(-2px); }
 .stream-link:hover::before { transform:scaleX(1); }
@@ -197,59 +183,39 @@ section { padding:90px 20px; max-width:1000px; margin:0 auto; position:relative;
 h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36px; }
 
 /* ── VEHICLE CARDS ── */
-/* Section has more breathing room */
 #fleet { padding-top:100px; padding-bottom:100px; }
-
-.vehicle-cards {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-  gap:22px;
-  align-items:stretch; /* equal height */
-}
+.vehicle-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:22px; align-items:stretch; }
 .vehicle-card {
-  background: linear-gradient(160deg, #111 0%, #0d0d0d 100%);
-  border-radius: 22px; cursor:pointer;
-  transition: box-shadow 0.35s var(--ease), border-color 0.3s var(--ease);
+  background:linear-gradient(160deg,#111 0%,#0d0d0d 100%);
+  border-radius:22px; cursor:pointer;
+  transition:box-shadow 0.35s var(--ease),border-color 0.3s var(--ease);
   position:relative; overflow:hidden;
-  border: 1px solid rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.08);
   display:flex; flex-direction:column;
-  /* equal height via grid align-items:stretch */
 }
 .vehicle-card:hover {
-  box-shadow: 0 14px 44px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.13);
-  border-color: rgba(255,255,255,0.13);
+  box-shadow:0 14px 44px rgba(0,0,0,0.65),0 0 0 1px rgba(255,255,255,0.13);
+  border-color:rgba(255,255,255,0.13);
 }
-.vehicle-card:hover::after { opacity: 0.75; width: 3px; }
-
-/* Top colour bar with a bit more height for feel */
-.vc-color-bar { height:3px; background:var(--vc,#fff); opacity:0.45; flex-shrink:0; transition:opacity 0.3s; }
+.vc-color-bar { background:var(--vc,#fff); opacity:0.45; flex-shrink:0; transition:opacity 0.3s; }
 .vehicle-card:hover .vc-color-bar { opacity:1.0; }
-
-/* More breathing room inside */
-.vc-inner { padding:15px 20px 10px; display:flex; flex-direction:column; flex:1; }
-
-/* Bigger gap between bar and name */
-.vc-label-row { display:flex; align-items:center; gap:10px; margin-bottom:7px; margin-top:6px; }
+.vc-inner { display:flex; flex-direction:column; flex:1; }
+.vc-label-row { display:flex; align-items:center; gap:10px; }
 .vc-dot { width:7px; height:7px; border-radius:50%; background:var(--vc,#fff); flex-shrink:0; opacity:0.45; transition:opacity 0.3s; }
 .vehicle-card:hover .vc-dot { opacity:0.7; }
 .vc-name { font-size:1.35em; font-weight:500; letter-spacing:-0.01em; line-height:1.2; }
-.vc-sub { font-size:0.7em; color:var(--muted); letter-spacing:0.14em; text-transform:uppercase; margin-bottom:28px; font-family:var(--mono); }
-.vc-divider { height:1px; background:rgba(255,255,255,0.06); margin-bottom:22px; }
+.vc-sub { font-size:0.7em; color:var(--muted); letter-spacing:0.14em; text-transform:uppercase; font-family:var(--mono); }
+.vc-divider { height:1px; background:rgba(255,255,255,0.06); }
 .vc-stat-row { display:flex; justify-content:space-between; gap:12px; margin-top:auto; }
 .vc-stat { text-align:center; flex:1; }
 .vc-stat-val { font-size:1.1em; font-weight:400; font-family:var(--mono); color:var(--text); letter-spacing:0.02em; }
 .vc-stat-lbl { font-size:0.61em; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; margin-top:5px; }
-
-.vc-footer {
-  display:flex; align-items:center; justify-content:flex-end;
-  padding:14px 28px; border-top:1px solid rgba(255,255,255,0.05); margin-top:22px; gap:6px;
-}
+.vc-footer { display:flex; align-items:center; justify-content:flex-end; border-top:1px solid rgba(255,255,255,0.05); gap:6px; }
 .vc-footer-text { font-size:0.72em; color:var(--muted2); letter-spacing:0.1em; text-transform:uppercase; font-family:var(--mono); transition:color 0.2s; }
-.vc-footer-arrow { font-size:0.82em; color:var(--muted2); transition:transform 0.22s var(--ease-spring), color 0.2s; }
-.vehicle-card:hover .vc-footer-text { color: rgba(255,255,255,0.55); }
-.vehicle-card:hover .vc-footer-arrow { color: rgba(255,255,255,0.55); transform:translate(3px,-3px); }
+.vc-footer-arrow { font-size:0.82em; color:var(--muted2); transition:transform 0.22s var(--ease-spring),color 0.2s; }
+.vehicle-card:hover .vc-footer-text { color:rgba(255,255,255,0.55); }
+.vehicle-card:hover .vc-footer-arrow { color:rgba(255,255,255,0.55); transform:translate(3px,-3px); }
 
-/* ── VEHICLE OVERLAY ── */
 #vehicle-overlay { display:none; position:fixed; inset:0; background:var(--bg); z-index:200; overflow-y:auto; opacity:0; transition:opacity 0.35s var(--ease); }
 #vehicle-overlay.active { display:block; }
 #vehicle-overlay.visible { opacity:1; }
@@ -280,28 +246,25 @@ h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36p
 .vp-stage-val { font-size:0.95em; font-weight:300; font-family:var(--mono); color:var(--text); }
 .vp-desc { color:#777; font-size:1.0em; line-height:1.85; max-width:680px; font-weight:300; }
 
-/* ── NEWS CARDS ── */
+/* ── NEWS ── */
 .rocket-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin-top:20px; }
-.rocket { background:var(--bg2); border:1px solid rgba(255,255,255,0.07); border-radius:18px; padding:0; transition:transform 0.28s var(--ease-spring), box-shadow 0.28s var(--ease), border-color 0.25s; position:relative; overflow:hidden; display:flex; flex-direction:column; cursor:default; opacity:0; transform:translateY(16px); animation:newsIn 0.5s var(--ease) forwards; }
+.rocket { background:var(--bg2); border:1px solid rgba(255,255,255,0.07); border-radius:18px; padding:0; transition:transform 0.28s var(--ease-spring),box-shadow 0.28s var(--ease),border-color 0.25s; position:relative; overflow:hidden; display:flex; flex-direction:column; cursor:default; opacity:0; transform:translateY(16px); animation:newsIn 0.5s var(--ease) forwards; }
 @keyframes newsIn { to { opacity:1; transform:translateY(0); } }
 .rocket:hover { transform:translateY(-5px); box-shadow:0 16px 48px rgba(0,0,0,0.4); border-color:rgba(255,255,255,0.13); }
 .rocket-top-bar { height:2px; background:linear-gradient(90deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04)); transition:background 0.3s; }
 .rocket:hover .rocket-top-bar { background:linear-gradient(90deg,rgba(255,255,255,0.28),rgba(255,255,255,0.06)); }
 .rocket-body { padding:22px 22px 14px; flex:1; display:flex; flex-direction:column; }
 .rocket h3 { margin-bottom:10px; font-size:0.97em; font-weight:500; letter-spacing:-0.005em; line-height:1.4; color:var(--text); }
-/* Slightly brighter description text — controlled via --news-text-brightness */
-.rocket p.rocket-desc { font-size:0.875em; color:#888; line-height:1.7; flex:1; filter: brightness(var(--news-text-brightness)); }
+.rocket p.rocket-desc { font-size:0.875em; color:#888; line-height:1.7; flex:1; filter:brightness(var(--news-text-brightness)); }
 .rocket-footer { display:flex; align-items:center; justify-content:space-between; padding:12px 22px; border-top:1px solid rgba(255,255,255,0.05); margin-top:14px; }
 .rocket-date { font-size:0.75em; color:#777; font-family:var(--mono); letter-spacing:0.04em; }
 .rocket-details-btn { font-size:0.72em; color:var(--muted2); font-family:var(--mono); letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; transition:color 0.2s; background:none; border:none; padding:0; display:flex; align-items:center; gap:5px; }
 .rocket-details-btn .rd-arrow { transition:transform 0.22s var(--ease-spring); display:inline-block; }
 .rocket:hover .rocket-details-btn { color:#aaa; }
 .rocket:hover .rocket-details-btn .rd-arrow { transform:translate(2px,-2px); }
-
 #load-more-btn { display:block; margin:24px auto 0; padding:10px 32px; background:transparent; border:1px solid var(--border); color:var(--muted); border-radius:100px; font-size:0.85em; font-family:var(--font); cursor:pointer; transition:all 0.2s var(--ease); }
 #load-more-btn:hover { background:var(--bg2); color:var(--text); border-color:var(--border-hover); }
 
-/* ── NEWS OVERLAY ── */
 #news-overlay { display:none; position:fixed; inset:0; background:var(--bg); z-index:200; overflow-y:auto; opacity:0; transition:opacity 0.35s var(--ease); }
 #news-overlay.active { display:block; }
 #news-overlay.visible { opacity:1; }
@@ -315,31 +278,34 @@ h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36p
 .np-divider { height:1px; background:var(--border); margin-bottom:36px; }
 .np-text { color:#ccc; font-size:1.0em; line-height:1.9; font-weight:300; }
 
-/* ── LAUNCH SCHEDULE ── */
+/* ── SCHEDULE ── */
 #launch-list { margin-top:10px; display:flex; flex-direction:column; gap:10px; }
-.launch-row { display:grid; grid-template-columns:2fr 1.8fr 1fr 1fr; align-items:center; padding:15px 20px; background:rgba(255,255,255,0.025); border:1px solid var(--border); border-radius:8px; transition:background 0.2s ease, border-color 0.2s ease, transform 0.2s ease; cursor:pointer; }
+.launch-row { display:grid; grid-template-columns:2fr 1.8fr 1fr 1fr; align-items:center; padding:15px 20px; background:rgba(255,255,255,0.025); border:1px solid var(--border); border-radius:8px; transition:background 0.2s ease,border-color 0.2s ease,transform 0.2s ease; cursor:pointer; }
 .launch-row:hover { background:rgba(255,255,255,0.05); transform:scale(1.012); border-color:var(--border-hover); }
 .launch-row strong { font-size:0.97em; color:#fff; }
 .launch-row div { font-size:0.87em; }
 .status-badge { text-align:center; font-size:0.74em; font-weight:600; text-transform:uppercase; padding:6px 14px; border-radius:100px; background:rgba(0,0,0,0.3); border:1px solid currentColor; justify-self:end; min-width:108px; font-family:var(--mono); letter-spacing:0.06em; opacity:0.85; }
 @media(max-width:768px){ .launch-row { grid-template-columns:1.5fr 1fr; gap:8px; } .status-badge { grid-column:span 2; justify-self:start; } }
 
-.row-watch-link { display:none; font-size:0.72em; color:rgba(255,255,255,0.45); font-family:var(--mono); letter-spacing:0.08em; text-decoration:none; cursor:pointer; padding:3px 0; border-bottom:1px solid rgba(255,255,255,0.2); transition:color 0.2s, border-color 0.2s; white-space:nowrap; align-self:center; }
+.row-watch-link { display:none; font-size:0.72em; color:rgba(255,255,255,0.45); font-family:var(--mono); letter-spacing:0.08em; text-decoration:none; cursor:pointer; padding:3px 0; border-bottom:1px solid rgba(255,255,255,0.2); transition:color 0.2s,border-color 0.2s; white-space:nowrap; align-self:center; }
 .row-watch-link:hover { color:#fff; border-color:rgba(255,255,255,0.6); }
 .row-watch-link.visible { display:inline-block; }
 
-/* ── LAUNCH MODAL — slightly bigger ── */
+/* Accordion load-more button */
+.acc-load-more {
+  display:block; margin:10px 20px 12px; padding:8px 0;
+  background:transparent; border:1px solid rgba(255,255,255,0.1);
+  color:var(--muted); border-radius:8px;
+  font-size:0.78em; font-family:var(--mono); letter-spacing:0.06em;
+  text-transform:uppercase; cursor:pointer; width:calc(100% - 40px);
+  transition:all 0.2s var(--ease);
+}
+.acc-load-more:hover { background:rgba(255,255,255,0.04); color:var(--text); border-color:rgba(255,255,255,0.2); }
+
 #launch-modal-backdrop { display:none; position:fixed; inset:0; z-index:300; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); opacity:0; transition:opacity 0.3s var(--ease); align-items:center; justify-content:center; }
 #launch-modal-backdrop.active { display:flex; }
 #launch-modal-backdrop.visible { opacity:1; }
-#launch-modal {
-  background:var(--bg2); border:1px solid rgba(255,255,255,0.12);
-  border-radius:22px; width:min(var(--lm-width),92vw);
-  padding:0; overflow:hidden;
-  transform:translateY(20px) scale(0.97);
-  transition:transform 0.35s var(--ease-spring), opacity 0.3s;
-  opacity:0; position:relative;
-}
+#launch-modal { background:var(--bg2); border:1px solid rgba(255,255,255,0.12); border-radius:22px; width:min(var(--lm-width),92vw); padding:0; overflow:hidden; transform:translateY(20px) scale(0.97); transition:transform 0.35s var(--ease-spring),opacity 0.3s; opacity:0; position:relative; }
 #launch-modal-backdrop.visible #launch-modal { transform:translateY(0) scale(1); opacity:1; }
 .lm-color-bar { height:3px; opacity:0.7; }
 .lm-inner { padding:34px 36px 32px; }
@@ -348,24 +314,18 @@ h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36p
 .lm-status-text { font-size:0.7em; letter-spacing:0.18em; text-transform:uppercase; font-family:var(--mono); opacity:0.85; }
 .lm-name { font-size:1.6em; font-weight:400; letter-spacing:-0.01em; margin-bottom:6px; line-height:1.25; }
 .lm-type { font-size:0.72em; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; font-family:var(--mono); margin-bottom:28px; }
-.lm-grid {
-  display:grid; grid-template-columns:1fr 1fr; gap:1px;
-  background:rgba(255,255,255,0.07); border-radius:14px; overflow:hidden; margin-bottom:26px;
-}
+.lm-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:rgba(255,255,255,0.07); border-radius:14px; overflow:hidden; margin-bottom:26px; }
 .lm-cell { background:var(--bg3); padding:var(--lm-cell-padding); }
 .lm-cell-lbl { font-size:0.63em; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; font-family:var(--mono); margin-bottom:6px; }
 .lm-cell-val { font-size:var(--lm-cell-val-size); font-family:var(--mono); color:var(--text); font-weight:300; }
-.lm-desc { font-size:0.9em; color:#666; line-height:1.8; margin-bottom:0; }
+.lm-desc { font-size:0.9em; color:#666; line-height:1.8; }
 .lm-watch-row { margin-top:22px; padding-top:18px; border-top:1px solid rgba(255,255,255,0.06); }
-.lm-watch-link { display:inline-flex; align-items:center; gap:8px; font-size:0.82em; font-family:var(--mono); letter-spacing:0.1em; color:rgba(255,255,255,0.45); text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,0.2); cursor:pointer; text-decoration:none; transition:color 0.2s, border-color 0.2s; padding-bottom:1px; }
+.lm-watch-link { display:inline-flex; align-items:center; gap:8px; font-size:0.82em; font-family:var(--mono); letter-spacing:0.1em; color:rgba(255,255,255,0.45); text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,0.2); cursor:pointer; text-decoration:none; transition:color 0.2s,border-color 0.2s; padding-bottom:1px; }
 .lm-watch-link:hover { color:#fff; border-color:rgba(255,255,255,0.6); }
-.lm-watch-link .wl-arrow { font-size:0.9em; transition:transform 0.2s var(--ease-spring); }
-.lm-watch-link:hover .wl-arrow { transform:translate(2px,-2px); }
 .lm-close { position:absolute; top:18px; right:22px; background:none; border:1px solid rgba(255,255,255,0.1); color:var(--muted2); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:0.8em; display:flex; align-items:center; justify-content:center; transition:all 0.2s var(--ease); }
 .lm-close:hover { background:rgba(255,255,255,0.07); color:var(--text); border-color:rgba(255,255,255,0.25); }
 
-/* ── ACCORDION ── */
-.group-accordion { border:1px solid var(--border); border-radius:14px; overflow:hidden; transition:box-shadow 0.3s, border-color 0.25s; }
+.group-accordion { border:1px solid var(--border); border-radius:14px; overflow:hidden; transition:box-shadow 0.3s,border-color 0.25s; }
 .group-accordion:hover { box-shadow:0 4px 20px rgba(255,255,255,0.03); border-color:var(--border-hover); }
 .group-header { display:flex; align-items:center; justify-content:space-between; padding:var(--acc-padding-v) var(--acc-padding-h); background:rgba(255,255,255,0.025); cursor:pointer; user-select:none; transition:background 0.2s; }
 .group-header:hover { background:rgba(255,255,255,0.05); }
@@ -375,30 +335,17 @@ h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36p
 .group-count { font-size:var(--acc-font-count); color:var(--muted2); font-weight:400; font-family:var(--mono); }
 .group-chevron { font-size:0.72em; color:var(--muted2); transition:transform 0.38s var(--ease); }
 .group-accordion.open .group-chevron { transform:rotate(180deg); }
-.group-rows { overflow:hidden; max-height:0; opacity:0; transition:max-height 0.65s cubic-bezier(1,0,0.2,1), opacity 1.65s cubic-bezier(0.4,0,0.2,1), padding 0.65s cubic-bezier(0.4,0,0.2,1); padding-top:0; padding-bottom:0; }
+.group-rows { overflow:hidden; max-height:0; opacity:0; transition:max-height 0.65s cubic-bezier(1,0,0.2,1),opacity 1s cubic-bezier(0.4,0,0.2,1),padding 0.65s cubic-bezier(0.4,0,0.2,1); padding-top:0; padding-bottom:0; }
 .group-rows.open { opacity:1; padding-top:0; padding-bottom:0; max-height:3000px !important; }
 
-.contact p, .contact a { color:#aaa; margin-bottom:5px; }
-.contact a:hover { color:var(--text); }
 footer { text-align:center; padding:24px; border-top:1px solid var(--border); font-size:0.8em; color:var(--muted); font-family:var(--mono); position:relative; z-index:1; }
-.reveal { opacity:0; transform:translateY(22px); transition:opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+.reveal { opacity:0; transform:translateY(22px); transition:opacity 0.7s var(--ease),transform 0.7s var(--ease); }
 .reveal.visible { opacity:1; transform:translateY(0); }
-
-/* News on X button hover — лёгкое увеличение */
-#news-on-x-btn:hover {
-  color: #ccc;
-  border-color: rgba(255,255,255,0.45);
-  transform: scale(1.04);
-}
-
-#news-on-x-btn:hover .x-arrow {
-  transform: translate(1px, -1px);
-}
 
 /* ── MOBILE ── */
 @media(max-width:768px) {
+  .rd-arrow,.vc-footer-arrow,.rw-arrow { display:none !important; }
   .vehicle-cards { gap:14px; }
-  .vc-inner { padding:22px 18px 16px; }
   .vc-footer { padding:12px 18px; }
   .rocket-body { padding:18px 18px 12px; }
   .rocket-footer { padding:10px 18px; }
@@ -409,7 +356,6 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
 
 <div id="starfield"></div>
 
-<!-- VEHICLE OVERLAY -->
 <div id="vehicle-overlay">
   <div id="vp-starfield"></div>
   <div class="vp-header">
@@ -419,7 +365,6 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
   <div class="vp-body" id="vp-body"></div>
 </div>
 
-<!-- NEWS OVERLAY -->
 <div id="news-overlay">
   <div class="np-header">
     <button class="np-back" onclick="closeNews()">&#8592; Back</button>
@@ -429,7 +374,6 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
   <div class="np-body" id="np-body"></div>
 </div>
 
-<!-- LAUNCH DETAIL MODAL -->
 <div id="launch-modal-backdrop" onclick="closeLaunchModal(event)">
   <div id="launch-modal">
     <button class="lm-close" onclick="closeLaunchModal(null,true)">&#10005;</button>
@@ -444,22 +388,15 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
       <div class="lm-grid" id="lm-grid"></div>
       <div class="lm-desc" id="lm-desc"></div>
       <div class="lm-watch-row" id="lm-watch-row" style="display:none">
-        <a class="lm-watch-link" id="lm-watch-link" target="_blank">
-          Watch Launch
-        </a>
+        <a class="lm-watch-link" id="lm-watch-link" target="_blank">Watch Launch</a>
       </div>
     </div>
   </div>
 </div>
 
 <header>
-  <!-- Left: local clock -->
   <div class="header-left" id="header-left-slot"></div>
-
-  <!-- Center: navigation -->
   <nav class="header-nav" id="header-nav"></nav>
-
-  <!-- Right: social buttons -->
   <div class="header-right" id="header-right-slot"></div>
 </header>
 
@@ -469,20 +406,9 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
   <div id="countdown-wrap">
     <div id="countdown-mission"></div>
     <div id="countdown-label">Next launch in</div>
-    <div id="countdown-timer">
-      <div class="cd-unit"><div class="cd-num" id="cd-d">00</div><div class="cd-lbl">Days</div></div>
-      <div class="cd-sep-thin"></div>
-      <div class="cd-unit"><div class="cd-num" id="cd-h">00</div><div class="cd-lbl">Hours</div></div>
-      <div class="cd-sep">:</div>
-      <div class="cd-unit"><div class="cd-num" id="cd-m">00</div><div class="cd-lbl">Min</div></div>
-      <div class="cd-sep">:</div>
-      <div class="cd-unit"><div class="cd-num" id="cd-s">00</div><div class="cd-lbl">Sec</div></div>
-    </div>
+    <div id="countdown-timer"></div>
   </div>
-  <!-- Days since last launch -->
-  <div id="days-since-wrap">
-    <span id="days-since-text"></span>
-  </div>
+  <div id="days-since-wrap"><span id="days-since-text"></span></div>
   <div class="stream-link" id="main-watch-btn" onclick="window.open('https://www.youtube.com/@hi9eS')">
     <span class="stream-link-text">Watch Launch</span>
   </div>
@@ -496,804 +422,652 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
 <section id="rockets" class="reveal">
   <h2>Latest News</h2>
   <div class="rocket-cards" id="rocket-cards"></div>
-  <div style="display:flex; gap:12px; justify-content:center; margin:32px auto 40px;">
-  <button id="load-more-btn" onclick="loadMore()" style="display:none;">Load more</button>
-</div>
+  <div style="display:flex;gap:12px;justify-content:center;margin:32px auto 40px;">
+    <button id="load-more-btn" onclick="loadMore()" style="display:none;">Load more</button>
+  </div>
 </section>
 
 <section id="schedule" class="reveal">
   <h2>Launch Schedule</h2>
   <div id="launch-list"></div>
 </section>
+
 <footer>2026-2331 InSpace. This website is for informational purposes only and does not engage in any commercial activity.</footer>
 
 <script>
 /* ══════════════════════════════════════
-   SOUND SYSTEM
-   ─────────────────────────────────────
-   enableSounds = master switch (true/false)
-   
-   Each sound entry:
-     file: null → use generated tone
-     file: 'my.mp3' → load from same folder
-     volume: 0..1
-     enabled: true/false per-sound switch
+   ╔══════════════════════════════════╗
+   ║  SITE CONFIG — edit freely here  ║
+   ╚══════════════════════════════════╝
 ══════════════════════════════════════ */
-const enableSounds = true; // ← master switch
 
-const sounds = {
-  accordion: { file: null, volume: 0.18, enabled: true, freq: 520, duration: 0.06, type: 'sine' },
-  details:   { file: null, volume: 0.14, enabled: true, freq: 600, duration: 0.05, type: 'sine' },
-  modal:     { file: null, volume: 0.16, enabled: true, freq: 480, duration: 0.08, type: 'triangle' },
-  news:      { file: null, volume: 0.14, enabled: true, freq: 560, duration: 0.06, type: 'sine' },
-  final10:   { file: null, volume: 0.25, enabled: true, freq: 880, duration: 0.12, type: 'sine' }
+/* ── Vehicle card dimensions ── */
+const vehicleCardConfig = {
+  colorBarHeight:  '3px',      /* top colour stripe */
+  innerPaddingV:   '15px',     /* top/bottom padding of card body */
+  innerPaddingH:   '20px',     /* left/right padding of card body */
+  labelRowMarginBottom: '7px',
+  labelRowMarginTop:    '6px',
+  subMarginBottom: '18px',
+  dividerMarginBottom:  '16px',
+  footerPaddingV:  '13px',
+  footerPaddingH:  '20px',
 };
 
-let audioCtx = null;
-const audioBuffers = {};
+/* ── Accordion Load-more ── */
+const accLoadMorePerPage = 10; /* how many rows to show initially and per click */
 
-function getAudioCtx() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  return audioCtx;
-}
+/* ── Countdown days/hours separator mode ──
+   'bar'   → thin vertical line (default, current look)
+   'colon' → colon like other separators             */
+const daysSeparatorMode = 'bar'; /* 'bar' | 'colon' */
 
-function preloadSounds() {
-  Object.entries(sounds).forEach(([key, cfg]) => {
-    if (cfg.file) {
-      fetch(cfg.file)
-        .then(r => r.arrayBuffer())
-        .then(buf => getAudioCtx().decodeAudioData(buf))
-        .then(decoded => { audioBuffers[key] = decoded; })
-        .catch(() => {}); // fallback to tone if file missing
-    }
-  });
-}
-preloadSounds();
+/* ── Header clock ── */
+const showClock     = true;
+const clockColor    = '#888';   /* adjust brightness: '#666'=darker, '#aaa'=brighter */
+const clockTzColor  = '#555';   /* "local" label colour */
+const clockFontSize = '0.78em';
+
+/* ── Nav link colour ── */
+const navLinkColor      = '#888';   /* default — slightly brighter than muted #666 */
+const navLinkHoverColor = '#f0f0f0';
+
+/* ── Social buttons ──
+   label: text shown if logoSrc is null
+   logoSrc: path to image file, or null
+   url: destination link
+   fontSize / padding: per-button overrides (optional) */
+const socialButtons = [
+  { label:'X/Twitter', logoSrc:null, url:'https://x.com/OXeallCorp'       },
+  { label:'YouTube',   logoSrc:null, url:'https://www.youtube.com/@hi9eS' },
+  /* add more here if needed */
+];
+const socialBtnFontSize = '0.72em';
+const socialBtnPadding  = '6px 14px';
+const socialBtnColor    = '#888';
+
+/* ── Sound system ── */
+const enableSounds = true;
+const sounds = {
+  accordion: { file:null, volume:0.18, enabled:true, freq:520, duration:0.06, type:'sine'     },
+  details:   { file:null, volume:0.14, enabled:true, freq:600, duration:0.05, type:'sine'     },
+  modal:     { file:null, volume:0.16, enabled:true, freq:480, duration:0.08, type:'triangle' },
+  news:      { file:null, volume:0.14, enabled:true, freq:560, duration:0.06, type:'sine'     },
+  final10:   { file:null, volume:0.25, enabled:true, freq:880, duration:0.12, type:'sine'     },
+};
 
 /* ══════════════════════════════════════
-   BUILD HEADER
+   END OF CONFIG
 ══════════════════════════════════════ */
-/* Nav */
-const navEl = document.getElementById('header-nav');
-const navLinks = [
-  { label: 'Home',     section: 'hero'     },
-  { label: 'Vehicles', section: 'fleet'    },
-  { label: 'News',     section: 'rockets'  },
-  { label: 'Schedule', section: 'schedule' },
-];
 
-navLinks.forEach(n => {
-  const a = document.createElement('a');
-  a.textContent = n.label;
-  a.onclick = () => { closeVehicle(); closeNews(); scrollToSection(n.section); };
+/* ── Apply vehicle card config to CSS ── */
+(function applyCardConfig(){
+  const s = document.documentElement.style;
+  // We'll apply via inline styles when building cards, but set globals here
+})();
+
+/* ── Sound ── */
+let audioCtx=null; const audioBuffers={};
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+(function preload(){Object.entries(sounds).forEach(([k,c])=>{if(c.file){fetch(c.file).then(r=>r.arrayBuffer()).then(b=>getAudioCtx().decodeAudioData(b)).then(d=>{audioBuffers[k]=d;}).catch(()=>{});}});})();
+function playSound(key){
+  if(!enableSounds)return; const cfg=sounds[key]; if(!cfg||!cfg.enabled)return;
+  try{
+    const ctx=getAudioCtx();
+    if(audioBuffers[key]){const s=ctx.createBufferSource();s.buffer=audioBuffers[key];const g=ctx.createGain();g.gain.value=cfg.volume;s.connect(g);g.connect(ctx.destination);s.start();}
+    else{const o=ctx.createOscillator();const g=ctx.createGain();o.type=cfg.type||'sine';o.frequency.setValueAtTime(cfg.freq,ctx.currentTime);g.gain.setValueAtTime(cfg.volume,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+cfg.duration);o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+cfg.duration+0.01);}
+  }catch(e){}
+}
+
+/* ── Starfield ── */
+function createStars(container,count){for(let i=0;i<count;i++){const s=document.createElement('div');s.className='star';const size=Math.random()*1.8+0.3;s.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--op:${Math.random()*0.45+0.1};--dur:${Math.random()*5+3}s;--delay:${Math.random()*6}s;`;container.appendChild(s);}}
+createStars(document.getElementById('starfield'),110);
+let vpStarsCreated=false; function ensureVpStars(){if(vpStarsCreated)return;createStars(document.getElementById('vp-starfield'),90);vpStarsCreated=true;}
+let newsStarsCreated=false; function ensureNewsStars(){if(newsStarsCreated)return;createStars(document.getElementById('news-starfield'),80);newsStarsCreated=true;}
+
+/* ── Reveal & Utilities ── */
+
+const revealObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            e.target.classList.add('visible');
+        }
+    });
+}, { 
+    threshold: 0.07 
+});
+
+document.querySelectorAll('.reveal').forEach(el => {
+    revealObs.observe(el);
+});
+
+function scrollToSection(id) {
+    document.getElementById(id).scrollIntoView({ 
+        behavior: 'smooth' 
+    });
+}
+
+function statusColor(s) {
+    switch (s) {
+        case 'Planned':      return '#fff';
+        case 'Delayed':      return '#ffcc00';
+        case 'Big Event Plans':      return '#ffcc00';
+        case 'Completed':    return '#00cc66';
+        case 'Concept/Plan': return '#00ccff';
+        case 'Canceled':     return '#ff3300';
+        case 'Coming Soon':  return '#d9d9d9';
+        case 'Recorded':     return '#00cc66';
+        default:             return '#ccc';
+    }
+}
+
+/* ── Build header ── */
+const navEl=document.getElementById('header-nav');
+[{label:'Home',section:'hero'},{label:'Vehicles',section:'fleet'},{label:'News',section:'rockets'},{label:'Schedule',section:'schedule'}].forEach(n=>{
+  const a=document.createElement('a');
+  a.textContent=n.label;
+  a.style.color=navLinkColor;
+  a.onmouseenter=()=>{a.style.color=navLinkHoverColor;};
+  a.onmouseleave=()=>{a.style.color=navLinkColor;};
+  a.onclick=()=>{closeVehicle();closeNews();scrollToSection(n.section);};
   navEl.appendChild(a);
 });
 
-/* Clock */
-const leftSlot = document.getElementById('header-left-slot');
-const clockSpan = document.createElement('span');
-clockSpan.className = 'header-clock';
-clockSpan.id = 'header-clock-display';
-const tzSpan = document.createElement('span');
-tzSpan.className = 'header-clock-tz';
-tzSpan.textContent = 'local';
-leftSlot.appendChild(clockSpan);
-leftSlot.appendChild(tzSpan);
-
-function updateClock() {
-  const now = new Date();
-  const hh = String(now.getHours()).padStart(2,'0');
-  const mm = String(now.getMinutes()).padStart(2,'0');
-  const ss = String(now.getSeconds()).padStart(2,'0');
-  clockSpan.textContent = `${hh}:${mm}:${ss} `;
+if(showClock){
+  const ls=document.getElementById('header-left-slot');
+  const cs=document.createElement('span'); cs.className='header-clock'; cs.id='header-clock-display';
+  cs.style.fontSize=clockFontSize; cs.style.color=clockColor;
+  const tz=document.createElement('span'); tz.className='header-clock-tz'; tz.textContent='local';
+  tz.style.fontSize='0.68em'; tz.style.color=clockTzColor;
+  ls.appendChild(cs); ls.appendChild(tz);
+  function updateClock(){const n=new Date();cs.textContent=`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')} `;}
+  updateClock(); setInterval(updateClock,1000);
 }
-updateClock();
-setInterval(updateClock, 1000);
 
-/* Social */
-const rightSlot = document.getElementById('header-right-slot');
-const socialButtons = [
-  { 
-    label: 'X', 
-    logoSrc: '',
-    url: 'https://x.com/OXeallCorp' 
-  },
-  { 
-    label: 'Y', 
-    logoSrc: '',
-    url: 'https://www.youtube.com/@hi9eS' 
-  },
-];
-
-socialButtons.forEach(btn => {
-  const a = document.createElement('a');
-  a.className = 'social-btn';
-  a.href = btn.url;
-  a.target = '_blank';
-  a.title = btn.label;
-
-  if (btn.logoSrc) {
-    const img = document.createElement('img');
-    img.src = btn.logoSrc;
-    img.alt = btn.label;
-    img.style.width = '16px';
-    img.style.height = '16px';
-    a.appendChild(img);
-  } else {
-    a.textContent = btn.label;
-  }
-
-  rightSlot.appendChild(a);
+const rs=document.getElementById('header-right-slot');
+socialButtons.forEach(btn=>{
+  const a=document.createElement('a');
+  a.className='social-btn'; a.href=btn.url; a.target='_blank'; a.title=btn.label;
+  a.style.fontSize=socialBtnFontSize;
+  a.style.padding=socialBtnPadding;
+  a.style.color=socialBtnColor;
+  if(btn.logoSrc){const img=document.createElement('img');img.src=btn.logoSrc;img.alt=btn.label;img.style.width='16px';img.style.height='16px';a.appendChild(img);}
+  else{a.textContent=btn.label;}
+  rs.appendChild(a);
 });
-function playSound(key) {
-  if (!enableSounds) return;
-  const cfg = sounds[key];
-  if (!cfg || !cfg.enabled) return;
-  try {
-    const ctx = getAudioCtx();
-    if (audioBuffers[key]) {
-      // File-based
-      const src = ctx.createBufferSource();
-      src.buffer = audioBuffers[key];
-      const gain = ctx.createGain();
-      gain.gain.value = cfg.volume;
-      src.connect(gain); gain.connect(ctx.destination);
-      src.start();
-    } else {
-      // Generated tone
-      const osc  = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = cfg.type || 'sine';
-      osc.frequency.setValueAtTime(cfg.freq, ctx.currentTime);
-      gain.gain.setValueAtTime(cfg.volume, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + cfg.duration);
-      osc.connect(gain); gain.connect(ctx.destination);
-      osc.start(); osc.stop(ctx.currentTime + cfg.duration + 0.01);
-    }
-  } catch(e) {}
-}
-
-/* ══════════════════════════════════════
-   STARFIELD
-══════════════════════════════════════ */
-function createStars(container, count) {
-  for (let i = 0; i < count; i++) {
-    const s = document.createElement('div');
-    s.className = 'star';
-    const size = Math.random() * 1.8 + 0.3;
-    s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--op:${Math.random()*0.45+0.1};--dur:${Math.random()*5+3}s;--delay:${Math.random()*6}s;`;
-    container.appendChild(s);
-  }
-}
-createStars(document.getElementById('starfield'), 110);
-
-let vpStarsCreated = false;
-function ensureVpStars() {
-  if (vpStarsCreated) return;
-  createStars(document.getElementById('vp-starfield'), 90);
-  vpStarsCreated = true;
-}
-let newsStarsCreated = false;
-function ensureNewsStars() {
-  if (newsStarsCreated) return;
-  createStars(document.getElementById('news-starfield'), 80);
-  newsStarsCreated = true;
-}
-
-/* ══════════════════════════════════════
-   REVEAL / UTILS
-══════════════════════════════════════ */
-const revealObs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.07 });
-document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
-
-function scrollToSection(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
-
-function statusColor(status) {
-  switch (status) {
-    case 'Planned':      return '#fff';
-    case 'Delayed':      return '#ffcc00';
-    case 'Completed':    return '#00cc66';
-    case 'Concept/Plan': return '#00ccff';
-    case 'Canceled':     return '#ff3300';
-    case 'Coming Soon':  return '#d9d9d9';
-    case 'Recorded':     return '#00cc66';
-    default:             return '#ccc';
-  }
-}
 
 /* ══════════════════════════════════════
    LAUNCHES DATA
-   ─────────────────────────────────────
-   nameId: matches vehicle id in vehicles[]
-           so Launches count is auto-calculated per vehicle
-   watchUrl: '' = no Watch button
-   showWatchMin: show Watch Live N min before launch
-   durationMin: mission length in minutes (timer counts up)
 ══════════════════════════════════════ */
-const launches = [
-  { rocket:'SunPower One SN5 (V2.2)',  date:'2026-03-07 14:00', status:'Canceled',  nameId:'sunpower',       site:'Ali 28R',              type:'-', durationMin:3,   target:'Suicide Burn Test',      vehicle:'SunPower SN5 (V2.2)',   desc:'New plans required mission cancellation. Booster landing test using precision Suicide Burn.',                          watchUrl:'', showWatchMin:30 },
-  { rocket:'SunPower One SN3 (V2.2)',  date:'2026-03-03 17:00', status:'Canceled',  nameId:'sunpower',       site:'Miami, FL (RSS)',       type:'-', durationMin:3,   target:'Suicide Burn Test (OLD)',vehicle:'SunPower SN3 (V2.2)',   desc:'New plans required mission cancellation. Booster landing test using precision Suicide Burn.',                          watchUrl:'', showWatchMin:30 },
-  { rocket:'SunOrbit One SN2 (V2.2)',  date:'2026-03-02 23:00', status:'Canceled',  nameId:'sunorbit',       site:'Vandenberg SFB (RSS)', type:'-', durationMin:3,   target:'Suicide Burn Test',      vehicle:'SunOrbit SN2 (V2.2)',   desc:'New plans required mission cancellation. Booster landing test using precision Suicide Burn.',                          watchUrl:'', showWatchMin:30 },
-  { rocket:'SunPower One SN1 (V2.2)',  date:'2026-03-01 14:00', status:'Canceled',  nameId:'sunpower',       site:'Vandenberg SFB (RSS)', type:'-', durationMin:3,   target:'Suicide Burn Test',      vehicle:'SunPower SN1 (V2.2)',   desc:'First SN1 booster test. New plans required mission cancellation.',                                                   watchUrl:'', showWatchMin:30 },
-  { rocket:'SunOrbit One SN48 (V2.2)', date:'2026-04-13 15:00', status:'Completed',   nameId:'sunorbit',       site:'Vandenberg SFB (RSS)', type:'-', durationMin:3, target:'Suicide Burn Test',      vehicle:'SunOrbit SN48 (V2.2)', desc:'8th Flight: Booster Separation & Landing Test.',                                                                        watchUrl:'https://www.youtube.com/@hi9eS', showWatchMin:60 },
-  { rocket:'SunOrbit One SN10 (V2.2)', date:'2026-04-02 00:00', status:'Completed', nameId:'sunorbit',       site:'Vandenberg SFB (RSS)', type:'-', durationMin:3,   target:'Suicide Burn Test',      vehicle:'SunOrbit SN10 (V2.2)', desc:'7th Flight: Booster Separation & Landing Test.',                                                                        watchUrl:'', showWatchMin:30 },
-  { rocket:'SunOrbit One SN9 (V2.2)',  date:'2026-03-29 07:30', status:'Completed', nameId:'sunorbit',       site:'Vandenberg SFB (RSS)', type:'-', durationMin:3,   target:'Suicide Burn Test',      vehicle:'SunOrbit SN9 (V2.2)',  desc:'6th Flight: Booster Separation & Landing Test.',                                                                        watchUrl:'', showWatchMin:30 },
-  { rocket:'SunOrbit One SN8 (V2.2)',  date:'2026-03-29 03:00', status:'Completed', nameId:'sunorbit',       site:'Vandenberg SFB (RSS)', type:'-', durationMin:3,   target:'Suicide Burn Test',      vehicle:'SunOrbit SN8 (V2.2)',  desc:'5th Flight: Booster Separation & Landing Test.',                                                                        watchUrl:'', showWatchMin:30 },
-  { rocket:'SunOrbit One SN7 (V2.2)',  date:'2026-03-21 16:00', status:'Completed', nameId:'sunorbit',       site:'Vandenberg SFB (RSS)', type:'-', durationMin:3,   target:'Suicide Burn Test',      vehicle:'SunOrbit SN7 (V2.2)',  desc:'4th Flight: Booster Separation & Landing Test.',                                                                        watchUrl:'', showWatchMin:30 },
-  { rocket:'SunOrbit One SN7 (V2.2)',  date:'2026-03-19 14:30', status:'Completed', nameId:'sunorbit',       site:'Vandenberg SFB (RSS)', type:'-', durationMin:3,   target:'Suicide Burn Test',      vehicle:'SunOrbit SN7 (V2.2)',  desc:'3rd Flight: Booster Separation & Landing Test.',                                                                        watchUrl:'', showWatchMin:30 },
-  { rocket:'SunOrbit One SN6 (V2.2)',  date:'2026-03-11 13:45', status:'Completed', nameId:'sunorbit',       site:'Vandenberg SFB (RSS)', type:'-', durationMin:3,   target:'Suicide Burn Test',      vehicle:'SunOrbit SN6 (V2.2)',  desc:'2nd Flight: Booster Separation & Landing Test.',                                                                        watchUrl:'', showWatchMin:30 },
-  { rocket:'SunOrbit One SN4 (V2.2)',  date:'2026-03-06 11:00', status:'Completed', nameId:'sunorbit',       site:'Miami, FL (RSS)',       type:'-', durationMin:3,   target:'Suicide Burn Test',      vehicle:'SunOrbit SN4 (V2.2)',  desc:'1st Flight: Booster Separation & Landing Test.',                                                                        watchUrl:'', showWatchMin:30 },
-  { rocket:'SunOrbit One SN49 (V2.2)', date:'2026-04-16 20:00', status:'Planned',   nameId:'sunorbit',       site:'Vandenberg SFB (RSS)', type:'-', durationMin:3,   target:'Suicide Burn Test',      vehicle:'SunOrbit One SN49 (V2.2)', desc:'9th Flight: Booster Separation & Landing Test.',                                                                        watchUrl:'https://www.youtube.com/@hi9eS', showWatchMin:60 }
+const launches=[
+  {rocket:'SunPower One SN5 (V2.2)', date:'2026-03-07 14:00',status:'Canceled', nameId:'sunpower',site:'Ali 28R',              type:'-',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunPower SN5 (V2.2)',  desc:'New plans required mission cancellation. Booster landing test using precision Suicide Burn.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunPower One SN3 (V2.2)', date:'2026-03-03 17:00',status:'Canceled', nameId:'sunpower',site:'Miami, FL (RSS)',       type:'-',durationMin:3,target:'Suicide Burn Test (OLD)',vehicle:'SunPower SN3 (V2.2)',  desc:'New plans required mission cancellation. Booster landing test using precision Suicide Burn.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN2 (V2.2)', date:'2026-03-02 23:00',status:'Canceled', nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'-',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunOrbit SN2 (V2.2)',  desc:'New plans required mission cancellation. Booster landing test using precision Suicide Burn.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunPower One SN1 (V2.2)', date:'2026-03-01 14:00',status:'Canceled', nameId:'sunpower',site:'Vandenberg SFB (RSS)', type:'-',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunPower SN1 (V2.2)',  desc:'First SN1 booster test. New plans required mission cancellation.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN48 (V2.2)',date:'2026-04-13 15:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'-',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunOrbit SN48 (V2.2)',desc:'8th Flight: Booster Separation & Landing Test.',watchUrl:'https://www.youtube.com/@hi9eS',showWatchMin:60},
+  {rocket:'SunOrbit One SN10 (V2.2)',date:'2026-04-02 00:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'-',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunOrbit SN10 (V2.2)',desc:'7th Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN9 (V2.2)', date:'2026-03-29 07:30',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'-',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunOrbit SN9 (V2.2)', desc:'6th Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN8 (V2.2)', date:'2026-03-29 03:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'-',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunOrbit SN8 (V2.2)', desc:'5th Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN7 (V2.2)', date:'2026-03-21 16:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'-',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunOrbit SN7 (V2.2)', desc:'4th Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN7 (V2.2)', date:'2026-03-19 14:30',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'-',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunOrbit SN7 (V2.2)', desc:'3rd Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN6 (V2.2)', date:'2026-03-11 13:45',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'-',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunOrbit SN6 (V2.2)', desc:'2nd Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN4 (V2.2)', date:'2026-03-06 11:00',status:'Completed',nameId:'sunorbit',site:'Miami, FL (RSS)',       type:'-',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunOrbit SN4 (V2.2)', desc:'1st Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN49 (V2.2)',date:'2026-04-16 20:00',status:'Planned',  nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'-',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunOrbit SN49 (V2.2)',desc:'9th Flight: Booster Separation & Landing Test.',watchUrl:'https://www.youtube.com/@hi9eS',showWatchMin:60},
 ];
 
-launches.forEach(l => {
-  const [d, t] = l.date.split(' ');
-  const [year, month, day] = d.split('-').map(Number);
-  const [hour, minute] = t.split(':').map(Number);
-  l.dateObj = new Date(Date.UTC(year, month - 1, day, hour - 5, minute));
-  l.endObj   = new Date(l.dateObj.getTime() + l.durationMin * 60 * 1000);
+launches.forEach(l=>{
+  const[d,t]=l.date.split(' ');const[year,month,day]=d.split('-').map(Number);const[hour,minute]=t.split(':').map(Number);
+  l.dateObj=new Date(Date.UTC(year,month-1,day,hour-5,minute));
+  l.endObj=new Date(l.dateObj.getTime()+l.durationMin*60*1000);
 });
 
-/* ── Auto-count Completed launches per vehicle nameId ── */
-function launchCountFor(nameId) {
-  return launches.filter(l => l.nameId === nameId && l.status === 'Completed').length;
-}
+function launchCountFor(nameId){return launches.filter(l=>l.nameId===nameId&&l.status==='Completed').length;}
 
-/* ── Days since last Completed launch — правильный local time ── */
-(function initDaysSince() {
-  const completed = launches.filter(l => l.status === 'Completed');
-  if (!completed.length) return;
-
-  const latest = completed.reduce((a, b) => a.dateObj > b.dateObj ? a : b);
-
-  const now = new Date();
-  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());   // сегодня 00:00 по местному времени
-
-  const launchDate = new Date(
-    latest.dateObj.getUTCFullYear(),
-    latest.dateObj.getUTCMonth(),
-    latest.dateObj.getUTCDate()
-  );
-
-  const diffMs = today.getTime() - launchDate.getTime();
-  let diffDays = Math.floor(diffMs / 86400000);
-
-  if (diffDays < 0) diffDays = 0;
-
-  const wrap = document.getElementById('days-since-wrap');
-  const text = document.getElementById('days-since-text');
-
-  const label = diffDays === 0 
-    ? '<1 Days since last launch' 
-    : `${diffDays} day${diffDays !== 1 ? 's' : ''} since last launch`;
-
-  text.textContent = label;
-  wrap.style.display = 'block';
+/* Days since last launch — local time */
+(function initDaysSince(){
+  const completed=launches.filter(l=>l.status==='Completed'); if(!completed.length)return;
+  const latest=completed.reduce((a,b)=>a.dateObj>b.dateObj?a:b);
+  const now=new Date();
+  const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const launchLocal=new Date(latest.dateObj.toLocaleDateString('en-CA'));
+  const diffDays=Math.max(0,Math.floor((today-launchLocal)/86400000));
+  const wrap=document.getElementById('days-since-wrap');
+  const text=document.getElementById('days-since-text');
+  text.textContent=diffDays<1?'<1 day since last launch':`${diffDays} day${diffDays!==1?'s':''} since last launch`;
+  wrap.style.display='block';
 })();
 
 /* ══════════════════════════════════════
    VEHICLES
 ══════════════════════════════════════ */
+
 const vehicles = [
-  {
-    id: 'sunorbit',
-    name: 'SunOrbit',
-    class: 'Interplanetary Vehicle',
-    color: '#00aaff',
-    image: '991ef2dcfcd94c0f95050b657d1c6134.png',
-    description: "SunOrbit is InSpace’s primary interplanetary vehicle, built in modular stages.<br>" +
-                 "It is equally capable of crewed and uncrewed missions to Low Earth Orbit and to other planets. " +
-                 "For Earth orbit, the third stage can function as a crewed mini-station or as an uncrewed satellite that separates directly in orbit. " +
-                 "For missions to other planets, the third stage can serve as the main crew habitat and command module with life support systems, " +
-                 "or operate fully autonomously without pilots - including orbital insertion around other planets.<br>" +
-                 "The first and second stages are reusable and designed for precise suicide burn landings on Earth and other planetary bodies. " +
-                 "The vehicle features advanced docking capabilities and high-bandwidth communication relay systems.",
-    specs: [
-      { val: '205m',      lbl: 'Height'       },
-      { val: '3370 t',    lbl: 'Mass'         },
-      { val: '79.1 km/s', lbl: 'Delta-V'      },
-      { val: '14.64×',    lbl: 'TWR'          },
-      { val: 'Feb 2026',  lbl: 'First Flight' }
-    ],
-    stages: [
-      {
-        title: 'Stage 1 — Booster',
-        rows: [
-          { key: 'Engines',      val: '42'               },
-          { key: 'Thrust (SL)',  val: '484,000 kN'       },
-          { key: 'Burn time',    val: '33.8 min'         },
-          { key: 'Propellant',   val: '2,560 t'          },
-          { key: 'Recovery',     val: 'Vertical landing' },
-          { key: 'Reusable',     val: 'Yes'              }
+    {
+        id: 'sunorbit',
+        name: 'SunOrbit',
+        class: 'Interplanetary Vehicle',
+        color: '#00aaff',
+        image: '991ef2dcfcd94c0f95050b657d1c6134.png',
+        description: "SunOrbit is InSpace’s primary interplanetary vehicle, built in modular stages.<br>It is equally capable of crewed and uncrewed missions to Low Earth Orbit and to other planets. For Earth orbit, the third stage can function as a crewed mini-station or as an uncrewed satellite that separates directly in orbit. For missions to other planets, the third stage can serve as the main crew habitat and command module with life support systems, or operate fully autonomously without pilots - including orbital insertion around other planets.<br>The first and second stages are reusable and designed for precise suicide burn landings on Earth and other planetary bodies. The vehicle features advanced docking capabilities and high-bandwidth communication relay systems.",
+        specs: [
+            { val: '205m', lbl: 'Height' },
+            { val: '3370 t', lbl: 'Mass' },
+            { val: '79.1 km/s', lbl: 'Delta-V' },
+            { val: '14.64×', lbl: 'TWR' },
+            { val: 'Feb 2026', lbl: 'First Flight' }
+        ],
+        stages: [
+            {
+                title: 'Stage 1 — Booster',
+                rows: [
+                    { key: 'Engines', val: '42' },
+                    { key: 'Thrust (SL)', val: '484,000 kN' },
+                    { key: 'Burn time', val: '33.8 min' },
+                    { key: 'Propellant', val: '2,560 t' },
+                    { key: 'Recovery', val: 'Vertical landing' },
+                    { key: 'Reusable', val: 'Yes' }
+                ]
+            },
+            {
+                title: 'Stage 2 — Upper',
+                rows: [
+                    { key: 'Engines', val: '90' },
+                    { key: 'Thrust (vac)', val: '120,000 kN' },
+                    { key: 'Burn time', val: '1.6 min' },
+                    { key: 'Propellant', val: '2,330 t' },
+                    { key: 'Recovery', val: 'Vertical landing' },
+                    { key: 'Reusable', val: 'Yes' }
+                ]
+            }
         ]
-      },
-      {
-        title: 'Stage 2 — Upper',
-        rows: [
-          { key: 'Engines',     val: '90'                },
-          { key: 'Thrust (vac)',val: '120,000 kN'        },
-          { key: 'Burn time',   val: '1.6 min'           },
-          { key: 'Propellant',  val: '2,330 t'           },
-          { key: 'Recovery',    val: 'Vertical landing'  },
-          { key: 'Reusable',    val: 'Yes'               }
-        ]
-      }
-    ]
-  },
+    },
 
-  {
-    id: 'sunpower',
-    name: 'SunPower',
-    class: 'Earth Orbit',
-    color: '#ffaa00',
-    image: null,
-    description: "SunPower is InSpace’s heavy-lift workhorse, designed specifically for Low Earth Orbit missions.<br>" +
-                 "It evolved from a rapid prototype through multiple generations into a reliable high-performance launcher, " +
-                 "optimized for delivering large payloads, solar arrays, and orbital stations. " +
-                 "The name SunPower was coined on the fly by Haisess during the very first test campaign.<br>" +
-                 "Although public records show 0 launches, more than 20 SunPower vehicles have already been built " +
-                 "and successfully flown in classified InSpace test and operational missions.",
-    specs: [
-      { val: '—', lbl: 'Height'       },
-      { val: '—', lbl: 'Mass'         },
-      { val: '—', lbl: 'Delta-V'      },
-      { val: '—', lbl: 'TWR'          },
-      { val: 'Feb 2026', lbl: 'First Flight' }
-    ],
-    stages: [
-      {
-        title: 'Stage 1 — Booster',
-        rows: [
-          { key: 'Engines',      val: '—'                },
-          { key: 'Thrust (SL)',  val: '—'                },
-          { key: 'Burn time',    val: '—'                },
-          { key: 'Propellant',   val: '—'                },
-          { key: 'Recovery',     val: 'Vertical landing' },
-          { key: 'Reusable',     val: 'Yes'              }
+    {
+        id: 'sunpower',
+        name: 'SunPower',
+        class: 'Earth Orbit',
+        color: '#ffaa00',
+        image: null,
+        description: "SunPower is InSpace’s heavy-lift workhorse, designed specifically for Low Earth Orbit missions.<br>It evolved from a rapid prototype through multiple generations into a reliable high-performance launcher, optimized for delivering large payloads, solar arrays, and orbital stations. The name SunPower was coined on the fly by Haisess during the very first test campaign.<br>Although public records show 0 launches, more than 20 SunPower vehicles have already been built and successfully flown in classified InSpace test and operational missions.",
+        specs: [
+            { val: '—', lbl: 'Height' },
+            { val: '—', lbl: 'Mass' },
+            { val: '—', lbl: 'Delta-V' },
+            { val: '—', lbl: 'TWR' },
+            { val: 'Feb 2026', lbl: 'First Flight' }
+        ],
+        stages: [
+            {
+                title: 'Stage 1 — Booster',
+                rows: [
+                    { key: 'Engines', val: '—' },
+                    { key: 'Thrust (SL)', val: '—' },
+                    { key: 'Burn time', val: '—' },
+                    { key: 'Propellant', val: '—' },
+                    { key: 'Recovery', val: 'Vertical landing' },
+                    { key: 'Reusable', val: 'Yes' }
+                ]
+            },
+            {
+                title: 'Stage 2 — Upper',
+                rows: [
+                    { key: 'Engines', val: '—' },
+                    { key: 'Thrust (vac)', val: '—' },
+                    { key: 'Burn time', val: '—' },
+                    { key: 'Propellant', val: '—' },
+                    { key: 'Recovery', val: '—' },
+                    { key: 'Reusable', val: '—' }
+                ]
+            }
         ]
-      },
-      {
-        title: 'Stage 2 — Upper',
-        rows: [
-          { key: 'Engines',      val: '—' },
-          { key: 'Thrust (vac)', val: '—' },
-          { key: 'Burn time',    val: '—' },
-          { key: 'Propellant',   val: '—' },
-          { key: 'Recovery',     val: '—' },
-          { key: 'Reusable',     val: '—' }
-        ]
-      }
-    ]
-  },
+    },
 
-  {
-    id: 'planetsrockets',
-    name: 'PlanetsRockets',
-    class: 'COMING SOON',
-    color: '#cc66ff',
-    image: null,
-    description: "PlanetsRockets is InSpace’s next-generation interplanetary vehicle, currently in the early concept and planning phase.<br>" +
-                 "All detailed information about its design, capabilities, and specific mission targets remains confidential at this stage.<br>" +
-                 "It is being developed as part of InSpace’s long-term ambitions for deep-space exploration.",
-    specs: [
-      { val: '—', lbl: 'Height'       },
-      { val: '—', lbl: 'Mass'         },
-      { val: '—', lbl: 'Delta-V'      },
-      { val: '—', lbl: 'TWR'          },
-      { val: 'Apr 2026', lbl: 'First Flight' }
-    ],
-    stages: [
-      {
-        title: 'Stage 1 — Booster',
-        rows: [
-          { key: 'Engines',      val: '—'   },
-          { key: 'Thrust (SL)',  val: '—'   },
-          { key: 'Burn time',    val: '—'   },
-          { key: 'Propellant',   val: '—'   },
-          { key: 'Recovery',     val: 'TBD' },
-          { key: 'Reusable',     val: 'TBD' }
+    {
+        id: 'planetsrockets',
+        name: 'PlanetsRockets',
+        class: 'COMING SOON',
+        color: '#cc66ff',
+        image: null,
+        description: "PlanetsRockets is InSpace’s next-generation interplanetary vehicle, currently in the early concept and planning phase.<br>All detailed information about its design, capabilities, and specific mission targets remains confidential at this stage.<br>It is being developed as part of InSpace’s long-term ambitions for deep-space exploration.",
+        specs: [
+            { val: '—', lbl: 'Height' },
+            { val: '—', lbl: 'Mass' },
+            { val: '—', lbl: 'Delta-V' },
+            { val: '—', lbl: 'TWR' },
+            { val: 'Apr 2026', lbl: 'First Flight' }
+        ],
+        stages: [
+            {
+                title: 'Stage 1 — Booster',
+                rows: [
+                    { key: 'Engines', val: '—' },
+                    { key: 'Thrust (SL)', val: '—' },
+                    { key: 'Burn time', val: '—' },
+                    { key: 'Propellant', val: '—' },
+                    { key: 'Recovery', val: 'TBD' },
+                    { key: 'Reusable', val: 'TBD' }
+                ]
+            },
+            {
+                title: 'Stage 2 — Upper',
+                rows: [
+                    { key: 'Engines', val: '—' },
+                    { key: 'Thrust (vac)', val: '—' },
+                    { key: 'Burn time', val: '—' },
+                    { key: 'Propellant', val: '—' },
+                    { key: 'Recovery', val: '—' },
+                    { key: 'Reusable', val: '—' }
+                ]
+            }
         ]
-      },
-      {
-        title: 'Stage 2 — Upper',
-        rows: [
-          { key: 'Engines',      val: '—' },
-          { key: 'Thrust (vac)', val: '—' },
-          { key: 'Burn time',    val: '—' },
-          { key: 'Propellant',   val: '—' },
-          { key: 'Recovery',     val: '—' },
-          { key: 'Reusable',     val: '—' }
-        ]
-      }
-    ]
-  }
+    }
 ];
 
-const vcContainer = document.getElementById('vehicle-cards');
-vehicles.forEach(v => {
-  const completedCount = launchCountFor(v.id);
-  const launchDisplay  = completedCount > 0 ? String(completedCount) : '\u2014';
+const vcContainer=document.getElementById('vehicle-cards');
+vehicles.forEach(v=>{
+  const count=launchCountFor(v.id);
+  const launchVal=count>0?String(count):'\u2014';
+  const hSpec=v.specs.find(s=>s.lbl==='Height');
+  const mSpec=v.specs.find(s=>s.lbl==='Mass');
+  const cardStats=[{val:hSpec?.val??'\u2014',lbl:'Height'},{val:mSpec?.val??'\u2014',lbl:'Mass'},{val:launchVal,lbl:'Launches'}];
 
-  // Card stats: Height and Mass from specs, Launches from auto-count
-  const heightSpec = v.specs.find(s => s.lbl === 'Height');
-  const massSpec   = v.specs.find(s => s.lbl === 'Mass');
-  const cardStats  = [
-    { val: heightSpec ? heightSpec.val : '\u2014', lbl: 'Height' },
-    { val: massSpec   ? massSpec.val   : '\u2014', lbl: 'Mass'   },
-    { val: launchDisplay, lbl: 'Launches' }
-  ];
-
-  const card = document.createElement('div');
-  card.className = 'vehicle-card';
-  card.style.setProperty('--vc', v.color);
-  card.innerHTML = `
-    <div class="vc-color-bar"></div>
-    <div class="vc-inner">
-      <div class="vc-label-row"><div class="vc-dot"></div><div class="vc-name">${v.name}</div></div>
-      <div class="vc-sub">${v.class}</div>
-      <div class="vc-divider"></div>
+  const c=vehicleCardConfig;
+  const card=document.createElement('div'); card.className='vehicle-card'; card.style.setProperty('--vc',v.color);
+  card.innerHTML=`
+    <div class="vc-color-bar" style="height:${c.colorBarHeight};"></div>
+    <div class="vc-inner" style="padding:${c.innerPaddingV} ${c.innerPaddingH};">
+      <div class="vc-label-row" style="margin-bottom:${c.labelRowMarginBottom};margin-top:${c.labelRowMarginTop};">
+        <div class="vc-dot"></div><div class="vc-name">${v.name}</div>
+      </div>
+      <div class="vc-sub" style="margin-bottom:${c.subMarginBottom};">${v.class}</div>
+      <div class="vc-divider" style="margin-bottom:${c.dividerMarginBottom};"></div>
       <div class="vc-stat-row">
         ${cardStats.map(s=>`<div class="vc-stat"><div class="vc-stat-val">${s.val}</div><div class="vc-stat-lbl">${s.lbl}</div></div>`).join('')}
       </div>
     </div>
-    <div class="vc-footer">
+    <div class="vc-footer" style="padding:${c.footerPaddingV} ${c.footerPaddingH};">
       <span class="vc-footer-text">Details</span>
       <span class="vc-footer-arrow">&#8599;</span>
     </div>`;
-  card.addEventListener('click', () => { playSound('details'); openVehicle(v.id); });
+  card.addEventListener('click',()=>{playSound('details');openVehicle(v.id);});
   vcContainer.appendChild(card);
 });
 
-function openVehicle(id) {
-  const v = vehicles.find(x => x.id === id);
-  if (!v) return;
-  ensureVpStars();
-  playSound('modal');
-  document.getElementById('vp-header-title').textContent = v.name;
-  const imgHTML = v.image ? `<img src="${v.image}" alt="${v.name}">` : `<div class="vp-img-placeholder">No data. Image coming soon</div>`;
-  const specsHTML = v.specs.map(s => `<div class="vp-spec"><div class="vp-spec-lbl">${s.lbl}</div><div class="vp-spec-val">${s.val}</div></div>`).join('');
-  const stagesHTML = v.stages.map(st => {
-    const cells = st.rows.map(r => `<div class="vp-stage-cell"><div class="vp-stage-key">${r.key}</div><div class="vp-stage-val">${r.val}</div></div>`).join('');
-    return `<div class="vp-stage"><div class="vp-stage-title">${st.title}</div><div class="vp-stage-rows">${cells}</div></div>`;
-  }).join('');
-  document.getElementById('vp-body').innerHTML = `
+function openVehicle(id){
+  const v=vehicles.find(x=>x.id===id); if(!v)return;
+  ensureVpStars(); playSound('modal');
+  document.getElementById('vp-header-title').textContent=v.name;
+  const imgHTML=v.image?`<img src="${v.image}" alt="${v.name}">`:`<div class="vp-img-placeholder">No data. Image coming soon</div>`;
+  const specsHTML=v.specs.map(s=>`<div class="vp-spec"><div class="vp-spec-lbl">${s.lbl}</div><div class="vp-spec-val">${s.val}</div></div>`).join('');
+  const stagesHTML=v.stages.map(st=>{const cells=st.rows.map(r=>`<div class="vp-stage-cell"><div class="vp-stage-key">${r.key}</div><div class="vp-stage-val">${r.val}</div></div>`).join('');return`<div class="vp-stage"><div class="vp-stage-title">${st.title}</div><div class="vp-stage-rows">${cells}</div></div>`;}).join('');
+  document.getElementById('vp-body').innerHTML=`
     <div class="vp-hero-name" style="color:${v.color}">${v.name}</div>
     <div class="vp-hero-class">${v.class}</div>
     <div class="vp-img-wrap">${imgHTML}</div>
-    <div class="vp-section-title">Specifications</div>
-    <div class="vp-specs-grid">${specsHTML}</div>
-    <div class="vp-section-title">Stages</div>
-    <div class="vp-stages">${stagesHTML}</div>
-    <div class="vp-section-title">Overview</div>
-    <div class="vp-desc">${v.description}</div>`;
-  const overlay = document.getElementById('vehicle-overlay');
-  overlay.classList.add('active');
-  requestAnimationFrame(() => { requestAnimationFrame(() => overlay.classList.add('visible')); });
-  overlay.scrollTop = 0;
-  document.body.style.overflow = 'hidden';
+    <div class="vp-section-title">Specifications</div><div class="vp-specs-grid">${specsHTML}</div>
+    <div class="vp-section-title">Stages</div><div class="vp-stages">${stagesHTML}</div>
+    <div class="vp-section-title">Overview</div><div class="vp-desc">${v.description}</div>`;
+  const overlay=document.getElementById('vehicle-overlay');
+  overlay.classList.add('active'); requestAnimationFrame(()=>{requestAnimationFrame(()=>overlay.classList.add('visible'));});
+  overlay.scrollTop=0; document.body.style.overflow='hidden';
 }
-function closeVehicle() {
-  const overlay = document.getElementById('vehicle-overlay');
+function closeVehicle(){
+  const overlay=document.getElementById('vehicle-overlay');
   overlay.classList.remove('visible');
-  setTimeout(() => { overlay.classList.remove('active'); document.body.style.overflow = ''; }, 350);
+  setTimeout(()=>{overlay.classList.remove('active');document.body.style.overflow='';},350);
 }
 
 /* ══════════════════════════════════════
    NEWS
 ══════════════════════════════════════ */
-const allRockets = [
-  { name:'SunPower One', description:'Where it all began. The name "SunPower" was coined on the fly by Haisess.', detail:'The very first SunPower prototype was assembled and launched within a single session, marking the birth of the InSpace vehicle programme. It flew a nominal trajectory and completed a controlled descent. The launch validated core propulsion, guidance systems, and ground support procedures that would be carried forward into every subsequent vehicle in the InSpace fleet.', date:'February 26, 2026' },
-  { name:'SunPower: The Return of a Legend', description:'InSpace is officially resuming work on its very first heavy-lift rocket.', detail:'After being put on hold due to shifting priorities, SunPower One is making a comeback. The rocket that started everything for InSpace was temporarily shelved as the team focused on more advanced programs.<br>Now development is restarting. The vehicle will undergo a major redesign and upgrade, including modern systems and the new AVSBL \u2014 Automatic Vertical Suicide Burn Landing.<br>Active work will begin in the coming days and weeks. SunPower One is getting a second life, this time in a much more mature form.', date:'April 12, 2026' },
-  { name:'Vertical Recovery: The Mark of Precision', description:'"Where others leave a crater, we leave our mark."', detail:'Booster SN8 executed a textbook suicide burn and touched down within 0.4 m of the target pad centre. Recovery teams confirmed zero structural damage. Turnaround inspection was completed in under 6 hours, and the booster is already being prepared for its next flight. This marks the fourth consecutive successful recovery in the current test campaign.', date:'March 6, 2026' },
-  { name:'Trial Mission to the Moon', description:'The team is preparing for a trial run of the upcoming lunar mission.', detail:'Initial trajectory calculations and propellant budgets have been finalised. The trial will validate trans-lunar injection burn performance before a crewed attempt. Ground teams have completed two full dress rehearsals. Launch window analysis targets a low-energy transfer trajectory with an estimated transit time of 72 hours.', date:'February 27, 2026' },
-  { name:'Cancelling Missions', description:'Resumption is coming soon. We are currently preparing for two targets: Mars and the Moon.', detail:'Several scheduled test flights were cancelled to consolidate resources around the dual Mars and Moon programme. A revised launch manifest is expected shortly. Engineering teams have been reassigned to focus exclusively on propulsion and life support integration for the crewed lunar mission, with Mars planning running in parallel.', date:'March 03, 2026' }
+const allRockets=[
+  {name:'SunPower One',description:'Where it all began. The name "SunPower" was coined on the fly by Haisess.',detail:'The very first SunPower prototype was assembled and launched within a single session, marking the birth of the InSpace vehicle programme. It flew a nominal trajectory and completed a controlled descent. The launch validated core propulsion, guidance systems, and ground support procedures that would be carried forward into every subsequent vehicle in the InSpace fleet.',date:'February 26, 2026'},
+  {name:'SunPower: The Return of a Legend',description:'InSpace is officially resuming work on its very first heavy-lift rocket.',detail:'After being put on hold due to shifting priorities, SunPower One is making a comeback. The rocket that started everything for InSpace was temporarily shelved as the team focused on more advanced programs.<br>Now development is restarting. The vehicle will undergo a major redesign and upgrade, including modern systems and the new AVSBL \u2014 Automatic Vertical Suicide Burn Landing.<br>Active work will begin in the coming days and weeks. SunPower One is getting a second life, this time in a much more mature form.',date:'April 12, 2026'},
+  {name:'Vertical Recovery: The Mark of Precision',description:'"Where others leave a crater, we leave our mark."',detail:'Booster SN8 executed a textbook suicide burn and touched down within 0.4 m of the target pad centre. Recovery teams confirmed zero structural damage. Turnaround inspection was completed in under 6 hours, and the booster is already being prepared for its next flight.',date:'March 6, 2026'},
+  {name:'Trial Mission to the Moon',description:'The team is preparing for a trial run of the upcoming lunar mission.',detail:'Initial trajectory calculations and propellant budgets have been finalised. The trial will validate trans-lunar injection burn performance before a crewed attempt. Ground teams have completed two full dress rehearsals.',date:'February 27, 2026'},
+  {name:'Cancelling Missions',description:'Resumption is coming soon. We are currently preparing for two targets: Mars and the Moon.',detail:'Several scheduled test flights were cancelled to consolidate resources around the dual Mars and Moon programme. A revised launch manifest is expected shortly.',date:'March 03, 2026'},
 ];
-
-const NEWS_PER_PAGE = 3;
-let newsShown = 0;
-function renderNews() {
-  const grid = document.getElementById('rocket-cards');
-  const btn  = document.getElementById('load-more-btn');
-  const slice = allRockets.slice(newsShown, newsShown + NEWS_PER_PAGE);
-  slice.forEach((r, localI) => {
-    const globalI = newsShown + localI;
-    const card = document.createElement('div');
-    card.className = 'rocket';
-    card.style.animationDelay = (localI * 0.08) + 's';
-    card.innerHTML = `
-      <div class="rocket-top-bar"></div>
-      <div class="rocket-body">
-        <h3>${r.name}</h3>
-        <p class="rocket-desc">${r.description}</p>
-      </div>
-      <div class="rocket-footer">
-        <span class="rocket-date">${r.date}</span>
-        <button class="rocket-details-btn" onclick="openNews(${globalI})">Details <span class="rd-arrow">&#8599;</span></button>
-      </div>`;
+const NEWS_PER_PAGE=3; let newsShown=0;
+function renderNews(){
+  const grid=document.getElementById('rocket-cards'); const btn=document.getElementById('load-more-btn');
+  allRockets.slice(newsShown,newsShown+NEWS_PER_PAGE).forEach((r,li)=>{
+    const gi=newsShown+li; const card=document.createElement('div'); card.className='rocket'; card.style.animationDelay=(li*0.08)+'s';
+    card.innerHTML=`<div class="rocket-top-bar"></div><div class="rocket-body"><h3>${r.name}</h3><p class="rocket-desc">${r.description}</p></div><div class="rocket-footer"><span class="rocket-date">${r.date}</span><button class="rocket-details-btn" onclick="openNews(${gi})">Details <span class="rd-arrow">&#8599;</span></button></div>`;
     grid.appendChild(card);
   });
-        newsShown += slice.length;
-
-  const loadBtn = document.getElementById('load-more-btn');
-
-  if (newsShown < allRockets.length) {
-    loadBtn.style.display = 'inline-flex';
-  } else {
-    loadBtn.style.display = 'none';
-
-    // Показываем кнопку "News on X" с анимацией только когда все новости загружены
-    const xContainer = loadBtn.parentNode;
-    if (!document.getElementById('news-on-x-btn')) {
-      const xBtn = document.createElement('a');
-      xBtn.href = "https://x.com/OXeallCorp";
-      xBtn.target = "_blank";
-      xBtn.id = "news-on-x-btn";
-      xBtn.style.cssText = `
-        display:inline-flex; align-items:center; gap:8px; padding:10px 26px; 
-        border:1px solid rgba(255,255,255,0.25); border-radius:100px; 
-        color:#999; font-size:0.85em; font-family:var(--mono); 
-        text-decoration:none; transition:all 0.25s var(--ease);
-        position:relative; overflow:hidden; margin-left:12px;
-        opacity: 0; transform: translateY(4px);
-      `;
-      xBtn.innerHTML = `News on X <span class="x-arrow" style="font-size:1.05em; transition:transform 0.22s var(--ease-spring);">↗</span>`;
-      
-      xContainer.appendChild(xBtn);
-
-      // Плавная анимация появления
-      setTimeout(() => {
-        xBtn.style.transition = 'all 0.6s var(--ease)';
-        xBtn.style.opacity = '1';
-        xBtn.style.transform = 'translateY(0)';
-      }, 50);
-
-      // Hover эффект
-      xBtn.addEventListener('mouseenter', () => {
-        xBtn.style.color = '#ccc';
-        xBtn.style.borderColor = 'rgba(255,255,255,0.45)';
-        xBtn.querySelector('.x-arrow').style.transform = 'translate(3px, -3px)';
-      });
-      xBtn.addEventListener('mouseleave', () => {
-        xBtn.style.color = '#999';
-        xBtn.style.borderColor = 'rgba(255,255,255,0.25)';
-        xBtn.querySelector('.x-arrow').style.transform = '';
-      });
-    }
-  }
+  newsShown+=Math.min(NEWS_PER_PAGE,allRockets.length-newsShown);
+  btn.style.display=newsShown<allRockets.length?'inline-flex':'none';
 }
-function loadMore() { renderNews(); }
+function loadMore(){renderNews();}
 renderNews();
 
-function openNews(idx) {
-  const r = allRockets[idx];
-  ensureNewsStars();
-  playSound('news');
-  document.getElementById('np-header-title').textContent = r.name;
-  document.getElementById('np-body').innerHTML = `
-    <div class="np-date-tag">${r.date}</div>
-    <div class="np-title">${r.name}</div>
-    <div class="np-divider"></div>
-    <div class="np-text">${r.detail}</div>`;
-  const overlay = document.getElementById('news-overlay');
-  overlay.classList.add('active');
-  requestAnimationFrame(() => { requestAnimationFrame(() => overlay.classList.add('visible')); });
-  overlay.scrollTop = 0;
-  document.body.style.overflow = 'hidden';
+function openNews(idx){
+  const r=allRockets[idx]; ensureNewsStars(); playSound('news');
+  document.getElementById('np-header-title').textContent=r.name;
+  document.getElementById('np-body').innerHTML=`<div class="np-date-tag">${r.date}</div><div class="np-title">${r.name}</div><div class="np-divider"></div><div class="np-text">${r.detail}</div>`;
+  const overlay=document.getElementById('news-overlay'); overlay.classList.add('active');
+  requestAnimationFrame(()=>{requestAnimationFrame(()=>overlay.classList.add('visible'));});
+  overlay.scrollTop=0; document.body.style.overflow='hidden';
 }
-function closeNews() {
-  const overlay = document.getElementById('news-overlay');
-  overlay.classList.remove('visible');
-  setTimeout(() => { overlay.classList.remove('active'); document.body.style.overflow = ''; }, 350);
+function closeNews(){
+  const overlay=document.getElementById('news-overlay'); overlay.classList.remove('visible');
+  setTimeout(()=>{overlay.classList.remove('active');document.body.style.overflow='';},350);
 }
 
 /* ══════════════════════════════════════
-   COUNTDOWN + MISSION IN PROGRESS
+   COUNTDOWN TIMER — build DOM
 ══════════════════════════════════════ */
-(function initCountdown() {
-  let currentTarget = null;
+(function buildTimer(){
+  const timerEl=document.getElementById('countdown-timer');
 
-  const wrapEl    = document.getElementById('countdown-wrap');
-  const labelEl   = document.getElementById('countdown-label');
-  const missionEl = document.getElementById('countdown-mission');
-  const dEl       = document.getElementById('cd-d');
-  const hEl       = document.getElementById('cd-h');
-  const mEl       = document.getElementById('cd-m');
-  const sEl       = document.getElementById('cd-s');
-  const dUnit     = dEl.closest('.cd-unit');
-  const sepThin   = document.querySelector('.cd-sep-thin');
+  // Days unit
+  const dUnit=document.createElement('div'); dUnit.className='cd-unit'; dUnit.id='cd-days-unit';
+  dUnit.innerHTML='<div class="cd-num" id="cd-d">00</div><div class="cd-lbl">Days</div>';
+  timerEl.appendChild(dUnit);
 
-  const rowWatchLinks = {};
-
-  function pad(n) { return String(Math.max(0, n)).padStart(2, '0'); }
-  function showDays(show) { dUnit.style.display = show ? '' : 'none'; sepThin.style.display = show ? '' : 'none'; }
-
-  function findNextLaunch() {
-    const now = Date.now();
-    return launches
-      .filter(l => l.status === 'Planned' && l.endObj.getTime() > now)
-      .sort((a, b) => a.dateObj - b.dateObj)[0] || null;
-  }
-
-  function tick() {
-  const now = Date.now();
-  if (!currentTarget) {
-    currentTarget = findNextLaunch();
-    if (!currentTarget) { wrapEl.style.display = 'none'; return; }
-  }
-
-  const msToLaunch = currentTarget.dateObj.getTime() - now;
-  const msToEnd = currentTarget.endObj.getTime() - now;
-
-  if (msToEnd <= 0) {
-    hideRowWatch(currentTarget);
-    currentTarget = null;
-    currentTarget = findNextLaunch();
-    if (!currentTarget) { wrapEl.style.display = 'none'; return; }
-    missionEl.textContent = currentTarget.rocket;
-  }
-
-  wrapEl.style.display = 'block';
-  missionEl.textContent = currentTarget.rocket;
-
-  if (msToLaunch <= 0 && msToEnd > 0) {
-    labelEl.textContent = 'Mission in progress';
-    const elapsed = Math.floor((now - currentTarget.dateObj.getTime()) / 1000);
-    showDays(false);
-    hEl.textContent = pad(Math.floor(elapsed / 3600));
-    mEl.textContent = pad(Math.floor((elapsed % 3600) / 60));
-    sEl.textContent = pad(elapsed % 60);
-    showRowWatch(currentTarget);
-    return;
-  }
-
-  // Lite Countdown
-  labelEl.textContent = 'Next launch in';
-  const totalSec = Math.floor(msToLaunch / 1000);   // ← One tick
-  showDays(Math.floor(totalSec / 86400) > 0);
-  dEl.textContent = pad(Math.floor(totalSec / 86400));
-  hEl.textContent = pad(Math.floor((totalSec % 86400) / 3600));
-  mEl.textContent = pad(Math.floor((totalSec % 3600) / 60));
-  sEl.textContent = pad(totalSec % 60);
-
-  // Sound 10 to 0 
-  if (totalSec <= 10 && totalSec >= 0) {
-    playSound('final10');
-  }
-
-  if (currentTarget.watchUrl && totalSec <= currentTarget.showWatchMin * 60) {
-    showRowWatch(currentTarget);
+  // Days→Hours separator — controlled by daysSeparatorMode
+  const sep=document.createElement('div');
+  sep.id='cd-days-sep';
+  if(daysSeparatorMode==='colon'){
+    sep.className='cd-sep-colon'; sep.textContent=':';
   } else {
-    hideRowWatch(currentTarget);
+    sep.className='cd-sep-thin';
   }
-}
+  timerEl.appendChild(sep);
 
-  window.registerRowWatch = function(idx, el) { rowWatchLinks[idx] = el; };
-  function showRowWatch(launch) { const idx = launches.indexOf(launch); if (rowWatchLinks[idx]) rowWatchLinks[idx].classList.add('visible'); }
-  function hideRowWatch(launch) { if (!launch) return; const idx = launches.indexOf(launch); if (rowWatchLinks[idx]) rowWatchLinks[idx].classList.remove('visible'); }
+  // Hours
+  const hUnit=document.createElement('div'); hUnit.className='cd-unit';
+  hUnit.innerHTML='<div class="cd-num" id="cd-h">00</div><div class="cd-lbl">Hours</div>';
+  timerEl.appendChild(hUnit);
 
-  currentTarget = findNextLaunch();
-  if (currentTarget) { wrapEl.style.display = 'block'; missionEl.textContent = currentTarget.rocket; }
-  tick();
-  setInterval(tick, 1000);
+  const s1=document.createElement('div'); s1.className='cd-sep'; s1.textContent=':'; timerEl.appendChild(s1);
+
+  // Minutes
+  const mUnit=document.createElement('div'); mUnit.className='cd-unit';
+  mUnit.innerHTML='<div class="cd-num" id="cd-m">00</div><div class="cd-lbl">Min</div>';
+  timerEl.appendChild(mUnit);
+
+  const s2=document.createElement('div'); s2.className='cd-sep'; s2.textContent=':'; timerEl.appendChild(s2);
+
+  // Seconds
+  const sUnit=document.createElement('div'); sUnit.className='cd-unit';
+  sUnit.innerHTML='<div class="cd-num" id="cd-s">00</div><div class="cd-lbl">Sec</div>';
+  timerEl.appendChild(sUnit);
+})();
+
+/* ══════════════════════════════════════
+   COUNTDOWN LOGIC
+══════════════════════════════════════ */
+(function initCountdown(){
+  let currentTarget=null;
+  const wrapEl=document.getElementById('countdown-wrap');
+  const labelEl=document.getElementById('countdown-label');
+  const missionEl=document.getElementById('countdown-mission');
+  const dEl=document.getElementById('cd-d');
+  const hEl=document.getElementById('cd-h');
+  const mEl=document.getElementById('cd-m');
+  const sEl=document.getElementById('cd-s');
+  const dUnit=document.getElementById('cd-days-unit');
+  const sepEl=document.getElementById('cd-days-sep');
+  const rowWatchLinks={};
+
+  function pad(n){return String(Math.max(0,n)).padStart(2,'0');}
+  function showDays(show){dUnit.style.display=show?'':'none';sepEl.style.display=show?'':'none';}
+  function findNext(){const now=Date.now();return launches.filter(l=>l.status==='Planned'&&l.endObj.getTime()>now).sort((a,b)=>a.dateObj-b.dateObj)[0]||null;}
+
+  function tick(){
+    const now=Date.now();
+    if(!currentTarget){currentTarget=findNext();if(!currentTarget){wrapEl.style.display='none';return;}}
+    const msL=currentTarget.dateObj.getTime()-now;
+    const msE=currentTarget.endObj.getTime()-now;
+    if(msE<=0){hideRW(currentTarget);currentTarget=null;currentTarget=findNext();if(!currentTarget){wrapEl.style.display='none';return;}missionEl.textContent=currentTarget.rocket;}
+    wrapEl.style.display='block'; missionEl.textContent=currentTarget.rocket;
+    if(msL<=0&&msE>0){
+      labelEl.textContent='Mission in progress';
+      const el=Math.floor((now-currentTarget.dateObj.getTime())/1000);
+      showDays(false); hEl.textContent=pad(Math.floor(el/3600)); mEl.textContent=pad(Math.floor((el%3600)/60)); sEl.textContent=pad(el%60);
+      showRW(currentTarget); return;
+    }
+    labelEl.textContent='Next launch in';
+    const ts=Math.floor(msL/1000);
+    showDays(Math.floor(ts/86400)>0);
+    dEl.textContent=pad(Math.floor(ts/86400)); hEl.textContent=pad(Math.floor((ts%86400)/3600));
+    mEl.textContent=pad(Math.floor((ts%3600)/60)); sEl.textContent=pad(ts%60);
+    if(ts<=10&&ts>=0)playSound('final10');
+    if(currentTarget.watchUrl&&ts<=currentTarget.showWatchMin*60){showRW(currentTarget);}else{hideRW(currentTarget);}
+  }
+
+  window.registerRowWatch=function(idx,el){rowWatchLinks[idx]=el;};
+  function showRW(l){const i=launches.indexOf(l);if(rowWatchLinks[i])rowWatchLinks[i].classList.add('visible');}
+  function hideRW(l){if(!l)return;const i=launches.indexOf(l);if(rowWatchLinks[i])rowWatchLinks[i].classList.remove('visible');}
+
+  currentTarget=findNext();
+  if(currentTarget){wrapEl.style.display='block';missionEl.textContent=currentTarget.rocket;}
+  tick(); setInterval(tick,1000);
 })();
 
 /* ══════════════════════════════════════
    LAUNCH MODAL
 ══════════════════════════════════════ */
-function openLaunchModal(idx) {
-  const l = launches[idx];
-  const color = statusColor(l.status);
-  playSound('modal');
-  const backdrop = document.getElementById('launch-modal-backdrop');
-  document.getElementById('lm-color-bar').style.background = color;
-  document.getElementById('lm-dot').style.cssText = `width:8px;height:8px;border-radius:50%;background:${color};opacity:0.75;box-shadow:0 0 8px ${color}`;
-  document.getElementById('lm-status-text').style.color = color;
-  document.getElementById('lm-status-text').textContent = l.status;
-  document.getElementById('lm-name').textContent = l.rocket;
-  document.getElementById('lm-type').textContent = l.type;
-  const dateStr = l.dateObj.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  const timeStr = l.dateObj.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false}) + ' local';
-  document.getElementById('lm-grid').innerHTML = `
+function openLaunchModal(idx){
+  const l=launches[idx]; const color=statusColor(l.status); playSound('modal');
+  document.getElementById('lm-color-bar').style.background=color;
+  document.getElementById('lm-dot').style.cssText=`width:8px;height:8px;border-radius:50%;background:${color};opacity:0.75;box-shadow:0 0 8px ${color}`;
+  document.getElementById('lm-status-text').style.color=color;
+  document.getElementById('lm-status-text').textContent=l.status;
+  document.getElementById('lm-name').textContent=l.rocket;
+  document.getElementById('lm-type').textContent=l.type;
+  const ds=l.dateObj.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+  const ts=l.dateObj.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false})+' local';
+  document.getElementById('lm-grid').innerHTML=`
     <div class="lm-cell"><div class="lm-cell-lbl">Vehicle</div><div class="lm-cell-val">${l.vehicle}</div></div>
     <div class="lm-cell"><div class="lm-cell-lbl">Launch Site</div><div class="lm-cell-val">${l.site}</div></div>
-    <div class="lm-cell"><div class="lm-cell-lbl">Date</div><div class="lm-cell-val">${dateStr}</div></div>
-    <div class="lm-cell"><div class="lm-cell-lbl">Time</div><div class="lm-cell-val">${timeStr}</div></div>
+    <div class="lm-cell"><div class="lm-cell-lbl">Date</div><div class="lm-cell-val">${ds}</div></div>
+    <div class="lm-cell"><div class="lm-cell-lbl">Time</div><div class="lm-cell-val">${ts}</div></div>
     <div class="lm-cell"><div class="lm-cell-lbl">Target</div><div class="lm-cell-val">${l.target}</div></div>
     <div class="lm-cell"><div class="lm-cell-lbl">Duration</div><div class="lm-cell-val">~${l.durationMin} min</div></div>`;
-  document.getElementById('lm-desc').textContent = l.desc;
-  const watchRow  = document.getElementById('lm-watch-row');
-  const watchLink = document.getElementById('lm-watch-link');
-  if (l.watchUrl) { watchLink.href = l.watchUrl; watchRow.style.display = ''; } else { watchRow.style.display = 'none'; }
-  backdrop.classList.add('active');
-  requestAnimationFrame(() => { requestAnimationFrame(() => backdrop.classList.add('visible')); });
-  document.body.style.overflow = 'hidden';
+  document.getElementById('lm-desc').textContent=l.desc;
+  const wr=document.getElementById('lm-watch-row'); const wl=document.getElementById('lm-watch-link');
+  if(l.watchUrl){wl.href=l.watchUrl;wr.style.display='';}else{wr.style.display='none';}
+  const bd=document.getElementById('launch-modal-backdrop'); bd.classList.add('active');
+  requestAnimationFrame(()=>{requestAnimationFrame(()=>bd.classList.add('visible'));});
+  document.body.style.overflow='hidden';
 }
-function closeLaunchModal(e, force) {
-  if (!force && e && e.target !== document.getElementById('launch-modal-backdrop')) return;
-  const backdrop = document.getElementById('launch-modal-backdrop');
-  backdrop.classList.remove('visible');
-  setTimeout(() => { backdrop.classList.remove('active'); document.body.style.overflow = ''; }, 320);
+function closeLaunchModal(e,force){
+  if(!force&&e&&e.target!==document.getElementById('launch-modal-backdrop'))return;
+  const bd=document.getElementById('launch-modal-backdrop'); bd.classList.remove('visible');
+  setTimeout(()=>{bd.classList.remove('active');document.body.style.overflow='';},320);
 }
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeLaunchModal(null,true); closeNews(); closeVehicle(); }
-});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLaunchModal(null,true);closeNews();closeVehicle();}});
 
 /* ══════════════════════════════════════
-   ACCORDION
+   ACCORDION — with per-group Load more
+   Planned: show all (no limit)
+   Completed / Canceled: show accLoadMorePerPage initially, Load more adds accLoadMorePerPage
 ══════════════════════════════════════ */
 const groups = [
-  { status:'Planned',   color:'#ffffff' },
-  { status:'Completed', color:'#00cc66' },
-  { status:'Canceled',  color:'#ff3300' },
+    { status: 'Planned',         color: '#ffffff', paginate: true },
+    { status: 'Completed',       color: '#00cc66', paginate: true },
+    { status: 'Canceled',        color: '#ff3300', paginate: true },
+    { status: 'Big Event Plans', color: '#ffaa00', paginate: true }
 ];
-const scheduleContainer = document.getElementById('launch-list');
+const schedCont=document.getElementById('launch-list');
 
-groups.forEach(g => {
-  const items = launches.map((l, i) => ({ ...l, _idx: i })).filter(l => l.status === g.status);
-  if (!items.length) return;
+groups.forEach(g=>{
+  const allItems=launches.map((l,i)=>({...l,_idx:i})).filter(l=>l.status===g.status);
+  if(!allItems.length)return;
 
-  const acc = document.createElement('div');
-  acc.className = 'group-accordion';
-
-  const header = document.createElement('div');
-  header.className = 'group-header';
-  header.innerHTML = `
+  const acc=document.createElement('div'); acc.className='group-accordion';
+  const hdr=document.createElement('div'); hdr.className='group-header';
+  hdr.innerHTML=`
     <div class="group-left">
       <div class="group-dot" style="background:${g.color};box-shadow:0 0 6px ${g.color}55;"></div>
       <span class="group-label" style="color:${g.color}">${g.status}</span>
-      <span class="group-count">${items.length} launch${items.length!==1?'es':''}</span>
+      <span class="group-count">${allItems.length} launch${allItems.length!==1?'es':''}</span>
     </div>
     <span class="group-chevron">&#9660;</span>`;
 
-  const rowsWrap = document.createElement('div');
-  rowsWrap.className = 'group-rows';
+  const rw=document.createElement('div'); rw.className='group-rows';
 
-  items.forEach(l => {
-    const dateStr = l.dateObj.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-    const timeStr = l.dateObj.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false}) + ' (local)';
-    const row = document.createElement('div');
-    row.className = 'launch-row';
-    row.title = 'Click for details';
-    const watchLinkHTML = l.watchUrl
-      ? `<a class="row-watch-link" id="row-watch-${l._idx}" href="${l.watchUrl}" target="_blank" onclick="event.stopPropagation()">Watch Live &#8599;</a>`
-      : '';
-    row.innerHTML = `
+  // State for pagination
+  let visibleCount=g.paginate?Math.min(accLoadMorePerPage,allItems.length):allItems.length;
+  const rowEls=[]; // keep references to all row elements
+
+  function buildRow(l){
+    const ds=l.dateObj.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+    const ts=l.dateObj.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false})+' (local)';
+    const row=document.createElement('div'); row.className='launch-row'; row.title='Click for details';
+    const wlHTML=l.watchUrl?`<a class="row-watch-link" id="row-watch-${l._idx}" href="${l.watchUrl}" target="_blank" onclick="event.stopPropagation()">Watch Live <span class="rw-arrow">&#8599;</span></a>`:'';
+    row.innerHTML=`
       <div><strong>${l.rocket}</strong></div>
-      <div style="color:#aaa;font-family:var(--mono);font-size:0.88em;">${dateStr}</div>
-      <div style="color:#666;font-size:0.84em;font-family:var(--mono);">${timeStr}</div>
-      <div style="display:flex;align-items:center;gap:14px;justify-content:flex-end;">
-        ${watchLinkHTML}
-        <div class="status-badge" style="color:${statusColor(l.status)};">${l.status}</div>
-      </div>`;
-    row.addEventListener('click', () => openLaunchModal(l._idx));
-    rowsWrap.appendChild(row);
-    if (l.watchUrl) {
-      const el = document.getElementById(`row-watch-${l._idx}`);
-      if (el) window.registerRowWatch(l._idx, el);
-    }
+      <div style="color:#aaa;font-family:var(--mono);font-size:0.88em;">${ds}</div>
+      <div style="color:#666;font-size:0.84em;font-family:var(--mono);">${ts}</div>
+      <div style="display:flex;align-items:center;gap:14px;justify-content:flex-end;">${wlHTML}<div class="status-badge" style="color:${statusColor(l.status)};">${l.status}</div></div>`;
+    row.addEventListener('click',()=>openLaunchModal(l._idx));
+    if(l.watchUrl){setTimeout(()=>{const el=document.getElementById(`row-watch-${l._idx}`);if(el)window.registerRowWatch(l._idx,el);},0);}
+    return row;
+  }
+
+  // Add initially visible rows
+  allItems.forEach((l,i)=>{
+    const row=buildRow(l); row.style.display=i<visibleCount?'':'none';
+    rw.appendChild(row); rowEls.push(row);
   });
 
-  acc.appendChild(header);
-  acc.appendChild(rowsWrap);
-  scheduleContainer.appendChild(acc);
+  // Load more button (only for paginated groups)
+  let loadMoreBtn=null;
+  if(g.paginate&&allItems.length>accLoadMorePerPage){
+    loadMoreBtn=document.createElement('button');
+    loadMoreBtn.className='acc-load-more';
+    loadMoreBtn.textContent=`Load more (${allItems.length-visibleCount} remaining)`;
+    loadMoreBtn.addEventListener('click',e=>{
+      e.stopPropagation();
+      const prev=visibleCount;
+      visibleCount=Math.min(visibleCount+accLoadMorePerPage,allItems.length);
+      for(let i=prev;i<visibleCount;i++){rowEls[i].style.display='';}
+      if(visibleCount>=allItems.length){loadMoreBtn.remove();loadMoreBtn=null;}
+      else{loadMoreBtn.textContent=`Load more (${allItems.length-visibleCount} remaining)`;}
+      // Update max-height so accordion re-measures
+      rw.style.maxHeight=rw.scrollHeight+'px';
+    });
+    rw.appendChild(loadMoreBtn);
+  }
 
-  header.addEventListener('click', () => {
+  acc.appendChild(hdr); acc.appendChild(rw); schedCont.appendChild(acc);
+
+  hdr.addEventListener('click',()=>{
     playSound('accordion');
-    const isOpen = acc.classList.contains('open');
-    if (isOpen) {
-      rowsWrap.style.maxHeight = rowsWrap.scrollHeight + 'px';
-      rowsWrap.classList.remove('open');
-      requestAnimationFrame(() => { rowsWrap.style.maxHeight = '0px'; });
+    const isOpen=acc.classList.contains('open');
+    if(isOpen){
+      rw.style.maxHeight=rw.scrollHeight+'px';
+      rw.classList.remove('open');
+      requestAnimationFrame(()=>{rw.style.maxHeight='0px';});
       acc.classList.remove('open');
     } else {
       acc.classList.add('open');
-      rowsWrap.style.maxHeight = rowsWrap.scrollHeight + 'px';
-      rowsWrap.classList.add('open');
-      rowsWrap.addEventListener('transitionend', () => {
-        if (acc.classList.contains('open')) rowsWrap.style.maxHeight = 'none';
-      }, { once: true });
+      rw.style.maxHeight=rw.scrollHeight+'px';
+      rw.classList.add('open');
+      rw.addEventListener('transitionend',()=>{if(acc.classList.contains('open'))rw.style.maxHeight='none';},{once:true});
     }
   });
 });
