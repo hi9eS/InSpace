@@ -56,10 +56,11 @@ a { color:inherit; text-decoration:none; }
   100% { opacity:0.08; transform:scale(1.1); }
 }
 
+/* ── HEADER ── */
 header {
   position:sticky; top:0; z-index:100;
-  display:flex; justify-content:center; gap:4px;
-  padding:14px 0;
+  display:flex; align-items:center; justify-content:center;
+  padding:14px 24px;
   background:rgba(8,8,8,0.88); backdrop-filter:blur(14px);
   border-bottom:1px solid var(--border);
 }
@@ -68,10 +69,53 @@ header::after {
   width:180px; height:1px;
   background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
 }
-header a {
+
+/* Left side: local time */
+.header-left {
+  position:absolute; left:24px;
+  display:flex; align-items:center; gap:8px;
+}
+.header-clock {
+  font-family:var(--mono); font-size:0.78em; font-weight:300;
+  color:var(--muted); letter-spacing:0.06em;
+  white-space:nowrap;
+}
+.header-clock-tz {
+  font-family:var(--mono); font-size:0.68em;
+  color:var(--muted2); letter-spacing:0.04em;
+}
+
+/* Center: nav links */
+.header-nav { display:flex; gap:4px; }
+.header-nav a {
   font-size:0.85em; font-weight:400; letter-spacing:0.04em;
   padding:7px 16px; border-radius:8px; cursor:pointer; color:var(--muted);
   transition:color 0.2s, background 0.2s, transform 0.15s var(--ease-spring);
+}
+.header-nav a:hover { color:var(--text); transform:translateY(-1px); background:rgba(255,255,255,0.05); }
+.header-nav a:active { transform:scale(0.96); }
+
+/* Right side: social buttons */
+.header-right {
+  position:absolute; right:24px;
+  display:flex; align-items:center; gap:8px;
+}
+.social-btn {
+  width:32px; height:32px; border-radius:50%;
+  border:1px solid rgba(255,255,255,0.15);
+  background:rgba(255,255,255,0.03);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; color:var(--muted);
+  font-size:0.78em; font-weight:500; font-family:var(--mono);
+  transition:color 0.2s, border-color 0.2s, background 0.2s, transform 0.15s var(--ease-spring);
+  text-decoration:none;
+  flex-shrink:0;
+}
+.social-btn:hover { 
+  color:var(--text); 
+  border-color:rgba(255,255,255,0.35); 
+  background:rgba(255,255,255,0.07); 
+  transform: scale(1.08);
 }
 header a:hover { color:var(--text); transform:translateY(-1px); background:rgba(255,255,255,0.05); }
 header a:active { transform:scale(0.96); }
@@ -255,7 +299,7 @@ h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36p
 /* Slightly brighter description text — controlled via --news-text-brightness */
 .rocket p.rocket-desc { font-size:0.875em; color:#888; line-height:1.7; flex:1; filter: brightness(var(--news-text-brightness)); }
 .rocket-footer { display:flex; align-items:center; justify-content:space-between; padding:12px 22px; border-top:1px solid rgba(255,255,255,0.05); margin-top:14px; }
-.rocket-date { font-size:0.75em; color:#444; font-family:var(--mono); letter-spacing:0.04em; }
+.rocket-date { font-size:0.75em; color:#777; font-family:var(--mono); letter-spacing:0.04em; }
 .rocket-details-btn { font-size:0.72em; color:var(--muted2); font-family:var(--mono); letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; transition:color 0.2s; background:none; border:none; padding:0; display:flex; align-items:center; gap:5px; }
 .rocket-details-btn .rd-arrow { transition:transform 0.22s var(--ease-spring); display:inline-block; }
 .rocket:hover .rocket-details-btn { color:#aaa; }
@@ -347,6 +391,17 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
 .reveal { opacity:0; transform:translateY(22px); transition:opacity 0.7s var(--ease), transform 0.7s var(--ease); }
 .reveal.visible { opacity:1; transform:translateY(0); }
 
+/* News on X button hover — лёгкое увеличение */
+#news-on-x-btn:hover {
+  color: #ccc;
+  border-color: rgba(255,255,255,0.45);
+  transform: scale(1.04);
+}
+
+#news-on-x-btn:hover .x-arrow {
+  transform: translate(1px, -1px);
+}
+
 /* ── MOBILE ── */
 @media(max-width:768px) {
   .vehicle-cards { gap:14px; }
@@ -405,11 +460,14 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
 </div>
 
 <header>
-  <a onclick="closeVehicle();closeNews();scrollToSection('hero')">Home</a>
-  <a onclick="closeVehicle();closeNews();scrollToSection('fleet')">Vehicles</a>
-  <a onclick="closeVehicle();closeNews();scrollToSection('rockets')">News</a>
-  <a onclick="closeVehicle();closeNews();scrollToSection('schedule')">Schedule</a>
-  <a onclick="closeVehicle();closeNews();scrollToSection('contact')">Contact</a>
+  <!-- Left: local clock -->
+  <div class="header-left" id="header-left-slot"></div>
+
+  <!-- Center: navigation -->
+  <nav class="header-nav" id="header-nav"></nav>
+
+  <!-- Right: social buttons -->
+  <div class="header-right" id="header-right-slot"></div>
 </header>
 
 <section class="hero" id="hero">
@@ -445,19 +503,15 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
 <section id="rockets" class="reveal">
   <h2>Latest News</h2>
   <div class="rocket-cards" id="rocket-cards"></div>
+  <div style="display:flex; gap:12px; justify-content:center; margin:32px auto 40px;">
   <button id="load-more-btn" onclick="loadMore()" style="display:none;">Load more</button>
+</div>
 </section>
 
 <section id="schedule" class="reveal">
   <h2>Launch Schedule</h2>
   <div id="launch-list"></div>
 </section>
-
-<section class="contact reveal" id="contact">
-  <h2>Contact</h2>
-  <p>Twitter: <a href="https://x.com/OXeallCorp" target="_blank">@OXeallCorp</a></p>
-</section>
-
 <footer>2026-2331 InSpace. This website is for informational purposes only and does not engage in any commercial activity.</footer>
 
 <script>
@@ -503,6 +557,81 @@ function preloadSounds() {
 }
 preloadSounds();
 
+/* ══════════════════════════════════════
+   BUILD HEADER
+══════════════════════════════════════ */
+/* Nav */
+const navEl = document.getElementById('header-nav');
+const navLinks = [
+  { label: 'Home',     section: 'hero'     },
+  { label: 'Vehicles', section: 'fleet'    },
+  { label: 'News',     section: 'rockets'  },
+  { label: 'Schedule', section: 'schedule' },
+];
+
+navLinks.forEach(n => {
+  const a = document.createElement('a');
+  a.textContent = n.label;
+  a.onclick = () => { closeVehicle(); closeNews(); scrollToSection(n.section); };
+  navEl.appendChild(a);
+});
+
+/* Clock */
+const leftSlot = document.getElementById('header-left-slot');
+const clockSpan = document.createElement('span');
+clockSpan.className = 'header-clock';
+clockSpan.id = 'header-clock-display';
+const tzSpan = document.createElement('span');
+tzSpan.className = 'header-clock-tz';
+tzSpan.textContent = 'local';
+leftSlot.appendChild(clockSpan);
+leftSlot.appendChild(tzSpan);
+
+function updateClock() {
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  const ss = String(now.getSeconds()).padStart(2,'0');
+  clockSpan.textContent = `${hh}:${mm}:${ss} `;
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+/* Social buttons с png иконками */
+const rightSlot = document.getElementById('header-right-slot');
+const socialButtons = [
+  { 
+    label: 'X', 
+    logoSrc: 'XIMA.png',           // ← сюда вставь имя файла иконки X
+    url: 'https://x.com/OXeallCorp' 
+  },
+  { 
+    label: 'YT', 
+    logoSrc: 'YoutubeIMA.png',          // ← сюда вставь имя файла иконки YouTube
+    url: 'https://www.youtube.com/@hi9eS' 
+  },
+];
+
+socialButtons.forEach(btn => {
+  const a = document.createElement('a');
+  a.className = 'social-btn';
+  a.href = btn.url;
+  a.target = '_blank';
+  a.title = btn.label;
+
+  if (btn.logoSrc) {
+    const img = document.createElement('img');
+    img.src = btn.logoSrc;
+    img.alt = btn.label;
+    img.style.width = '16px';
+    img.style.height = '16px';
+    a.appendChild(img);
+  } else {
+    a.textContent = btn.label;
+  }
+
+  rightSlot.appendChild(a);
+});
 function playSound(key) {
   if (!enableSounds) return;
   const cfg = sounds[key];
@@ -619,25 +748,36 @@ function launchCountFor(nameId) {
   return launches.filter(l => l.nameId === nameId && l.status === 'Completed').length;
 }
 
-/* ── Days since last Completed launch (any vehicle) ── */
-function daysSinceLastLaunch() {
-  const completed = launches.filter(l => l.status === 'Completed');
-  if (!completed.length) return null;
-  const latest = completed.reduce((a, b) => a.dateObj > b.dateObj ? a : b);
-  const diff = Date.now() - latest.dateObj.getTime();
-  return Math.floor(diff / 86400000);
-}
-
+/* ── Days since last Completed launch — правильный local time ── */
 (function initDaysSince() {
-  const days = daysSinceLastLaunch();
+  const completed = launches.filter(l => l.status === 'Completed');
+  if (!completed.length) return;
+
+  const latest = completed.reduce((a, b) => a.dateObj > b.dateObj ? a : b);
+
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());   // сегодня 00:00 по местному времени
+
+  const launchDate = new Date(
+    latest.dateObj.getUTCFullYear(),
+    latest.dateObj.getUTCMonth(),
+    latest.dateObj.getUTCDate()
+  );
+
+  const diffMs = today.getTime() - launchDate.getTime();
+  let diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffDays < 0) diffDays = 0;
+
   const wrap = document.getElementById('days-since-wrap');
   const text = document.getElementById('days-since-text');
-  if (days !== null) {
-    text.textContent = days === 0
-      ? 'Last launch: today'
-      : `${days} day${days !== 1 ? 's' : ''} since last launch`;
-    wrap.style.display = 'block';
-  }
+
+  const label = diffDays === 0 
+    ? 'Last launch: today' 
+    : `${diffDays} day${diffDays !== 1 ? 's' : ''} since last launch`;
+
+  text.textContent = label;
+  wrap.style.display = 'block';
 })();
 
 /* ══════════════════════════════════════
@@ -881,8 +1021,54 @@ function renderNews() {
       </div>`;
     grid.appendChild(card);
   });
-  newsShown += slice.length;
-  btn.style.display = newsShown < allRockets.length ? 'block' : 'none';
+        newsShown += slice.length;
+
+  const loadBtn = document.getElementById('load-more-btn');
+
+  if (newsShown < allRockets.length) {
+    loadBtn.style.display = 'inline-flex';
+  } else {
+    loadBtn.style.display = 'none';
+
+    // Показываем кнопку "News on X" с анимацией только когда все новости загружены
+    const xContainer = loadBtn.parentNode;
+    if (!document.getElementById('news-on-x-btn')) {
+      const xBtn = document.createElement('a');
+      xBtn.href = "https://x.com/OXeallCorp";
+      xBtn.target = "_blank";
+      xBtn.id = "news-on-x-btn";
+      xBtn.style.cssText = `
+        display:inline-flex; align-items:center; gap:8px; padding:10px 26px; 
+        border:1px solid rgba(255,255,255,0.25); border-radius:100px; 
+        color:#999; font-size:0.85em; font-family:var(--mono); 
+        text-decoration:none; transition:all 0.25s var(--ease);
+        position:relative; overflow:hidden; margin-left:12px;
+        opacity: 0; transform: translateY(8px);
+      `;
+      xBtn.innerHTML = `News on X <span class="x-arrow" style="font-size:1.05em; transition:transform 0.22s var(--ease-spring);">↗</span>`;
+      
+      xContainer.appendChild(xBtn);
+
+      // Плавная анимация появления
+      setTimeout(() => {
+        xBtn.style.transition = 'all 0.6s var(--ease)';
+        xBtn.style.opacity = '1';
+        xBtn.style.transform = 'translateY(0)';
+      }, 50);
+
+      // Hover эффект
+      xBtn.addEventListener('mouseenter', () => {
+        xBtn.style.color = '#ccc';
+        xBtn.style.borderColor = 'rgba(255,255,255,0.45)';
+        xBtn.querySelector('.x-arrow').style.transform = 'translate(3px, -3px)';
+      });
+      xBtn.addEventListener('mouseleave', () => {
+        xBtn.style.color = '#999';
+        xBtn.style.borderColor = 'rgba(255,255,255,0.25)';
+        xBtn.querySelector('.x-arrow').style.transform = '';
+      });
+    }
+  }
 }
 function loadMore() { renderNews(); }
 renderNews();
