@@ -92,7 +92,7 @@ header::after {
   transition:color 0.2s, background 0.2s, transform 0.15s var(--ease-spring);
 }
 .header-nav a:hover { transform:scale(0.97); background:rgba(255,255,255,0.05); }
-.header-nav a:active { transform:scale(1.05); }
+.header-nav a:active { transform:scale(0.90); }
 
 .header-right { position:absolute; right:24px; display:flex; align-items:center; gap:8px; }
 /* ── SOCIAL BUTTONS ── */
@@ -669,7 +669,7 @@ let newsStarsCreated=false; function ensureNewsStars(){if(newsStarsCreated)retur
     } else { // starship
       return {
         ...base,
-        speed: 3 + Math.random() * 1,
+        speed: 3 + Math.random() * 2,
         brightness: 0.22 + Math.random() * 0.12,
         size: 3.5,
         tailLen: 28,
