@@ -56,6 +56,15 @@ a { color:inherit; text-decoration:none; }
   100% { opacity:0.08; transform:scale(1.1); }
 }
 
+/* ── FLYBY CANVAS ── */
+#flyby-canvas {
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:1;
+  overflow:hidden;
+}
+
 /* ── HEADER ── */
 header {
   position:sticky; top:0; z-index:100;
@@ -356,6 +365,9 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
 
 <div id="starfield"></div>
 
+<!-- Flyby canvas: meteors, satellites, Starship silhouettes -->
+<canvas id="flyby-canvas"></canvas>
+
 <div id="vehicle-overlay">
   <div id="vp-starfield"></div>
   <div class="vp-header">
@@ -443,9 +455,9 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
 
 /* ── Vehicle card dimensions ── */
 const vehicleCardConfig = {
-  colorBarHeight:  '3px',      /* top colour stripe */
-  innerPaddingV:   '15px',     /* top/bottom padding of card body */
-  innerPaddingH:   '20px',     /* left/right padding of card body */
+  colorBarHeight:  '3px',
+  innerPaddingV:   '15px',
+  innerPaddingH:   '20px',
   labelRowMarginBottom: '7px',
   labelRowMarginTop:    '6px',
   subMarginBottom: '18px',
@@ -455,32 +467,25 @@ const vehicleCardConfig = {
 };
 
 /* ── Accordion Load-more ── */
-const accLoadMorePerPage = 10; /* how many rows to show initially and per click */
+const accLoadMorePerPage = 10;
 
-/* ── Countdown days/hours separator mode ──
-   'bar'   → thin vertical line (default, current look)
-   'colon' → colon like other separators             */
-const daysSeparatorMode = 'bar'; /* 'bar' | 'colon' */
+/* ── Countdown days/hours separator mode ── */
+const daysSeparatorMode = 'bar';
 
 /* ── Header clock ── */
 const showClock     = true;
-const clockColor    = '#888';   /* adjust brightness: '#666'=darker, '#aaa'=brighter */
-const clockTzColor  = '#555';   /* "local" label colour */
+const clockColor    = '#888';
+const clockTzColor  = '#555';
 const clockFontSize = '0.78em';
 
 /* ── Nav link colour ── */
-const navLinkColor      = '#888';   /* default — slightly brighter than muted #666 */
+const navLinkColor      = '#888';
 const navLinkHoverColor = '#f0f0f0';
 
-/* ── Social buttons ──
-   label: text shown if logoSrc is null
-   logoSrc: path to image file, or null
-   url: destination link
-   fontSize / padding: per-button overrides (optional) */
+/* ── Social buttons ── */
 const socialButtons = [
   { label:'X/Twitter', logoSrc:null, url:'https://x.com/OXeallCorp'       },
   { label:'YouTube',   logoSrc:null, url:'https://www.youtube.com/@hi9eS' },
-  /* add more here if needed */
 ];
 const socialBtnFontSize = '0.72em';
 const socialBtnPadding  = '6px 14px';
@@ -500,12 +505,6 @@ const sounds = {
    END OF CONFIG
 ══════════════════════════════════════ */
 
-/* ── Apply vehicle card config to CSS ── */
-(function applyCardConfig(){
-  const s = document.documentElement.style;
-  // We'll apply via inline styles when building cards, but set globals here
-})();
-
 /* ── Sound ── */
 let audioCtx=null; const audioBuffers={};
 function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
@@ -519,32 +518,367 @@ function playSound(key){
   }catch(e){}
 }
 
-/* ── Starfield ── */
-function createStars(container,count){for(let i=0;i<count;i++){const s=document.createElement('div');s.className='star';const size=Math.random()*1.8+0.3;s.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--op:${Math.random()*0.45+0.1};--dur:${Math.random()*5+3}s;--delay:${Math.random()*6}s;`;container.appendChild(s);}}
-createStars(document.getElementById('starfield'),110);
+/* ── Starfield with parallax layers ── */
+function createStars(container, count) {
+  for (let i = 0; i < count; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 1.8 + 0.3;
+    // Assign depth layer: 0=far(slow), 1=mid, 2=close(faster)
+    const layer = Math.floor(Math.random() * 3);
+    s.dataset.layer = layer;
+    s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--op:${Math.random()*0.45+0.1};--dur:${Math.random()*5+3}s;--delay:${Math.random()*6}s;`;
+    // Store base positions for parallax
+    s.dataset.baseLeft = parseFloat(s.style.left);
+    s.dataset.baseTop  = parseFloat(s.style.top);
+    container.appendChild(s);
+  }
+}
+
+createStars(document.getElementById('starfield'), 110);
 let vpStarsCreated=false; function ensureVpStars(){if(vpStarsCreated)return;createStars(document.getElementById('vp-starfield'),90);vpStarsCreated=true;}
 let newsStarsCreated=false; function ensureNewsStars(){if(newsStarsCreated)return;createStars(document.getElementById('news-starfield'),80);newsStarsCreated=true;}
 
-/* ── Reveal & Utilities ── */
+/* ── Parallax effect ── */
+(function initParallax() {
+  // Parallax multipliers per layer (far → close)
+  const factors = [0.004, 0.010, 0.020];
 
+  let mouseX = 0, mouseY = 0;
+  let scrollY = 0;
+  let rafId = null;
+  let targetMX = 0, targetMY = 0;
+  let currentMX = 0, currentMY = 0;
+
+  document.addEventListener('mousemove', e => {
+    // Offset from center, normalised to -1..1
+    targetMX = (e.clientX / window.innerWidth  - 0.5) * 2;
+    targetMY = (e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  window.addEventListener('scroll', () => {
+    scrollY = window.scrollY;
+    scheduleUpdate();
+  }, { passive: true });
+
+  function scheduleUpdate() {
+    if (!rafId) rafId = requestAnimationFrame(update);
+  }
+
+  function update() {
+    rafId = null;
+    // Smooth mouse interpolation
+    currentMX += (targetMX - currentMX) * 0.06;
+    currentMY += (targetMY - currentMY) * 0.06;
+
+    const starfield = document.getElementById('starfield');
+    const stars = starfield.querySelectorAll('.star');
+    stars.forEach(s => {
+      const layer = parseInt(s.dataset.layer) || 0;
+      const f = factors[layer];
+      const baseLeft = parseFloat(s.dataset.baseLeft);
+      const baseTop  = parseFloat(s.dataset.baseTop);
+      // Mouse parallax (viewport %)
+      const dx = currentMX * f * 100;
+      const dy = currentMY * f * 100;
+      // Scroll parallax — far stars scroll slower
+      const scrollFactor = [0.003, 0.008, 0.016][layer];
+      const sy = (scrollY * scrollFactor);
+      s.style.transform = `translate(${dx}%, calc(${dy}% - ${sy}px))`;
+    });
+
+    // Keep smooth loop while mouse is moving
+    if (Math.abs(targetMX - currentMX) > 0.0005 || Math.abs(targetMY - currentMY) > 0.0005) {
+      rafId = requestAnimationFrame(update);
+    }
+  }
+
+  // Kick off loop
+  document.addEventListener('mousemove', scheduleUpdate, { passive: true });
+  window.addEventListener('scroll', scheduleUpdate, { passive: true });
+})();
+
+/* ══════════════════════════════════════
+   FLYBY SYSTEM — canvas overlay
+   Types: meteor | satellite | starship
+══════════════════════════════════════ */
+(function initFlyby() {
+  const canvas = document.getElementById('flyby-canvas');
+  const ctx    = canvas.getContext('2d');
+  let W, H;
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Active flyby objects
+  let flyby = null;
+  let animFrame = null;
+
+  // Schedule next flyby: 15–30 seconds
+  function scheduleNext() {
+    const delay = (15 + Math.random() * 15) * 1000;
+    setTimeout(spawnFlyby, delay);
+  }
+
+  function spawnFlyby() {
+    // pick type weighted: meteor 50%, satellite 35%, starship 15%
+    const r = Math.random();
+    const type = r < 0.50 ? 'meteor' : r < 0.85 ? 'satellite' : 'starship';
+
+    // Random angle: mostly left-to-right, slight diagonal
+    const angle = (Math.random() * 30 - 15) * Math.PI / 180; // ±15°
+    // Slightly randomise vertical entry point
+    const startY = H * (0.1 + Math.random() * 0.55);
+
+    flyby = buildFlyby(type, angle, startY);
+    if (!animFrame) animFrame = requestAnimationFrame(drawLoop);
+    scheduleNext();
+  }
+
+  function buildFlyby(type, angle, startY) {
+    const base = {
+      type,
+      x: -120,
+      y: startY,
+      angle,
+      progress: 0, // 0..1
+    };
+
+    if (type === 'meteor') {
+      return {
+        ...base,
+        speed: 4.5 + Math.random() * 3,
+        tailLen: 80 + Math.random() * 60,
+        brightness: 0.55 + Math.random() * 0.35,
+        size: 1.2 + Math.random() * 0.8,
+        duration: 1.4,    // seconds
+      };
+    } else if (type === 'satellite') {
+      return {
+        ...base,
+        speed: 1.0 + Math.random() * 0.6,
+        brightness: 0.30 + Math.random() * 0.20,
+        size: 1.4,
+        tailLen: 18,
+        duration: 6,
+      };
+    } else { // starship
+      return {
+        ...base,
+        speed: 1.8 + Math.random() * 0.5,
+        brightness: 0.22 + Math.random() * 0.12,
+        size: 3.5,
+        tailLen: 28,
+        duration: 5,
+        // plume glow color
+        plumeColor: 'rgba(120,180,255,',
+      };
+    }
+  }
+
+  let lastTime = null;
+  function drawLoop(ts) {
+    if (!lastTime) lastTime = ts;
+    const dt = (ts - lastTime) / 1000;
+    lastTime = ts;
+
+    ctx.clearRect(0, 0, W, H);
+
+    if (flyby) {
+      // Advance position
+      const dx = Math.cos(flyby.angle) * flyby.speed;
+      const dy = Math.sin(flyby.angle) * flyby.speed;
+      flyby.x += dx;
+      flyby.y += dy;
+
+      // Fade in/out envelope based on progress across screen
+      const prog = flyby.x / (W + 200);
+      // Envelope: quick fade-in (0..0.08), flat (0.08..0.85), fade-out (0.85..1)
+      let alpha;
+      if (prog < 0.08)       alpha = prog / 0.08;
+      else if (prog < 0.85)  alpha = 1.0;
+      else                   alpha = Math.max(0, 1 - (prog - 0.85) / 0.15);
+
+      alpha *= flyby.brightness;
+
+      if (flyby.x > W + 150) {
+        flyby = null;
+        ctx.clearRect(0, 0, W, H);
+        animFrame = null;
+        lastTime = null;
+        return;
+      }
+
+      if (flyby.type === 'meteor') drawMeteor(flyby, alpha);
+      else if (flyby.type === 'satellite') drawSatellite(flyby, alpha);
+      else drawStarship(flyby, alpha);
+    }
+
+    if (flyby) animFrame = requestAnimationFrame(drawLoop);
+    else animFrame = null;
+  }
+
+  /* ── Draw: meteor ── */
+  function drawMeteor(f, alpha) {
+    const tailX = f.x - Math.cos(f.angle) * f.tailLen;
+    const tailY = f.y - Math.sin(f.angle) * f.tailLen;
+
+    const grad = ctx.createLinearGradient(tailX, tailY, f.x, f.y);
+    grad.addColorStop(0, `rgba(255,255,255,0)`);
+    grad.addColorStop(0.6, `rgba(220,235,255,${alpha * 0.35})`);
+    grad.addColorStop(1, `rgba(255,255,255,${alpha})`);
+
+    ctx.beginPath();
+    ctx.moveTo(tailX, tailY);
+    ctx.lineTo(f.x, f.y);
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = f.size;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+
+    // Head glow
+    const glow = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.size * 4);
+    glow.addColorStop(0, `rgba(255,255,255,${alpha * 0.9})`);
+    glow.addColorStop(1, `rgba(200,220,255,0)`);
+    ctx.beginPath();
+    ctx.arc(f.x, f.y, f.size * 4, 0, Math.PI * 2);
+    ctx.fillStyle = glow;
+    ctx.fill();
+  }
+
+  /* ── Draw: satellite (slow dim dot, faint trail) ── */
+  function drawSatellite(f, alpha) {
+    // Short faint trail
+    const tailX = f.x - Math.cos(f.angle) * f.tailLen;
+    const tailY = f.y - Math.sin(f.angle) * f.tailLen;
+
+    const grad = ctx.createLinearGradient(tailX, tailY, f.x, f.y);
+    grad.addColorStop(0, `rgba(255,255,255,0)`);
+    grad.addColorStop(1, `rgba(255,255,255,${alpha * 0.28})`);
+
+    ctx.beginPath();
+    ctx.moveTo(tailX, tailY);
+    ctx.lineTo(f.x, f.y);
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = 0.7;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+
+    // Dot
+    ctx.beginPath();
+    ctx.arc(f.x, f.y, f.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(220,235,255,${alpha})`;
+    ctx.fill();
+
+    // Occasional blink — simple sine flicker
+    const blink = 0.5 + 0.5 * Math.sin(Date.now() * 0.003);
+    if (blink > 0.72) {
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.size * 2.5, 0, Math.PI * 2);
+      const g2 = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.size * 2.5);
+      g2.addColorStop(0, `rgba(180,210,255,${alpha * 0.5})`);
+      g2.addColorStop(1, `rgba(180,210,255,0)`);
+      ctx.fillStyle = g2;
+      ctx.fill();
+    }
+  }
+
+  /* ── Draw: Starship silhouette (tiny) ── */
+  function drawStarship(f, alpha) {
+    ctx.save();
+    ctx.translate(f.x, f.y);
+    ctx.rotate(f.angle);
+
+    const sc = f.size * 0.9;
+
+    // Engine plume — soft blue-white glow behind
+    const plumeLen = sc * 9;
+    const plume = ctx.createLinearGradient(-plumeLen, 0, 0, 0);
+    plume.addColorStop(0, `rgba(120,180,255,0)`);
+    plume.addColorStop(0.5, `rgba(160,210,255,${alpha * 0.18})`);
+    plume.addColorStop(1, `rgba(200,225,255,${alpha * 0.32})`);
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(-plumeLen, -sc * 0.9);
+    ctx.lineTo(-plumeLen, sc * 0.9);
+    ctx.closePath();
+    ctx.fillStyle = plume;
+    ctx.fill();
+
+    // Minimal Starship silhouette — dark body
+    ctx.fillStyle = `rgba(210,220,235,${alpha})`;
+
+    // Fuselage — elongated pill
+    ctx.beginPath();
+    ctx.ellipse(0, 0, sc * 5.5, sc * 0.85, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Nose cone — pointed
+    ctx.beginPath();
+    ctx.moveTo(sc * 5.5, 0);
+    ctx.lineTo(sc * 3.5, -sc * 0.85);
+    ctx.lineTo(sc * 7.5, 0);
+    ctx.lineTo(sc * 3.5, sc * 0.85);
+    ctx.closePath();
+    ctx.fill();
+
+    // Fin — tiny rear fin
+    ctx.beginPath();
+    ctx.moveTo(-sc * 4.5, 0);
+    ctx.lineTo(-sc * 5.8, -sc * 1.8);
+    ctx.lineTo(-sc * 3.8, -sc * 0.85);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(-sc * 4.5, 0);
+    ctx.lineTo(-sc * 5.8, sc * 1.8);
+    ctx.lineTo(-sc * 3.8, sc * 0.85);
+    ctx.closePath();
+    ctx.fill();
+
+    ctx.restore();
+
+    // Short trail behind
+    const trailStart = {
+      x: f.x - Math.cos(f.angle) * f.tailLen,
+      y: f.y - Math.sin(f.angle) * f.tailLen,
+    };
+    const tg = ctx.createLinearGradient(trailStart.x, trailStart.y, f.x, f.y);
+    tg.addColorStop(0, `rgba(140,190,255,0)`);
+    tg.addColorStop(1, `rgba(140,190,255,${alpha * 0.18})`);
+    ctx.beginPath();
+    ctx.moveTo(trailStart.x, trailStart.y);
+    ctx.lineTo(f.x, f.y);
+    ctx.strokeStyle = tg;
+    ctx.lineWidth = 1.2;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+  }
+
+  // Kick off scheduling after short initial delay
+  setTimeout(scheduleNext, 4000 + Math.random() * 6000);
+})();
+
+/* ── Reveal & Utilities ── */
 const revealObs = new IntersectionObserver(entries => {
     entries.forEach(e => {
         if (e.isIntersecting) {
             e.target.classList.add('visible');
         }
     });
-}, { 
-    threshold: 0.07 
-});
+}, { threshold: 0.07 });
 
 document.querySelectorAll('.reveal').forEach(el => {
     revealObs.observe(el);
 });
 
 function scrollToSection(id) {
-    document.getElementById(id).scrollIntoView({ 
-        behavior: 'smooth' 
-    });
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
 }
 
 function statusColor(s) {
@@ -623,7 +957,7 @@ launches.forEach(l=>{
 
 function launchCountFor(nameId){return launches.filter(l=>l.nameId===nameId&&l.status==='Completed').length;}
 
-/* Days since last launch — local time */
+/* Days since last launch */
 (function initDaysSince(){
   const completed=launches.filter(l=>l.status==='Completed'); if(!completed.length)return;
   const latest=completed.reduce((a,b)=>a.dateObj>b.dateObj?a:b);
@@ -640,7 +974,6 @@ function launchCountFor(nameId){return launches.filter(l=>l.nameId===nameId&&l.s
 /* ══════════════════════════════════════
    VEHICLES
 ══════════════════════════════════════ */
-
 const vehicles = [
     {
         id: 'sunorbit',
@@ -648,7 +981,7 @@ const vehicles = [
         class: 'Interplanetary Vehicle',
         color: '#00aaff',
         image: '991ef2dcfcd94c0f95050b657d1c6134.png',
-        description: "SunOrbit is InSpace’s primary interplanetary vehicle, built in modular stages.<br>It is equally capable of crewed and uncrewed missions to Low Earth Orbit and to other planets. For Earth orbit, the third stage can function as a crewed mini-station or as an uncrewed satellite that separates directly in orbit. For missions to other planets, the third stage can serve as the main crew habitat and command module with life support systems, or operate fully autonomously without pilots - including orbital insertion around other planets.<br>The first and second stages are reusable and designed for precise suicide burn landings on Earth and other planetary bodies. The vehicle features advanced docking capabilities and high-bandwidth communication relay systems.",
+        description: "SunOrbit is InSpace's primary interplanetary vehicle, built in modular stages.<br>It is equally capable of crewed and uncrewed missions to Low Earth Orbit and to other planets. For Earth orbit, the third stage can function as a crewed mini-station or as an uncrewed satellite that separates directly in orbit. For missions to other planets, the third stage can serve as the main crew habitat and command module with life support systems, or operate fully autonomously without pilots - including orbital insertion around other planets.<br>The first and second stages are reusable and designed for precise suicide burn landings on Earth and other planetary bodies. The vehicle features advanced docking capabilities and high-bandwidth communication relay systems.",
         specs: [
             { val: '205m', lbl: 'Height' },
             { val: '3370 t', lbl: 'Mass' },
@@ -681,14 +1014,13 @@ const vehicles = [
             }
         ]
     },
-
     {
         id: 'sunpower',
         name: 'SunPower',
         class: 'Earth Orbit',
         color: '#ffaa00',
         image: null,
-        description: "SunPower is InSpace’s heavy-lift workhorse, designed specifically for Low Earth Orbit missions.<br>It evolved from a rapid prototype through multiple generations into a reliable high-performance launcher, optimized for delivering large payloads, solar arrays, and orbital stations. The name SunPower was coined on the fly by Haisess during the very first test campaign.<br>Although public records show 0 launches, more than 20 SunPower vehicles have already been built and successfully flown in classified InSpace test and operational missions.",
+        description: "SunPower is InSpace's heavy-lift workhorse, designed specifically for Low Earth Orbit missions.<br>It evolved from a rapid prototype through multiple generations into a reliable high-performance launcher, optimized for delivering large payloads, solar arrays, and orbital stations. The name SunPower was coined on the fly by Haisess during the very first test campaign.<br>Although public records show 0 launches, more than 20 SunPower vehicles have already been built and successfully flown in classified InSpace test and operational missions.",
         specs: [
             { val: '—', lbl: 'Height' },
             { val: '—', lbl: 'Mass' },
@@ -721,14 +1053,13 @@ const vehicles = [
             }
         ]
     },
-
     {
         id: 'planetsrockets',
         name: 'PlanetsRockets',
         class: 'COMING SOON',
         color: '#cc66ff',
         image: null,
-        description: "PlanetsRockets is InSpace’s next-generation interplanetary vehicle, currently in the early concept and planning phase.<br>All detailed information about its design, capabilities, and specific mission targets remains confidential at this stage.<br>It is being developed as part of InSpace’s long-term ambitions for deep-space exploration.",
+        description: "PlanetsRockets is InSpace's next-generation interplanetary vehicle, currently in the early concept and planning phase.<br>All detailed information about its design, capabilities, and specific mission targets remains confidential at this stage.<br>It is being developed as part of InSpace's long-term ambitions for deep-space exploration.",
         specs: [
             { val: '—', lbl: 'Height' },
             { val: '—', lbl: 'Mass' },
@@ -859,37 +1190,20 @@ function closeNews(){
 ══════════════════════════════════════ */
 (function buildTimer(){
   const timerEl=document.getElementById('countdown-timer');
-
-  // Days unit
   const dUnit=document.createElement('div'); dUnit.className='cd-unit'; dUnit.id='cd-days-unit';
   dUnit.innerHTML='<div class="cd-num" id="cd-d">00</div><div class="cd-lbl">Days</div>';
   timerEl.appendChild(dUnit);
-
-  // Days→Hours separator — controlled by daysSeparatorMode
-  const sep=document.createElement('div');
-  sep.id='cd-days-sep';
-  if(daysSeparatorMode==='colon'){
-    sep.className='cd-sep-colon'; sep.textContent=':';
-  } else {
-    sep.className='cd-sep-thin';
-  }
+  const sep=document.createElement('div'); sep.id='cd-days-sep';
+  if(daysSeparatorMode==='colon'){sep.className='cd-sep-colon';sep.textContent=':';}else{sep.className='cd-sep-thin';}
   timerEl.appendChild(sep);
-
-  // Hours
   const hUnit=document.createElement('div'); hUnit.className='cd-unit';
   hUnit.innerHTML='<div class="cd-num" id="cd-h">00</div><div class="cd-lbl">Hours</div>';
   timerEl.appendChild(hUnit);
-
   const s1=document.createElement('div'); s1.className='cd-sep'; s1.textContent=':'; timerEl.appendChild(s1);
-
-  // Minutes
   const mUnit=document.createElement('div'); mUnit.className='cd-unit';
   mUnit.innerHTML='<div class="cd-num" id="cd-m">00</div><div class="cd-lbl">Min</div>';
   timerEl.appendChild(mUnit);
-
   const s2=document.createElement('div'); s2.className='cd-sep'; s2.textContent=':'; timerEl.appendChild(s2);
-
-  // Seconds
   const sUnit=document.createElement('div'); sUnit.className='cd-unit';
   sUnit.innerHTML='<div class="cd-num" id="cd-s">00</div><div class="cd-lbl">Sec</div>';
   timerEl.appendChild(sUnit);
@@ -982,8 +1296,6 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLaunchModal(nu
 
 /* ══════════════════════════════════════
    ACCORDION — with per-group Load more
-   Planned: show all (no limit)
-   Completed / Canceled: show accLoadMorePerPage initially, Load more adds accLoadMorePerPage
 ══════════════════════════════════════ */
 const groups = [
     { status: 'Planned',         color: '#ffffff', paginate: true },
@@ -1009,9 +1321,8 @@ groups.forEach(g=>{
 
   const rw=document.createElement('div'); rw.className='group-rows';
 
-  // State for pagination
   let visibleCount=g.paginate?Math.min(accLoadMorePerPage,allItems.length):allItems.length;
-  const rowEls=[]; // keep references to all row elements
+  const rowEls=[];
 
   function buildRow(l){
     const ds=l.dateObj.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
@@ -1028,13 +1339,11 @@ groups.forEach(g=>{
     return row;
   }
 
-  // Add initially visible rows
   allItems.forEach((l,i)=>{
     const row=buildRow(l); row.style.display=i<visibleCount?'':'none';
     rw.appendChild(row); rowEls.push(row);
   });
 
-  // Load more button (only for paginated groups)
   let loadMoreBtn=null;
   if(g.paginate&&allItems.length>accLoadMorePerPage){
     loadMoreBtn=document.createElement('button');
@@ -1047,7 +1356,6 @@ groups.forEach(g=>{
       for(let i=prev;i<visibleCount;i++){rowEls[i].style.display='';}
       if(visibleCount>=allItems.length){loadMoreBtn.remove();loadMoreBtn=null;}
       else{loadMoreBtn.textContent=`Load more (${allItems.length-visibleCount} remaining)`;}
-      // Update max-height so accordion re-measures
       rw.style.maxHeight=rw.scrollHeight+'px';
     });
     rw.appendChild(loadMoreBtn);
