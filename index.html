@@ -620,7 +620,7 @@ let newsStarsCreated=false; function ensureNewsStars(){if(newsStarsCreated)retur
 
   // Schedule next flyby: 15–30 seconds
   function scheduleNext() {
-    const delay = (15 + Math.random() * 15) * 1000;
+    const delay = (1 + Math.random() * 8) * 1000;
     setTimeout(spawnFlyby, delay);
   }
 
