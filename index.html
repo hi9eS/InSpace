@@ -579,7 +579,7 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
   <div class="game-header">
     <div class="game-title-row">
       <h2 style="margin-bottom:0;">Asteroid Dodge</h2>
-      <span class="game-tag">Mini Game</span>
+      <span class="game-tag">Mini-Game</span>
     </div>
     <div class="game-score-row">
       <span>Score <span class="game-score-val" id="score-display">0</span></span>
@@ -911,7 +911,7 @@ function statusColor(s) {
 
 /* ── Build header ── */
 const navEl=document.getElementById('header-nav');
-[{label:'Home',section:'hero'},{label:'Vehicles',section:'fleet'},{label:'News',section:'rockets'},{label:'Schedule',section:'schedule'},{label:'Game',section:'game-section'}].forEach(n=>{
+[{label:'Home',section:'hero'},{label:'Vehicles',section:'fleet'},{label:'News',section:'rockets'},{label:'Schedule',section:'schedule'},{label:'Mini-Game',section:'game-section'}].forEach(n=>{
   const a=document.createElement('a');
   a.textContent=n.label;
   a.style.color=navLinkColor;
