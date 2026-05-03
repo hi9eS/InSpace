@@ -780,19 +780,124 @@ function launchCountFor(nameId){return launches.filter(l=>l.nameId===nameId&&l.s
 /* ══════════════════════════════════════
    VEHICLES
 ══════════════════════════════════════ */
-const vehicles=[
-  {id:'sunorbit',name:'SunOrbit',class:'Interplanetary Vehicle',color:'#00aaff',image:'991ef2dcfcd94c0f95050b657d1c6134.png',
-   description:"SunOrbit is InSpace's primary interplanetary vehicle, built in modular stages.<br>It is equally capable of crewed and uncrewed missions to Low Earth Orbit and to other planets. For Earth orbit, the third stage can function as a crewed mini-station or as an uncrewed satellite that separates directly in orbit. For missions to other planets, the third stage can serve as the main crew habitat and command module with life support systems, or operate fully autonomously without pilots - including orbital insertion around other planets.<br>The first and second stages are reusable and designed for precise suicide burn landings on Earth and other planetary bodies. The vehicle features advanced docking capabilities and high-bandwidth communication relay systems.",
-   specs:[{val:'205m',lbl:'Height'},{val:'3370 t',lbl:'Mass'},{val:'79.1 km/s',lbl:'Delta-V'},{val:'14.64×',lbl:'TWR'},{val:'Feb 2026',lbl:'First Flight'}],
-   stages:[{title:'Stage 1 — Booster',rows:[{key:'Engines',val:'42'},{key:'Thrust (SL)',val:'484,000 kN'},{key:'Burn time',val:'33.8 min'},{key:'Propellant',val:'2,560 t'},{key:'Recovery',val:'Vertical landing'},{key:'Reusable',val:'Yes'}]},{title:'Stage 2 — Upper',rows:[{key:'Engines',val:'90'},{key:'Thrust (vac)',val:'120,000 kN'},{key:'Burn time',val:'1.6 min'},{key:'Propellant',val:'2,330 t'},{key:'Recovery',val:'Vertical landing'},{key:'Reusable',val:'Yes'}]}]},
-  {id:'sunpower',name:'SunPower',class:'Earth Orbit',color:'#ffaa00',image:null,
-   description:"SunPower is InSpace's heavy-lift workhorse, designed specifically for Low Earth Orbit missions.<br>It evolved from a rapid prototype through multiple generations into a reliable high-performance launcher, optimized for delivering large payloads, solar arrays, and orbital stations. The name SunPower was coined on the fly by Haisess during the very first test campaign.<br>Although public records show 0 launches, more than 20 SunPower vehicles have already been built and successfully flown in classified InSpace test and operational missions.",
-   specs:[{val:'—',lbl:'Height'},{val:'—',lbl:'Mass'},{val:'—',lbl:'Delta-V'},{val:'—',lbl:'TWR'},{val:'Feb 2026',lbl:'First Flight'}],
-   stages:[{title:'Stage 1 — Booster',rows:[{key:'Engines',val:'—'},{key:'Thrust (SL)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'Vertical landing'},{key:'Reusable',val:'Yes'}]},{title:'Stage 2 — Upper',rows:[{key:'Engines',val:'—'},{key:'Thrust (vac)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'—'},{key:'Reusable',val:'—'}]}]},
-  {id:'planetsrockets',name:'PlanetsRockets',class:'COMING SOON',color:'#cc66ff',image:null,
-   description:"PlanetsRockets is InSpace's next-generation interplanetary vehicle, currently in the early concept and planning phase.<br>All detailed information about its design, capabilities, and specific mission targets remains confidential at this stage.<br>It is being developed as part of InSpace's long-term ambitions for deep-space exploration.",
-   specs:[{val:'—',lbl:'Height'},{val:'—',lbl:'Mass'},{val:'—',lbl:'Delta-V'},{val:'—',lbl:'TWR'},{val:'Apr 2026',lbl:'First Flight'}],
-   stages:[{title:'Stage 1 — Booster',rows:[{key:'Engines',val:'—'},{key:'Thrust (SL)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'TBD'},{key:'Reusable',val:'TBD'}]},{title:'Stage 2 — Upper',rows:[{key:'Engines',val:'—'},{key:'Thrust (vac)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'—'},{key:'Reusable',val:'—'}]}]}
+const vehicles = [
+  {
+    id: 'sunorbit',
+    name: 'SunOrbit',
+    class: 'Interplanetary Vehicle',
+    color: '#00aaff',
+    image: '991ef2dcfcd94c0f95050b657d1c6134.png',
+    description: "SunOrbit is InSpace's primary interplanetary vehicle, built in modular stages.<br>It is equally capable of crewed and uncrewed missions to Low Earth Orbit and to other planets. For Earth orbit, the third stage can function as a crewed mini-station or as an uncrewed satellite that separates directly in orbit. For missions to other planets, the third stage can serve as the main crew habitat and command module with life support systems, or operate fully autonomously without pilots - including orbital insertion around other planets.<br>The first and second stages are reusable and designed for precise suicide burn landings on Earth and other planetary bodies. The vehicle features advanced docking capabilities and high-bandwidth communication relay systems.",
+    specs: [
+      { val: '205m', lbl: 'Height' },
+      { val: '3370 t', lbl: 'Mass' },
+      { val: '79.1 km/s', lbl: 'Delta-V' },
+      { val: '14.64×', lbl: 'TWR' },
+      { val: 'Feb 2026', lbl: 'First Flight' }
+    ],
+    stages: [
+      {
+        title: 'Stage 1 — Booster',
+        rows: [
+          { key: 'Engines', val: '42' },
+          { key: 'Thrust (SL)', val: '484,000 kN' },
+          { key: 'Burn time', val: '33.8 min' },
+          { key: 'Propellant', val: '2,560 t' },
+          { key: 'Recovery', val: 'Vertical landing' },
+          { key: 'Reusable', val: 'Yes' }
+        ]
+      },
+      {
+        title: 'Stage 2 — Upper',
+        rows: [
+          { key: 'Engines', val: '90' },
+          { key: 'Thrust (vac)', val: '120,000 kN' },
+          { key: 'Burn time', val: '1.6 min' },
+          { key: 'Propellant', val: '2,330 t' },
+          { key: 'Recovery', val: 'Vertical landing' },
+          { key: 'Reusable', val: 'Yes' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'sunpower',
+    name: 'SunPower',
+    class: 'Earth Orbit',
+    color: '#ffaa00',
+    image: null,
+    description: "SunPower is InSpace's heavy-lift workhorse, designed specifically for Low Earth Orbit missions.<br>It evolved from a rapid prototype through multiple generations into a reliable high-performance launcher, optimized for delivering large payloads, solar arrays, and orbital stations. The name SunPower was coined on the fly by Haisess during the very first test campaign.<br>Although public records show 0 launches, more than 20 SunPower vehicles have already been built and successfully flown in classified InSpace test and operational missions.",
+    specs: [
+      { val: '—', lbl: 'Height' },
+      { val: '—', lbl: 'Mass' },
+      { val: '—', lbl: 'Delta-V' },
+      { val: '—', lbl: 'TWR' },
+      { val: 'Feb 2026', lbl: 'First Flight' }
+    ],
+    stages: [
+      {
+        title: 'Stage 1 — Booster',
+        rows: [
+          { key: 'Engines', val: '—' },
+          { key: 'Thrust (SL)', val: '—' },
+          { key: 'Burn time', val: '—' },
+          { key: 'Propellant', val: '—' },
+          { key: 'Recovery', val: 'Vertical landing' },
+          { key: 'Reusable', val: 'Yes' }
+        ]
+      },
+      {
+        title: 'Stage 2 — Upper',
+        rows: [
+          { key: 'Engines', val: '—' },
+          { key: 'Thrust (vac)', val: '—' },
+          { key: 'Burn time', val: '—' },
+          { key: 'Propellant', val: '—' },
+          { key: 'Recovery', val: '—' },
+          { key: 'Reusable', val: '—' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'planetsrockets',
+    name: 'PlanetsRockets',
+    class: 'COMING SOON',
+    color: '#cc66ff',
+    image: null,
+    description: "PlanetsRockets is InSpace's next-generation interplanetary vehicle, currently in the early concept and planning phase.<br>All detailed information about its design, capabilities, and specific mission targets remains confidential at this stage.<br>It is being developed as part of InSpace's long-term ambitions for deep-space exploration.",
+    specs: [
+      { val: '—', lbl: 'Height' },
+      { val: '—', lbl: 'Mass' },
+      { val: '—', lbl: 'Delta-V' },
+      { val: '—', lbl: 'TWR' },
+      { val: 'Apr 2026', lbl: 'First Flight' }
+    ],
+    stages: [
+      {
+        title: 'Stage 1 — Booster',
+        rows: [
+          { key: 'Engines', val: '—' },
+          { key: 'Thrust (SL)', val: '—' },
+          { key: 'Burn time', val: '—' },
+          { key: 'Propellant', val: '—' },
+          { key: 'Recovery', val: 'TBD' },
+          { key: 'Reusable', val: 'TBD' }
+        ]
+      },
+      {
+        title: 'Stage 2 — Upper',
+        rows: [
+          { key: 'Engines', val: '—' },
+          { key: 'Thrust (vac)', val: '—' },
+          { key: 'Burn time', val: '—' },
+          { key: 'Propellant', val: '—' },
+          { key: 'Recovery', val: '—' },
+          { key: 'Reusable', val: '—' }
+        ]
+      }
+    ]
+  }
 ];
 
 const vcContainer=document.getElementById('vehicle-cards');
@@ -815,7 +920,6 @@ vehicles.forEach(v=>{
         <div class="vc-name">${v.name}</div>
         <div class="vc-sub">${v.class}</div>
       </div>
-      <div class="vc-count">${count>0?count+' flight'+(count!==1?'s':''):'No flights'}</div>
     </div>
     <div class="vc-specs">${specHTML}</div>
     <div class="vc-foot">
