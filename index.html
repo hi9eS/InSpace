@@ -8,504 +8,398 @@
 /* Made by InSpace */
 /* This website is for informational purposes only and does NOT engage in any commercial activity. */
 
-/* Accordion load-more button */
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 :root {
-  --bg: #080808;
-  --bg2: #0f0f0f;
-  --bg3: #141414;
-  --border: rgba(255,255,255,0.08);
-  --border-hover: rgba(255,255,255,0.18);
-  --text: #f0f0f0;
-  --muted: #666;
-  --muted2: #444;
-  --font: 'DM Sans', 'Segoe UI', sans-serif;
-  --mono: 'DM Mono', monospace;
-  --ease: cubic-bezier(0.4,0,0.2,1);
-  --ease-spring: cubic-bezier(0.34,1.56,0.64,1);
-
-  --hero-title-from: #ffffff;
-  --hero-title-to: #a0c8ff;
-  --hero-title-glow: rgba(120,180,255,0.18);
-  --hero-sub-brightness: 1.38;
-  --hero-sub-color: #888;
-
-  --acc-padding-v: 17px;
-  --acc-padding-h: 22px;
-  --acc-font-label: 0.79em;
-  --acc-font-count: 0.79em;
-  --acc-dot-size: 10px;
-
-  --lm-width: 600px;
-  --lm-cell-padding: 18px 22px;
-  --lm-cell-val-size: 1.1em;
-
-  --news-text-brightness: 1.15;
+  --bg: #080808; --bg2: #0f0f0f; --bg3: #141414;
+  --border: rgba(255,255,255,0.08); --border-h: rgba(255,255,255,0.18);
+  --text: #f0f0f0; --muted: #666; --muted2: #444;
+  --font: 'DM Sans','Segoe UI',sans-serif; --mono: 'DM Mono',monospace;
+  --ease: cubic-bezier(0.4,0,0.2,1); --spring: cubic-bezier(0.34,1.56,0.64,1);
+  --hero-from:#fff; --hero-to:#a0c8ff; --hero-glow:rgba(120,180,255,0.18);
+  --acc-pv:17px; --acc-ph:22px;
+  --lm-w:600px; --lm-cell:18px 22px; --lm-val:1.1em;
 }
-html { scroll-behavior:smooth; }
-body { background:var(--bg); color:var(--text); font-family:var(--font); line-height:1.6; font-size:15px; overflow-x:hidden; }
-a { color:inherit; text-decoration:none; }
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6;font-size:15px;overflow-x:hidden;}
+a{color:inherit;text-decoration:none;}
 
-#starfield, #vp-starfield { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
-#vp-starfield { z-index:0; }
-#news-starfield { position:absolute; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
-.star { position:absolute; border-radius:50%; background:#fff; animation:twinkle var(--dur,4s) var(--delay,0s) infinite ease-in-out alternate; opacity:0; }
-@keyframes twinkle {
-  0%   { opacity:0; transform:scale(0.8); }
-  50%  { opacity:var(--op,0.5); }
-  100% { opacity:0.08; transform:scale(1.1); }
-}
-
-/* ── FLYBY CANVAS ── */
-#flyby-canvas {
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:1;
-  overflow:hidden;
-}
+/* ── STARFIELD ── */
+#starfield,#vp-starfield{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+#news-starfield{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--dur,4s) var(--delay,0s) infinite ease-in-out alternate;opacity:0;}
+@keyframes twinkle{0%{opacity:0;transform:scale(0.8);}50%{opacity:var(--op,0.5);}100%{opacity:0.08;transform:scale(1.1);}}
+#flyby-canvas{position:fixed;inset:0;pointer-events:none;z-index:1;}
 
 /* ── HEADER ── */
-header {
-  position:sticky; top:0; z-index:100;
-  display:flex; align-items:center; justify-content:center;
+header{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:center;
   padding:14px 24px;
-  background:rgba(8,8,8,0.88); backdrop-filter:blur(14px);
+  background:rgba(8,8,8,0.88);backdrop-filter:blur(14px);
   border-bottom:1px solid var(--border);
 }
-header::after {
-  content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%);
-  width:180px; height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);
-}
-.header-left { position:absolute; left:24px; display:flex; align-items:center; gap:6px; }
-.header-clock {
-  font-family:var(--mono); font-weight:300;
-  letter-spacing:0.06em; white-space:nowrap;
-}
-.header-clock-tz { font-family:var(--mono); letter-spacing:0.04em; }
+header::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:180px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);}
+.header-left{position:absolute;left:24px;display:flex;align-items:center;gap:6px;}
+.header-clock{font-family:var(--mono);font-weight:300;letter-spacing:0.06em;white-space:nowrap;}
+.header-nav{display:flex;gap:4px;}
+.header-nav a{font-size:0.85em;font-weight:400;letter-spacing:0.04em;padding:7px 16px;border-radius:8px;cursor:pointer;transition:color 0.2s,background 0.2s,transform 0.15s var(--spring);}
+.header-nav a:hover{transform:scale(0.97);background:rgba(255,255,255,0.05);}
+.header-nav a:active{transform:scale(0.90);}
+.header-right{position:absolute;right:24px;display:flex;align-items:center;gap:8px;}
 
-.header-nav { display:flex; gap:4px; }
-.header-nav a {
-  font-size:0.85em; font-weight:400; letter-spacing:0.04em;
-  padding:7px 16px; border-radius:8px; cursor:pointer;
-  transition:color 0.2s, background 0.2s, transform 0.15s var(--ease-spring);
-}
-.header-nav a:hover { transform:scale(0.97); background:rgba(255,255,255,0.05); }
-.header-nav a:active { transform:scale(0.90); }
-
-.header-right { position:absolute; right:24px; display:flex; align-items:center; gap:8px; }
-/* ── SOCIAL BUTTONS ── */
-.social-btn {
-  border-radius:100px;
-  border:1px solid rgba(255,255,255,0.18);
+/* ── SOCIAL BUTTONS — icon only ── */
+.social-btn{
+  border-radius:100px;border:1px solid rgba(255,255,255,0.18);
   background:rgba(255,255,255,0.04);
-  display:inline-flex; 
-  align-items:center; 
-  justify-content:center;
-  padding:7px 16px;
-  cursor:pointer;
-  font-weight:500; 
-  font-family:var(--mono);
-  font-size:0.76em;
-  color:#aaa;
-  transition:all 0.28s var(--ease-spring);
-  text-decoration:none; 
-  white-space:nowrap;
-  flex-shrink:0;
-  gap:7px;
+  display:inline-flex;align-items:center;justify-content:center;
+  width:34px;height:34px;cursor:pointer;
+  transition:all 0.28s var(--spring);text-decoration:none;flex-shrink:0;
 }
-.social-btn:hover {
-  border-color:rgba(255,255,255,0.4); 
-  background:rgba(255,255,255,0.09);
-  color:#f0f0f0;
-  transform:scale(1.05);
-}
-.social-btn img { 
-  width:18px; 
-  height:18px; 
-  object-fit:contain; 
-  filter:brightness(0.65); 
-  transition:filter 0.25s; 
-}
-.social-btn:hover img { 
-  filter:brightness(1.1); 
-}
+.social-btn:hover{border-color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.09);transform:scale(1.08);}
+.social-btn svg{width:15px;height:15px;fill:rgba(255,255,255,0.45);transition:fill 0.25s;display:block;}
+.social-btn:hover svg{fill:rgba(255,255,255,0.9);}
 
-section { padding:90px 20px; max-width:1000px; margin:0 auto; position:relative; z-index:1; }
+section{padding:90px 20px;max-width:1000px;margin:0 auto;position:relative;z-index:1;}
 
-.hero { text-align:center; padding-top:130px; }
-.hero h1 {
-  font-size:clamp(2.5em,5.5vw,4em); font-weight:300; letter-spacing:-0.02em; margin-bottom:20px;
+/* ── HERO ── */
+.hero{text-align:center;padding-top:130px;}
+.hero h1{
+  font-size:clamp(2.5em,5.5vw,4em);font-weight:300;letter-spacing:-0.02em;margin-bottom:20px;
   animation:fadeUp 0.8s var(--ease) both;
-  background:linear-gradient(135deg,var(--hero-title-from) 0%,var(--hero-title-to) 100%);
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-  filter:drop-shadow(0 0 26px var(--hero-title-glow)) drop-shadow(0 0 8px var(--hero-title-glow));
+  background:linear-gradient(135deg,var(--hero-from) 0%,var(--hero-to) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 26px var(--hero-glow)) drop-shadow(0 0 8px var(--hero-glow));
 }
-.hero p {
-  font-size:1.1em; max-width:600px; margin:0 auto 36px;
-  color:var(--hero-sub-color); font-weight:300; filter:brightness(var(--hero-sub-brightness));
-  animation:fadeUp 0.8s 0.1s var(--ease) both;
-}
-@keyframes fadeUp { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+.hero p{font-size:1.1em;max-width:600px;margin:0 auto 36px;color:#888;font-weight:300;filter:brightness(1.38);animation:fadeUp 0.8s 0.1s var(--ease) both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
 
-#countdown-wrap {
-  display:none; margin:0 auto 9px; max-width:640px;
-  background:var(--bg2); border:1px solid var(--border);
-  border-radius:20px; padding:28px 40px; position:relative; overflow:hidden;
-  animation:fadeUp 0.8s 0.15s var(--ease) both;
-}
-#countdown-wrap::before {
-  content:''; position:absolute; top:0; left:0; right:0; height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent);
-}
-#countdown-mission { font-size:0.72em; letter-spacing:0.18em; text-transform:uppercase; color:#888; margin-bottom:10px; font-family:var(--mono); }
-#countdown-label { font-size:0.85em; color:#aaa; margin-bottom:18px; font-weight:300; }
-#countdown-timer { display:flex; justify-content:center; align-items:center; gap:18px; }
-.cd-unit { text-align:center; min-width:52px; }
-.cd-num { font-size:2.6em; font-weight:300; font-variant-numeric:tabular-nums; letter-spacing:0.04em; line-height:1; font-family:var(--mono); }
-.cd-lbl { font-size:0.63em; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted2); margin-top:5px; }
-.cd-sep { font-size:2em; font-weight:200; color:var(--muted2); line-height:1; padding-bottom:14px; }
-/* separator between Days and Hours — toggled by JS */
-.cd-sep-thin { width:1px; height:36px; background:rgba(255,255,255,0.1); align-self:center; margin-bottom:14px; }
-.cd-sep-colon { font-size:2em; font-weight:200; color:var(--muted2); line-height:1; padding-bottom:14px; }
+#countdown-wrap{display:none;margin:0 auto 9px;max-width:640px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:28px 40px;position:relative;overflow:hidden;animation:fadeUp 0.8s 0.15s var(--ease) both;}
+#countdown-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent);}
+#countdown-mission{font-size:0.72em;letter-spacing:0.18em;text-transform:uppercase;color:#888;margin-bottom:10px;font-family:var(--mono);}
+#countdown-label{font-size:0.85em;color:#aaa;margin-bottom:18px;font-weight:300;}
+#countdown-timer{display:flex;justify-content:center;align-items:center;gap:18px;}
+.cd-unit{text-align:center;min-width:52px;}
+.cd-num{font-size:2.6em;font-weight:300;font-variant-numeric:tabular-nums;letter-spacing:0.04em;line-height:1;font-family:var(--mono);}
+.cd-lbl{font-size:0.63em;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted2);margin-top:5px;}
+.cd-sep{font-size:2em;font-weight:200;color:var(--muted2);line-height:1;padding-bottom:14px;}
+.cd-sep-thin{width:1px;height:36px;background:rgba(255,255,255,0.1);align-self:center;margin-bottom:14px;}
+.cd-sep-colon{font-size:2em;font-weight:200;color:var(--muted2);line-height:1;padding-bottom:14px;}
+#days-since-wrap{display:none;margin:0 auto 13px;max-width:640px;text-align:center;animation:fadeUp 0.8s 0.18s var(--ease) both;}
+#days-since-text{font-size:0.72em;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted2);font-family:var(--mono);}
+.stream-link{display:inline-flex;align-items:center;gap:11px;font-size:1.06em;font-weight:400;letter-spacing:0.07em;padding:16px 46px;border:1px solid rgba(255,255,255,0.35);border-radius:100px;cursor:pointer;color:#fff;transition:all 0.3s var(--ease);margin-bottom:70px;position:relative;overflow:hidden;animation:fadeUp 0.8s 0.2s var(--ease) both;}
+.stream-link::before{content:'';position:absolute;inset:0;background:#fff;transform:scaleX(0);transform-origin:left;transition:transform 0.35s var(--ease);border-radius:100px;}
+.stream-link:hover{color:#000;border-color:#fff;transform:translateY(-2px);}
+.stream-link:hover::before{transform:scaleX(1);}
+.stream-link-text{position:relative;z-index:1;}
 
-#days-since-wrap { display:none; margin:0 auto 13px; max-width:640px; text-align:center; animation:fadeUp 0.8s 0.18s var(--ease) both; }
-#days-since-text { font-size:0.72em; letter-spacing:0.14em; text-transform:uppercase; color:var(--muted2); font-family:var(--mono); }
-
-.stream-link {
-  display:inline-flex; align-items:center; gap:11px;
-  font-size:1.06em; font-weight:400; letter-spacing:0.07em; padding:16px 46px;
-  border:1px solid rgba(255,255,255,0.35); border-radius:100px;
-  cursor:pointer; color:#fff; transition:all 0.3s var(--ease);
-  margin-bottom:70px; position:relative; overflow:hidden;
-  animation:fadeUp 0.8s 0.2s var(--ease) both;
-}
-.stream-link::before {
-  content:''; position:absolute; inset:0; background:#fff;
-  transform:scaleX(0); transform-origin:left; transition:transform 0.35s var(--ease); border-radius:100px;
-}
-.stream-link:hover { color:#000; border-color:#fff; transform:translateY(-2px); }
-.stream-link:hover::before { transform:scaleX(1); }
-.stream-link-text { position:relative; z-index:1; }
-
-h2 { font-size:1.7em; font-weight:300; letter-spacing:-0.01em; margin-bottom:36px; }
+h2{font-size:1.7em;font-weight:300;letter-spacing:-0.01em;margin-bottom:36px;}
 
 /* ══════════════════════════════════════
-   VEHICLE CARDS — redesigned
+   VEHICLE CARDS — compact, no translateY hover
 ══════════════════════════════════════ */
-#fleet { padding-top:100px; padding-bottom:100px; }
-.vehicle-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:22px; align-items:stretch; }
+#fleet{padding-top:100px;padding-bottom:80px;}
+.vehicle-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(275px,1fr));gap:18px;align-items:stretch;}
 
-.vehicle-card {
-  background:var(--bg2);
-  border-radius:20px; cursor:pointer;
-  transition:box-shadow 0.35s var(--ease), border-color 0.3s var(--ease), transform 0.25s var(--ease);
-  position:relative; overflow:hidden;
+.vehicle-card{
+  background:var(--bg2);border-radius:18px;cursor:pointer;
   border:1px solid rgba(255,255,255,0.08);
-  display:flex; flex-direction:column;
+  display:flex;flex-direction:column;
+  /* No transform on hover — brightness via color bar + glow only */
+  transition:box-shadow 0.3s var(--ease),border-color 0.3s var(--ease);
+  position:relative;overflow:hidden;
 }
-.vehicle-card:hover {
-  box-shadow:0 18px 52px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.13);
+.vehicle-card:hover{
+  box-shadow:0 0 0 1px rgba(255,255,255,0.14),0 12px 40px rgba(0,0,0,0.6);
   border-color:rgba(255,255,255,0.14);
-  transform:translateY(-3px);
 }
+/* color accent bar — only visual feedback on hover */
+.vc-bar{height:3px;flex-shrink:0;opacity:0.4;transition:opacity 0.28s,height 0.2s;}
+.vehicle-card:hover .vc-bar{opacity:1;height:4px;}
 
-/* color accent bar */
-.vc-color-bar { flex-shrink:0; opacity:0.6; transition:opacity 0.3s; }
-.vehicle-card:hover .vc-color-bar { opacity:1; }
+/* head */
+.vc-head{padding:16px 18px 12px;border-bottom:1px solid rgba(255,255,255,0.055);display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.vc-head-left{display:flex;flex-direction:column;gap:2px;}
+.vc-dot{width:6px;height:6px;border-radius:50%;background:var(--vc,#fff);opacity:0.35;transition:opacity 0.28s;margin-bottom:4px;}
+.vehicle-card:hover .vc-dot{opacity:0.9;}
+.vc-name{font-size:1.18em;font-weight:500;letter-spacing:-0.01em;line-height:1.2;color:var(--text);}
+.vc-sub{font-size:0.64em;color:var(--muted);letter-spacing:0.16em;text-transform:uppercase;font-family:var(--mono);}
 
-/* header block */
-.vc-head {
-  padding:20px 22px 16px;
-  border-bottom:1px solid rgba(255,255,255,0.06);
-  display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+/* launch count badge top-right */
+.vc-count{
+  font-size:0.62em;font-family:var(--mono);letter-spacing:0.06em;
+  padding:3px 9px;border-radius:100px;
+  border:1px solid rgba(255,255,255,0.09);
+  color:var(--muted2);background:rgba(255,255,255,0.025);
+  white-space:nowrap;flex-shrink:0;margin-top:2px;
+  transition:color 0.25s,border-color 0.25s;
 }
-.vc-head-left { display:flex; flex-direction:column; gap:4px; }
-.vc-dot { width:7px; height:7px; border-radius:50%; background:var(--vc,#fff); flex-shrink:0; opacity:0.5; transition:opacity 0.3s; margin-bottom:6px; }
-.vehicle-card:hover .vc-dot { opacity:0.85; }
-.vc-name { font-size:1.3em; font-weight:500; letter-spacing:-0.01em; line-height:1.2; color:var(--text); }
-.vc-sub { font-size:0.68em; color:var(--muted); letter-spacing:0.16em; text-transform:uppercase; font-family:var(--mono); }
-.vc-launch-badge {
-  font-size:0.65em; font-family:var(--mono); letter-spacing:0.08em;
-  padding:4px 10px; border-radius:100px;
-  border:1px solid rgba(255,255,255,0.1);
-  color:var(--muted); background:rgba(255,255,255,0.03);
-  white-space:nowrap; flex-shrink:0;
-}
+.vehicle-card:hover .vc-count{color:rgba(255,255,255,0.4);border-color:rgba(255,255,255,0.14);}
 
-/* spec grid — like lm-grid */
-.vc-spec-grid {
-  display:grid; grid-template-columns:1fr 1fr;
-  gap:1px; background:rgba(255,255,255,0.06);
-  margin:0;
+/* spec row — 3 cells, single row */
+.vc-specs{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:1px;background:rgba(255,255,255,0.055);
+  flex:1;
 }
-.vc-spec-cell {
-  background:var(--bg3); padding:14px 18px;
+.vc-sc{
+  background:var(--bg3);padding:12px 14px;
   transition:background 0.2s;
+  display:flex;flex-direction:column;justify-content:center;
 }
-.vehicle-card:hover .vc-spec-cell { background:#131313; }
-.vc-spec-lbl { font-size:0.6em; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; font-family:var(--mono); margin-bottom:5px; }
-.vc-spec-val { font-size:1.0em; font-weight:300; font-family:var(--mono); color:var(--text); line-height:1.2; }
+.vehicle-card:hover .vc-sc{background:#131313;}
+.vc-sl{font-size:0.56em;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:3px;}
+.vc-sv{font-size:0.92em;font-weight:300;font-family:var(--mono);color:var(--text);line-height:1.2;}
 
-/* footer */
-.vc-footer {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:12px 18px; border-top:1px solid rgba(255,255,255,0.05);
+/* footer — no gap, flush */
+.vc-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:9px 16px;
+  border-top:1px solid rgba(255,255,255,0.045);
+  background:rgba(255,255,255,0.01);
+  flex-shrink:0;
 }
-.vc-footer-text { font-size:0.72em; color:var(--muted2); letter-spacing:0.1em; text-transform:uppercase; font-family:var(--mono); transition:color 0.2s; }
-.vc-footer-arrow { font-size:0.82em; color:var(--muted2); transition:transform 0.22s var(--ease-spring),color 0.2s; }
-.vehicle-card:hover .vc-footer-text { color:rgba(255,255,255,0.55); }
-.vehicle-card:hover .vc-footer-arrow { color:rgba(255,255,255,0.55); transform:translate(3px,-3px); }
+.vc-foot-txt{font-size:0.67em;color:var(--muted2);letter-spacing:0.1em;text-transform:uppercase;font-family:var(--mono);transition:color 0.2s;}
+.vc-foot-arr{font-size:0.78em;color:var(--muted2);transition:transform 0.22s var(--spring),color 0.2s;}
+.vehicle-card:hover .vc-foot-txt{color:rgba(255,255,255,0.5);}
+.vehicle-card:hover .vc-foot-arr{color:rgba(255,255,255,0.5);transform:translate(3px,-3px);}
 
-/* ── Vehicle overlay (unchanged) ── */
-#vehicle-overlay { display:none; position:fixed; inset:0; background:var(--bg); z-index:200; overflow-y:auto; opacity:0; transition:opacity 0.35s var(--ease); }
-#vehicle-overlay.active { display:block; }
-#vehicle-overlay.visible { opacity:1; }
-.vp-header { position:sticky; top:0; background:rgba(8,8,8,0.92); backdrop-filter:blur(14px); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:20px; padding:18px 32px; z-index:10; }
-.vp-back { background:none; border:1px solid var(--border); color:var(--muted); padding:8px 20px; border-radius:100px; cursor:pointer; font-size:0.82em; font-family:var(--font); transition:all 0.2s var(--ease); }
-.vp-back:hover { background:var(--bg3); color:var(--text); border-color:var(--border-hover); transform:translateX(-2px); }
-.vp-title { font-size:1em; font-weight:300; color:var(--muted); }
-.vp-body { max-width:900px; margin:0 auto; padding:60px 24px 100px; animation:fadeUp 0.5s 0.05s var(--ease) both; position:relative; z-index:1; }
-.vp-hero-name { font-size:clamp(2.5em,6vw,4em); font-weight:300; letter-spacing:-0.01em; margin-bottom:8px; }
-.vp-hero-class { font-size:0.72em; color:var(--muted); letter-spacing:0.2em; text-transform:uppercase; margin-bottom:48px; font-family:var(--mono); }
-.vp-img-wrap { width:100%; aspect-ratio:16/7; background:var(--bg2); border:1px solid var(--border); border-radius:18px; margin-bottom:52px; display:flex; align-items:center; justify-content:center; overflow:hidden; position:relative; }
-.vp-img-wrap img { width:100%; height:100%; object-fit:cover; }
-.vp-img-placeholder { font-size:0.72em; color:var(--muted2); letter-spacing:0.15em; text-transform:uppercase; font-family:var(--mono); }
-.vp-section-title { font-size:0.68em; letter-spacing:0.2em; text-transform:uppercase; color:var(--muted); margin-bottom:14px; border-bottom:1px solid var(--border); padding-bottom:12px; font-family:var(--mono); }
-.vp-specs-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:1px; background:rgba(255,255,255,0.07); border-radius:16px; overflow:hidden; margin-bottom:36px; }
-.vp-spec { background:var(--bg3); padding:18px 20px; transition:background 0.2s; }
-.vp-spec:hover { background:#1a1a1a; }
-.vp-spec-lbl { font-size:0.62em; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; font-family:var(--mono); margin-bottom:6px; }
-.vp-spec-val { font-size:1.25em; font-weight:300; font-family:var(--mono); color:var(--text); line-height:1.1; }
-.vp-stages { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:36px; }
-@media(max-width:600px){ .vp-stages { grid-template-columns:1fr; } }
-.vp-stage { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); border-radius:16px; padding:0; overflow:hidden; }
-.vp-stage-title { font-size:0.65em; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); padding:14px 18px 12px; font-family:var(--mono); border-bottom:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.02); }
-.vp-stage-rows { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:rgba(255,255,255,0.06); }
-.vp-stage-cell { background:var(--bg3); padding:13px 16px; transition:background 0.2s; }
-.vp-stage-cell:hover { background:#1a1a1a; }
-.vp-stage-key { font-size:0.6em; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; font-family:var(--mono); margin-bottom:4px; }
-.vp-stage-val { font-size:0.95em; font-weight:300; font-family:var(--mono); color:var(--text); }
-.vp-desc { color:#777; font-size:1.0em; line-height:1.85; max-width:680px; font-weight:300; }
+/* ── Vehicle overlay ── */
+#vehicle-overlay{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;opacity:0;transition:opacity 0.35s var(--ease);}
+#vehicle-overlay.active{display:block;}
+#vehicle-overlay.visible{opacity:1;}
+.vp-header{position:sticky;top:0;background:rgba(8,8,8,0.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:20px;padding:18px 32px;z-index:10;}
+.vp-back{background:none;border:1px solid var(--border);color:var(--muted);padding:8px 20px;border-radius:100px;cursor:pointer;font-size:0.82em;font-family:var(--font);transition:all 0.2s var(--ease);}
+.vp-back:hover{background:var(--bg3);color:var(--text);border-color:var(--border-h);transform:translateX(-2px);}
+.vp-title{font-size:1em;font-weight:300;color:var(--muted);}
+.vp-body{max-width:900px;margin:0 auto;padding:60px 24px 100px;animation:fadeUp 0.5s 0.05s var(--ease) both;position:relative;z-index:1;}
+.vp-hero-name{font-size:clamp(2.5em,6vw,4em);font-weight:300;letter-spacing:-0.01em;margin-bottom:8px;}
+.vp-hero-class{font-size:0.72em;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:48px;font-family:var(--mono);}
+.vp-img-wrap{width:100%;aspect-ratio:16/7;background:var(--bg2);border:1px solid var(--border);border-radius:18px;margin-bottom:52px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+.vp-img-wrap img{width:100%;height:100%;object-fit:cover;}
+.vp-img-ph{font-size:0.72em;color:var(--muted2);letter-spacing:0.15em;text-transform:uppercase;font-family:var(--mono);}
+.vp-sec-title{font-size:0.68em;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:12px;font-family:var(--mono);}
+.vp-specs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1px;background:rgba(255,255,255,0.07);border-radius:16px;overflow:hidden;margin-bottom:36px;}
+.vp-spec{background:var(--bg3);padding:18px 20px;transition:background 0.2s;}
+.vp-spec:hover{background:#1a1a1a;}
+.vp-spec-lbl{font-size:0.62em;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:6px;}
+.vp-spec-val{font-size:1.25em;font-weight:300;font-family:var(--mono);color:var(--text);line-height:1.1;}
+.vp-stages{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:36px;}
+@media(max-width:600px){.vp-stages{grid-template-columns:1fr;}}
+.vp-stage{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:0;overflow:hidden;}
+.vp-stage-title{font-size:0.65em;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);padding:14px 18px 12px;font-family:var(--mono);border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);}
+.vp-stage-rows{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.06);}
+.vp-stage-cell{background:var(--bg3);padding:13px 16px;transition:background 0.2s;}
+.vp-stage-cell:hover{background:#1a1a1a;}
+.vp-stage-key{font-size:0.6em;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:4px;}
+.vp-stage-val{font-size:0.95em;font-weight:300;font-family:var(--mono);color:var(--text);}
+.vp-desc{color:#777;font-size:1.0em;line-height:1.85;max-width:680px;font-weight:300;}
 
 /* ── NEWS ── */
-.rocket-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px; margin-top:20px; }
-.rocket { background:var(--bg2); border:1px solid rgba(255,255,255,0.07); border-radius:18px; padding:0; transition:transform 0.28s var(--ease-spring),box-shadow 0.28s var(--ease),border-color 0.25s; position:relative; overflow:hidden; display:flex; flex-direction:column; cursor:default; opacity:0; transform:translateY(16px); animation:newsIn 0.5s var(--ease) forwards; }
-@keyframes newsIn { to { opacity:1; transform:translateY(0); } }
-.rocket:hover { transform:translateY(-5px); box-shadow:0 16px 48px rgba(0,0,0,0.4); border-color:rgba(255,255,255,0.13); }
-.rocket-top-bar { height:2px; background:linear-gradient(90deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04)); transition:background 0.3s; }
-.rocket:hover .rocket-top-bar { background:linear-gradient(90deg,rgba(255,255,255,0.28),rgba(255,255,255,0.06)); }
-.rocket-body { padding:22px 22px 14px; flex:1; display:flex; flex-direction:column; }
-.rocket h3 { margin-bottom:10px; font-size:0.97em; font-weight:500; letter-spacing:-0.005em; line-height:1.4; color:var(--text); }
-.rocket p.rocket-desc { font-size:0.875em; color:#888; line-height:1.7; flex:1; filter:brightness(var(--news-text-brightness)); }
-.rocket-footer { display:flex; align-items:center; justify-content:space-between; padding:12px 22px; border-top:1px solid rgba(255,255,255,0.05); margin-top:14px; }
-.rocket-date { font-size:0.75em; color:#777; font-family:var(--mono); letter-spacing:0.04em; }
-.rocket-details-btn { font-size:0.72em; color:var(--muted2); font-family:var(--mono); letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; transition:color 0.2s; background:none; border:none; padding:0; display:flex; align-items:center; gap:5px; }
-.rocket-details-btn .rd-arrow { transition:transform 0.22s var(--ease-spring); display:inline-block; }
-.rocket:hover .rocket-details-btn { color:#aaa; }
-.rocket:hover .rocket-details-btn .rd-arrow { transform:translate(2px,-2px); }
-#load-more-btn { display:block; margin:24px auto 0; padding:10px 32px; background:transparent; border:1px solid var(--border); color:var(--muted); border-radius:100px; font-size:0.85em; font-family:var(--font); cursor:pointer; transition:all 0.2s var(--ease); }
-#load-more-btn:hover { background:var(--bg2); color:var(--text); border-color:var(--border-hover); }
+.rocket-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:20px;}
+.rocket{background:var(--bg2);border:1px solid rgba(255,255,255,0.07);border-radius:18px;padding:0;transition:transform 0.28s var(--spring),box-shadow 0.28s var(--ease),border-color 0.25s;position:relative;overflow:hidden;display:flex;flex-direction:column;cursor:default;opacity:0;transform:translateY(16px);animation:newsIn 0.5s var(--ease) forwards;}
+@keyframes newsIn{to{opacity:1;transform:translateY(0);}}
+.rocket:hover{transform:translateY(-5px);box-shadow:0 16px 48px rgba(0,0,0,0.4);border-color:rgba(255,255,255,0.13);}
+.rocket-top-bar{height:2px;background:linear-gradient(90deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04));transition:background 0.3s;}
+.rocket:hover .rocket-top-bar{background:linear-gradient(90deg,rgba(255,255,255,0.28),rgba(255,255,255,0.06));}
+.rocket-body{padding:22px 22px 14px;flex:1;display:flex;flex-direction:column;}
+.rocket h3{margin-bottom:10px;font-size:0.97em;font-weight:500;letter-spacing:-0.005em;line-height:1.4;color:var(--text);}
+.rocket p.rocket-desc{font-size:0.875em;color:#888;line-height:1.7;flex:1;filter:brightness(1.15);}
+.rocket-footer{display:flex;align-items:center;justify-content:space-between;padding:12px 22px;border-top:1px solid rgba(255,255,255,0.05);margin-top:14px;}
+.rocket-date{font-size:0.75em;color:#777;font-family:var(--mono);letter-spacing:0.04em;}
+.rocket-details-btn{font-size:0.72em;color:var(--muted2);font-family:var(--mono);letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:color 0.2s;background:none;border:none;padding:0;display:flex;align-items:center;gap:5px;}
+.rocket-details-btn .rd-arrow{transition:transform 0.22s var(--spring);display:inline-block;}
+.rocket:hover .rocket-details-btn{color:#aaa;}
+.rocket:hover .rocket-details-btn .rd-arrow{transform:translate(2px,-2px);}
+#load-more-btn{display:block;margin:24px auto 0;padding:10px 32px;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:100px;font-size:0.85em;font-family:var(--font);cursor:pointer;transition:all 0.2s var(--ease);}
+#load-more-btn:hover{background:var(--bg2);color:var(--text);border-color:var(--border-h);}
 
-#news-overlay { display:none; position:fixed; inset:0; background:var(--bg); z-index:200; overflow-y:auto; opacity:0; transition:opacity 0.35s var(--ease); }
-#news-overlay.active { display:block; }
-#news-overlay.visible { opacity:1; }
-.np-header { position:sticky; top:0; background:rgba(8,8,8,0.92); backdrop-filter:blur(14px); border-bottom:1px solid var(--border); display:flex; align-items:center; gap:20px; padding:18px 32px; z-index:10; }
-.np-back { background:none; border:1px solid var(--border); color:var(--muted); padding:8px 20px; border-radius:100px; cursor:pointer; font-size:0.82em; font-family:var(--font); transition:all 0.2s var(--ease); }
-.np-back:hover { background:var(--bg3); color:var(--text); border-color:var(--border-hover); transform:translateX(-2px); }
-.np-header-title { font-size:1em; font-weight:300; color:var(--muted); }
-.np-body { max-width:760px; margin:0 auto; padding:60px 24px 100px; animation:fadeUp 0.5s 0.05s var(--ease) both; position:relative; z-index:1; }
-.np-date-tag { font-size:0.7em; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); font-family:var(--mono); margin-bottom:18px; }
-.np-title { font-size:clamp(1.8em,4vw,2.8em); font-weight:300; letter-spacing:-0.01em; margin-bottom:32px; line-height:1.25; }
-.np-divider { height:1px; background:var(--border); margin-bottom:36px; }
-.np-text { color:#ccc; font-size:1.0em; line-height:1.9; font-weight:300; }
+#news-overlay{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;opacity:0;transition:opacity 0.35s var(--ease);}
+#news-overlay.active{display:block;}#news-overlay.visible{opacity:1;}
+.np-header{position:sticky;top:0;background:rgba(8,8,8,0.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:20px;padding:18px 32px;z-index:10;}
+.np-back{background:none;border:1px solid var(--border);color:var(--muted);padding:8px 20px;border-radius:100px;cursor:pointer;font-size:0.82em;font-family:var(--font);transition:all 0.2s var(--ease);}
+.np-back:hover{background:var(--bg3);color:var(--text);border-color:var(--border-h);transform:translateX(-2px);}
+.np-header-title{font-size:1em;font-weight:300;color:var(--muted);}
+.np-body{max-width:760px;margin:0 auto;padding:60px 24px 100px;animation:fadeUp 0.5s 0.05s var(--ease) both;position:relative;z-index:1;}
+.np-date-tag{font-size:0.7em;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);font-family:var(--mono);margin-bottom:18px;}
+.np-title{font-size:clamp(1.8em,4vw,2.8em);font-weight:300;letter-spacing:-0.01em;margin-bottom:32px;line-height:1.25;}
+.np-divider{height:1px;background:var(--border);margin-bottom:36px;}
+.np-text{color:#ccc;font-size:1.0em;line-height:1.9;font-weight:300;}
 
 /* ── SCHEDULE ── */
-#launch-list { margin-top:10px; display:flex; flex-direction:column; gap:10px; }
-.launch-row { display:grid; grid-template-columns:2fr 1.8fr 1fr 1fr; align-items:center; padding:15px 20px; background:rgba(255,255,255,0.025); border:1px solid var(--border); border-radius:8px; transition:background 0.2s ease,border-color 0.2s ease,transform 0.2s ease; cursor:pointer; }
-.launch-row:hover { background:rgba(255,255,255,0.05); transform:scale(1.012); border-color:var(--border-hover); }
-.launch-row strong { font-size:0.97em; color:#fff; }
-.launch-row div { font-size:0.87em; }
-.status-badge { text-align:center; font-size:0.74em; font-weight:600; text-transform:uppercase; padding:6px 14px; border-radius:100px; background:rgba(0,0,0,0.3); border:1px solid currentColor; justify-self:end; min-width:108px; font-family:var(--mono); letter-spacing:0.06em; opacity:0.85; }
-@media(max-width:768px){ .launch-row { grid-template-columns:1.5fr 1fr; gap:8px; } .status-badge { grid-column:span 2; justify-self:start; } }
+#launch-list{margin-top:10px;display:flex;flex-direction:column;gap:10px;}
+.launch-row{display:grid;grid-template-columns:2fr 1.8fr 1fr 1fr;align-items:center;padding:15px 20px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:8px;transition:background 0.2s,border-color 0.2s,transform 0.2s;cursor:pointer;}
+.launch-row:hover{background:rgba(255,255,255,0.05);transform:scale(1.012);border-color:var(--border-h);}
+.launch-row strong{font-size:0.97em;color:#fff;}
+.launch-row div{font-size:0.87em;}
+.status-badge{text-align:center;font-size:0.74em;font-weight:600;text-transform:uppercase;padding:6px 14px;border-radius:100px;background:rgba(0,0,0,0.3);border:1px solid currentColor;justify-self:end;min-width:108px;font-family:var(--mono);letter-spacing:0.06em;opacity:0.85;}
+@media(max-width:768px){.launch-row{grid-template-columns:1.5fr 1fr;gap:8px;}.status-badge{grid-column:span 2;justify-self:start;}}
+.row-watch-link{display:none;font-size:0.72em;color:rgba(255,255,255,0.45);font-family:var(--mono);letter-spacing:0.08em;text-decoration:none;cursor:pointer;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.2);transition:color 0.2s,border-color 0.2s;white-space:nowrap;align-self:center;}
+.row-watch-link:hover{color:#fff;border-color:rgba(255,255,255,0.6);}
+.row-watch-link.visible{display:inline-block;}
+.acc-load-more{display:block;margin:10px 20px 12px;padding:8px 0;background:transparent;border:1px solid rgba(255,255,255,0.1);color:var(--muted);border-radius:8px;font-size:0.78em;font-family:var(--mono);letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;width:calc(100% - 40px);transition:all 0.2s var(--ease);}
+.acc-load-more:hover{background:rgba(255,255,255,0.04);color:var(--text);border-color:rgba(255,255,255,0.2);}
 
-.row-watch-link { display:none; font-size:0.72em; color:rgba(255,255,255,0.45); font-family:var(--mono); letter-spacing:0.08em; text-decoration:none; cursor:pointer; padding:3px 0; border-bottom:1px solid rgba(255,255,255,0.2); transition:color 0.2s,border-color 0.2s; white-space:nowrap; align-self:center; }
-.row-watch-link:hover { color:#fff; border-color:rgba(255,255,255,0.6); }
-.row-watch-link.visible { display:inline-block; }
+/* ── LAUNCH MODAL ── */
+#launch-modal-backdrop{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);opacity:0;transition:opacity 0.3s var(--ease);align-items:center;justify-content:center;}
+#launch-modal-backdrop.active{display:flex;}
+#launch-modal-backdrop.visible{opacity:1;}
+#launch-modal{background:var(--bg2);border:1px solid rgba(255,255,255,0.12);border-radius:22px;width:min(var(--lm-w),92vw);padding:0;overflow:hidden;transform:translateY(20px) scale(0.97);transition:transform 0.35s var(--spring),opacity 0.3s;opacity:0;position:relative;}
+#launch-modal-backdrop.visible #launch-modal{transform:translateY(0) scale(1);opacity:1;}
+.lm-color-bar{height:3px;opacity:0.7;}
+.lm-inner{padding:34px 36px 32px;}
+.lm-status-row{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+.lm-dot{width:8px;height:8px;border-radius:50%;opacity:0.75;}
+.lm-status-text{font-size:0.7em;letter-spacing:0.18em;text-transform:uppercase;font-family:var(--mono);opacity:0.85;}
+.lm-name{font-size:1.6em;font-weight:400;letter-spacing:-0.01em;margin-bottom:6px;line-height:1.25;}
+.lm-type{font-size:0.72em;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;font-family:var(--mono);margin-bottom:28px;}
+.lm-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.07);border-radius:14px;overflow:hidden;margin-bottom:26px;}
+.lm-cell{background:var(--bg3);padding:var(--lm-cell);}
+.lm-cell-lbl{font-size:0.63em;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:6px;}
+.lm-cell-val{font-size:var(--lm-val);font-family:var(--mono);color:var(--text);font-weight:300;}
+.lm-desc{font-size:0.9em;color:#666;line-height:1.8;}
+.lm-watch-row{margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,0.06);}
+.lm-watch-link{display:inline-flex;align-items:center;gap:8px;font-size:0.82em;font-family:var(--mono);letter-spacing:0.1em;color:rgba(255,255,255,0.45);text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.2);cursor:pointer;text-decoration:none;transition:color 0.2s,border-color 0.2s;padding-bottom:1px;}
+.lm-watch-link:hover{color:#fff;border-color:rgba(255,255,255,0.6);}
+.lm-close{position:absolute;top:18px;right:22px;background:none;border:1px solid rgba(255,255,255,0.1);color:var(--muted2);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:0.8em;display:flex;align-items:center;justify-content:center;transition:all 0.2s var(--ease);}
+.lm-close:hover{background:rgba(255,255,255,0.07);color:var(--text);border-color:rgba(255,255,255,0.25);}
 
-/* Accordion load-more button */
-.acc-load-more {
-  display:block; margin:10px 20px 12px; padding:8px 0;
-  background:transparent; border:1px solid rgba(255,255,255,0.1);
-  color:var(--muted); border-radius:8px;
-  font-size:0.78em; font-family:var(--mono); letter-spacing:0.06em;
-  text-transform:uppercase; cursor:pointer; width:calc(100% - 40px);
-  transition:all 0.2s var(--ease);
-}
-.acc-load-more:hover { background:rgba(255,255,255,0.04); color:var(--text); border-color:rgba(255,255,255,0.2); }
+/* ── ACCORDION ── */
+.group-accordion{border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:box-shadow 0.3s,border-color 0.25s;}
+.group-accordion:hover{box-shadow:0 4px 20px rgba(255,255,255,0.03);border-color:var(--border-h);}
+.group-header{display:flex;align-items:center;justify-content:space-between;padding:var(--acc-pv) var(--acc-ph);background:rgba(255,255,255,0.025);cursor:pointer;user-select:none;transition:background 0.2s;}
+.group-header:hover{background:rgba(255,255,255,0.05);}
+.group-left{display:flex;align-items:center;gap:14px;}
+.group-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.group-label{font-size:0.79em;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;font-family:var(--mono);}
+.group-count{font-size:0.79em;color:var(--muted2);font-weight:400;font-family:var(--mono);}
+.group-chevron{font-size:0.72em;color:var(--muted2);transition:transform 0.38s var(--ease);}
+.group-accordion.open .group-chevron{transform:rotate(360deg);}
+.group-rows{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.65s cubic-bezier(1,0,0.2,1),opacity 1s cubic-bezier(0.4,0,0.2,1);}
+.group-rows.open{opacity:1;max-height:3000px !important;}
 
-#launch-modal-backdrop { display:none; position:fixed; inset:0; z-index:300; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); opacity:0; transition:opacity 0.3s var(--ease); align-items:center; justify-content:center; }
-#launch-modal-backdrop.active { display:flex; }
-#launch-modal-backdrop.visible { opacity:1; }
-#launch-modal { background:var(--bg2); border:1px solid rgba(255,255,255,0.12); border-radius:22px; width:min(var(--lm-width),92vw); padding:0; overflow:hidden; transform:translateY(20px) scale(0.97); transition:transform 0.35s var(--ease-spring),opacity 0.3s; opacity:0; position:relative; }
-#launch-modal-backdrop.visible #launch-modal { transform:translateY(0) scale(1); opacity:1; }
-.lm-color-bar { height:3px; opacity:0.7; }
-.lm-inner { padding:34px 36px 32px; }
-.lm-status-row { display:flex; align-items:center; gap:10px; margin-bottom:18px; }
-.lm-dot { width:8px; height:8px; border-radius:50%; opacity:0.75; }
-.lm-status-text { font-size:0.7em; letter-spacing:0.18em; text-transform:uppercase; font-family:var(--mono); opacity:0.85; }
-.lm-name { font-size:1.6em; font-weight:400; letter-spacing:-0.01em; margin-bottom:6px; line-height:1.25; }
-.lm-type { font-size:0.72em; color:var(--muted); letter-spacing:0.12em; text-transform:uppercase; font-family:var(--mono); margin-bottom:28px; }
-.lm-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:rgba(255,255,255,0.07); border-radius:14px; overflow:hidden; margin-bottom:26px; }
-.lm-cell { background:var(--bg3); padding:var(--lm-cell-padding); }
-.lm-cell-lbl { font-size:0.63em; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em; font-family:var(--mono); margin-bottom:6px; }
-.lm-cell-val { font-size:var(--lm-cell-val-size); font-family:var(--mono); color:var(--text); font-weight:300; }
-.lm-desc { font-size:0.9em; color:#666; line-height:1.8; }
-.lm-watch-row { margin-top:22px; padding-top:18px; border-top:1px solid rgba(255,255,255,0.06); }
-.lm-watch-link { display:inline-flex; align-items:center; gap:8px; font-size:0.82em; font-family:var(--mono); letter-spacing:0.1em; color:rgba(255,255,255,0.45); text-transform:uppercase; border-bottom:1px solid rgba(255,255,255,0.2); cursor:pointer; text-decoration:none; transition:color 0.2s,border-color 0.2s; padding-bottom:1px; }
-.lm-watch-link:hover { color:#fff; border-color:rgba(255,255,255,0.6); }
-.lm-close { position:absolute; top:18px; right:22px; background:none; border:1px solid rgba(255,255,255,0.1); color:var(--muted2); width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:0.8em; display:flex; align-items:center; justify-content:center; transition:all 0.2s var(--ease); }
-.lm-close:hover { background:rgba(255,255,255,0.07); color:var(--text); border-color:rgba(255,255,255,0.25); }
+/* ── MISSION STATS ── */
+#mission-stats{padding-top:0;padding-bottom:80px;}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.07);border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);}
+@media(max-width:700px){.stats-grid{grid-template-columns:1fr 1fr;}}
+.stat-cell{background:var(--bg2);padding:28px 24px;display:flex;flex-direction:column;gap:6px;transition:background 0.22s;position:relative;overflow:hidden;}
+.stat-cell::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);opacity:0;transition:opacity 0.3s;}
+.stat-cell:hover{background:#131313;}
+.stat-cell:hover::before{opacity:1;}
+.stat-num{font-size:2.2em;font-weight:300;font-family:var(--mono);letter-spacing:-0.02em;line-height:1;color:var(--text);}
+.stat-label{font-size:0.63em;color:var(--muted);text-transform:uppercase;letter-spacing:0.14em;font-family:var(--mono);}
 
-.group-accordion { border:1px solid var(--border); border-radius:14px; overflow:hidden; transition:box-shadow 0.3s,border-color 0.25s; }
-.group-accordion:hover { box-shadow:0 4px 20px rgba(255,255,255,0.03); border-color:var(--border-hover); }
-.group-header { display:flex; align-items:center; justify-content:space-between; padding:var(--acc-padding-v) var(--acc-padding-h); background:rgba(255,255,255,0.025); cursor:pointer; user-select:none; transition:background 0.2s; }
-.group-header:hover { background:rgba(255,255,255,0.05); }
-.group-left { display:flex; align-items:center; gap:14px; }
-.group-dot { width:var(--acc-dot-size); height:var(--acc-dot-size); border-radius:50%; flex-shrink:0; }
-.group-label { font-size:var(--acc-font-label); font-weight:500; letter-spacing:0.14em; text-transform:uppercase; font-family:var(--mono); }
-.group-count { font-size:var(--acc-font-count); color:var(--muted2); font-weight:400; font-family:var(--mono); }
-.group-chevron { font-size:0.72em; color:var(--muted2); transition:transform 0.38s var(--ease); }
-.group-accordion.open .group-chevron { transform:rotate(360deg); }
-.group-rows { overflow:hidden; max-height:0; opacity:0; transition:max-height 0.65s cubic-bezier(1,0,0.2,1),opacity 1s cubic-bezier(0.4,0,0.2,1),padding 0.65s cubic-bezier(0.4,0,0.2,1); padding-top:0; padding-bottom:0; }
-.group-rows.open { opacity:1; padding-top:0; padding-bottom:0; max-height:3000px !important; }
+footer{text-align:center;padding:24px;border-top:1px solid var(--border);font-size:0.8em;color:var(--muted);font-family:var(--mono);position:relative;z-index:1;}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.7s var(--ease),transform 0.7s var(--ease);}
+.reveal.visible{opacity:1;transform:translateY(0);}
 
-footer { text-align:center; padding:24px; border-top:1px solid var(--border); font-size:0.8em; color:var(--muted); font-family:var(--mono); position:relative; z-index:1; }
-.reveal { opacity:0; transform:translateY(22px); transition:opacity 0.7s var(--ease),transform 0.7s var(--ease); }
-.reveal.visible { opacity:1; transform:translateY(0); }
-
-/* ── MOBILE ── */
-@media(max-width:768px) {
-  .rd-arrow,.vc-footer-arrow,.rw-arrow { display:none !important; }
-  .vehicle-cards { gap:14px; }
-  .vc-footer { padding:12px 18px; }
-  .rocket-body { padding:18px 18px 12px; }
-  .rocket-footer { padding:10px 18px; }
-}
-
-/* ══════════════════════════════════════
-   MISSION STATS — new section
-══════════════════════════════════════ */
-#mission-stats {
-  padding-top:0; padding-bottom:80px;
-}
-.stats-grid {
-  display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
-  background:rgba(255,255,255,0.07);
-  border-radius:18px; overflow:hidden;
-  border:1px solid rgba(255,255,255,0.07);
-}
-@media(max-width:700px){ .stats-grid { grid-template-columns:1fr 1fr; } }
-.stat-cell {
-  background:var(--bg2); padding:28px 24px;
-  display:flex; flex-direction:column; gap:6px;
-  transition:background 0.22s;
-  position:relative; overflow:hidden;
-}
-.stat-cell::before {
-  content:''; position:absolute; top:0; left:0; right:0; height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);
-  opacity:0; transition:opacity 0.3s;
-}
-.stat-cell:hover { background:#131313; }
-.stat-cell:hover::before { opacity:1; }
-.stat-num {
-  font-size:2.2em; font-weight:300; font-family:var(--mono);
-  letter-spacing:-0.02em; line-height:1;
-  color:var(--text);
-}
-.stat-num span { font-size:0.55em; color:var(--muted); font-weight:400; }
-.stat-label {
-  font-size:0.63em; color:var(--muted); text-transform:uppercase;
-  letter-spacing:0.14em; font-family:var(--mono);
-}
-.stat-accent {
-  font-size:0.7em; font-family:var(--mono); letter-spacing:0.04em;
-  margin-top:4px;
+@media(max-width:768px){
+  .rd-arrow,.vc-foot-arr,.rw-arrow{display:none !important;}
+  .vehicle-cards{gap:12px;}
+  .rocket-body{padding:18px 18px 12px;}
+  .rocket-footer{padding:10px 18px;}
 }
 
 /* ══════════════════════════════════════
-   MINI GAME — Asteroid Dodge
+   FLOATING MINI-GAME BUTTON — bottom-left
 ══════════════════════════════════════ */
-#game-section {
-  padding-top:40px; padding-bottom:80px;
+#mg-fab{
+  position:fixed;bottom:28px;left:28px;z-index:90;
+  display:flex;align-items:center;gap:10px;
+  padding:10px 18px 10px 12px;
+  background:rgba(12,12,14,0.92);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:100px;
+  cursor:pointer;
+  backdrop-filter:blur(12px);
+  transition:all 0.28s var(--spring);
+  text-decoration:none;
+  box-shadow:0 4px 20px rgba(0,0,0,0.5);
+  color:rgba(255,255,255,0.65);
 }
-.game-header {
-  display:flex; align-items:center; justify-content:space-between;
-  margin-bottom:20px; flex-wrap:wrap; gap:12px;
+#mg-fab:hover{
+  background:rgba(18,18,22,0.96);
+  border-color:rgba(255,255,255,0.22);
+  color:#fff;
+  transform:translateY(-2px) scale(1.03);
+  box-shadow:0 8px 28px rgba(0,0,0,0.6);
 }
-.game-title-row { display:flex; align-items:center; gap:14px; }
-.game-tag {
-  font-size:0.63em; font-family:var(--mono); letter-spacing:0.14em;
-  text-transform:uppercase; color:var(--muted);
-  border:1px solid rgba(255,255,255,0.1); padding:4px 10px; border-radius:100px;
+#mg-fab:hover .mg-fab-icon svg path{fill:rgba(255,255,255,0.9);}
+.mg-fab-icon{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(255,255,255,0.05);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
 }
-.game-score-row {
-  display:flex; align-items:center; gap:20px;
-  font-family:var(--mono); font-size:0.82em; color:var(--muted);
+.mg-fab-icon svg{width:16px;height:16px;display:block;}
+.mg-fab-icon svg path{fill:rgba(255,255,255,0.5);transition:fill 0.2s;}
+.mg-fab-label{font-size:0.74em;font-family:var(--mono);letter-spacing:0.08em;text-transform:uppercase;font-weight:400;}
+
+/* ══════════════════════════════════════
+   GAME MODAL OVERLAY
+══════════════════════════════════════ */
+#game-modal-bd{
+  display:none;position:fixed;inset:0;z-index:400;
+  background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);
+  opacity:0;transition:opacity 0.3s var(--ease);
+  align-items:center;justify-content:center;
+  padding:20px;
 }
-.game-score-val {
-  color:var(--text); font-size:1.15em; font-weight:300;
-  transition:color 0.15s;
+#game-modal-bd.active{display:flex;}
+#game-modal-bd.visible{opacity:1;}
+#game-modal{
+  background:var(--bg2);border:1px solid rgba(255,255,255,0.12);
+  border-radius:22px;
+  width:100%;max-width:780px;
+  overflow:hidden;
+  transform:translateY(24px) scale(0.97);
+  transition:transform 0.38s var(--spring),opacity 0.3s;
+  opacity:0;position:relative;
+  display:flex;flex-direction:column;
 }
-.game-wrap {
-  position:relative; border-radius:16px; overflow:hidden;
-  border:1px solid rgba(255,255,255,0.08);
-  background:var(--bg2);
-  user-select:none;
+#game-modal-bd.visible #game-modal{transform:translateY(0) scale(1);opacity:1;}
+
+.gm-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 22px;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+  flex-shrink:0;
 }
-#gameCanvas {
-  display:block; width:100%; height:340px;
-  cursor:none;
+.gm-title-row{display:flex;align-items:center;gap:14px;}
+.gm-title{font-size:1em;font-weight:400;letter-spacing:0.01em;}
+.gm-score-row{display:flex;align-items:center;gap:18px;font-family:var(--mono);font-size:0.78em;color:var(--muted);}
+.gm-score-val{color:var(--text);font-size:1.1em;font-weight:300;}
+.gm-note{font-size:0.62em;color:var(--muted2);letter-spacing:0.07em;text-transform:uppercase;}
+.gm-close{
+  background:none;border:1px solid rgba(255,255,255,0.1);
+  color:var(--muted2);width:30px;height:30px;border-radius:50%;
+  cursor:pointer;font-size:0.78em;display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s var(--ease);flex-shrink:0;
 }
-.game-overlay {
-  position:absolute; inset:0;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:18px; background:rgba(8,8,8,0.82); backdrop-filter:blur(6px);
+.gm-close:hover{background:rgba(255,255,255,0.07);color:var(--text);border-color:rgba(255,255,255,0.25);}
+
+.gm-canvas-wrap{position:relative;flex:1;min-height:0;}
+#game-canvas{display:block;width:100%;height:360px;cursor:none;}
+
+.gm-overlay{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;background:rgba(8,8,8,0.82);backdrop-filter:blur(6px);
   transition:opacity 0.3s;
 }
-.game-overlay.hidden { opacity:0; pointer-events:none; }
-.game-over-title {
-  font-size:1.6em; font-weight:300; letter-spacing:-0.01em;
-}
-.game-over-sub {
-  font-size:0.78em; font-family:var(--mono); color:var(--muted);
-  letter-spacing:0.1em; text-transform:uppercase;
-}
-.game-start-btn {
-  padding:10px 32px; border:1px solid rgba(255,255,255,0.3);
-  border-radius:100px; background:transparent; color:#fff;
-  font-family:var(--font); font-size:0.9em; cursor:pointer;
-  transition:all 0.25s var(--ease);
-}
-.game-start-btn:hover {
-  background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.6);
-  transform:scale(1.03);
-}
-.game-hint {
-  font-size:0.68em; font-family:var(--mono); color:var(--muted2);
-  letter-spacing:0.1em; text-transform:uppercase;
-}
+.gm-overlay.hidden{opacity:0;pointer-events:none;}
+.gm-over-title{font-size:1.55em;font-weight:300;letter-spacing:-0.01em;}
+.gm-over-sub{font-size:0.76em;font-family:var(--mono);color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
+.gm-start-btn{padding:9px 30px;border:1px solid rgba(255,255,255,0.3);border-radius:100px;background:transparent;color:#fff;font-family:var(--font);font-size:0.88em;cursor:pointer;transition:all 0.25s var(--ease);}
+.gm-start-btn:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.6);transform:scale(1.03);}
+.gm-hint{font-size:0.65em;font-family:var(--mono);color:var(--muted2);letter-spacing:0.1em;text-transform:uppercase;}
 </style>
 </head>
 <body>
 
 <div id="starfield"></div>
-
-<!-- Flyby canvas: meteors, satellites, Starship silhouettes -->
 <canvas id="flyby-canvas"></canvas>
 
+<!-- Vehicle overlay -->
 <div id="vehicle-overlay">
   <div id="vp-starfield"></div>
   <div class="vp-header">
@@ -515,6 +409,7 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
   <div class="vp-body" id="vp-body"></div>
 </div>
 
+<!-- News overlay -->
 <div id="news-overlay">
   <div class="np-header">
     <button class="np-back" onclick="closeNews()">&#8592; Back</button>
@@ -524,15 +419,13 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
   <div class="np-body" id="np-body"></div>
 </div>
 
+<!-- Launch modal -->
 <div id="launch-modal-backdrop" onclick="closeLaunchModal(event)">
   <div id="launch-modal">
     <button class="lm-close" onclick="closeLaunchModal(null,true)">&#10005;</button>
     <div class="lm-color-bar" id="lm-color-bar"></div>
     <div class="lm-inner">
-      <div class="lm-status-row">
-        <div class="lm-dot" id="lm-dot"></div>
-        <span class="lm-status-text" id="lm-status-text"></span>
-      </div>
+      <div class="lm-status-row"><div class="lm-dot" id="lm-dot"></div><span class="lm-status-text" id="lm-status-text"></span></div>
       <div class="lm-name" id="lm-name"></div>
       <div class="lm-type" id="lm-type"></div>
       <div class="lm-grid" id="lm-grid"></div>
@@ -544,12 +437,51 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
   </div>
 </div>
 
+<!-- ══ FLOATING MINI-GAME BUTTON ══ -->
+<div id="mg-fab" onclick="openGameModal()">
+  <div class="mg-fab-icon">
+    <!-- Rocket icon -->
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2C12 2 6 7 6 13.5C6 16.54 8.25 19.22 11 19.84V22L12 21L13 22V19.84C15.75 19.22 18 16.54 18 13.5C18 7 12 2 12 2ZM12 5.5C12 5.5 15 9 15 13C15 15.21 13.66 17.11 12 17.79C10.34 17.11 9 15.21 9 13C9 9 12 5.5 12 5.5ZM9 19.65C7.32 18.56 6 16.14 6 13.5C6 12.84 6.09 12.2 6.25 11.58L4.5 13.5L6 19L9 19.65ZM15 19.65L18 19L19.5 13.5L17.75 11.58C17.91 12.2 18 12.84 18 13.5C18 16.14 16.68 18.56 15 19.65Z"/>
+    </svg>
+  </div>
+  <span class="mg-fab-label">Mini Game</span>
+</div>
+
+<!-- ══ GAME MODAL ══ -->
+<div id="game-modal-bd" onclick="closeGameModal(event)">
+  <div id="game-modal">
+    <div class="gm-header">
+      <div class="gm-title-row">
+        <span class="gm-title">Fly in Space</span>
+        <span class="gm-note">Score &amp; best are not saved between sessions.</span>
+      </div>
+      <div class="gm-score-row">
+        <span>Score&nbsp;<span class="gm-score-val" id="gm-score">0</span></span>
+        <span>Best&nbsp;<span class="gm-score-val" id="gm-best">0</span></span>
+        <button class="gm-close" onclick="closeGameModal(null,true)">&#10005;</button>
+      </div>
+    </div>
+    <div class="gm-canvas-wrap">
+      <canvas id="game-canvas"></canvas>
+      <div class="gm-overlay" id="gm-overlay">
+        <div class="gm-over-title" id="gm-over-title">Fly in Space</div>
+        <div class="gm-over-sub" id="gm-over-sub">Dodge asteroids · Collect fuel cells · Survive</div>
+        <button class="gm-start-btn" onclick="startGame()">Launch</button>
+        <div class="gm-hint">Mouse / Touch to steer</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Header -->
 <header>
   <div class="header-left" id="header-left-slot"></div>
   <nav class="header-nav" id="header-nav"></nav>
   <div class="header-right" id="header-right-slot"></div>
 </header>
 
+<!-- Hero -->
 <section class="hero" id="hero">
   <h1>Welcome to InSpace</h1>
   <p>Keep an eye out for updates</p>
@@ -559,44 +491,23 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
     <div id="countdown-timer"></div>
   </div>
   <div id="days-since-wrap"><span id="days-since-text"></span></div>
-  <div class="stream-link" id="main-watch-btn" onclick="window.open('https://www.youtube.com/@hi9eS')">
+  <div class="stream-link" onclick="window.open('https://www.youtube.com/@hi9eS')">
     <span class="stream-link-text">Watch Launch</span>
   </div>
 </section>
 
+<!-- Our Vehicles -->
 <section id="fleet" class="reveal">
   <h2>Our Vehicles</h2>
   <div class="vehicle-cards" id="vehicle-cards"></div>
 </section>
 
-<!-- ══ MISSION STATS ══ -->
+<!-- Mission Stats -->
 <section id="mission-stats" class="reveal">
   <div class="stats-grid" id="stats-grid"></div>
 </section>
 
-<!-- ══ MINI GAME ══ -->
-<section id="game-section" class="reveal">
-  <div class="game-header">
-    <div class="game-title-row">
-      <h2 style="margin-bottom:0;">Asteroid Dodge</h2>
-      <span class="game-tag">Mini-Game</span>
-    </div>
-    <div class="game-score-row">
-      <span>Score <span class="game-score-val" id="score-display">0</span></span>
-      <span>Best <span class="game-score-val" id="best-display">0</span></span>
-    </div>
-  </div>
-  <div class="game-wrap">
-    <canvas id="gameCanvas"></canvas>
-    <div class="game-overlay" id="game-overlay">
-      <div class="game-over-title" id="overlay-title">Asteroid Dodge</div>
-      <div class="game-over-sub" id="overlay-sub">Pilot your ship through the asteroid field</div>
-      <button class="game-start-btn" id="game-start-btn" onclick="startGame()">Launch</button>
-      <div class="game-hint">Mouse / Touch to steer &nbsp;·&nbsp; Survive as long as possible</div>
-    </div>
-  </div>
-</section>
-
+<!-- Latest News -->
 <section id="rockets" class="reveal">
   <h2>Latest News</h2>
   <div class="rocket-cards" id="rocket-cards"></div>
@@ -605,6 +516,7 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
   </div>
 </section>
 
+<!-- Launch Schedule -->
 <section id="schedule" class="reveal">
   <h2>Launch Schedule</h2>
   <div id="launch-list"></div>
@@ -614,69 +526,63 @@ footer { text-align:center; padding:24px; border-top:1px solid var(--border); fo
 
 <script>
 /* ══════════════════════════════════════
-   ╔══════════════════════════════════╗
-   ║  SITE CONFIG — edit freely here  ║
-   ╚══════════════════════════════════╝
+   SITE CONFIG
 ══════════════════════════════════════ */
-
-/* ── Vehicle card dimensions ── */
-const vehicleCardConfig = {
-  colorBarHeight:  '3px',
-  innerPaddingV:   '15px',
-  innerPaddingH:   '20px',
-  labelRowMarginBottom: '7px',
-  labelRowMarginTop:    '6px',
-  subMarginBottom: '18px',
-  dividerMarginBottom:  '16px',
-  footerPaddingV:  '13px',
-  footerPaddingH:  '20px',
-};
-
-/* ── Accordion Load-more ── */
 const accLoadMorePerPage = 10;
+const daysSeparatorMode  = 'bar';
+const showClock          = true;
+const clockColor         = '#888';
+const clockTzColor       = '#555';
+const clockFontSize      = '0.78em';
+const navLinkColor       = '#888';
+const navLinkHoverColor  = '#f0f0f0';
 
-/* ── Countdown days/hours separator mode ── */
-const daysSeparatorMode = 'bar';
-
-/* ── Header clock ── */
-const showClock     = true;
-const clockColor    = '#888';
-const clockTzColor  = '#555';
-const clockFontSize = '0.78em';
-
-/* ── Nav link colour ── */
-const navLinkColor      = '#888';
-const navLinkHoverColor = '#f0f0f0';
-
-/* ── Social buttons ── */
-const socialButtons = [
-  { label:'X/Twitter', logoSrc:null, url:'https://x.com/OXeallCorp'       },
-  { label:'YouTube',   logoSrc:null, url:'https://www.youtube.com/@hi9eS' },
-];
-const socialBtnFontSize = '0.72em';
-const socialBtnPadding  = '6px 14px';
-const socialBtnColor    = '#888';
-
-/* ── Sound system ── */
 const enableSounds = true;
 const sounds = {
-  accordion: { file:null, volume:0.18, enabled:true, freq:520, duration:0.06, type:'sine'     },
-  details:   { file:null, volume:0.14, enabled:true, freq:600, duration:0.05, type:'sine'     },
-  modal:     { file:null, volume:0.16, enabled:true, freq:480, duration:0.08, type:'triangle' },
-  news:      { file:null, volume:0.14, enabled:true, freq:560, duration:0.06, type:'sine'     },
-  final10:   { file:null, volume:0.25, enabled:true, freq:880, duration:0.12, type:'sine'     },
+  accordion:{ file:null,volume:0.18,enabled:true,freq:520,duration:0.06,type:'sine' },
+  details:  { file:null,volume:0.14,enabled:true,freq:600,duration:0.05,type:'sine' },
+  modal:    { file:null,volume:0.16,enabled:true,freq:480,duration:0.08,type:'triangle' },
+  news:     { file:null,volume:0.14,enabled:true,freq:560,duration:0.06,type:'sine' },
+  final10:  { file:null,volume:0.25,enabled:true,freq:880,duration:0.12,type:'sine' },
 };
 
-/* ══════════════════════════════════════
-   END OF CONFIG
-══════════════════════════════════════ */
+/*
+  SOCIAL BUTTONS CONFIG
+  ───────────────────────────────────────────────────────────────
+  visible: true  → shown in header
+  visible: false → hidden (template, enable later)
+
+  TO ENABLE A FUTURE NETWORK:
+    1. Set visible: true
+    2. Fill in url
+    3. Paste SVG icon path data into svg field
+  ───────────────────────────────────────────────────────────────
+*/
+const socialButtons = [
+  {
+    id:'twitter', visible:true, label:'X / Twitter',
+    url:'https://x.com/OXeallCorp',
+    svg:`<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.738l7.727-8.835L1.254 2.25H8.08l4.26 5.632 5.904-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`
+  },
+  {
+    id:'youtube', visible:true, label:'YouTube',
+    url:'https://www.youtube.com/@hi9eS',
+    svg:`<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`
+  },
+  /* ── TEMPLATES — set visible:true to enable ──
+  { id:'instagram', visible:false, label:'Instagram', url:'https://instagram.com/YOUR_HANDLE', svg:`` },
+  { id:'tiktok',    visible:false, label:'TikTok',    url:'https://tiktok.com/@YOUR_HANDLE',  svg:`` },
+  { id:'discord',   visible:false, label:'Discord',   url:'https://discord.gg/YOUR_INVITE',   svg:`` },
+  { id:'twitch',    visible:false, label:'Twitch',    url:'https://twitch.tv/YOUR_CHANNEL',   svg:`` },
+  */
+];
 
 /* ── Sound ── */
-let audioCtx=null; const audioBuffers={};
+let audioCtx=null;const audioBuffers={};
 function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
 (function preload(){Object.entries(sounds).forEach(([k,c])=>{if(c.file){fetch(c.file).then(r=>r.arrayBuffer()).then(b=>getAudioCtx().decodeAudioData(b)).then(d=>{audioBuffers[k]=d;}).catch(()=>{});}});})();
 function playSound(key){
-  if(!enableSounds)return; const cfg=sounds[key]; if(!cfg||!cfg.enabled)return;
+  if(!enableSounds)return;const cfg=sounds[key];if(!cfg||!cfg.enabled)return;
   try{
     const ctx=getAudioCtx();
     if(audioBuffers[key]){const s=ctx.createBufferSource();s.buffer=audioBuffers[key];const g=ctx.createGain();g.gain.value=cfg.volume;s.connect(g);g.connect(ctx.destination);s.start();}
@@ -684,535 +590,286 @@ function playSound(key){
   }catch(e){}
 }
 
-/* ── Starfield with parallax layers ── */
-function createStars(container, count) {
-  for (let i = 0; i < count; i++) {
-    const s = document.createElement('div');
-    s.className = 'star';
-    const size = Math.random() * 1.8 + 0.3;
-    const layer = Math.floor(Math.random() * 3);
-    s.dataset.layer = layer;
-    s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--op:${Math.random()*0.45+0.1};--dur:${Math.random()*5+3}s;--delay:${Math.random()*6}s;`;
-    s.dataset.baseLeft = parseFloat(s.style.left);
-    s.dataset.baseTop  = parseFloat(s.style.top);
+/* ── Starfield ── */
+function createStars(container,count){
+  for(let i=0;i<count;i++){
+    const s=document.createElement('div');s.className='star';
+    const sz=Math.random()*1.8+0.3,layer=Math.floor(Math.random()*3);
+    s.dataset.layer=layer;
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--op:${Math.random()*0.45+0.1};--dur:${Math.random()*5+3}s;--delay:${Math.random()*6}s;`;
+    s.dataset.baseLeft=parseFloat(s.style.left);s.dataset.baseTop=parseFloat(s.style.top);
     container.appendChild(s);
   }
 }
+createStars(document.getElementById('starfield'),110);
+let vpStarsCreated=false;function ensureVpStars(){if(vpStarsCreated)return;createStars(document.getElementById('vp-starfield'),90);vpStarsCreated=true;}
+let newsStarsCreated=false;function ensureNewsStars(){if(newsStarsCreated)return;createStars(document.getElementById('news-starfield'),80);newsStarsCreated=true;}
 
-createStars(document.getElementById('starfield'), 110);
-let vpStarsCreated=false; function ensureVpStars(){if(vpStarsCreated)return;createStars(document.getElementById('vp-starfield'),90);vpStarsCreated=true;}
-let newsStarsCreated=false; function ensureNewsStars(){if(newsStarsCreated)return;createStars(document.getElementById('news-starfield'),80);newsStarsCreated=true;}
-
-/* ── Parallax effect ── */
-(function initParallax() {
-  const factors = [0.004, 0.010, 0.020];
-  let mouseX = 0, mouseY = 0;
-  let scrollY = 0;
-  let rafId = null;
-  let targetMX = 0, targetMY = 0;
-  let currentMX = 0, currentMY = 0;
-
-  document.addEventListener('mousemove', e => {
-    targetMX = (e.clientX / window.innerWidth  - 0.5) * 2;
-    targetMY = (e.clientY / window.innerHeight - 0.5) * 2;
-  });
-
-  window.addEventListener('scroll', () => {
-    scrollY = window.scrollY;
-    scheduleUpdate();
-  }, { passive: true });
-
-  function scheduleUpdate() {
-    if (!rafId) rafId = requestAnimationFrame(update);
-  }
-
-  function update() {
-    rafId = null;
-    currentMX += (targetMX - currentMX) * 0.06;
-    currentMY += (targetMY - currentMY) * 0.06;
-
-    const starfield = document.getElementById('starfield');
-    const stars = starfield.querySelectorAll('.star');
-    stars.forEach(s => {
-      const layer = parseInt(s.dataset.layer) || 0;
-      const f = factors[layer];
-      const baseLeft = parseFloat(s.dataset.baseLeft);
-      const baseTop  = parseFloat(s.dataset.baseTop);
-      const dx = currentMX * f * 100;
-      const dy = currentMY * f * 100;
-      const scrollFactor = [0.003, 0.008, 0.016][layer];
-      const sy = (scrollY * scrollFactor);
-      s.style.transform = `translate(${dx}%, calc(${dy}% - ${sy}px))`;
+/* ── Parallax ── */
+(function(){
+  const factors=[0.004,0.010,0.020];let scrollY=0,rafId=null,tMX=0,tMY=0,cMX=0,cMY=0;
+  document.addEventListener('mousemove',e=>{tMX=(e.clientX/window.innerWidth-0.5)*2;tMY=(e.clientY/window.innerHeight-0.5)*2;});
+  window.addEventListener('scroll',()=>{scrollY=window.scrollY;sch();},{passive:true});
+  function sch(){if(!rafId)rafId=requestAnimationFrame(upd);}
+  function upd(){
+    rafId=null;cMX+=(tMX-cMX)*0.06;cMY+=(tMY-cMY)*0.06;
+    document.getElementById('starfield').querySelectorAll('.star').forEach(s=>{
+      const layer=parseInt(s.dataset.layer)||0,f=factors[layer];
+      const dx=cMX*f*100,dy=cMY*f*100,sy=scrollY*[0.003,0.008,0.016][layer];
+      s.style.transform=`translate(${dx}%,calc(${dy}% - ${sy}px))`;
     });
-
-    if (Math.abs(targetMX - currentMX) > 0.0005 || Math.abs(targetMY - currentMY) > 0.0005) {
-      rafId = requestAnimationFrame(update);
-    }
+    if(Math.abs(tMX-cMX)>0.0005||Math.abs(tMY-cMY)>0.0005)rafId=requestAnimationFrame(upd);
   }
-
-  document.addEventListener('mousemove', scheduleUpdate, { passive: true });
-  window.addEventListener('scroll', scheduleUpdate, { passive: true });
+  document.addEventListener('mousemove',sch,{passive:true});
+  window.addEventListener('scroll',sch,{passive:true});
 })();
 
-/* ══════════════════════════════════════
-   FLYBY SYSTEM — canvas overlay
-══════════════════════════════════════ */
-(function initFlyby() {
-  const canvas = document.getElementById('flyby-canvas');
-  const ctx    = canvas.getContext('2d');
-  let W, H;
-
-  function resize() {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
+/* ── Flyby ── */
+(function(){
+  const canvas=document.getElementById('flyby-canvas'),ctx=canvas.getContext('2d');
+  let W,H;
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  let flyby=null,animFrame=null,lastTime=null;
+  function sched(){setTimeout(spawn,(10+Math.random()*5)*1000);}
+  function spawn(){
+    const r=Math.random(),type=r<0.50?'meteor':r<0.85?'satellite':'starship';
+    const angle=(Math.random()*30-15)*Math.PI/180,sy=H*(0.1+Math.random()*0.55);
+    flyby=build(type,angle,sy);if(!animFrame)animFrame=requestAnimationFrame(loop);sched();
   }
-  resize();
-  window.addEventListener('resize', resize);
-
-  let flyby = null;
-  let animFrame = null;
-
-  function scheduleNext() {
-    const delay = (10 + Math.random() * 5) * 1000;
-    setTimeout(spawnFlyby, delay);
+  function build(type,angle,sy){
+    const b={type,x:-120,y:sy,angle};
+    if(type==='meteor')return{...b,speed:5+Math.random()*4,tailLen:80+Math.random()*60,brightness:0.55+Math.random()*0.35,size:1.2+Math.random()*0.8};
+    if(type==='satellite')return{...b,speed:3+Math.random()*3,brightness:0.30+Math.random()*0.20,size:1.4,tailLen:18};
+    return{...b,speed:3+Math.random()*2,brightness:0.22+Math.random()*0.12,size:3.5,tailLen:28};
   }
-
-  function spawnFlyby() {
-    const r = Math.random();
-    const type = r < 0.50 ? 'meteor' : r < 0.85 ? 'satellite' : 'starship';;
-    const angle = (Math.random() * 30 - 15) * Math.PI / 180;
-    const startY = H * (0.1 + Math.random() * 0.55);
-    flyby = buildFlyby(type, angle, startY);
-    if (!animFrame) animFrame = requestAnimationFrame(drawLoop);
-    scheduleNext();
-  }
-
-  function buildFlyby(type, angle, startY) {
-    const base = { type, x: -120, y: startY, angle, progress: 0 };
-    if (type === 'meteor') {
-      return { ...base, speed: 5 + Math.random() * 4, tailLen: 80 + Math.random() * 60, brightness: 0.55 + Math.random() * 0.35, size: 1.2 + Math.random() * 0.8, duration: 1.4 };
-    } else if (type === 'satellite') {
-      return { ...base, speed: 3 + Math.random() * 3, brightness: 0.30 + Math.random() * 0.20, size: 1.4, tailLen: 18, duration: 6 };
-    } else {
-      return { ...base, speed: 3 + Math.random() * 2, brightness: 0.22 + Math.random() * 0.12, size: 3.5, tailLen: 28, duration: 5, plumeColor: 'rgba(120,180,255,' };
+  function loop(ts){
+    if(!lastTime)lastTime=ts;lastTime=ts;
+    ctx.clearRect(0,0,W,H);
+    if(flyby){
+      flyby.x+=Math.cos(flyby.angle)*flyby.speed;flyby.y+=Math.sin(flyby.angle)*flyby.speed;
+      const prog=flyby.x/(W+200);
+      let alpha;if(prog<0.08)alpha=prog/0.08;else if(prog<0.85)alpha=1;else alpha=Math.max(0,1-(prog-0.85)/0.15);
+      alpha*=flyby.brightness;
+      if(flyby.x>W+150){flyby=null;ctx.clearRect(0,0,W,H);animFrame=null;lastTime=null;return;}
+      if(flyby.type==='meteor')dMeteor(flyby,alpha);
+      else if(flyby.type==='satellite')dSatellite(flyby,alpha);
+      else dStarship(flyby,alpha);
     }
+    if(flyby)animFrame=requestAnimationFrame(loop);else animFrame=null;
   }
-
-  let lastTime = null;
-  function drawLoop(ts) {
-    if (!lastTime) lastTime = ts;
-    const dt = (ts - lastTime) / 1000;
-    lastTime = ts;
-    ctx.clearRect(0, 0, W, H);
-    if (flyby) {
-      const dx = Math.cos(flyby.angle) * flyby.speed;
-      const dy = Math.sin(flyby.angle) * flyby.speed;
-      flyby.x += dx;
-      flyby.y += dy;
-      const prog = flyby.x / (W + 200);
-      let alpha;
-      if (prog < 0.08)       alpha = prog / 0.08;
-      else if (prog < 0.85)  alpha = 1.0;
-      else                   alpha = Math.max(0, 1 - (prog - 0.85) / 0.15);
-      alpha *= flyby.brightness;
-      if (flyby.x > W + 150) { flyby = null; ctx.clearRect(0, 0, W, H); animFrame = null; lastTime = null; return; }
-      if (flyby.type === 'meteor') drawMeteor(flyby, alpha);
-      else if (flyby.type === 'satellite') drawSatellite(flyby, alpha);
-      else drawStarship(flyby, alpha);
-    }
-    if (flyby) animFrame = requestAnimationFrame(drawLoop);
-    else animFrame = null;
+  function dMeteor(f,alpha){
+    const tx=f.x-Math.cos(f.angle)*f.tailLen,ty=f.y-Math.sin(f.angle)*f.tailLen;
+    const g=ctx.createLinearGradient(tx,ty,f.x,f.y);
+    g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(0.6,`rgba(220,235,255,${alpha*0.35})`);g.addColorStop(1,`rgba(255,255,255,${alpha})`);
+    ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(f.x,f.y);ctx.strokeStyle=g;ctx.lineWidth=f.size;ctx.lineCap='round';ctx.stroke();
+    const gw=ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,f.size*4);
+    gw.addColorStop(0,`rgba(255,255,255,${alpha*0.9})`);gw.addColorStop(1,'rgba(200,220,255,0)');
+    ctx.beginPath();ctx.arc(f.x,f.y,f.size*4,0,Math.PI*2);ctx.fillStyle=gw;ctx.fill();
   }
-
-  function drawMeteor(f, alpha) {
-    const tailX = f.x - Math.cos(f.angle) * f.tailLen;
-    const tailY = f.y - Math.sin(f.angle) * f.tailLen;
-    const grad = ctx.createLinearGradient(tailX, tailY, f.x, f.y);
-    grad.addColorStop(0, `rgba(255,255,255,0)`);
-    grad.addColorStop(0.6, `rgba(220,235,255,${alpha * 0.35})`);
-    grad.addColorStop(1, `rgba(255,255,255,${alpha})`);
-    ctx.beginPath(); ctx.moveTo(tailX, tailY); ctx.lineTo(f.x, f.y);
-    ctx.strokeStyle = grad; ctx.lineWidth = f.size; ctx.lineCap = 'round'; ctx.stroke();
-    const glow = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.size * 4);
-    glow.addColorStop(0, `rgba(255,255,255,${alpha * 0.9})`);
-    glow.addColorStop(1, `rgba(200,220,255,0)`);
-    ctx.beginPath(); ctx.arc(f.x, f.y, f.size * 4, 0, Math.PI * 2);
-    ctx.fillStyle = glow; ctx.fill();
+  function dSatellite(f,alpha){
+    const tx=f.x-Math.cos(f.angle)*f.tailLen,ty=f.y-Math.sin(f.angle)*f.tailLen;
+    const g=ctx.createLinearGradient(tx,ty,f.x,f.y);
+    g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(1,`rgba(255,255,255,${alpha*0.28})`);
+    ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(f.x,f.y);ctx.strokeStyle=g;ctx.lineWidth=0.7;ctx.lineCap='round';ctx.stroke();
+    ctx.beginPath();ctx.arc(f.x,f.y,f.size,0,Math.PI*2);ctx.fillStyle=`rgba(220,235,255,${alpha})`;ctx.fill();
+    const blink=0.5+0.5*Math.sin(Date.now()*0.003);
+    if(blink>0.72){const g2=ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,f.size*2.5);g2.addColorStop(0,`rgba(180,210,255,${alpha*0.5})`);g2.addColorStop(1,'rgba(180,210,255,0)');ctx.beginPath();ctx.arc(f.x,f.y,f.size*2.5,0,Math.PI*2);ctx.fillStyle=g2;ctx.fill();}
   }
-
-  function drawSatellite(f, alpha) {
-    const tailX = f.x - Math.cos(f.angle) * f.tailLen;
-    const tailY = f.y - Math.sin(f.angle) * f.tailLen;
-    const grad = ctx.createLinearGradient(tailX, tailY, f.x, f.y);
-    grad.addColorStop(0, `rgba(255,255,255,0)`);
-    grad.addColorStop(1, `rgba(255,255,255,${alpha * 0.28})`);
-    ctx.beginPath(); ctx.moveTo(tailX, tailY); ctx.lineTo(f.x, f.y);
-    ctx.strokeStyle = grad; ctx.lineWidth = 0.7; ctx.lineCap = 'round'; ctx.stroke();
-    ctx.beginPath(); ctx.arc(f.x, f.y, f.size, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(220,235,255,${alpha})`; ctx.fill();
-    const blink = 0.5 + 0.5 * Math.sin(Date.now() * 0.003);
-    if (blink > 0.72) {
-      ctx.beginPath(); ctx.arc(f.x, f.y, f.size * 2.5, 0, Math.PI * 2);
-      const g2 = ctx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.size * 2.5);
-      g2.addColorStop(0, `rgba(180,210,255,${alpha * 0.5})`);
-      g2.addColorStop(1, `rgba(180,210,255,0)`);
-      ctx.fillStyle = g2; ctx.fill();
-    }
-  }
-
-  function drawStarship(f, alpha) {
-    ctx.save(); ctx.translate(f.x, f.y); ctx.rotate(f.angle);
-    const sc = f.size * 0.9;
-    const plumeLen = sc * 9;
-    const plume = ctx.createLinearGradient(-plumeLen, 0, 0, 0);
-    plume.addColorStop(0, `rgba(120,180,255,0)`);
-    plume.addColorStop(0.5, `rgba(160,210,255,${alpha * 0.18})`);
-    plume.addColorStop(1, `rgba(200,225,255,${alpha * 0.32})`);
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-plumeLen, -sc * 0.9); ctx.lineTo(-plumeLen, sc * 0.9); ctx.closePath();
-    ctx.fillStyle = plume; ctx.fill();
-    ctx.fillStyle = `rgba(210,220,235,${alpha})`;
-    ctx.beginPath(); ctx.ellipse(0, 0, sc * 5.5, sc * 0.85, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(sc * 5.5, 0); ctx.lineTo(sc * 3.5, -sc * 0.85); ctx.lineTo(sc * 7.5, 0); ctx.lineTo(sc * 3.5, sc * 0.85); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(-sc * 4.5, 0); ctx.lineTo(-sc * 5.8, -sc * 1.8); ctx.lineTo(-sc * 3.8, -sc * 0.85); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(-sc * 4.5, 0); ctx.lineTo(-sc * 5.8, sc * 1.8); ctx.lineTo(-sc * 3.8, sc * 0.85); ctx.closePath(); ctx.fill();
+  function dStarship(f,alpha){
+    ctx.save();ctx.translate(f.x,f.y);ctx.rotate(f.angle);const sc=f.size*0.9;
+    const p=ctx.createLinearGradient(-sc*9,0,0,0);p.addColorStop(0,'rgba(120,180,255,0)');p.addColorStop(0.5,`rgba(160,210,255,${alpha*0.18})`);p.addColorStop(1,`rgba(200,225,255,${alpha*0.32})`);
+    ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(-sc*9,-sc*0.9);ctx.lineTo(-sc*9,sc*0.9);ctx.closePath();ctx.fillStyle=p;ctx.fill();
+    ctx.fillStyle=`rgba(210,220,235,${alpha})`;
+    ctx.beginPath();ctx.ellipse(0,0,sc*5.5,sc*0.85,0,0,Math.PI*2);ctx.fill();
+    ctx.beginPath();ctx.moveTo(sc*5.5,0);ctx.lineTo(sc*3.5,-sc*0.85);ctx.lineTo(sc*7.5,0);ctx.lineTo(sc*3.5,sc*0.85);ctx.closePath();ctx.fill();
+    ctx.beginPath();ctx.moveTo(-sc*4.5,0);ctx.lineTo(-sc*5.8,-sc*1.8);ctx.lineTo(-sc*3.8,-sc*0.85);ctx.closePath();ctx.fill();
+    ctx.beginPath();ctx.moveTo(-sc*4.5,0);ctx.lineTo(-sc*5.8,sc*1.8);ctx.lineTo(-sc*3.8,sc*0.85);ctx.closePath();ctx.fill();
     ctx.restore();
-    const trailStart = { x: f.x - Math.cos(f.angle) * f.tailLen, y: f.y - Math.sin(f.angle) * f.tailLen };
-    const tg = ctx.createLinearGradient(trailStart.x, trailStart.y, f.x, f.y);
-    tg.addColorStop(0, `rgba(140,190,255,0)`);
-    tg.addColorStop(1, `rgba(140,190,255,${alpha * 0.18})`);
-    ctx.beginPath(); ctx.moveTo(trailStart.x, trailStart.y); ctx.lineTo(f.x, f.y);
-    ctx.strokeStyle = tg; ctx.lineWidth = 1.2; ctx.lineCap = 'round'; ctx.stroke();
+    const ts2={x:f.x-Math.cos(f.angle)*f.tailLen,y:f.y-Math.sin(f.angle)*f.tailLen};
+    const tg=ctx.createLinearGradient(ts2.x,ts2.y,f.x,f.y);tg.addColorStop(0,'rgba(140,190,255,0)');tg.addColorStop(1,`rgba(140,190,255,${alpha*0.18})`);
+    ctx.beginPath();ctx.moveTo(ts2.x,ts2.y);ctx.lineTo(f.x,f.y);ctx.strokeStyle=tg;ctx.lineWidth=1.2;ctx.lineCap='round';ctx.stroke();
   }
-
-  setTimeout(scheduleNext, 4000 + Math.random() * 6000);
+  setTimeout(sched,4000+Math.random()*6000);
 })();
 
-/* ── Reveal & Utilities ── */
-const revealObs = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
-}, { threshold: 0.07 });
-document.querySelectorAll('.reveal').forEach(el => { revealObs.observe(el); });
+/* ── Reveal ── */
+const revealObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07});
+document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+function scrollToSection(id){document.getElementById(id).scrollIntoView({behavior:'smooth'});}
 
-function scrollToSection(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
-
-function statusColor(s) {
-    switch (s) {
-        case 'Planned':      return '#fff';
-        case 'Delayed':      return '#ffcc00';
-        case 'Big Event Plans': return '#ffcc00';
-        case 'Completed':    return '#00cc66';
-        case 'Concept/Plan': return '#00ccff';
-        case 'Canceled':     return '#ff3300';
-        case 'Coming Soon':  return '#d9d9d9';
-        case 'Recorded':     return '#00cc66';
-        default:             return '#ccc';
-    }
+function statusColor(s){
+  switch(s){
+    case 'Planned':return'#fff';case 'Delayed':return'#ffcc00';case 'Big Event Plans':return'#ffcc00';
+    case 'Completed':return'#00cc66';case 'Concept/Plan':return'#00ccff';case 'Canceled':return'#ff3300';
+    case 'Coming Soon':return'#d9d9d9';case 'Recorded':return'#00cc66';default:return'#ccc';
+  }
 }
 
-/* ── Build header ── */
+/* ── Header nav ── */
 const navEl=document.getElementById('header-nav');
-[{label:'Home',section:'hero'},{label:'Vehicles',section:'fleet'},{label:'News',section:'rockets'},{label:'Schedule',section:'schedule'},{label:'Mini-Game',section:'game-section'}].forEach(n=>{
-  const a=document.createElement('a');
-  a.textContent=n.label;
-  a.style.color=navLinkColor;
-  a.onmouseenter=()=>{a.style.color=navLinkHoverColor;};
-  a.onmouseleave=()=>{a.style.color=navLinkColor;};
+[
+  {label:'Home',section:'hero'},
+  {label:'Vehicles',section:'fleet'},
+  {label:'News',section:'rockets'},
+  {label:'Schedule',section:'schedule'},
+].forEach(n=>{
+  const a=document.createElement('a');a.textContent=n.label;a.style.color=navLinkColor;
+  a.onmouseenter=()=>{a.style.color=navLinkHoverColor;};a.onmouseleave=()=>{a.style.color=navLinkColor;};
   a.onclick=()=>{closeVehicle();closeNews();scrollToSection(n.section);};
   navEl.appendChild(a);
 });
+// Mini Games nav button opens the modal
+const mgNav=document.createElement('a');mgNav.textContent='Mini Game';mgNav.style.color=navLinkColor;
+mgNav.onmouseenter=()=>{mgNav.style.color=navLinkHoverColor;};mgNav.onmouseleave=()=>{mgNav.style.color=navLinkColor;};
+mgNav.onclick=()=>{openGameModal();};navEl.appendChild(mgNav);
 
+/* ── Clock ── */
 if(showClock){
   const ls=document.getElementById('header-left-slot');
-  const cs=document.createElement('span'); cs.className='header-clock'; cs.id='header-clock-display';
-  cs.style.fontSize=clockFontSize; cs.style.color=clockColor;
-  const tz=document.createElement('span'); tz.className='header-clock-tz'; tz.textContent='local';
-  tz.style.fontSize='0.68em'; tz.style.color=clockTzColor;
-  ls.appendChild(cs); ls.appendChild(tz);
+  const cs=document.createElement('span');cs.className='header-clock';cs.style.fontSize=clockFontSize;cs.style.color=clockColor;
+  const tz=document.createElement('span');tz.className='header-clock-tz';tz.textContent='local';tz.style.fontSize='0.68em';tz.style.color=clockTzColor;
+  ls.appendChild(cs);ls.appendChild(tz);
   function updateClock(){const n=new Date();cs.textContent=`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')} `;}
-  updateClock(); setInterval(updateClock,1000);
+  updateClock();setInterval(updateClock,1000);
 }
 
+/* ── Social buttons ── */
 const rs=document.getElementById('header-right-slot');
 socialButtons.forEach(btn=>{
-  const a=document.createElement('a');
-  a.className='social-btn'; a.href=btn.url; a.target='_blank'; a.title=btn.label;
-  a.style.fontSize=socialBtnFontSize; a.style.padding=socialBtnPadding; a.style.color=socialBtnColor;
-  if(btn.logoSrc){const img=document.createElement('img');img.src=btn.logoSrc;img.alt=btn.label;img.style.width='16px';img.style.height='16px';a.appendChild(img);}
-  else{a.textContent=btn.label;}
-  rs.appendChild(a);
+  if(!btn.visible)return;
+  const a=document.createElement('a');a.className='social-btn';a.href=btn.url;a.target='_blank';a.title=btn.label;
+  a.innerHTML=btn.svg;rs.appendChild(a);
 });
 
 /* ══════════════════════════════════════
    LAUNCHES DATA
 ══════════════════════════════════════ */
 const launches=[
-  {rocket:'SunPower One SN5 (V2.2)', date:'2026-03-07 14:00',status:'Canceled', nameId:'sunpower',site:'Ali 28R',              type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunPower SN5 (V2.2)',  desc:'New plans required mission cancellation. Booster landing test using precision Suicide Burn.',watchUrl:'',showWatchMin:30},
-  {rocket:'SunPower One SN3 (V2.2)', date:'2026-03-03 17:00',status:'Canceled', nameId:'sunpower',site:'Miami, FL (RSS)',       type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test (OLD)',vehicle:'SunPower SN3 (V2.2)',  desc:'New plans required mission cancellation. Booster landing test using precision Suicide Burn.',watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN2 (V2.2)', date:'2026-03-02 23:00',status:'Canceled', nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunOrbit SN2 (V2.2)',  desc:'New plans required mission cancellation. Booster landing test using precision Suicide Burn.',watchUrl:'',showWatchMin:30},
-  {rocket:'SunPower One SN1 (V2.2)', date:'2026-03-01 14:00',status:'Canceled', nameId:'sunpower',site:'Vandenberg SFB (RSS)', type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunPower SN1 (V2.2)',  desc:'First SN1 booster test. New plans required mission cancellation.',watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN51 (V2.4)',date:'2026-05-01 05:00',status:'Completed', nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'Regular Landing Tests',durationMin:4,target:'Suicide Burn Test',     vehicle:'SunOrbit SN49 (V2.2)',desc:'9th Flight: Booster Separation & Landing Test.',watchUrl:'https://www.youtube.com/@hi9eS',showWatchMin:60},
-  {rocket:'SunOrbit One SN49 (V2.2)',date:'2026-04-16 20:00',status:'Completed', nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunOrbit SN49 (V2.2)',desc:'9th Flight: Booster Separation & Landing Test.',watchUrl:'https://www.youtube.com/@hi9eS',showWatchMin:60},
-  {rocket:'SunOrbit One SN48 (V2.2)',date:'2026-04-13 15:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunOrbit SN48 (V2.2)',desc:'8th Flight: Booster Separation & Landing Test.',watchUrl:'https://www.youtube.com/@hi9eS',showWatchMin:60},
-  {rocket:'SunOrbit One SN10 (V2.2)',date:'2026-04-02 00:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunOrbit SN10 (V2.2)',desc:'7th Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN9 (V2.2)', date:'2026-03-29 07:30',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunOrbit SN9 (V2.2)', desc:'6th Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN8 (V2.2)', date:'2026-03-29 03:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunOrbit SN8 (V2.2)', desc:'5th Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN7 (V2.2)', date:'2026-03-21 16:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunOrbit SN7 (V2.2)', desc:'4th Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN7 (V2.2)', date:'2026-03-19 14:30',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunOrbit SN7 (V2.2)', desc:'3rd Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN6 (V2.2)', date:'2026-03-11 13:45',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunOrbit SN6 (V2.2)', desc:'2nd Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN4 (V2.2)', date:'2026-03-06 11:00',status:'Completed',nameId:'sunorbit',site:'Miami, FL (RSS)',       type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',     vehicle:'SunOrbit SN4 (V2.2)', desc:'1st Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30}
+  {rocket:'SunPower One SN5 (V2.2)', date:'2026-03-07 14:00',status:'Canceled', nameId:'sunpower',site:'Ali 28R',              type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunPower SN5 (V2.2)', desc:'New plans required mission cancellation. Booster landing test using precision Suicide Burn.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunPower One SN3 (V2.2)', date:'2026-03-03 17:00',status:'Canceled', nameId:'sunpower',site:'Miami, FL (RSS)',       type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test (OLD)',vehicle:'SunPower SN3 (V2.2)', desc:'New plans required mission cancellation. Booster landing test using precision Suicide Burn.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN2 (V2.2)', date:'2026-03-02 23:00',status:'Canceled', nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN2 (V2.2)', desc:'New plans required mission cancellation. Booster landing test using precision Suicide Burn.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunPower One SN1 (V2.2)', date:'2026-03-01 14:00',status:'Canceled', nameId:'sunpower',site:'Vandenberg SFB (RSS)', type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunPower SN1 (V2.2)', desc:'First SN1 booster test. New plans required mission cancellation.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN51 (V2.4)',date:'2026-05-01 05:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',  type:'Regular Landing Tests',durationMin:4,target:'Suicide Burn Test',      vehicle:'SunOrbit SN49 (V2.2)',desc:'9th Flight: Booster Separation & Landing Test.',watchUrl:'https://www.youtube.com/@hi9eS',showWatchMin:60},
+  {rocket:'SunOrbit One SN49 (V2.2)',date:'2026-04-16 20:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',  type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN49 (V2.2)',desc:'9th Flight: Booster Separation & Landing Test.',watchUrl:'https://www.youtube.com/@hi9eS',showWatchMin:60},
+  {rocket:'SunOrbit One SN48 (V2.2)',date:'2026-04-13 15:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',  type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN48 (V2.2)',desc:'8th Flight: Booster Separation & Landing Test.',watchUrl:'https://www.youtube.com/@hi9eS',showWatchMin:60},
+  {rocket:'SunOrbit One SN10 (V2.2)',date:'2026-04-02 00:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',  type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN10 (V2.2)',desc:'7th Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN9 (V2.2)', date:'2026-03-29 07:30',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',  type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN9 (V2.2)', desc:'6th Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN8 (V2.2)', date:'2026-03-29 03:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',  type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN8 (V2.2)', desc:'5th Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN7 (V2.2)', date:'2026-03-21 16:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',  type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN7 (V2.2)', desc:'4th Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN7 (V2.2)', date:'2026-03-19 14:30',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',  type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN7 (V2.2)', desc:'3rd Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN6 (V2.2)', date:'2026-03-11 13:45',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',  type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN6 (V2.2)', desc:'2nd Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN4 (V2.2)', date:'2026-03-06 11:00',status:'Completed',nameId:'sunorbit',site:'Miami, FL (RSS)',        type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN4 (V2.2)', desc:'1st Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30}
 ];
-
 launches.forEach(l=>{
   const[d,t]=l.date.split(' ');const[year,month,day]=d.split('-').map(Number);const[hour,minute]=t.split(':').map(Number);
   l.dateObj=new Date(Date.UTC(year,month-1,day,hour-5,minute));
   l.endObj=new Date(l.dateObj.getTime()+l.durationMin*60*1000);
 });
-
 function launchCountFor(nameId){return launches.filter(l=>l.nameId===nameId&&l.status==='Completed').length;}
 
-/* Days since last launch */
-(function initDaysSince(){
-  const completed=launches.filter(l=>l.status==='Completed'); if(!completed.length)return;
+(function(){
+  const completed=launches.filter(l=>l.status==='Completed');if(!completed.length)return;
   const latest=completed.reduce((a,b)=>a.dateObj>b.dateObj?a:b);
-  const now=new Date();
-  const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
   const launchLocal=new Date(latest.dateObj.toLocaleDateString('en-CA'));
   const diffDays=Math.max(0,Math.floor((today-launchLocal)/86400000));
-  const wrap=document.getElementById('days-since-wrap');
-  const text=document.getElementById('days-since-text');
-  text.textContent=diffDays<1?'<1 day since last launch':`${diffDays} day${diffDays!==1?'s':''} since last launch`;
-  wrap.style.display='block';
+  document.getElementById('days-since-text').textContent=diffDays<1?'<1 day since last launch':`${diffDays} day${diffDays!==1?'s':''} since last launch`;
+  document.getElementById('days-since-wrap').style.display='block';
 })();
 
 /* ══════════════════════════════════════
-   VEHICLES — redesigned cards
+   VEHICLES
 ══════════════════════════════════════ */
-const vehicles = [
-    {
-        id: 'sunorbit',
-        name: 'SunOrbit',
-        class: 'Interplanetary Vehicle',
-        color: '#00aaff',
-        image: '991ef2dcfcd94c0f95050b657d1c6134.png',
-        description: "SunOrbit is InSpace's primary interplanetary vehicle, built in modular stages.<br>It is equally capable of crewed and uncrewed missions to Low Earth Orbit and to other planets. For Earth orbit, the third stage can function as a crewed mini-station or as an uncrewed satellite that separates directly in orbit. For missions to other planets, the third stage can serve as the main crew habitat and command module with life support systems, or operate fully autonomously without pilots - including orbital insertion around other planets.<br>The first and second stages are reusable and designed for precise suicide burn landings on Earth and other planetary bodies. The vehicle features advanced docking capabilities and high-bandwidth communication relay systems.",
-        specs: [
-            { val: '205m', lbl: 'Height' },
-            { val: '3370 t', lbl: 'Mass' },
-            { val: '79.1 km/s', lbl: 'Delta-V' },
-            { val: '14.64×', lbl: 'TWR' },
-            { val: 'Feb 2026', lbl: 'First Flight' }
-        ],
-        stages: [
-            {
-                title: 'Stage 1 — Booster',
-                rows: [
-                    { key: 'Engines', val: '42' },
-                    { key: 'Thrust (SL)', val: '484,000 kN' },
-                    { key: 'Burn time', val: '33.8 min' },
-                    { key: 'Propellant', val: '2,560 t' },
-                    { key: 'Recovery', val: 'Vertical landing' },
-                    { key: 'Reusable', val: 'Yes' }
-                ]
-            },
-            {
-                title: 'Stage 2 — Upper',
-                rows: [
-                    { key: 'Engines', val: '90' },
-                    { key: 'Thrust (vac)', val: '120,000 kN' },
-                    { key: 'Burn time', val: '1.6 min' },
-                    { key: 'Propellant', val: '2,330 t' },
-                    { key: 'Recovery', val: 'Vertical landing' },
-                    { key: 'Reusable', val: 'Yes' }
-                ]
-            }
-        ]
-    },
-    {
-        id: 'sunpower',
-        name: 'SunPower',
-        class: 'Earth Orbit',
-        color: '#ffaa00',
-        image: null,
-        description: "SunPower is InSpace's heavy-lift workhorse, designed specifically for Low Earth Orbit missions.<br>It evolved from a rapid prototype through multiple generations into a reliable high-performance launcher, optimized for delivering large payloads, solar arrays, and orbital stations. The name SunPower was coined on the fly by Haisess during the very first test campaign.<br>Although public records show 0 launches, more than 20 SunPower vehicles have already been built and successfully flown in classified InSpace test and operational missions.",
-        specs: [
-            { val: '—', lbl: 'Height' },
-            { val: '—', lbl: 'Mass' },
-            { val: '—', lbl: 'Delta-V' },
-            { val: '—', lbl: 'TWR' },
-            { val: 'Feb 2026', lbl: 'First Flight' }
-        ],
-        stages: [
-            {
-                title: 'Stage 1 — Booster',
-                rows: [
-                    { key: 'Engines', val: '—' },
-                    { key: 'Thrust (SL)', val: '—' },
-                    { key: 'Burn time', val: '—' },
-                    { key: 'Propellant', val: '—' },
-                    { key: 'Recovery', val: 'Vertical landing' },
-                    { key: 'Reusable', val: 'Yes' }
-                ]
-            },
-            {
-                title: 'Stage 2 — Upper',
-                rows: [
-                    { key: 'Engines', val: '—' },
-                    { key: 'Thrust (vac)', val: '—' },
-                    { key: 'Burn time', val: '—' },
-                    { key: 'Propellant', val: '—' },
-                    { key: 'Recovery', val: '—' },
-                    { key: 'Reusable', val: '—' }
-                ]
-            }
-        ]
-    },
-    {
-        id: 'planetsrockets',
-        name: 'PlanetsRockets',
-        class: 'COMING SOON',
-        color: '#cc66ff',
-        image: null,
-        description: "PlanetsRockets is InSpace's next-generation interplanetary vehicle, currently in the early concept and planning phase.<br>All detailed information about its design, capabilities, and specific mission targets remains confidential at this stage.<br>It is being developed as part of InSpace's long-term ambitions for deep-space exploration.",
-        specs: [
-            { val: '—', lbl: 'Height' },
-            { val: '—', lbl: 'Mass' },
-            { val: '—', lbl: 'Delta-V' },
-            { val: '—', lbl: 'TWR' },
-            { val: 'Apr 2026', lbl: 'First Flight' }
-        ],
-        stages: [
-            {
-                title: 'Stage 1 — Booster',
-                rows: [
-                    { key: 'Engines', val: '—' },
-                    { key: 'Thrust (SL)', val: '—' },
-                    { key: 'Burn time', val: '—' },
-                    { key: 'Propellant', val: '—' },
-                    { key: 'Recovery', val: 'TBD' },
-                    { key: 'Reusable', val: 'TBD' }
-                ]
-            },
-            {
-                title: 'Stage 2 — Upper',
-                rows: [
-                    { key: 'Engines', val: '—' },
-                    { key: 'Thrust (vac)', val: '—' },
-                    { key: 'Burn time', val: '—' },
-                    { key: 'Propellant', val: '—' },
-                    { key: 'Recovery', val: '—' },
-                    { key: 'Reusable', val: '—' }
-                ]
-            }
-        ]
-    }
+const vehicles=[
+  {id:'sunorbit',name:'SunOrbit',class:'Interplanetary Vehicle',color:'#00aaff',image:'991ef2dcfcd94c0f95050b657d1c6134.png',
+   description:"SunOrbit is InSpace's primary interplanetary vehicle, built in modular stages.<br>It is equally capable of crewed and uncrewed missions to Low Earth Orbit and to other planets. For Earth orbit, the third stage can function as a crewed mini-station or as an uncrewed satellite that separates directly in orbit. For missions to other planets, the third stage can serve as the main crew habitat and command module with life support systems, or operate fully autonomously without pilots - including orbital insertion around other planets.<br>The first and second stages are reusable and designed for precise suicide burn landings on Earth and other planetary bodies. The vehicle features advanced docking capabilities and high-bandwidth communication relay systems.",
+   specs:[{val:'205m',lbl:'Height'},{val:'3370 t',lbl:'Mass'},{val:'79.1 km/s',lbl:'Delta-V'},{val:'14.64×',lbl:'TWR'},{val:'Feb 2026',lbl:'First Flight'}],
+   stages:[{title:'Stage 1 — Booster',rows:[{key:'Engines',val:'42'},{key:'Thrust (SL)',val:'484,000 kN'},{key:'Burn time',val:'33.8 min'},{key:'Propellant',val:'2,560 t'},{key:'Recovery',val:'Vertical landing'},{key:'Reusable',val:'Yes'}]},{title:'Stage 2 — Upper',rows:[{key:'Engines',val:'90'},{key:'Thrust (vac)',val:'120,000 kN'},{key:'Burn time',val:'1.6 min'},{key:'Propellant',val:'2,330 t'},{key:'Recovery',val:'Vertical landing'},{key:'Reusable',val:'Yes'}]}]},
+  {id:'sunpower',name:'SunPower',class:'Earth Orbit',color:'#ffaa00',image:null,
+   description:"SunPower is InSpace's heavy-lift workhorse, designed specifically for Low Earth Orbit missions.<br>It evolved from a rapid prototype through multiple generations into a reliable high-performance launcher, optimized for delivering large payloads, solar arrays, and orbital stations. The name SunPower was coined on the fly by Haisess during the very first test campaign.<br>Although public records show 0 launches, more than 20 SunPower vehicles have already been built and successfully flown in classified InSpace test and operational missions.",
+   specs:[{val:'—',lbl:'Height'},{val:'—',lbl:'Mass'},{val:'—',lbl:'Delta-V'},{val:'—',lbl:'TWR'},{val:'Feb 2026',lbl:'First Flight'}],
+   stages:[{title:'Stage 1 — Booster',rows:[{key:'Engines',val:'—'},{key:'Thrust (SL)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'Vertical landing'},{key:'Reusable',val:'Yes'}]},{title:'Stage 2 — Upper',rows:[{key:'Engines',val:'—'},{key:'Thrust (vac)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'—'},{key:'Reusable',val:'—'}]}]},
+  {id:'planetsrockets',name:'PlanetsRockets',class:'COMING SOON',color:'#cc66ff',image:null,
+   description:"PlanetsRockets is InSpace's next-generation interplanetary vehicle, currently in the early concept and planning phase.<br>All detailed information about its design, capabilities, and specific mission targets remains confidential at this stage.<br>It is being developed as part of InSpace's long-term ambitions for deep-space exploration.",
+   specs:[{val:'—',lbl:'Height'},{val:'—',lbl:'Mass'},{val:'—',lbl:'Delta-V'},{val:'—',lbl:'TWR'},{val:'Apr 2026',lbl:'First Flight'}],
+   stages:[{title:'Stage 1 — Booster',rows:[{key:'Engines',val:'—'},{key:'Thrust (SL)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'TBD'},{key:'Reusable',val:'TBD'}]},{title:'Stage 2 — Upper',rows:[{key:'Engines',val:'—'},{key:'Thrust (vac)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'—'},{key:'Reusable',val:'—'}]}]}
 ];
 
-/* Build vehicle cards — new design */
 const vcContainer=document.getElementById('vehicle-cards');
 vehicles.forEach(v=>{
   const count=launchCountFor(v.id);
-  const launchVal=count>0?String(count)+'×':'—';
-
-  /* spec grid cells: 6 items, 2 columns = 3 rows */
   const hSpec=v.specs.find(s=>s.lbl==='Height');
   const mSpec=v.specs.find(s=>s.lbl==='Mass');
-  const dvSpec=v.specs.find(s=>s.lbl==='Delta-V');
-  const twrSpec=v.specs.find(s=>s.lbl==='TWR');
-  const ffSpec=v.specs.find(s=>s.lbl==='First Flight');
-
-  const specCells=[
-    {lbl:'Height', val:hSpec?.val??'—'},
-    {lbl:'Mass',   val:mSpec?.val??'—'},
-    {lbl:'Delta-V',val:dvSpec?.val??'—'},
-    {lbl:'TWR',    val:twrSpec?.val??'—'},
-    {lbl:'First Flight', val:ffSpec?.val??'—'},
-    {lbl:'Launches', val:launchVal},
+  const cells=[
+    {lbl:'Height',  val:hSpec?.val??'—'},
+    {lbl:'Mass',    val:mSpec?.val??'—'},
+    {lbl:'Launches',val:count>0?count+'×':'—'},
   ];
-
-  const specHTML=specCells.map(c=>`
-    <div class="vc-spec-cell">
-      <div class="vc-spec-lbl">${c.lbl}</div>
-      <div class="vc-spec-val">${c.val}</div>
-    </div>`).join('');
-
-  const card=document.createElement('div');
-  card.className='vehicle-card';
-  card.style.setProperty('--vc',v.color);
+  const specHTML=cells.map(c=>`<div class="vc-sc"><div class="vc-sl">${c.lbl}</div><div class="vc-sv">${c.val}</div></div>`).join('');
+  const card=document.createElement('div');card.className='vehicle-card';card.style.setProperty('--vc',v.color);
   card.innerHTML=`
-    <div class="vc-color-bar" style="height:3px;background:${v.color};"></div>
+    <div class="vc-bar" style="background:${v.color};"></div>
     <div class="vc-head">
       <div class="vc-head-left">
         <div class="vc-dot"></div>
         <div class="vc-name">${v.name}</div>
         <div class="vc-sub">${v.class}</div>
       </div>
-      <div class="vc-launch-badge">${count>0?count+' flight'+(count!==1?'s':''):'No flights'}</div>
+      <div class="vc-count">${count>0?count+' flight'+(count!==1?'s':''):'No flights'}</div>
     </div>
-    <div class="vc-spec-grid">${specHTML}</div>
-    <div class="vc-footer">
-      <span class="vc-footer-text">Full Details</span>
-      <span class="vc-footer-arrow">&#8599;</span>
+    <div class="vc-specs">${specHTML}</div>
+    <div class="vc-foot">
+      <span class="vc-foot-txt">Full Details</span>
+      <span class="vc-foot-arr">&#8599;</span>
     </div>`;
   card.addEventListener('click',()=>{playSound('details');openVehicle(v.id);});
   vcContainer.appendChild(card);
 });
 
 function openVehicle(id){
-  const v=vehicles.find(x=>x.id===id); if(!v)return;
-  ensureVpStars(); playSound('modal');
+  const v=vehicles.find(x=>x.id===id);if(!v)return;
+  ensureVpStars();playSound('modal');
   document.getElementById('vp-header-title').textContent=v.name;
-  const imgHTML=v.image?`<img src="${v.image}" alt="${v.name}">`:`<div class="vp-img-placeholder">No data. Image coming soon</div>`;
+  const imgHTML=v.image?`<img src="${v.image}" alt="${v.name}">`:`<div class="vp-img-ph">No data. Image coming soon</div>`;
   const specsHTML=v.specs.map(s=>`<div class="vp-spec"><div class="vp-spec-lbl">${s.lbl}</div><div class="vp-spec-val">${s.val}</div></div>`).join('');
   const stagesHTML=v.stages.map(st=>{const cells=st.rows.map(r=>`<div class="vp-stage-cell"><div class="vp-stage-key">${r.key}</div><div class="vp-stage-val">${r.val}</div></div>`).join('');return`<div class="vp-stage"><div class="vp-stage-title">${st.title}</div><div class="vp-stage-rows">${cells}</div></div>`;}).join('');
   document.getElementById('vp-body').innerHTML=`
     <div class="vp-hero-name" style="color:${v.color}">${v.name}</div>
     <div class="vp-hero-class">${v.class}</div>
     <div class="vp-img-wrap">${imgHTML}</div>
-    <div class="vp-section-title">Specifications</div><div class="vp-specs-grid">${specsHTML}</div>
-    <div class="vp-section-title">Stages</div><div class="vp-stages">${stagesHTML}</div>
-    <div class="vp-section-title">Overview</div><div class="vp-desc">${v.description}</div>`;
+    <div class="vp-sec-title">Specifications</div><div class="vp-specs-grid">${specsHTML}</div>
+    <div class="vp-sec-title">Stages</div><div class="vp-stages">${stagesHTML}</div>
+    <div class="vp-sec-title">Overview</div><div class="vp-desc">${v.description}</div>`;
   const overlay=document.getElementById('vehicle-overlay');
-  overlay.classList.add('active'); requestAnimationFrame(()=>{requestAnimationFrame(()=>overlay.classList.add('visible'));});
-  overlay.scrollTop=0; document.body.style.overflow='hidden';
+  overlay.classList.add('active');requestAnimationFrame(()=>{requestAnimationFrame(()=>overlay.classList.add('visible'));});
+  overlay.scrollTop=0;document.body.style.overflow='hidden';
 }
 function closeVehicle(){
-  const overlay=document.getElementById('vehicle-overlay');
-  overlay.classList.remove('visible');
+  const overlay=document.getElementById('vehicle-overlay');overlay.classList.remove('visible');
   setTimeout(()=>{overlay.classList.remove('active');document.body.style.overflow='';},350);
 }
 
 /* ══════════════════════════════════════
-   MISSION STATS SECTION
+   MISSION STATS
 ══════════════════════════════════════ */
-(function buildStats(){
-  const totalFlights   = launches.filter(l=>l.status==='Completed').length;
-  const totalCanceled  = launches.filter(l=>l.status==='Canceled').length;
-  const uniqueVehicles = [...new Set(launches.map(l=>l.nameId))].length;
-
-  /* Streak: consecutive completed from most recent */
-  const sorted=[...launches].sort((a,b)=>b.dateObj-a.dateObj);
-  let streak=0;
-  for(const l of sorted){if(l.status==='Completed')streak++;else break;}
-
-  /* Days since programme start */
+(function(){
+  const totalFlights  =launches.filter(l=>l.status==='Completed').length;
+  const uniqueVehicles=[...new Set(launches.map(l=>l.nameId))].length;
+  const cutoff=Date.now()-365*24*60*60*1000;
+  const last365=launches.filter(l=>l.status==='Completed'&&l.dateObj.getTime()>=cutoff).length;
   const earliest=launches.reduce((a,b)=>a.dateObj<b.dateObj?a:b);
   const daysActive=Math.floor((Date.now()-earliest.dateObj.getTime())/86400000);
-
   const cells=[
-    {num:totalFlights,  unit:'',         label:'Completed Flights',   accent:'',         accentColor:'#00cc66'},
-    {num:streak,        unit:'',         label:'Current Streak',      accent:'in a row', accentColor:'#00aaff'},
-    {num:uniqueVehicles,unit:'',         label:'Active Vehicles',     accent:'',         accentColor:'#cc66ff'},
-    {num:daysActive,    unit:'',         label:'Days Since First Launch', accent:'programme active', accentColor:'#ffaa00'},
+    {num:totalFlights,   label:'Completed Flights'},
+    {num:last365,        label:'Launches in Last 365 Days'},
+    {num:uniqueVehicles, label:'Active Vehicles'},
+    {num:daysActive,     label:'Days Since First Launch'},
   ];
-
   const grid=document.getElementById('stats-grid');
   cells.forEach(c=>{
-    const el=document.createElement('div'); el.className='stat-cell';
-    el.innerHTML=`
-      <div class="stat-num">${c.num}<span>${c.unit}</span></div>
-      <div class="stat-label">${c.label}</div>
-      ${c.accent?`<div class="stat-accent" style="color:${c.accentColor};opacity:0.7;">${c.accent}</div>`:''}
-    `;
+    const el=document.createElement('div');el.className='stat-cell';
+    el.innerHTML=`<div class="stat-num">${c.num}</div><div class="stat-label">${c.label}</div>`;
     grid.appendChild(el);
   });
 })();
@@ -1227,11 +884,11 @@ const allRockets=[
   {name:'Trial Mission to the Moon',description:'The team is preparing for a trial run of the upcoming lunar mission.',detail:'Initial trajectory calculations and propellant budgets have been finalised. The trial will validate trans-lunar injection burn performance before a crewed attempt. Ground teams have completed two full dress rehearsals.',date:'February 27, 2026'},
   {name:'Cancelling Missions',description:'Resumption is coming soon. We are currently preparing for two targets: Mars and the Moon.',detail:'Several scheduled test flights were cancelled to consolidate resources around the dual Mars and Moon programme. A revised launch manifest is expected shortly.',date:'March 03, 2026'},
 ];
-const NEWS_PER_PAGE=3; let newsShown=0;
+const NEWS_PER_PAGE=3;let newsShown=0;
 function renderNews(){
-  const grid=document.getElementById('rocket-cards'); const btn=document.getElementById('load-more-btn');
+  const grid=document.getElementById('rocket-cards'),btn=document.getElementById('load-more-btn');
   allRockets.slice(newsShown,newsShown+NEWS_PER_PAGE).forEach((r,li)=>{
-    const gi=newsShown+li; const card=document.createElement('div'); card.className='rocket'; card.style.animationDelay=(li*0.08)+'s';
+    const gi=newsShown+li;const card=document.createElement('div');card.className='rocket';card.style.animationDelay=(li*0.08)+'s';
     card.innerHTML=`<div class="rocket-top-bar"></div><div class="rocket-body"><h3>${r.name}</h3><p class="rocket-desc">${r.description}</p></div><div class="rocket-footer"><span class="rocket-date">${r.date}</span><button class="rocket-details-btn" onclick="openNews(${gi})">Details <span class="rd-arrow">&#8599;</span></button></div>`;
     grid.appendChild(card);
   });
@@ -1242,565 +899,267 @@ function loadMore(){renderNews();}
 renderNews();
 
 function openNews(idx){
-  const r=allRockets[idx]; ensureNewsStars(); playSound('news');
+  const r=allRockets[idx];ensureNewsStars();playSound('news');
   document.getElementById('np-header-title').textContent=r.name;
   document.getElementById('np-body').innerHTML=`<div class="np-date-tag">${r.date}</div><div class="np-title">${r.name}</div><div class="np-divider"></div><div class="np-text">${r.detail}</div>`;
-  const overlay=document.getElementById('news-overlay'); overlay.classList.add('active');
+  const overlay=document.getElementById('news-overlay');overlay.classList.add('active');
   requestAnimationFrame(()=>{requestAnimationFrame(()=>overlay.classList.add('visible'));});
-  overlay.scrollTop=0; document.body.style.overflow='hidden';
+  overlay.scrollTop=0;document.body.style.overflow='hidden';
 }
 function closeNews(){
-  const overlay=document.getElementById('news-overlay'); overlay.classList.remove('visible');
+  const overlay=document.getElementById('news-overlay');overlay.classList.remove('visible');
   setTimeout(()=>{overlay.classList.remove('active');document.body.style.overflow='';},350);
 }
 
-/* ══════════════════════════════════════
-   COUNTDOWN TIMER — build DOM
-══════════════════════════════════════ */
-(function buildTimer(){
+/* ── Countdown DOM ── */
+(function(){
   const timerEl=document.getElementById('countdown-timer');
-  const dUnit=document.createElement('div'); dUnit.className='cd-unit'; dUnit.id='cd-days-unit';
-  dUnit.innerHTML='<div class="cd-num" id="cd-d">00</div><div class="cd-lbl">Days</div>';
-  timerEl.appendChild(dUnit);
-  const sep=document.createElement('div'); sep.id='cd-days-sep';
+  const dU=document.createElement('div');dU.className='cd-unit';dU.id='cd-days-unit';
+  dU.innerHTML='<div class="cd-num" id="cd-d">00</div><div class="cd-lbl">Days</div>';timerEl.appendChild(dU);
+  const sep=document.createElement('div');sep.id='cd-days-sep';
   if(daysSeparatorMode==='colon'){sep.className='cd-sep-colon';sep.textContent=':';}else{sep.className='cd-sep-thin';}
   timerEl.appendChild(sep);
-  const hUnit=document.createElement('div'); hUnit.className='cd-unit';
-  hUnit.innerHTML='<div class="cd-num" id="cd-h">00</div><div class="cd-lbl">Hours</div>';
-  timerEl.appendChild(hUnit);
-  const s1=document.createElement('div'); s1.className='cd-sep'; s1.textContent=':'; timerEl.appendChild(s1);
-  const mUnit=document.createElement('div'); mUnit.className='cd-unit';
-  mUnit.innerHTML='<div class="cd-num" id="cd-m">00</div><div class="cd-lbl">Min</div>';
-  timerEl.appendChild(mUnit);
-  const s2=document.createElement('div'); s2.className='cd-sep'; s2.textContent=':'; timerEl.appendChild(s2);
-  const sUnit=document.createElement('div'); sUnit.className='cd-unit';
-  sUnit.innerHTML='<div class="cd-num" id="cd-s">00</div><div class="cd-lbl">Sec</div>';
-  timerEl.appendChild(sUnit);
+  const hU=document.createElement('div');hU.className='cd-unit';hU.innerHTML='<div class="cd-num" id="cd-h">00</div><div class="cd-lbl">Hours</div>';timerEl.appendChild(hU);
+  const s1=document.createElement('div');s1.className='cd-sep';s1.textContent=':';timerEl.appendChild(s1);
+  const mU=document.createElement('div');mU.className='cd-unit';mU.innerHTML='<div class="cd-num" id="cd-m">00</div><div class="cd-lbl">Min</div>';timerEl.appendChild(mU);
+  const s2=document.createElement('div');s2.className='cd-sep';s2.textContent=':';timerEl.appendChild(s2);
+  const sU=document.createElement('div');sU.className='cd-unit';sU.innerHTML='<div class="cd-num" id="cd-s">00</div><div class="cd-lbl">Sec</div>';timerEl.appendChild(sU);
 })();
 
-/* ══════════════════════════════════════
-   COUNTDOWN LOGIC
-══════════════════════════════════════ */
-(function initCountdown(){
-  let currentTarget=null;
-  const wrapEl=document.getElementById('countdown-wrap');
-  const labelEl=document.getElementById('countdown-label');
-  const missionEl=document.getElementById('countdown-mission');
-  const dEl=document.getElementById('cd-d');
-  const hEl=document.getElementById('cd-h');
-  const mEl=document.getElementById('cd-m');
-  const sEl=document.getElementById('cd-s');
-  const dUnit=document.getElementById('cd-days-unit');
-  const sepEl=document.getElementById('cd-days-sep');
-  const rowWatchLinks={};
-
+(function(){
+  let cur=null;
+  const wEl=document.getElementById('countdown-wrap'),lEl=document.getElementById('countdown-label'),mEl=document.getElementById('countdown-mission');
+  const dEl=document.getElementById('cd-d'),hEl=document.getElementById('cd-h'),mEl2=document.getElementById('cd-m'),sEl=document.getElementById('cd-s');
+  const dU=document.getElementById('cd-days-unit'),sepEl=document.getElementById('cd-days-sep');
+  const rwl={};
   function pad(n){return String(Math.max(0,n)).padStart(2,'0');}
-  function showDays(show){dUnit.style.display=show?'':'none';sepEl.style.display=show?'':'none';}
+  function showDays(v){dU.style.display=v?'':'none';sepEl.style.display=v?'':'none';}
   function findNext(){const now=Date.now();return launches.filter(l=>l.status==='Planned'&&l.endObj.getTime()>now).sort((a,b)=>a.dateObj-b.dateObj)[0]||null;}
-
   function tick(){
     const now=Date.now();
-    if(!currentTarget){currentTarget=findNext();if(!currentTarget){wrapEl.style.display='none';return;}}
-    const msL=currentTarget.dateObj.getTime()-now;
-    const msE=currentTarget.endObj.getTime()-now;
-    if(msE<=0){hideRW(currentTarget);currentTarget=null;currentTarget=findNext();if(!currentTarget){wrapEl.style.display='none';return;}missionEl.textContent=currentTarget.rocket;}
-    wrapEl.style.display='block'; missionEl.textContent=currentTarget.rocket;
+    if(!cur){cur=findNext();if(!cur){wEl.style.display='none';return;}}
+    const msL=cur.dateObj.getTime()-now,msE=cur.endObj.getTime()-now;
+    if(msE<=0){hideRW(cur);cur=null;cur=findNext();if(!cur){wEl.style.display='none';return;}mEl.textContent=cur.rocket;}
+    wEl.style.display='block';mEl.textContent=cur.rocket;
     if(msL<=0&&msE>0){
-      labelEl.textContent='Mission in progress';
-      const el=Math.floor((now-currentTarget.dateObj.getTime())/1000);
-      showDays(false); hEl.textContent=pad(Math.floor(el/3600)); mEl.textContent=pad(Math.floor((el%3600)/60)); sEl.textContent=pad(el%60);
-      showRW(currentTarget); return;
+      lEl.textContent='Mission in progress';
+      const el=Math.floor((now-cur.dateObj.getTime())/1000);
+      showDays(false);hEl.textContent=pad(Math.floor(el/3600));mEl2.textContent=pad(Math.floor((el%3600)/60));sEl.textContent=pad(el%60);
+      showRW(cur);return;
     }
-    labelEl.textContent='Next launch in';
+    lEl.textContent='Next launch in';
     const ts=Math.floor(msL/1000);
     showDays(Math.floor(ts/86400)>0);
-    dEl.textContent=pad(Math.floor(ts/86400)); hEl.textContent=pad(Math.floor((ts%86400)/3600));
-    mEl.textContent=pad(Math.floor((ts%3600)/60)); sEl.textContent=pad(ts%60);
+    dEl.textContent=pad(Math.floor(ts/86400));hEl.textContent=pad(Math.floor((ts%86400)/3600));
+    mEl2.textContent=pad(Math.floor((ts%3600)/60));sEl.textContent=pad(ts%60);
     if(ts<=10&&ts>=0)playSound('final10');
-    if(currentTarget.watchUrl&&ts<=currentTarget.showWatchMin*60){showRW(currentTarget);}else{hideRW(currentTarget);}
+    if(cur.watchUrl&&ts<=cur.showWatchMin*60){showRW(cur);}else{hideRW(cur);}
   }
-
-  window.registerRowWatch=function(idx,el){rowWatchLinks[idx]=el;};
-  function showRW(l){const i=launches.indexOf(l);if(rowWatchLinks[i])rowWatchLinks[i].classList.add('visible');}
-  function hideRW(l){if(!l)return;const i=launches.indexOf(l);if(rowWatchLinks[i])rowWatchLinks[i].classList.remove('visible');}
-
-  currentTarget=findNext();
-  if(currentTarget){wrapEl.style.display='block';missionEl.textContent=currentTarget.rocket;}
-  tick(); setInterval(tick,1000);
+  window.registerRowWatch=function(idx,el){rwl[idx]=el;};
+  function showRW(l){const i=launches.indexOf(l);if(rwl[i])rwl[i].classList.add('visible');}
+  function hideRW(l){if(!l)return;const i=launches.indexOf(l);if(rwl[i])rwl[i].classList.remove('visible');}
+  cur=findNext();if(cur){wEl.style.display='block';mEl.textContent=cur.rocket;}
+  tick();setInterval(tick,1000);
 })();
 
-/* ══════════════════════════════════════
-   LAUNCH MODAL
-══════════════════════════════════════ */
+/* ── Launch modal ── */
 function openLaunchModal(idx){
-  const l=launches[idx]; const color=statusColor(l.status); playSound('modal');
+  const l=launches[idx],color=statusColor(l.status);playSound('modal');
   document.getElementById('lm-color-bar').style.background=color;
   document.getElementById('lm-dot').style.cssText=`width:8px;height:8px;border-radius:50%;background:${color};opacity:0.75;box-shadow:0 0 8px ${color}`;
-  document.getElementById('lm-status-text').style.color=color;
-  document.getElementById('lm-status-text').textContent=l.status;
-  document.getElementById('lm-name').textContent=l.rocket;
-  document.getElementById('lm-type').textContent=l.type;
+  document.getElementById('lm-status-text').style.color=color;document.getElementById('lm-status-text').textContent=l.status;
+  document.getElementById('lm-name').textContent=l.rocket;document.getElementById('lm-type').textContent=l.type;
   const ds=l.dateObj.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
   const ts=l.dateObj.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false})+' local';
-  document.getElementById('lm-grid').innerHTML=`
-    <div class="lm-cell"><div class="lm-cell-lbl">Vehicle</div><div class="lm-cell-val">${l.vehicle}</div></div>
-    <div class="lm-cell"><div class="lm-cell-lbl">Launch Site</div><div class="lm-cell-val">${l.site}</div></div>
-    <div class="lm-cell"><div class="lm-cell-lbl">Date</div><div class="lm-cell-val">${ds}</div></div>
-    <div class="lm-cell"><div class="lm-cell-lbl">Time</div><div class="lm-cell-val">${ts}</div></div>
-    <div class="lm-cell"><div class="lm-cell-lbl">Target</div><div class="lm-cell-val">${l.target}</div></div>
-    <div class="lm-cell"><div class="lm-cell-lbl">Duration</div><div class="lm-cell-val">~${l.durationMin} min</div></div>`;
+  document.getElementById('lm-grid').innerHTML=`<div class="lm-cell"><div class="lm-cell-lbl">Vehicle</div><div class="lm-cell-val">${l.vehicle}</div></div><div class="lm-cell"><div class="lm-cell-lbl">Launch Site</div><div class="lm-cell-val">${l.site}</div></div><div class="lm-cell"><div class="lm-cell-lbl">Date</div><div class="lm-cell-val">${ds}</div></div><div class="lm-cell"><div class="lm-cell-lbl">Time</div><div class="lm-cell-val">${ts}</div></div><div class="lm-cell"><div class="lm-cell-lbl">Target</div><div class="lm-cell-val">${l.target}</div></div><div class="lm-cell"><div class="lm-cell-lbl">Duration</div><div class="lm-cell-val">~${l.durationMin} min</div></div>`;
   document.getElementById('lm-desc').textContent=l.desc;
-  const wr=document.getElementById('lm-watch-row'); const wl=document.getElementById('lm-watch-link');
+  const wr=document.getElementById('lm-watch-row'),wl=document.getElementById('lm-watch-link');
   if(l.watchUrl){wl.href=l.watchUrl;wr.style.display='';}else{wr.style.display='none';}
-  const bd=document.getElementById('launch-modal-backdrop'); bd.classList.add('active');
+  const bd=document.getElementById('launch-modal-backdrop');bd.classList.add('active');
   requestAnimationFrame(()=>{requestAnimationFrame(()=>bd.classList.add('visible'));});
   document.body.style.overflow='hidden';
 }
 function closeLaunchModal(e,force){
   if(!force&&e&&e.target!==document.getElementById('launch-modal-backdrop'))return;
-  const bd=document.getElementById('launch-modal-backdrop'); bd.classList.remove('visible');
+  const bd=document.getElementById('launch-modal-backdrop');bd.classList.remove('visible');
   setTimeout(()=>{bd.classList.remove('active');document.body.style.overflow='';},320);
 }
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLaunchModal(null,true);closeNews();closeVehicle();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLaunchModal(null,true);closeNews();closeVehicle();closeGameModal(null,true);}});
 
-/* ══════════════════════════════════════
-   ACCORDION — with per-group Load more
-══════════════════════════════════════ */
-const groups = [
-    { status: 'Planned',         color: '#ffffff', paginate: true },
-    { status: 'Completed',       color: '#00cc66', paginate: true },
-    { status: 'Canceled',        color: '#ff3300', paginate: true },
-    { status: 'Big Event Plans', color: '#ffaa00', paginate: true }
+/* ── Accordion ── */
+const groups=[
+  {status:'Planned',color:'#ffffff',paginate:true},
+  {status:'Completed',color:'#00cc66',paginate:true},
+  {status:'Canceled',color:'#ff3300',paginate:true},
+  {status:'Big Event Plans',color:'#ffaa00',paginate:true}
 ];
 const schedCont=document.getElementById('launch-list');
-
 groups.forEach(g=>{
-  const allItems=launches.map((l,i)=>({...l,_idx:i})).filter(l=>l.status===g.status);
-  if(!allItems.length)return;
-
-  const acc=document.createElement('div'); acc.className='group-accordion';
-  const hdr=document.createElement('div'); hdr.className='group-header';
-  hdr.innerHTML=`
-    <div class="group-left">
-      <div class="group-dot" style="background:${g.color};box-shadow:0 0 6px ${g.color}55;"></div>
-      <span class="group-label" style="color:${g.color}">${g.status}</span>
-      <span class="group-count">${allItems.length} launch${allItems.length!==1?'es':''}</span>
-    </div>
-    <span class="group-chevron">&#9660;</span>`;
-
-  const rw=document.createElement('div'); rw.className='group-rows';
-
-  let visibleCount=g.paginate?Math.min(accLoadMorePerPage,allItems.length):allItems.length;
-  const rowEls=[];
-
+  const allItems=launches.map((l,i)=>({...l,_idx:i})).filter(l=>l.status===g.status);if(!allItems.length)return;
+  const acc=document.createElement('div');acc.className='group-accordion';
+  const hdr=document.createElement('div');hdr.className='group-header';
+  hdr.innerHTML=`<div class="group-left"><div class="group-dot" style="background:${g.color};box-shadow:0 0 6px ${g.color}55;"></div><span class="group-label" style="color:${g.color}">${g.status}</span><span class="group-count">${allItems.length} launch${allItems.length!==1?'es':''}</span></div><span class="group-chevron">&#9660;</span>`;
+  const rw=document.createElement('div');rw.className='group-rows';
+  let visibleCount=g.paginate?Math.min(accLoadMorePerPage,allItems.length):allItems.length;const rowEls=[];
   function buildRow(l){
     const ds=l.dateObj.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
     const ts=l.dateObj.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false})+' (local)';
-    const row=document.createElement('div'); row.className='launch-row'; row.title='Click for details';
+    const row=document.createElement('div');row.className='launch-row';row.title='Click for details';
     const wlHTML=l.watchUrl?`<a class="row-watch-link" id="row-watch-${l._idx}" href="${l.watchUrl}" target="_blank" onclick="event.stopPropagation()">Watch Live <span class="rw-arrow">&#8599;</span></a>`:'';
-    row.innerHTML=`
-      <div><strong>${l.rocket}</strong></div>
-      <div style="color:#aaa;font-family:var(--mono);font-size:0.88em;">${ds}</div>
-      <div style="color:#666;font-size:0.84em;font-family:var(--mono);">${ts}</div>
-      <div style="display:flex;align-items:center;gap:14px;justify-content:flex-end;">${wlHTML}<div class="status-badge" style="color:${statusColor(l.status)};">${l.status}</div></div>`;
+    row.innerHTML=`<div><strong>${l.rocket}</strong></div><div style="color:#aaa;font-family:var(--mono);font-size:0.88em;">${ds}</div><div style="color:#666;font-size:0.84em;font-family:var(--mono);">${ts}</div><div style="display:flex;align-items:center;gap:14px;justify-content:flex-end;">${wlHTML}<div class="status-badge" style="color:${statusColor(l.status)};">${l.status}</div></div>`;
     row.addEventListener('click',()=>openLaunchModal(l._idx));
     if(l.watchUrl){setTimeout(()=>{const el=document.getElementById(`row-watch-${l._idx}`);if(el)window.registerRowWatch(l._idx,el);},0);}
     return row;
   }
-
-  allItems.forEach((l,i)=>{
-    const row=buildRow(l); row.style.display=i<visibleCount?'':'none';
-    rw.appendChild(row); rowEls.push(row);
-  });
-
-  let loadMoreBtn=null;
+  allItems.forEach((l,i)=>{const row=buildRow(l);row.style.display=i<visibleCount?'':'none';rw.appendChild(row);rowEls.push(row);});
+  let lmBtn=null;
   if(g.paginate&&allItems.length>accLoadMorePerPage){
-    loadMoreBtn=document.createElement('button');
-    loadMoreBtn.className='acc-load-more';
-    loadMoreBtn.textContent=`Load more (${allItems.length-visibleCount} remaining)`;
-    loadMoreBtn.addEventListener('click',e=>{
-      e.stopPropagation();
-      const prev=visibleCount;
+    lmBtn=document.createElement('button');lmBtn.className='acc-load-more';
+    lmBtn.textContent=`Load more (${allItems.length-visibleCount} remaining)`;
+    lmBtn.addEventListener('click',e=>{
+      e.stopPropagation();const prev=visibleCount;
       visibleCount=Math.min(visibleCount+accLoadMorePerPage,allItems.length);
       for(let i=prev;i<visibleCount;i++){rowEls[i].style.display='';}
-      if(visibleCount>=allItems.length){loadMoreBtn.remove();loadMoreBtn=null;}
-      else{loadMoreBtn.textContent=`Load more (${allItems.length-visibleCount} remaining)`;}
+      if(visibleCount>=allItems.length){lmBtn.remove();lmBtn=null;}else{lmBtn.textContent=`Load more (${allItems.length-visibleCount} remaining)`;}
       rw.style.maxHeight=rw.scrollHeight+'px';
-    });
-    rw.appendChild(loadMoreBtn);
+    });rw.appendChild(lmBtn);
   }
-
-  acc.appendChild(hdr); acc.appendChild(rw); schedCont.appendChild(acc);
-
+  acc.appendChild(hdr);acc.appendChild(rw);schedCont.appendChild(acc);
   hdr.addEventListener('click',()=>{
-    playSound('accordion');
-    const isOpen=acc.classList.contains('open');
-    if(isOpen){
-      rw.style.maxHeight=rw.scrollHeight+'px';
-      rw.classList.remove('open');
-      requestAnimationFrame(()=>{rw.style.maxHeight='0px';});
-      acc.classList.remove('open');
-    } else {
-      acc.classList.add('open');
-      rw.style.maxHeight=rw.scrollHeight+'px';
-      rw.classList.add('open');
-      rw.addEventListener('transitionend',()=>{if(acc.classList.contains('open'))rw.style.maxHeight='none';},{once:true});
-    }
+    playSound('accordion');const isOpen=acc.classList.contains('open');
+    if(isOpen){rw.style.maxHeight=rw.scrollHeight+'px';rw.classList.remove('open');requestAnimationFrame(()=>{rw.style.maxHeight='0px';});acc.classList.remove('open');}
+    else{acc.classList.add('open');rw.style.maxHeight=rw.scrollHeight+'px';rw.classList.add('open');rw.addEventListener('transitionend',()=>{if(acc.classList.contains('open'))rw.style.maxHeight='none';},{once:true});}
   });
 });
 
 /* ══════════════════════════════════════
-   MINI GAME — Asteroid Dodge
-   2D canvas game: pilot ship with mouse/touch
-   Avoid asteroids, collect fuel cells
+   GAME MODAL CONTROLS
 ══════════════════════════════════════ */
-(function initGame(){
-  const canvas = document.getElementById('gameCanvas');
-  const ctx    = canvas.getContext('2d');
-  const overlay      = document.getElementById('game-overlay');
-  const overlayTitle = document.getElementById('overlay-title');
-  const overlaySub   = document.getElementById('overlay-sub');
-  const scoreEl      = document.getElementById('score-display');
-  const bestEl       = document.getElementById('best-display');
+let gameActive=false;
+function openGameModal(){
+  const bd=document.getElementById('game-modal-bd');bd.classList.add('active');
+  requestAnimationFrame(()=>{requestAnimationFrame(()=>bd.classList.add('visible'));});
+  document.body.style.overflow='hidden';
+  // Setup canvas sizing after modal is visible
+  setTimeout(()=>{ setupGameCanvas(); },50);
+}
+function closeGameModal(e,force){
+  if(!force&&e&&e.target!==document.getElementById('game-modal-bd'))return;
+  stopGame();
+  const bd=document.getElementById('game-modal-bd');bd.classList.remove('visible');
+  setTimeout(()=>{bd.classList.remove('active');document.body.style.overflow='';},320);
+}
 
-  let W, H, dpr;
-  function resize(){
-    dpr = window.devicePixelRatio || 1;
-    const rect = canvas.parentElement.getBoundingClientRect();
-    W = rect.width;
-    H = 340;
-    canvas.width  = W * dpr;
-    canvas.height = H * dpr;
-    canvas.style.width  = W + 'px';
-    canvas.style.height = H + 'px';
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-  resize();
-  window.addEventListener('resize', resize);
+/* ══════════════════════════════════════
+   GAME — Fly in Space (Asteroid Dodge)
+   Canvas lives inside a modal → proper sizing
+══════════════════════════════════════ */
+(function(){
+  const canvas=document.getElementById('game-canvas');
+  let ctx=null,W=0,H=0,dpr=1;
+  let running=false,score=0,best=0,raf=null,lastTs=0;
+  let spawnT=0,diffT=0,diffLvl=0,invTimer=0;
+  const ship={x:0,y:0,tx:0,ty:0,trail:[],size:10};
+  let asteroids=[],particles=[],fuelCells=[],bgStars=[];
 
-  /* State */
-  let running = false;
-  let score = 0;
-  let best  = 0;
-  let raf   = null;
-  let lastTs = 0;
-  let spawnTimer = 0;
-  let diffTimer  = 0;
-  let diffLevel  = 0;
-  let invincibleTimer = 0; // brief invincibility on start
-
-  /* Ship */
-  const ship = { x:0, y:0, targetX:0, targetY:0, trail:[], size:10 };
-
-  /* Particles */
-  let asteroids  = [];
-  let particles  = [];
-  let fuelCells  = [];
-  let bgStars    = [];
-
-  /* Background stars for game */
-  function initBgStars(){
-    bgStars = [];
-    for(let i=0;i<60;i++){
-      bgStars.push({
-        x: Math.random()*W,
-        y: Math.random()*H,
-        r: Math.random()*1.2+0.2,
-        speed: Math.random()*0.5+0.1,
-        op: Math.random()*0.4+0.1
-      });
-    }
-  }
-
-  function resetGame(){
-    score = 0;
-    diffLevel = 0;
-    spawnTimer = 0;
-    diffTimer  = 0;
-    invincibleTimer = 1.2;
-    asteroids  = [];
-    particles  = [];
-    fuelCells  = [];
-    ship.x = W * 0.22;
-    ship.y = H * 0.5;
-    ship.targetX = ship.x;
-    ship.targetY = ship.y;
-    ship.trail = [];
-    initBgStars();
-    scoreEl.textContent = '0';
-  }
-
-  /* Input */
-  canvas.addEventListener('mousemove', e=>{
-    if(!running) return;
-    const rect = canvas.getBoundingClientRect();
-    ship.targetX = e.clientX - rect.left;
-    ship.targetY = e.clientY - rect.top;
-  });
-  canvas.addEventListener('touchmove', e=>{
-    if(!running) return;
-    e.preventDefault();
-    const rect = canvas.getBoundingClientRect();
-    ship.targetX = e.touches[0].clientX - rect.left;
-    ship.targetY = e.touches[0].clientY - rect.top;
-  }, { passive: false });
-
-  /* Spawn helpers */
-  function spawnAsteroid(){
-    const side = Math.floor(Math.random()*2); // 0=right edge, 1=top/bottom
-    let x,y,vx,vy;
-    if(side===0){
-      x = W + 30;
-      y = Math.random() * H;
-      const angle = Math.PI + (Math.random()-0.5)*0.9;
-      const spd = 80 + diffLevel*18 + Math.random()*40;
-      vx = Math.cos(angle)*spd;
-      vy = Math.sin(angle)*spd;
-    } else {
-      x = W*0.3 + Math.random()*W*0.7;
-      y = Math.random() < 0.5 ? -20 : H+20;
-      const ty = y < 0 ? 1 : -1;
-      vx = -(30 + Math.random()*40);
-      vy = ty*(50 + Math.random()*60);
-    }
-    const r = 10 + Math.random()*14 + diffLevel*1.5;
-    asteroids.push({ x, y, vx, vy, r,
-      rot: Math.random()*Math.PI*2,
-      rotSpeed: (Math.random()-0.5)*1.5,
-      verts: genAsteroidVerts(r)
-    });
-  }
-
-  function genAsteroidVerts(r){
-    const n = 7 + Math.floor(Math.random()*4);
-    const v = [];
-    for(let i=0;i<n;i++){
-      const a = (i/n)*Math.PI*2;
-      const d = r*(0.72+Math.random()*0.28);
-      v.push({a,d});
-    }
-    return v;
-  }
-
-  function spawnFuelCell(){
-    fuelCells.push({
-      x: W + 14,
-      y: H*0.1 + Math.random()*H*0.8,
-      vx: -(55 + diffLevel*8),
-      vy: (Math.random()-0.5)*30,
-      r: 7,
-      pulse: Math.random()*Math.PI*2
-    });
-  }
-
-  function spawnParticles(x,y,color,count){
-    for(let i=0;i<count;i++){
-      const a=Math.random()*Math.PI*2;
-      const spd=30+Math.random()*80;
-      particles.push({
-        x,y,
-        vx:Math.cos(a)*spd, vy:Math.sin(a)*spd,
-        life:1, decay:0.8+Math.random()*0.8,
-        r:1.5+Math.random()*2.5,
-        color
-      });
-    }
-  }
-
-  /* Collision */
-  function circleHit(ax,ay,ar,bx,by,br){
-    const dx=ax-bx, dy=ay-by;
-    return dx*dx+dy*dy < (ar+br)*(ar+br);
-  }
-
-  /* Draw ship */
-  function drawShip(x,y,alpha){
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.translate(x,y);
-
-    /* Engine glow */
-    const grd = ctx.createRadialGradient(-14,0,0,-14,0,12);
-    grd.addColorStop(0,'rgba(100,180,255,0.7)');
-    grd.addColorStop(1,'rgba(100,180,255,0)');
-    ctx.beginPath(); ctx.arc(-14,0,12,0,Math.PI*2);
-    ctx.fillStyle=grd; ctx.fill();
-
-    /* Body */
-    ctx.fillStyle='rgba(220,235,255,1)';
-    ctx.beginPath();
-    ctx.moveTo(14,0);
-    ctx.lineTo(-8,-7);
-    ctx.lineTo(-10,0);
-    ctx.lineTo(-8,7);
-    ctx.closePath();
-    ctx.fill();
-
-    /* Cockpit */
-    ctx.fillStyle='rgba(100,180,255,0.7)';
-    ctx.beginPath();
-    ctx.ellipse(4,0,5,3.5,0,0,Math.PI*2);
-    ctx.fill();
-
-    ctx.restore();
-  }
-
-  /* Draw asteroid */
-  function drawAsteroid(a){
-    ctx.save();
-    ctx.translate(a.x,a.y);
-    ctx.rotate(a.rot);
-    ctx.beginPath();
-    a.verts.forEach((v,i)=>{
-      const px=Math.cos(v.a)*v.d, py=Math.sin(v.a)*v.d;
-      i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);
-    });
-    ctx.closePath();
-    ctx.strokeStyle='rgba(180,190,200,0.8)';
-    ctx.lineWidth=1.4;
-    ctx.fillStyle='rgba(40,42,48,0.9)';
-    ctx.fill();
-    ctx.stroke();
-    ctx.restore();
-  }
-
-  /* Draw fuel cell */
-  function drawFuelCell(f, dt){
-    f.pulse += dt*3;
-    const glow=0.5+0.5*Math.sin(f.pulse);
-    ctx.save();
-    ctx.translate(f.x,f.y);
-    const grd=ctx.createRadialGradient(0,0,0,0,0,f.r*(1.8+glow*0.5));
-    grd.addColorStop(0,'rgba(0,210,120,0.9)');
-    grd.addColorStop(0.5,'rgba(0,180,100,0.4)');
-    grd.addColorStop(1,'rgba(0,180,100,0)');
-    ctx.beginPath(); ctx.arc(0,0,f.r*(1.8+glow*0.5),0,Math.PI*2);
-    ctx.fillStyle=grd; ctx.fill();
-    ctx.beginPath(); ctx.arc(0,0,f.r,0,Math.PI*2);
-    ctx.fillStyle='rgba(0,220,130,0.95)'; ctx.fill();
-    ctx.restore();
-  }
-
-  /* Main loop */
-  function loop(ts){
-    if(!running){return;}
-    const dt = Math.min((ts-lastTs)/1000, 0.05);
-    lastTs = ts;
-
-    /* Score */
-    score += dt * 12;
-    scoreEl.textContent = Math.floor(score);
-
-    invincibleTimer = Math.max(0, invincibleTimer - dt);
-    diffTimer += dt;
-    if(diffTimer > 8){ diffTimer=0; diffLevel=Math.min(diffLevel+1,12); }
-
-    /* Spawn */
-    spawnTimer += dt;
-    const spawnRate = Math.max(0.4, 1.5 - diffLevel*0.09);
-    if(spawnTimer > spawnRate){ spawnTimer=0; spawnAsteroid(); if(Math.random()<0.18)spawnFuelCell(); }
-
-    /* Clear */
-    ctx.clearRect(0,0,W,H);
-
-    /* BG stars */
-    bgStars.forEach(s=>{
-      s.x -= s.speed*(1+diffLevel*0.05);
-      if(s.x<0) s.x=W;
-      ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-      ctx.fillStyle=`rgba(255,255,255,${s.op})`; ctx.fill();
-    });
-
-    /* Ship smooth follow */
-    const lerpSpeed = 7;
-    ship.x += (ship.targetX - ship.x) * Math.min(1, lerpSpeed*dt);
-    ship.y += (ship.targetY - ship.y) * Math.min(1, lerpSpeed*dt);
-
-    /* Clamp */
-    ship.x = Math.max(12, Math.min(W-12, ship.x));
-    ship.y = Math.max(12, Math.min(H-12, ship.y));
-
-    /* Trail */
-    ship.trail.unshift({x:ship.x,y:ship.y});
-    if(ship.trail.length>18) ship.trail.pop();
-    for(let i=1;i<ship.trail.length;i++){
-      const a=(1-i/ship.trail.length)*0.35;
-      ctx.beginPath();
-      ctx.arc(ship.trail[i].x,ship.trail[i].y,(1-i/ship.trail.length)*3.5,0,Math.PI*2);
-      ctx.fillStyle=`rgba(100,180,255,${a})`; ctx.fill();
-    }
-
-    /* Particles */
-    particles = particles.filter(p=>{
-      p.x+=p.vx*dt; p.y+=p.vy*dt; p.vx*=0.92; p.vy*=0.92;
-      p.life-=p.decay*dt;
-      if(p.life<=0) return false;
-      ctx.beginPath(); ctx.arc(p.x,p.y,p.r*p.life,0,Math.PI*2);
-      ctx.fillStyle=p.color.replace(')',`,${p.life})`).replace('rgb','rgba');
-      ctx.fill();
-      return true;
-    });
-
-    /* Fuel cells */
-    fuelCells = fuelCells.filter(f=>{
-      f.x+=f.vx*dt; f.y+=f.vy*dt;
-      if(f.x<-20) return false;
-      drawFuelCell(f,dt);
-      /* collect */
-      if(circleHit(ship.x,ship.y,ship.size,f.x,f.y,f.r+4)){
-        score+=50; scoreEl.textContent=Math.floor(score);
-        spawnParticles(f.x,f.y,'rgb(0,220,130)',12);
-        return false;
-      }
-      return true;
-    });
-
-    /* Asteroids */
-    let hit=false;
-    asteroids = asteroids.filter(a=>{
-      a.x+=a.vx*dt; a.y+=a.vy*dt; a.rot+=a.rotSpeed*dt;
-      if(a.x < -60 || a.y < -60 || a.y > H+60) return false;
-      drawAsteroid(a);
-      if(invincibleTimer<=0 && circleHit(ship.x,ship.y,ship.size-3,a.x,a.y,a.r*0.72)){
-        hit=true;
-        spawnParticles(ship.x,ship.y,'rgb(255,120,80)',20);
-        spawnParticles(a.x,a.y,'rgb(180,190,200)',10);
-      }
-      return !hit;
-    });
-
-    /* Draw ship */
-    const shipAlpha = invincibleTimer>0 ? (0.4+0.6*Math.abs(Math.sin(invincibleTimer*12))) : 1;
-    drawShip(ship.x, ship.y, shipAlpha);
-
-    if(hit){
-      endGame(); return;
-    }
-
-    raf = requestAnimationFrame(loop);
-  }
-
-  function endGame(){
-    running = false;
-    if(score>best){ best=Math.floor(score); bestEl.textContent=best; }
-    overlayTitle.textContent='Mission Failed';
-    overlaySub.textContent=`Score: ${Math.floor(score)}  ·  Best: ${best}`;
-    document.getElementById('game-start-btn').textContent='Retry';
-    overlay.classList.remove('hidden');
-  }
-
-  window.startGame = function(){
-    resetGame();
-    running = true;
-    overlay.classList.add('hidden');
-    lastTs = performance.now();
-    raf = requestAnimationFrame(loop);
+  window.setupGameCanvas=function(){
+    dpr=window.devicePixelRatio||1;
+    const wrap=canvas.parentElement;
+    W=wrap.clientWidth;
+    H=wrap.clientHeight||360;
+    canvas.width=W*dpr;canvas.height=H*dpr;
+    canvas.style.width=W+'px';canvas.style.height=H+'px';
+    ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
   };
+
+  function reset(){
+    score=0;diffLvl=0;spawnT=0;diffT=0;invTimer=1.2;
+    asteroids=[];particles=[];fuelCells=[];
+    ship.x=W*0.22;ship.y=H*0.5;ship.tx=ship.x;ship.ty=ship.y;ship.trail=[];
+    bgStars=[];
+    for(let i=0;i<65;i++)bgStars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.1+0.2,sp:Math.random()*0.4+0.08,op:Math.random()*0.35+0.08});
+    document.getElementById('gm-score').textContent='0';
+  }
+
+  function addInput(){
+    canvas.addEventListener('mousemove',onMM);canvas.addEventListener('touchmove',onTM,{passive:false});
+  }
+  function removeInput(){
+    canvas.removeEventListener('mousemove',onMM);canvas.removeEventListener('touchmove',onTM);
+  }
+  function onMM(e){if(!running)return;const r=canvas.getBoundingClientRect();ship.tx=(e.clientX-r.left)*(W/r.width);ship.ty=(e.clientY-r.top)*(H/r.height);}
+  function onTM(e){if(!running)return;e.preventDefault();const r=canvas.getBoundingClientRect();ship.tx=(e.touches[0].clientX-r.left)*(W/r.width);ship.ty=(e.touches[0].clientY-r.top)*(H/r.height);}
+
+  function spawnAst(){
+    const side=Math.floor(Math.random()*2);let x,y,vx,vy;
+    if(side===0){x=W+30;y=Math.random()*H;const a=Math.PI+(Math.random()-0.5)*0.9;const sp=80+diffLvl*18+Math.random()*40;vx=Math.cos(a)*sp;vy=Math.sin(a)*sp;}
+    else{x=W*0.3+Math.random()*W*0.7;y=Math.random()<0.5?-20:H+20;const ty=y<0?1:-1;vx=-(30+Math.random()*40);vy=ty*(50+Math.random()*60);}
+    const r=10+Math.random()*14+diffLvl*1.5;
+    const n=7+Math.floor(Math.random()*4),verts=[];
+    for(let i=0;i<n;i++){const a=(i/n)*Math.PI*2;verts.push({a,d:r*(0.72+Math.random()*0.28)});}
+    asteroids.push({x,y,vx,vy,r,rot:Math.random()*Math.PI*2,rotSpeed:(Math.random()-0.5)*1.5,verts});
+  }
+  function spawnFuel(){fuelCells.push({x:W+14,y:H*0.1+Math.random()*H*0.8,vx:-(55+diffLvl*8),vy:(Math.random()-0.5)*30,r:7,pulse:Math.random()*Math.PI*2});}
+  function spawnParts(x,y,color,count){for(let i=0;i<count;i++){const a=Math.random()*Math.PI*2,sp=30+Math.random()*80;particles.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,decay:0.8+Math.random()*0.8,r:1.5+Math.random()*2.5,color});}}
+  function chit(ax,ay,ar,bx,by,br){const dx=ax-bx,dy=ay-by;return dx*dx+dy*dy<(ar+br)*(ar+br);}
+
+  function drawShip(x,y,alpha){
+    ctx.save();ctx.globalAlpha=alpha;ctx.translate(x,y);
+    const g=ctx.createRadialGradient(-14,0,0,-14,0,12);g.addColorStop(0,'rgba(100,180,255,0.7)');g.addColorStop(1,'rgba(100,180,255,0)');
+    ctx.beginPath();ctx.arc(-14,0,12,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+    ctx.fillStyle='rgba(220,235,255,1)';ctx.beginPath();ctx.moveTo(14,0);ctx.lineTo(-8,-7);ctx.lineTo(-10,0);ctx.lineTo(-8,7);ctx.closePath();ctx.fill();
+    ctx.fillStyle='rgba(100,180,255,0.7)';ctx.beginPath();ctx.ellipse(4,0,5,3.5,0,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  }
+
+  function loop(ts){
+    if(!running)return;
+    const dt=Math.min((ts-lastTs)/1000,0.05);lastTs=ts;
+    score+=dt*12;document.getElementById('gm-score').textContent=Math.floor(score);
+    invTimer=Math.max(0,invTimer-dt);diffT+=dt;
+    if(diffT>8){diffT=0;diffLvl=Math.min(diffLvl+1,12);}
+    spawnT+=dt;
+    const sr=Math.max(0.4,1.5-diffLvl*0.09);
+    if(spawnT>sr){spawnT=0;spawnAst();if(Math.random()<0.18)spawnFuel();}
+    ctx.clearRect(0,0,W,H);
+    // bg stars
+    bgStars.forEach(s=>{s.x-=s.sp*(1+diffLvl*0.05);if(s.x<0)s.x=W;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${s.op})`;ctx.fill();});
+    // ship
+    ship.x+=(ship.tx-ship.x)*Math.min(1,7*dt);ship.y+=(ship.ty-ship.y)*Math.min(1,7*dt);
+    ship.x=Math.max(12,Math.min(W-12,ship.x));ship.y=Math.max(12,Math.min(H-12,ship.y));
+    ship.trail.unshift({x:ship.x,y:ship.y});if(ship.trail.length>18)ship.trail.pop();
+    for(let i=1;i<ship.trail.length;i++){const a=(1-i/ship.trail.length)*0.35;ctx.beginPath();ctx.arc(ship.trail[i].x,ship.trail[i].y,(1-i/ship.trail.length)*3.5,0,Math.PI*2);ctx.fillStyle=`rgba(100,180,255,${a})`;ctx.fill();}
+    // particles
+    particles=particles.filter(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=0.92;p.vy*=0.92;p.life-=p.decay*dt;if(p.life<=0)return false;ctx.beginPath();ctx.arc(p.x,p.y,p.r*p.life,0,Math.PI*2);ctx.fillStyle=p.color.replace(')',`,${p.life})`).replace('rgb','rgba');ctx.fill();return true;});
+    // fuel cells
+    fuelCells=fuelCells.filter(f=>{f.x+=f.vx*dt;f.y+=f.vy*dt;if(f.x<-20)return false;f.pulse+=dt*3;const gw=0.5+0.5*Math.sin(f.pulse);ctx.save();ctx.translate(f.x,f.y);const gd=ctx.createRadialGradient(0,0,0,0,0,f.r*(1.8+gw*0.5));gd.addColorStop(0,'rgba(0,210,120,0.9)');gd.addColorStop(0.5,'rgba(0,180,100,0.4)');gd.addColorStop(1,'rgba(0,180,100,0)');ctx.beginPath();ctx.arc(0,0,f.r*(1.8+gw*0.5),0,Math.PI*2);ctx.fillStyle=gd;ctx.fill();ctx.beginPath();ctx.arc(0,0,f.r,0,Math.PI*2);ctx.fillStyle='rgba(0,220,130,0.95)';ctx.fill();ctx.restore();if(chit(ship.x,ship.y,ship.size,f.x,f.y,f.r+4)){score+=50;document.getElementById('gm-score').textContent=Math.floor(score);spawnParts(f.x,f.y,'rgb(0,220,130)',12);return false;}return true;});
+    // asteroids
+    let isHit=false;
+    asteroids=asteroids.filter(a=>{a.x+=a.vx*dt;a.y+=a.vy*dt;a.rot+=a.rotSpeed*dt;if(a.x<-60||a.y<-60||a.y>H+60)return false;ctx.save();ctx.translate(a.x,a.y);ctx.rotate(a.rot);ctx.beginPath();a.verts.forEach((v,i)=>{const px=Math.cos(v.a)*v.d,py=Math.sin(v.a)*v.d;i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);});ctx.closePath();ctx.strokeStyle='rgba(180,190,200,0.8)';ctx.lineWidth=1.4;ctx.fillStyle='rgba(40,42,48,0.9)';ctx.fill();ctx.stroke();ctx.restore();if(invTimer<=0&&chit(ship.x,ship.y,ship.size-3,a.x,a.y,a.r*0.72)){isHit=true;spawnParts(ship.x,ship.y,'rgb(255,120,80)',20);spawnParts(a.x,a.y,'rgb(180,190,200)',10);}return!isHit;});
+    const sa=invTimer>0?(0.4+0.6*Math.abs(Math.sin(invTimer*12))):1;
+    drawShip(ship.x,ship.y,sa);
+    if(isHit){
+      running=false;if(score>best){best=Math.floor(score);document.getElementById('gm-best').textContent=best;}
+      document.getElementById('gm-over-title').textContent='Mission Failed';
+      document.getElementById('gm-over-sub').textContent=`Score: ${Math.floor(score)}  ·  Best: ${best}`;
+      document.querySelector('.gm-start-btn').textContent='Retry';
+      document.getElementById('gm-overlay').classList.remove('hidden');
+      removeInput();return;
+    }
+    raf=requestAnimationFrame(loop);
+  }
+
+  function stopGame(){running=false;if(raf){cancelAnimationFrame(raf);raf=null;}removeInput();}
+
+  window.startGame=function(){
+    if(!ctx)setupGameCanvas();
+    reset();running=true;addInput();
+    document.getElementById('gm-overlay').classList.add('hidden');
+    lastTs=performance.now();raf=requestAnimationFrame(loop);
+  };
+  window.stopGame=stopGame;
 })();
 </script>
-
-<script>
-  document.documentElement.style.zoom = "1.09";
-</script>
+<script>document.documentElement.style.zoom="1.09";</script>
 </body>
 </html>
