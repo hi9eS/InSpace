@@ -8,16 +8,16 @@
 /* Made by InSpace */
 /* This website is for informational purposes only and does NOT engage in any commercial activity. */
 
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-:root {
-  --bg: #080808; --bg2: #0f0f0f; --bg3: #141414;
-  --border: rgba(255,255,255,0.08); --border-h: rgba(255,255,255,0.18);
-  --text: #f0f0f0; --muted: #666; --muted2: #444;
-  --font: 'DM Sans','Segoe UI',sans-serif; --mono: 'DM Mono',monospace;
-  --ease: cubic-bezier(0.4,0,0.2,1); --spring: cubic-bezier(0.34,1.56,0.64,1);
-  --hero-from:#fff; --hero-to:#a0c8ff; --hero-glow:rgba(120,180,255,0.18);
-  --acc-pv:17px; --acc-ph:22px;
-  --lm-w:600px; --lm-cell:18px 22px; --lm-val:1.1em;
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#080808;--bg2:#0f0f0f;--bg3:#141414;
+  --border:rgba(255,255,255,0.08);--border-h:rgba(255,255,255,0.18);
+  --text:#f0f0f0;--muted:#666;--muted2:#444;
+  --font:'DM Sans','Segoe UI',sans-serif;--mono:'DM Mono',monospace;
+  --ease:cubic-bezier(0.4,0,0.2,1);--spring:cubic-bezier(0.34,1.56,0.64,1);
+  --hero-from:#fff;--hero-to:#a0c8ff;--hero-glow:rgba(120,180,255,0.18);
+  --acc-pv:17px;--acc-ph:22px;
+  --lm-w:600px;--lm-cell:18px 22px;--lm-val:1.1em;
 }
 html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6;font-size:15px;overflow-x:hidden;}
@@ -25,21 +25,15 @@ a{color:inherit;text-decoration:none;}
 
 /* ── STARFIELD ── */
 #starfield,#vp-starfield{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
-#news-starfield{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+#news-starfield,#game-starfield{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
 .star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--dur,4s) var(--delay,0s) infinite ease-in-out alternate;opacity:0;}
 @keyframes twinkle{0%{opacity:0;transform:scale(0.8);}50%{opacity:var(--op,0.5);}100%{opacity:0.08;transform:scale(1.1);}}
 #flyby-canvas{position:fixed;inset:0;pointer-events:none;z-index:1;}
 
 /* ── HEADER ── */
-header{
-  position:sticky;top:0;z-index:100;
-  display:flex;align-items:center;justify-content:center;
-  padding:14px 24px;
-  background:rgba(8,8,8,0.88);backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--border);
-}
+header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:14px 24px;background:rgba(8,8,8,0.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);}
 header::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:180px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);}
-.header-left{position:absolute;left:24px;display:flex;align-items:center;gap:6px;}
+.header-left{position:absolute;left:24px;display:flex;align-items:center;gap:8px;}
 .header-clock{font-family:var(--mono);font-weight:300;letter-spacing:0.06em;white-space:nowrap;}
 .header-nav{display:flex;gap:4px;}
 .header-nav a{font-size:0.85em;font-weight:400;letter-spacing:0.04em;padding:7px 16px;border-radius:8px;cursor:pointer;transition:color 0.2s,background 0.2s,transform 0.15s var(--spring);}
@@ -47,29 +41,57 @@ header::after{content:'';position:absolute;bottom:0;left:50%;transform:translate
 .header-nav a:active{transform:scale(0.90);}
 .header-right{position:absolute;right:24px;display:flex;align-items:center;gap:8px;}
 
-/* ── SOCIAL BUTTONS — icon only ── */
+/* ── LANG PICKER ── */
+.lang-picker{position:relative;}
+.lang-btn{
+  font-family:var(--mono);font-size:0.68em;letter-spacing:0.06em;
+  color:var(--muted);background:transparent;border:none;cursor:pointer;
+  padding:4px 6px;border-radius:6px;transition:color 0.2s,background 0.2s;
+  display:flex;align-items:center;gap:4px;white-space:nowrap;
+}
+.lang-btn:hover{color:rgba(255,255,255,0.65);background:rgba(255,255,255,0.05);}
+.lang-btn svg{width:10px;height:10px;fill:currentColor;flex-shrink:0;}
+.lang-dropdown{
+  position:absolute;top:calc(100% + 6px);left:0;
+  background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+  padding:4px;min-width:130px;
+  opacity:0;pointer-events:none;transform:translateY(-4px);
+  transition:opacity 0.18s var(--ease),transform 0.18s var(--ease);
+  z-index:200;
+}
+.lang-picker.open .lang-dropdown{opacity:1;pointer-events:all;transform:translateY(0);}
+.lang-option{
+  display:block;width:100%;text-align:left;
+  font-family:var(--mono);font-size:0.72em;letter-spacing:0.06em;
+  padding:7px 12px;border:none;background:transparent;
+  color:var(--muted);cursor:pointer;border-radius:8px;
+  transition:background 0.15s,color 0.15s;white-space:nowrap;
+}
+.lang-option:hover{background:rgba(255,255,255,0.05);color:var(--text);}
+.lang-option.active{color:var(--text);}
+
+/* ── SOCIAL BUTTONS — icon only, glow on hover, NO scale ── */
 .social-btn{
   border-radius:100px;border:1px solid rgba(255,255,255,0.18);
   background:rgba(255,255,255,0.04);
   display:inline-flex;align-items:center;justify-content:center;
   width:34px;height:34px;cursor:pointer;
-  transition:all 0.28s var(--spring);text-decoration:none;flex-shrink:0;
+  transition:border-color 0.25s,background 0.25s,box-shadow 0.25s;
+  text-decoration:none;flex-shrink:0;
 }
-.social-btn:hover{border-color:rgba(255,255,255,0.4);background:rgba(255,255,255,0.09);transform:scale(1.08);}
+.social-btn:hover{
+  border-color:rgba(255,255,255,0.3);
+  background:rgba(255,255,255,0.07);
+  box-shadow:0 0 10px rgba(255,255,255,0.08);
+}
 .social-btn svg{width:15px;height:15px;fill:rgba(255,255,255,0.45);transition:fill 0.25s;display:block;}
-.social-btn:hover svg{fill:rgba(255,255,255,0.9);}
+.social-btn:hover svg{fill:rgba(255,255,255,0.8);}
 
 section{padding:90px 20px;max-width:1000px;margin:0 auto;position:relative;z-index:1;}
 
 /* ── HERO ── */
 .hero{text-align:center;padding-top:130px;}
-.hero h1{
-  font-size:clamp(2.5em,5.5vw,4em);font-weight:300;letter-spacing:-0.02em;margin-bottom:20px;
-  animation:fadeUp 0.8s var(--ease) both;
-  background:linear-gradient(135deg,var(--hero-from) 0%,var(--hero-to) 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  filter:drop-shadow(0 0 26px var(--hero-glow)) drop-shadow(0 0 8px var(--hero-glow));
-}
+.hero h1{font-size:clamp(2.5em,5.5vw,4em);font-weight:300;letter-spacing:-0.02em;margin-bottom:20px;animation:fadeUp 0.8s var(--ease) both;background:linear-gradient(135deg,var(--hero-from) 0%,var(--hero-to) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 26px var(--hero-glow)) drop-shadow(0 0 8px var(--hero-glow));}
 .hero p{font-size:1.1em;max-width:600px;margin:0 auto 36px;color:#888;font-weight:300;filter:brightness(1.38);animation:fadeUp 0.8s 0.1s var(--ease) both;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
 
@@ -86,16 +108,39 @@ section{padding:90px 20px;max-width:1000px;margin:0 auto;position:relative;z-ind
 .cd-sep-colon{font-size:2em;font-weight:200;color:var(--muted2);line-height:1;padding-bottom:14px;}
 #days-since-wrap{display:none;margin:0 auto 13px;max-width:640px;text-align:center;animation:fadeUp 0.8s 0.18s var(--ease) both;}
 #days-since-text{font-size:0.72em;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted2);font-family:var(--mono);}
-.stream-link{display:inline-flex;align-items:center;gap:11px;font-size:1.06em;font-weight:400;letter-spacing:0.07em;padding:16px 46px;border:1px solid rgba(255,255,255,0.35);border-radius:100px;cursor:pointer;color:#fff;transition:all 0.3s var(--ease);margin-bottom:70px;position:relative;overflow:hidden;animation:fadeUp 0.8s 0.2s var(--ease) both;}
+.stream-link{display:inline-flex;align-items:center;gap:11px;font-size:1.06em;font-weight:400;letter-spacing:0.07em;padding:16px 46px;border:1px solid rgba(255,255,255,0.35);border-radius:100px;cursor:pointer;color:#fff;transition:all 0.3s var(--ease);margin-bottom:32px;position:relative;overflow:hidden;animation:fadeUp 0.8s 0.2s var(--ease) both;}
 .stream-link::before{content:'';position:absolute;inset:0;background:#fff;transform:scaleX(0);transform-origin:left;transition:transform 0.35s var(--ease);border-radius:100px;}
 .stream-link:hover{color:#000;border-color:#fff;transform:translateY(-2px);}
 .stream-link:hover::before{transform:scaleX(1);}
 .stream-link-text{position:relative;z-index:1;}
 
+/* ── STATS IN HERO (below Watch Launch) ── */
+#hero-stats{
+  max-width:640px;margin:0 auto 60px;
+  animation:fadeUp 0.8s 0.25s var(--ease) both;
+}
+.hero-stats-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:rgba(255,255,255,0.07);
+  border-radius:16px;overflow:hidden;
+  border:1px solid rgba(255,255,255,0.07);
+}
+@media(max-width:600px){.hero-stats-grid{grid-template-columns:1fr 1fr;}}
+.hero-stat-cell{
+  background:var(--bg2);padding:18px 16px;
+  display:flex;flex-direction:column;gap:4px;
+  transition:background 0.22s;position:relative;overflow:hidden;
+}
+.hero-stat-cell::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);opacity:0;transition:opacity 0.3s;}
+.hero-stat-cell:hover{background:#131313;}
+.hero-stat-cell:hover::before{opacity:1;}
+.hero-stat-num{font-size:1.7em;font-weight:300;font-family:var(--mono);letter-spacing:-0.02em;line-height:1;color:var(--text);}
+.hero-stat-lbl{font-size:0.55em;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;font-family:var(--mono);}
+
 h2{font-size:1.7em;font-weight:300;letter-spacing:-0.01em;margin-bottom:36px;}
 
 /* ══════════════════════════════════════
-   VEHICLE CARDS — compact, no translateY hover
+   VEHICLE CARDS — no transform on hover, fixed layout
 ══════════════════════════════════════ */
 #fleet{padding-top:100px;padding-bottom:80px;}
 .vehicle-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(275px,1fr));gap:18px;align-items:stretch;}
@@ -104,60 +149,31 @@ h2{font-size:1.7em;font-weight:300;letter-spacing:-0.01em;margin-bottom:36px;}
   background:var(--bg2);border-radius:18px;cursor:pointer;
   border:1px solid rgba(255,255,255,0.08);
   display:flex;flex-direction:column;
-  /* No transform on hover — brightness via color bar + glow only */
+  /* FIX: will-change:auto prevents GPU layer shift; no transform at all */
   transition:box-shadow 0.3s var(--ease),border-color 0.3s var(--ease);
   position:relative;overflow:hidden;
+  transform:translateZ(0);/* force layer, prevent reflow shift */
 }
 .vehicle-card:hover{
   box-shadow:0 0 0 1px rgba(255,255,255,0.14),0 12px 40px rgba(0,0,0,0.6);
   border-color:rgba(255,255,255,0.14);
 }
-/* color accent bar — only visual feedback on hover */
 .vc-bar{height:3px;flex-shrink:0;opacity:0.4;transition:opacity 0.28s,height 0.2s;}
 .vehicle-card:hover .vc-bar{opacity:1;height:4px;}
-
-/* head */
 .vc-head{padding:16px 18px 12px;border-bottom:1px solid rgba(255,255,255,0.055);display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
 .vc-head-left{display:flex;flex-direction:column;gap:2px;}
 .vc-dot{width:6px;height:6px;border-radius:50%;background:var(--vc,#fff);opacity:0.35;transition:opacity 0.28s;margin-bottom:4px;}
 .vehicle-card:hover .vc-dot{opacity:0.9;}
 .vc-name{font-size:1.18em;font-weight:500;letter-spacing:-0.01em;line-height:1.2;color:var(--text);}
 .vc-sub{font-size:0.64em;color:var(--muted);letter-spacing:0.16em;text-transform:uppercase;font-family:var(--mono);}
-
-/* launch count badge top-right */
-.vc-count{
-  font-size:0.62em;font-family:var(--mono);letter-spacing:0.06em;
-  padding:3px 9px;border-radius:100px;
-  border:1px solid rgba(255,255,255,0.09);
-  color:var(--muted2);background:rgba(255,255,255,0.025);
-  white-space:nowrap;flex-shrink:0;margin-top:2px;
-  transition:color 0.25s,border-color 0.25s;
-}
+.vc-count{font-size:0.62em;font-family:var(--mono);letter-spacing:0.06em;padding:3px 9px;border-radius:100px;border:1px solid rgba(255,255,255,0.09);color:var(--muted2);background:rgba(255,255,255,0.025);white-space:nowrap;flex-shrink:0;margin-top:2px;transition:color 0.25s,border-color 0.25s;}
 .vehicle-card:hover .vc-count{color:rgba(255,255,255,0.4);border-color:rgba(255,255,255,0.14);}
-
-/* spec row — 3 cells, single row */
-.vc-specs{
-  display:grid;grid-template-columns:1fr 1fr 1fr;
-  gap:1px;background:rgba(255,255,255,0.055);
-  flex:1;
-}
-.vc-sc{
-  background:var(--bg3);padding:12px 14px;
-  transition:background 0.2s;
-  display:flex;flex-direction:column;justify-content:center;
-}
+.vc-specs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(255,255,255,0.055);flex:1;}
+.vc-sc{background:var(--bg3);padding:12px 14px;transition:background 0.2s;display:flex;flex-direction:column;justify-content:center;}
 .vehicle-card:hover .vc-sc{background:#131313;}
 .vc-sl{font-size:0.56em;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:3px;}
 .vc-sv{font-size:0.92em;font-weight:300;font-family:var(--mono);color:var(--text);line-height:1.2;}
-
-/* footer — no gap, flush */
-.vc-foot{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:9px 16px;
-  border-top:1px solid rgba(255,255,255,0.045);
-  background:rgba(255,255,255,0.01);
-  flex-shrink:0;
-}
+.vc-foot{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;border-top:1px solid rgba(255,255,255,0.045);background:rgba(255,255,255,0.01);flex-shrink:0;}
 .vc-foot-txt{font-size:0.67em;color:var(--muted2);letter-spacing:0.1em;text-transform:uppercase;font-family:var(--mono);transition:color 0.2s;}
 .vc-foot-arr{font-size:0.78em;color:var(--muted2);transition:transform 0.22s var(--spring),color 0.2s;}
 .vehicle-card:hover .vc-foot-txt{color:rgba(255,255,255,0.5);}
@@ -165,8 +181,7 @@ h2{font-size:1.7em;font-weight:300;letter-spacing:-0.01em;margin-bottom:36px;}
 
 /* ── Vehicle overlay ── */
 #vehicle-overlay{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;opacity:0;transition:opacity 0.35s var(--ease);}
-#vehicle-overlay.active{display:block;}
-#vehicle-overlay.visible{opacity:1;}
+#vehicle-overlay.active{display:block;}#vehicle-overlay.visible{opacity:1;}
 .vp-header{position:sticky;top:0;background:rgba(8,8,8,0.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:20px;padding:18px 32px;z-index:10;}
 .vp-back{background:none;border:1px solid var(--border);color:var(--muted);padding:8px 20px;border-radius:100px;cursor:pointer;font-size:0.82em;font-family:var(--font);transition:all 0.2s var(--ease);}
 .vp-back:hover{background:var(--bg3);color:var(--text);border-color:var(--border-h);transform:translateX(-2px);}
@@ -174,7 +189,7 @@ h2{font-size:1.7em;font-weight:300;letter-spacing:-0.01em;margin-bottom:36px;}
 .vp-body{max-width:900px;margin:0 auto;padding:60px 24px 100px;animation:fadeUp 0.5s 0.05s var(--ease) both;position:relative;z-index:1;}
 .vp-hero-name{font-size:clamp(2.5em,6vw,4em);font-weight:300;letter-spacing:-0.01em;margin-bottom:8px;}
 .vp-hero-class{font-size:0.72em;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:48px;font-family:var(--mono);}
-.vp-img-wrap{width:100%;aspect-ratio:16/7;background:var(--bg2);border:1px solid var(--border);border-radius:18px;margin-bottom:52px;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;}
+.vp-img-wrap{width:100%;aspect-ratio:16/7;background:var(--bg2);border:1px solid var(--border);border-radius:18px;margin-bottom:52px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
 .vp-img-wrap img{width:100%;height:100%;object-fit:cover;}
 .vp-img-ph{font-size:0.72em;color:var(--muted2);letter-spacing:0.15em;text-transform:uppercase;font-family:var(--mono);}
 .vp-sec-title{font-size:0.68em;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:12px;font-family:var(--mono);}
@@ -239,10 +254,8 @@ h2{font-size:1.7em;font-weight:300;letter-spacing:-0.01em;margin-bottom:36px;}
 .acc-load-more{display:block;margin:10px 20px 12px;padding:8px 0;background:transparent;border:1px solid rgba(255,255,255,0.1);color:var(--muted);border-radius:8px;font-size:0.78em;font-family:var(--mono);letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;width:calc(100% - 40px);transition:all 0.2s var(--ease);}
 .acc-load-more:hover{background:rgba(255,255,255,0.04);color:var(--text);border-color:rgba(255,255,255,0.2);}
 
-/* ── LAUNCH MODAL ── */
 #launch-modal-backdrop{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);opacity:0;transition:opacity 0.3s var(--ease);align-items:center;justify-content:center;}
-#launch-modal-backdrop.active{display:flex;}
-#launch-modal-backdrop.visible{opacity:1;}
+#launch-modal-backdrop.active{display:flex;}#launch-modal-backdrop.visible{opacity:1;}
 #launch-modal{background:var(--bg2);border:1px solid rgba(255,255,255,0.12);border-radius:22px;width:min(var(--lm-w),92vw);padding:0;overflow:hidden;transform:translateY(20px) scale(0.97);transition:transform 0.35s var(--spring),opacity 0.3s;opacity:0;position:relative;}
 #launch-modal-backdrop.visible #launch-modal{transform:translateY(0) scale(1);opacity:1;}
 .lm-color-bar{height:3px;opacity:0.7;}
@@ -263,7 +276,6 @@ h2{font-size:1.7em;font-weight:300;letter-spacing:-0.01em;margin-bottom:36px;}
 .lm-close{position:absolute;top:18px;right:22px;background:none;border:1px solid rgba(255,255,255,0.1);color:var(--muted2);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:0.8em;display:flex;align-items:center;justify-content:center;transition:all 0.2s var(--ease);}
 .lm-close:hover{background:rgba(255,255,255,0.07);color:var(--text);border-color:rgba(255,255,255,0.25);}
 
-/* ── ACCORDION ── */
 .group-accordion{border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:box-shadow 0.3s,border-color 0.25s;}
 .group-accordion:hover{box-shadow:0 4px 20px rgba(255,255,255,0.03);border-color:var(--border-h);}
 .group-header{display:flex;align-items:center;justify-content:space-between;padding:var(--acc-pv) var(--acc-ph);background:rgba(255,255,255,0.025);cursor:pointer;user-select:none;transition:background 0.2s;}
@@ -277,17 +289,6 @@ h2{font-size:1.7em;font-weight:300;letter-spacing:-0.01em;margin-bottom:36px;}
 .group-rows{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.65s cubic-bezier(1,0,0.2,1),opacity 1s cubic-bezier(0.4,0,0.2,1);}
 .group-rows.open{opacity:1;max-height:3000px !important;}
 
-/* ── MISSION STATS ── */
-#mission-stats{padding-top:0;padding-bottom:80px;}
-.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(255,255,255,0.07);border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,0.07);}
-@media(max-width:700px){.stats-grid{grid-template-columns:1fr 1fr;}}
-.stat-cell{background:var(--bg2);padding:28px 24px;display:flex;flex-direction:column;gap:6px;transition:background 0.22s;position:relative;overflow:hidden;}
-.stat-cell::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);opacity:0;transition:opacity 0.3s;}
-.stat-cell:hover{background:#131313;}
-.stat-cell:hover::before{opacity:1;}
-.stat-num{font-size:2.2em;font-weight:300;font-family:var(--mono);letter-spacing:-0.02em;line-height:1;color:var(--text);}
-.stat-label{font-size:0.63em;color:var(--muted);text-transform:uppercase;letter-spacing:0.14em;font-family:var(--mono);}
-
 footer{text-align:center;padding:24px;border-top:1px solid var(--border);font-size:0.8em;color:var(--muted);font-family:var(--mono);position:relative;z-index:1;}
 .reveal{opacity:0;transform:translateY(22px);transition:opacity 0.7s var(--ease),transform 0.7s var(--ease);}
 .reveal.visible{opacity:1;transform:translateY(0);}
@@ -300,97 +301,29 @@ footer{text-align:center;padding:24px;border-top:1px solid var(--border);font-si
 }
 
 /* ══════════════════════════════════════
-   FLOATING MINI-GAME BUTTON — bottom-left
+   GAME OVERLAY — full-page like vehicle/news
 ══════════════════════════════════════ */
-#mg-fab{
-  position:fixed;bottom:28px;left:28px;z-index:90;
-  display:flex;align-items:center;gap:10px;
-  padding:10px 18px 10px 12px;
-  background:rgba(12,12,14,0.92);
-  border:1px solid rgba(255,255,255,0.12);
-  border-radius:100px;
-  cursor:pointer;
-  backdrop-filter:blur(12px);
-  transition:all 0.28s var(--spring);
-  text-decoration:none;
-  box-shadow:0 4px 20px rgba(0,0,0,0.5);
-  color:rgba(255,255,255,0.65);
-}
-#mg-fab:hover{
-  background:rgba(18,18,22,0.96);
-  border-color:rgba(255,255,255,0.22);
-  color:#fff;
-  box-shadow:0 8px 28px rgba(0,0,0,0.6);
-}
-#mg-fab:hover .mg-fab-icon svg path{fill:rgba(255,255,255,0.9);}
-.mg-fab-icon{
-  width:28px;height:28px;border-radius:50%;
-  background:rgba(255,255,255,0.05);
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;
-}
-.mg-fab-icon svg{width:16px;height:16px;display:block;}
-.mg-fab-icon svg path{fill:rgba(255,255,255,0.5);transition:fill 0.2s;}
-.mg-fab-label{font-size:0.74em;font-family:var(--mono);letter-spacing:0.08em;text-transform:uppercase;font-weight:400;}
-
-/* ══════════════════════════════════════
-   GAME MODAL OVERLAY
-══════════════════════════════════════ */
-#game-modal-bd{
-  display:none;position:fixed;inset:0;z-index:400;
-  background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);
-  opacity:0;transition:opacity 0.3s var(--ease);
-  align-items:center;justify-content:center;
-  padding:20px;
-}
-#game-modal-bd.active{display:flex;}
-#game-modal-bd.visible{opacity:1;}
-#game-modal{
-  background:var(--bg2);border:1px solid rgba(255,255,255,0.12);
-  border-radius:22px;
-  width:100%;max-width:780px;
-  overflow:hidden;
-  transform:translateY(24px) scale(0.97);
-  transition:transform 0.38s var(--spring),opacity 0.3s;
-  opacity:0;position:relative;
-  display:flex;flex-direction:column;
-}
-#game-modal-bd.visible #game-modal{transform:translateY(0) scale(1);opacity:1;}
-
-.gm-header{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:16px 22px;
-  border-bottom:1px solid rgba(255,255,255,0.07);
-  flex-shrink:0;
-}
-.gm-title-row{display:flex;align-items:center;gap:14px;}
-.gm-title{font-size:1em;font-weight:400;letter-spacing:0.01em;}
-.gm-score-row{display:flex;align-items:center;gap:18px;font-family:var(--mono);font-size:0.78em;color:var(--muted);}
-.gm-score-val{color:var(--text);font-size:1.1em;font-weight:300;}
-.gm-note{font-size:0.62em;color:var(--muted2);letter-spacing:0.07em;text-transform:uppercase;}
-.gm-close{
-  background:none;border:1px solid rgba(255,255,255,0.1);
-  color:var(--muted2);width:30px;height:30px;border-radius:50%;
-  cursor:pointer;font-size:0.78em;display:flex;align-items:center;justify-content:center;
-  transition:all 0.2s var(--ease);flex-shrink:0;
-}
-.gm-close:hover{background:rgba(255,255,255,0.07);color:var(--text);border-color:rgba(255,255,255,0.25);}
-
-.gm-canvas-wrap{position:relative;flex:1;min-height:0;}
-#game-canvas{display:block;width:100%;height:360px;cursor:none;}
-
-.gm-overlay{
-  position:absolute;inset:0;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:16px;background:rgba(8,8,8,0.82);backdrop-filter:blur(6px);
-  transition:opacity 0.3s;
-}
-.gm-overlay.hidden{opacity:0;pointer-events:none;}
-.gm-over-title{font-size:1.55em;font-weight:300;letter-spacing:-0.01em;}
-.gm-over-sub{font-size:0.76em;font-family:var(--mono);color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
-.gm-start-btn{padding:9px 30px;border:1px solid rgba(255,255,255,0.3);border-radius:100px;background:transparent;color:#fff;font-family:var(--font);font-size:0.88em;cursor:pointer;transition:all 0.25s var(--ease);}
-.gm-start-btn:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.6);transform:scale(1.03);}
-.gm-hint{font-size:0.65em;font-family:var(--mono);color:var(--muted2);letter-spacing:0.1em;text-transform:uppercase;}
+#game-overlay-page{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;opacity:0;transition:opacity 0.35s var(--ease);}
+#game-overlay-page.active{display:block;}
+#game-overlay-page.visible{opacity:1;}
+.gop-header{position:sticky;top:0;background:rgba(8,8,8,0.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:18px 32px;z-index:10;}
+.gop-back{background:none;border:1px solid var(--border);color:var(--muted);padding:8px 20px;border-radius:100px;cursor:pointer;font-size:0.82em;font-family:var(--font);transition:all 0.2s var(--ease);}
+.gop-back:hover{background:var(--bg3);color:var(--text);border-color:var(--border-h);transform:translateX(-2px);}
+.gop-scores{display:flex;align-items:center;gap:20px;font-family:var(--mono);font-size:0.78em;color:var(--muted);}
+.gop-score-val{color:var(--text);font-size:1.1em;font-weight:300;}
+.gop-note{font-size:0.62em;color:var(--muted2);letter-spacing:0.07em;text-transform:uppercase;}
+.gop-body{max-width:900px;margin:0 auto;padding:48px 24px 80px;animation:fadeUp 0.5s 0.05s var(--ease) both;position:relative;z-index:1;}
+.gop-title{font-size:clamp(2em,5vw,3em);font-weight:300;letter-spacing:-0.01em;margin-bottom:8px;}
+.gop-subtitle{font-size:0.72em;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:36px;font-family:var(--mono);}
+.gop-canvas-wrap{position:relative;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);background:var(--bg2);}
+#game-canvas{display:block;width:100%;height:420px;cursor:none;}
+.gop-game-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:rgba(8,8,8,0.82);backdrop-filter:blur(6px);transition:opacity 0.3s;}
+.gop-game-overlay.hidden{opacity:0;pointer-events:none;}
+.gop-over-title{font-size:1.55em;font-weight:300;letter-spacing:-0.01em;}
+.gop-over-sub{font-size:0.76em;font-family:var(--mono);color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
+.gop-start-btn{padding:9px 30px;border:1px solid rgba(255,255,255,0.3);border-radius:100px;background:transparent;color:#fff;font-family:var(--font);font-size:0.88em;cursor:pointer;transition:all 0.25s var(--ease);}
+.gop-start-btn:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.6);transform:scale(1.03);}
+.gop-hint{font-size:0.65em;font-family:var(--mono);color:var(--muted2);letter-spacing:0.1em;text-transform:uppercase;}
 </style>
 </head>
 <body>
@@ -402,7 +335,7 @@ footer{text-align:center;padding:24px;border-top:1px solid var(--border);font-si
 <div id="vehicle-overlay">
   <div id="vp-starfield"></div>
   <div class="vp-header">
-    <button class="vp-back" onclick="closeVehicle()">&#8592; Back</button>
+    <button class="vp-back" onclick="closeVehicle()">&#8592; <span data-i="back">Back</span></button>
     <span class="vp-title" id="vp-header-title"></span>
   </div>
   <div class="vp-body" id="vp-body"></div>
@@ -411,7 +344,7 @@ footer{text-align:center;padding:24px;border-top:1px solid var(--border);font-si
 <!-- News overlay -->
 <div id="news-overlay">
   <div class="np-header">
-    <button class="np-back" onclick="closeNews()">&#8592; Back</button>
+    <button class="np-back" onclick="closeNews()">&#8592; <span data-i="back">Back</span></button>
     <span class="np-header-title" id="np-header-title">Latest News</span>
   </div>
   <div id="news-starfield"></div>
@@ -430,44 +363,34 @@ footer{text-align:center;padding:24px;border-top:1px solid var(--border);font-si
       <div class="lm-grid" id="lm-grid"></div>
       <div class="lm-desc" id="lm-desc"></div>
       <div class="lm-watch-row" id="lm-watch-row" style="display:none">
-        <a class="lm-watch-link" id="lm-watch-link" target="_blank">Watch Launch</a>
+        <a class="lm-watch-link" id="lm-watch-link" target="_blank" data-i="watchLaunch">Watch Launch</a>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ FLOATING MINI-GAME BUTTON ══ -->
-<div id="mg-fab" onclick="openGameModal()">
-  <div class="mg-fab-icon">
-    <!-- Rocket icon -->
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 2C12 2 6 7 6 13.5C6 16.54 8.25 19.22 11 19.84V22L12 21L13 22V19.84C15.75 19.22 18 16.54 18 13.5C18 7 12 2 12 2ZM12 5.5C12 5.5 15 9 15 13C15 15.21 13.66 17.11 12 17.79C10.34 17.11 9 15.21 9 13C9 9 12 5.5 12 5.5ZM9 19.65C7.32 18.56 6 16.14 6 13.5C6 12.84 6.09 12.2 6.25 11.58L4.5 13.5L6 19L9 19.65ZM15 19.65L18 19L19.5 13.5L17.75 11.58C17.91 12.2 18 12.84 18 13.5C18 16.14 16.68 18.56 15 19.65Z"/>
-    </svg>
-  </div>
-  <span class="mg-fab-label">Mini Game</span>
-</div>
-
-<!-- ══ GAME MODAL ══ -->
-<div id="game-modal-bd" onclick="closeGameModal(event)">
-  <div id="game-modal">
-    <div class="gm-header">
-      <div class="gm-title-row">
-        <span class="gm-title">Fly in Space</span>
-        <span class="gm-note">Score &amp; best are not saved between sessions.</span>
-      </div>
-      <div class="gm-score-row">
-        <span>Score&nbsp;<span class="gm-score-val" id="gm-score">0</span></span>
-        <span>Best&nbsp;<span class="gm-score-val" id="gm-best">0</span></span>
-        <button class="gm-close" onclick="closeGameModal(null,true)">&#10005;</button>
-      </div>
+<!-- Game full-page overlay -->
+<div id="game-overlay-page">
+  <div id="game-starfield"></div>
+  <div class="gop-header">
+    <button class="gop-back" onclick="closeGamePage()">&#8592; <span data-i="back">Back</span></button>
+    <div class="gop-scores">
+      <span data-i="scoreLabel">Score</span>&nbsp;<span class="gop-score-val" id="gm-score">0</span>
+      &nbsp;&nbsp;
+      <span data-i="bestLabel">Best</span>&nbsp;<span class="gop-score-val" id="gm-best">0</span>
     </div>
-    <div class="gm-canvas-wrap">
+  </div>
+  <div class="gop-body">
+    <div class="gop-title" data-i="flyTitle">Fly in Space</div>
+    <div class="gop-subtitle" data-i="flySubtitle">Mini Game</div>
+    <div style="font-size:0.64em;font-family:var(--mono);color:var(--muted2);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:20px;" data-i="noSave">Score &amp; best are not saved between sessions.</div>
+    <div class="gop-canvas-wrap">
       <canvas id="game-canvas"></canvas>
-      <div class="gm-overlay" id="gm-overlay">
-        <div class="gm-over-title" id="gm-over-title">Fly in Space</div>
-        <div class="gm-over-sub" id="gm-over-sub">Dodge asteroids · Collect fuel cells · Survive</div>
-        <button class="gm-start-btn" onclick="startGame()">Launch</button>
-        <div class="gm-hint">Mouse / Touch to steer</div>
+      <div class="gop-game-overlay" id="gop-game-overlay">
+        <div class="gop-over-title" id="gop-over-title" data-i="flyTitle">Fly in Space</div>
+        <div class="gop-over-sub" id="gop-over-sub" data-i="flyDesc">Dodge asteroids · Collect fuel cells · Survive</div>
+        <button class="gop-start-btn" onclick="startGame()" data-i="launch">Launch</button>
+        <div class="gop-hint" data-i="steerHint">Mouse / Touch to steer</div>
       </div>
     </div>
   </div>
@@ -482,48 +405,236 @@ footer{text-align:center;padding:24px;border-top:1px solid var(--border);font-si
 
 <!-- Hero -->
 <section class="hero" id="hero">
-  <h1>Welcome to InSpace</h1>
-  <p>Keep an eye out for updates</p>
+  <h1 data-i="heroTitle">Welcome to InSpace</h1>
+  <p data-i="heroSub">Keep an eye out for updates</p>
   <div id="countdown-wrap">
     <div id="countdown-mission"></div>
-    <div id="countdown-label">Next launch in</div>
+    <div id="countdown-label" data-i="nextLaunch">Next launch in</div>
     <div id="countdown-timer"></div>
   </div>
   <div id="days-since-wrap"><span id="days-since-text"></span></div>
   <div class="stream-link" onclick="window.open('https://www.youtube.com/@OXeall')">
-    <span class="stream-link-text">Watch Launch</span>
+    <span class="stream-link-text" data-i="watchLaunch">Watch Launch</span>
+  </div>
+  <!-- Stats moved here, below Watch Launch -->
+  <div id="hero-stats">
+    <div class="hero-stats-grid" id="hero-stats-grid"></div>
   </div>
 </section>
 
 <!-- Our Vehicles -->
 <section id="fleet" class="reveal">
-  <h2>Our Vehicles</h2>
+  <h2 data-i="ourVehicles">Our Vehicles</h2>
   <div class="vehicle-cards" id="vehicle-cards"></div>
-</section>
-
-<!-- Mission Stats -->
-<section id="mission-stats" class="reveal">
-  <div class="stats-grid" id="stats-grid"></div>
 </section>
 
 <!-- Latest News -->
 <section id="rockets" class="reveal">
-  <h2>Latest News</h2>
+  <h2 data-i="latestNews">Latest News</h2>
   <div class="rocket-cards" id="rocket-cards"></div>
   <div style="display:flex;gap:12px;justify-content:center;margin:32px auto 40px;">
-    <button id="load-more-btn" onclick="loadMore()" style="display:none;">Load more</button>
+    <button id="load-more-btn" onclick="loadMore()" style="display:none;" data-i="loadMore">Load more</button>
   </div>
 </section>
 
 <!-- Launch Schedule -->
 <section id="schedule" class="reveal">
-  <h2>Launch Schedule</h2>
+  <h2 data-i="launchSchedule">Launch Schedule</h2>
   <div id="launch-list"></div>
 </section>
 
-<footer>2026-2331 InSpace. This website is for informational purposes only and does not engage in any commercial activity.</footer>
+<footer>2026-2331 InSpace. <span data-i="footerNote">This website is for informational purposes only and does not engage in any commercial activity.</span></footer>
 
 <script>
+/* ══════════════════════════════════════
+   TRANSLATIONS
+══════════════════════════════════════ */
+const TRANSLATIONS = {
+  en: {
+    heroTitle:'Welcome to InSpace', heroSub:'Keep an eye out for updates',
+    nextLaunch:'Next launch in', missionInProgress:'Mission in progress',
+    watchLaunch:'Watch Launch', ourVehicles:'Our Vehicles',
+    latestNews:'Latest News', launchSchedule:'Launch Schedule',
+    loadMore:'Load more', details:'Details', back:'Back',
+    fullDetails:'Full Details', noSave:'Score & best are not saved between sessions.',
+    flyTitle:'Fly in Space', flySubtitle:'Mini Game',
+    flyDesc:'Dodge asteroids · Collect fuel cells · Survive',
+    launch:'Launch', steerHint:'Mouse / Touch to steer',
+    scoreLabel:'Score', bestLabel:'Best',
+    missionFailed:'Mission Failed',
+    statFlights:'Completed Flights', stat365:'Launches in Last 365 Days',
+    statVehicles:'Active Vehicles', statDays:'Days Since First Launch',
+    daysSince:'day since last launch', daysSincePl:'days since last launch',
+    watchLive:'Watch Live', footerNote:'This website is for informational purposes only and does not engage in any commercial activity.',
+    watchLaunchLink:'Watch Launch',
+    local:'local', miniGame:'Mini Game',
+    specifications:'Specifications', stages:'Stages', overview:'Overview',
+    noImage:'No data. Image coming soon',
+  },
+  es: {
+    heroTitle:'Bienvenido a InSpace', heroSub:'Mantente al tanto de las actualizaciones',
+    nextLaunch:'Próximo lanzamiento en', missionInProgress:'Misión en curso',
+    watchLaunch:'Ver Lanzamiento', ourVehicles:'Nuestros Vehículos',
+    latestNews:'Últimas Noticias', launchSchedule:'Calendario de Lanzamientos',
+    loadMore:'Cargar más', details:'Detalles', back:'Volver',
+    fullDetails:'Detalles Completos', noSave:'Puntuación y récord no se guardan entre sesiones.',
+    flyTitle:'Volar en el Espacio', flySubtitle:'Minijuego',
+    flyDesc:'Esquiva asteroides · Recoge celdas de combustible · Sobrevive',
+    launch:'Lanzar', steerHint:'Ratón / Toque para dirigir',
+    scoreLabel:'Puntos', bestLabel:'Récord',
+    missionFailed:'Misión Fallida',
+    statFlights:'Vuelos Completados', stat365:'Lanzamientos en los Últimos 365 Días',
+    statVehicles:'Vehículos Activos', statDays:'Días Desde el Primer Lanzamiento',
+    daysSince:'día desde el último lanzamiento', daysSincePl:'días desde el último lanzamiento',
+    watchLive:'Ver en Vivo', footerNote:'Este sitio web es solo para fines informativos y no realiza ninguna actividad comercial.',
+    watchLaunchLink:'Ver Lanzamiento',
+    local:'local', miniGame:'Minijuego',
+    specifications:'Especificaciones', stages:'Etapas', overview:'Descripción',
+    noImage:'Sin datos. Imagen próximamente',
+  },
+  de: {
+    heroTitle:'Willkommen bei InSpace', heroSub:'Bleib auf dem Laufenden',
+    nextLaunch:'Nächster Start in', missionInProgress:'Mission läuft',
+    watchLaunch:'Start ansehen', ourVehicles:'Unsere Fahrzeuge',
+    latestNews:'Neueste Nachrichten', launchSchedule:'Startplan',
+    loadMore:'Mehr laden', details:'Details', back:'Zurück',
+    fullDetails:'Alle Details', noSave:'Punkte und Bestleistung werden nicht gespeichert.',
+    flyTitle:'Im Weltraum fliegen', flySubtitle:'Minispiel',
+    flyDesc:'Asteroiden ausweichen · Treibstoffzellen sammeln · Überleben',
+    launch:'Starten', steerHint:'Maus / Touch zum Steuern',
+    scoreLabel:'Punkte', bestLabel:'Bestleistung',
+    missionFailed:'Mission gescheitert',
+    statFlights:'Abgeschlossene Flüge', stat365:'Starts in den letzten 365 Tagen',
+    statVehicles:'Aktive Fahrzeuge', statDays:'Tage seit dem ersten Start',
+    daysSince:'Tag seit dem letzten Start', daysSincePl:'Tage seit dem letzten Start',
+    watchLive:'Live ansehen', footerNote:'Diese Website dient nur zu Informationszwecken und ist nicht kommerziell tätig.',
+    watchLaunchLink:'Start ansehen',
+    local:'lokal', miniGame:'Minispiel',
+    specifications:'Spezifikationen', stages:'Stufen', overview:'Überblick',
+    noImage:'Keine Daten. Bild demnächst',
+  },
+  fr: {
+    heroTitle:'Bienvenue sur InSpace', heroSub:'Restez informé des mises à jour',
+    nextLaunch:'Prochain lancement dans', missionInProgress:'Mission en cours',
+    watchLaunch:'Voir le Lancement', ourVehicles:'Nos Véhicules',
+    latestNews:'Dernières Nouvelles', launchSchedule:'Calendrier des Lancements',
+    loadMore:'Charger plus', details:'Détails', back:'Retour',
+    fullDetails:'Détails Complets', noSave:'Score et meilleur score non sauvegardés.',
+    flyTitle:'Voler dans l\'Espace', flySubtitle:'Mini-jeu',
+    flyDesc:'Esquivez les astéroïdes · Collectez des cellules de carburant · Survivez',
+    launch:'Lancer', steerHint:'Souris / Toucher pour piloter',
+    scoreLabel:'Score', bestLabel:'Meilleur',
+    missionFailed:'Mission Échouée',
+    statFlights:'Vols Complétés', stat365:'Lancements sur 365 Derniers Jours',
+    statVehicles:'Véhicules Actifs', statDays:'Jours depuis le Premier Lancement',
+    daysSince:'jour depuis le dernier lancement', daysSincePl:'jours depuis le dernier lancement',
+    watchLive:'Regarder en Direct', footerNote:'Ce site est à titre informatif uniquement et ne mène aucune activité commerciale.',
+    watchLaunchLink:'Voir le Lancement',
+    local:'local', miniGame:'Mini-jeu',
+    specifications:'Spécifications', stages:'Étages', overview:'Aperçu',
+    noImage:'Pas de données. Image bientôt disponible',
+  },
+  ru: {
+    heroTitle:'Добро пожаловать в InSpace', heroSub:'Следите за обновлениями',
+    nextLaunch:'Следующий запуск через', missionInProgress:'Миссия выполняется',
+    watchLaunch:'Смотреть запуск', ourVehicles:'Наши ракеты',
+    latestNews:'Последние новости', launchSchedule:'Расписание запусков',
+    loadMore:'Загрузить ещё', details:'Подробнее', back:'Назад',
+    fullDetails:'Все детали', noSave:'Счёт и рекорд не сохраняются между сессиями.',
+    flyTitle:'Полёт в космосе', flySubtitle:'Мини-игра',
+    flyDesc:'Уклоняйся от астероидов · Собирай топливо · Выживи',
+    launch:'Запуск', steerHint:'Мышь / касание для управления',
+    scoreLabel:'Счёт', bestLabel:'Рекорд',
+    missionFailed:'Миссия провалена',
+    statFlights:'Выполненных полётов', stat365:'Запусков за последние 365 дней',
+    statVehicles:'Активных аппаратов', statDays:'Дней с первого запуска',
+    daysSince:'день с последнего запуска', daysSincePl:'дней с последнего запуска',
+    watchLive:'Смотреть прямой эфир', footerNote:'Этот сайт носит исключительно информационный характер и не ведёт коммерческой деятельности.',
+    watchLaunchLink:'Смотреть запуск',
+    local:'местное', miniGame:'Мини-игра',
+    specifications:'Характеристики', stages:'Ступени', overview:'Обзор',
+    noImage:'Нет данных. Изображение скоро',
+  },
+  zh: {
+    heroTitle:'欢迎来到 InSpace', heroSub:'关注最新动态',
+    nextLaunch:'下次发射倒计时', missionInProgress:'任务进行中',
+    watchLaunch:'观看发射', ourVehicles:'我们的飞行器',
+    latestNews:'最新消息', launchSchedule:'发射时间表',
+    loadMore:'加载更多', details:'详情', back:'返回',
+    fullDetails:'完整详情', noSave:'分数和最佳成绩不会在会话间保存。',
+    flyTitle:'太空飞行', flySubtitle:'小游戏',
+    flyDesc:'躲避小行星 · 收集燃料电池 · 生存',
+    launch:'发射', steerHint:'鼠标/触摸操控',
+    scoreLabel:'得分', bestLabel:'最高',
+    missionFailed:'任务失败',
+    statFlights:'已完成飞行', stat365:'过去365天的发射次数',
+    statVehicles:'活跃飞行器', statDays:'自首次发射以来的天数',
+    daysSince:'天前最后一次发射', daysSincePl:'天前最后一次发射',
+    watchLive:'观看直播', footerNote:'本网站仅供参考，不从事任何商业活动。',
+    watchLaunchLink:'观看发射',
+    local:'本地', miniGame:'小游戏',
+    specifications:'规格', stages:'阶段', overview:'概述',
+    noImage:'暂无数据。图片即将上线',
+  },
+  pt: {
+    heroTitle:'Bem-vindo ao InSpace', heroSub:'Fique atento às atualizações',
+    nextLaunch:'Próximo lançamento em', missionInProgress:'Missão em andamento',
+    watchLaunch:'Assistir ao Lançamento', ourVehicles:'Nossos Veículos',
+    latestNews:'Últimas Notícias', launchSchedule:'Calendário de Lançamentos',
+    loadMore:'Carregar mais', details:'Detalhes', back:'Voltar',
+    fullDetails:'Detalhes Completos', noSave:'Pontuação e recorde não são salvos entre sessões.',
+    flyTitle:'Voar no Espaço', flySubtitle:'Minijogo',
+    flyDesc:'Desvie de asteroides · Colete células de combustível · Sobreviva',
+    launch:'Lançar', steerHint:'Mouse / Toque para dirigir',
+    scoreLabel:'Pontos', bestLabel:'Recorde',
+    missionFailed:'Missão Falhou',
+    statFlights:'Voos Concluídos', stat365:'Lançamentos nos Últimos 365 Dias',
+    statVehicles:'Veículos Ativos', statDays:'Dias desde o Primeiro Lançamento',
+    daysSince:'dia desde o último lançamento', daysSincePl:'dias desde o último lançamento',
+    watchLive:'Assistir ao Vivo', footerNote:'Este site é apenas para fins informativos e não exerce nenhuma atividade comercial.',
+    watchLaunchLink:'Assistir ao Lançamento',
+    local:'local', miniGame:'Minijogo',
+    specifications:'Especificações', stages:'Estágios', overview:'Visão Geral',
+    noImage:'Sem dados. Imagem em breve',
+  },
+};
+
+const LANG_NAMES = {en:'EN',es:'ES',de:'DE',fr:'FR',ru:'RU',zh:'中文',pt:'PT'};
+const LANG_LABELS = {en:'English (US)',es:'Spanish',de:'German',fr:'French',ru:'Russian',zh:'Chinese',pt:'Brazilian'};
+
+let currentLang = localStorage.getItem('inspace_lang') || 'en';
+
+function t(key){ return (TRANSLATIONS[currentLang]||TRANSLATIONS.en)[key] || TRANSLATIONS.en[key] || key; }
+
+function applyLang(){
+  document.querySelectorAll('[data-i]').forEach(el=>{
+    const key=el.getAttribute('data-i');
+    const val=t(key);
+    if(el.tagName==='INPUT'||el.tagName==='BUTTON'||el.tagName==='A'){
+      if(!el.children.length) el.textContent=val; // only set if no child elements
+    } else {
+      el.textContent=val;
+    }
+  });
+  // update lang button label
+  const lb=document.getElementById('lang-btn-label');
+  if(lb) lb.textContent=LANG_NAMES[currentLang]||'EN';
+  // update clock tz label
+  const tzEl=document.querySelector('.header-clock-tz');
+  if(tzEl) tzEl.textContent=t('local');
+}
+
+function setLang(code){
+  currentLang=code;
+  localStorage.setItem('inspace_lang',code);
+  applyLang();
+  // re-render dynamic content
+  rebuildStats();
+  rebuildDaysSince();
+  // nav links text
+  rebuildNav();
+}
+
 /* ══════════════════════════════════════
    SITE CONFIG
 ══════════════════════════════════════ */
@@ -547,15 +658,8 @@ const sounds = {
 
 /*
   SOCIAL BUTTONS CONFIG
-  ───────────────────────────────────────────────────────────────
-  visible: true  → shown in header
-  visible: false → hidden (template, enable later)
-
-  TO ENABLE A FUTURE NETWORK:
-    1. Set visible: true
-    2. Fill in url
-    3. Paste SVG icon path data into svg field
-  ───────────────────────────────────────────────────────────────
+  visible: true → shown; false → hidden template
+  TO ENABLE: set visible:true, fill url and svg
 */
 const socialButtons = [
   {
@@ -603,6 +707,7 @@ function createStars(container,count){
 createStars(document.getElementById('starfield'),110);
 let vpStarsCreated=false;function ensureVpStars(){if(vpStarsCreated)return;createStars(document.getElementById('vp-starfield'),90);vpStarsCreated=true;}
 let newsStarsCreated=false;function ensureNewsStars(){if(newsStarsCreated)return;createStars(document.getElementById('news-starfield'),80);newsStarsCreated=true;}
+let gameStarsCreated=false;function ensureGameStars(){if(gameStarsCreated)return;createStars(document.getElementById('game-starfield'),80);gameStarsCreated=true;}
 
 /* ── Parallax ── */
 (function(){
@@ -623,7 +728,7 @@ let newsStarsCreated=false;function ensureNewsStars(){if(newsStarsCreated)return
   window.addEventListener('scroll',sch,{passive:true});
 })();
 
-/* ── Flyby ── */
+/* ── Flyby — now spawns from all sides ── */
 (function(){
   const canvas=document.getElementById('flyby-canvas'),ctx=canvas.getContext('2d');
   let W,H;
@@ -631,26 +736,57 @@ let newsStarsCreated=false;function ensureNewsStars(){if(newsStarsCreated)return
   resize();window.addEventListener('resize',resize);
   let flyby=null,animFrame=null,lastTime=null;
   function sched(){setTimeout(spawn,(10+Math.random()*5)*1000);}
+
   function spawn(){
     const r=Math.random(),type=r<0.50?'meteor':r<0.85?'satellite':'starship';
-    const angle=(Math.random()*30-15)*Math.PI/180,sy=H*(0.1+Math.random()*0.55);
-    flyby=build(type,angle,sy);if(!animFrame)animFrame=requestAnimationFrame(loop);sched();
+    // Direction: 60% horizontal (left/right), 20% top, 20% bottom
+    const dir=Math.random();
+    let startX,startY,angle;
+    if(dir<0.35){
+      // from left
+      startX=-120;startY=H*(0.05+Math.random()*0.9);
+      angle=(Math.random()*30-15)*Math.PI/180;
+    } else if(dir<0.70){
+      // from right
+      startX=W+120;startY=H*(0.05+Math.random()*0.9);
+      // pointing left
+      angle=Math.PI+(Math.random()*30-15)*Math.PI/180;
+    } else if(dir<0.85){
+      // from top
+      startX=W*(0.05+Math.random()*0.9);startY=-80;
+      angle=Math.PI/2+(Math.random()*20-10)*Math.PI/180;
+    } else {
+      // from bottom
+      startX=W*(0.05+Math.random()*0.9);startY=H+80;
+      angle=-Math.PI/2+(Math.random()*20-10)*Math.PI/180;
+    }
+    flyby=build(type,startX,startY,angle);
+    if(!animFrame)animFrame=requestAnimationFrame(loop);sched();
   }
-  function build(type,angle,sy){
-    const b={type,x:-120,y:sy,angle};
+
+  function build(type,sx,sy,angle){
+    const b={type,x:sx,y:sy,angle};
     if(type==='meteor')return{...b,speed:5+Math.random()*4,tailLen:80+Math.random()*60,brightness:0.55+Math.random()*0.35,size:1.2+Math.random()*0.8};
     if(type==='satellite')return{...b,speed:3+Math.random()*3,brightness:0.30+Math.random()*0.20,size:1.4,tailLen:18};
     return{...b,speed:3+Math.random()*2,brightness:0.22+Math.random()*0.12,size:3.5,tailLen:28};
   }
+
+  function isOffScreen(f){
+    return f.x>W+200||f.x<-200||f.y>H+200||f.y<-200;
+  }
+
   function loop(ts){
     if(!lastTime)lastTime=ts;lastTime=ts;
     ctx.clearRect(0,0,W,H);
     if(flyby){
       flyby.x+=Math.cos(flyby.angle)*flyby.speed;flyby.y+=Math.sin(flyby.angle)*flyby.speed;
-      const prog=flyby.x/(W+200);
-      let alpha;if(prog<0.08)alpha=prog/0.08;else if(prog<0.85)alpha=1;else alpha=Math.max(0,1-(prog-0.85)/0.15);
-      alpha*=flyby.brightness;
-      if(flyby.x>W+150){flyby=null;ctx.clearRect(0,0,W,H);animFrame=null;lastTime=null;return;}
+      // fade based on progress across screen (use center distance)
+      const cx=W/2,cy=H/2;
+      const maxD=Math.sqrt(cx*cx+cy*cy)+150;
+      const d=Math.sqrt((flyby.x-cx)**2+(flyby.y-cy)**2);
+      const prog=1-Math.max(0,Math.min(1,(d-maxD*0.1)/(maxD*0.7)));
+      let alpha=Math.min(1,prog*2.5)*flyby.brightness;
+      if(isOffScreen(flyby)){flyby=null;ctx.clearRect(0,0,W,H);animFrame=null;lastTime=null;return;}
       if(flyby.type==='meteor')dMeteor(flyby,alpha);
       else if(flyby.type==='satellite')dSatellite(flyby,alpha);
       else dStarship(flyby,alpha);
@@ -705,29 +841,59 @@ function statusColor(s){
   }
 }
 
-/* ── Header nav ── */
-const navEl=document.getElementById('header-nav');
-[
-  {label:'Home',section:'hero'},
-  {label:'Vehicles',section:'fleet'},
-  {label:'News',section:'rockets'},
-  {label:'Schedule',section:'schedule'},
-].forEach(n=>{
-  const a=document.createElement('a');a.textContent=n.label;a.style.color=navLinkColor;
-  a.onmouseenter=()=>{a.style.color=navLinkHoverColor;};a.onmouseleave=()=>{a.style.color=navLinkColor;};
-  a.onclick=()=>{closeVehicle();closeNews();scrollToSection(n.section);};
-  navEl.appendChild(a);
-});
-// Mini Games nav button opens the modal
-const mgNav=document.createElement('a');mgNav.textContent='Mini Game';mgNav.style.color=navLinkColor;
-mgNav.onmouseenter=()=>{mgNav.style.color=navLinkHoverColor;};mgNav.onmouseleave=()=>{mgNav.style.color=navLinkColor;};
-mgNav.onclick=()=>{openGameModal();};navEl.appendChild(mgNav);
+/* ── Build header nav ── */
+let navLinks=[];
+function rebuildNav(){
+  const navEl=document.getElementById('header-nav');
+  navEl.innerHTML='';
+  const items=[
+    {key:'Home',section:'hero'},{key:'Vehicles',section:'fleet'},
+    {key:'News',section:'rockets'},{key:'Schedule',section:'schedule'},
+  ];
+  // static labels for nav (use English key as fallback since nav labels aren't in translations dict directly)
+  const navLabels={
+    en:['Home','Vehicles','News','Schedule'],
+    es:['Inicio','Vehículos','Noticias','Calendario'],
+    de:['Start','Fahrzeuge','Neuigkeiten','Startplan'],
+    fr:['Accueil','Véhicules','Actualités','Calendrier'],
+    ru:['Главная','Ракеты','Новости','Расписание'],
+    zh:['首页','飞行器','新闻','时间表'],
+    pt:['Início','Veículos','Notícias','Calendário'],
+  };
+  const labels=navLabels[currentLang]||navLabels.en;
+  items.forEach((n,i)=>{
+    const a=document.createElement('a');a.textContent=labels[i];a.style.color=navLinkColor;
+    a.onmouseenter=()=>{a.style.color=navLinkHoverColor;};a.onmouseleave=()=>{a.style.color=navLinkColor;};
+    a.onclick=()=>{closeVehicle();closeNews();closeGamePage();scrollToSection(n.section);};
+    navEl.appendChild(a);
+  });
+  // Mini Game nav
+  const mgLabels={en:'Mini Game',es:'Minijuego',de:'Minispiel',fr:'Mini-jeu',ru:'Мини-игра',zh:'小游戏',pt:'Minijogo'};
+  const mgA=document.createElement('a');mgA.textContent=mgLabels[currentLang]||'Mini Game';mgA.style.color=navLinkColor;
+  mgA.onmouseenter=()=>{mgA.style.color=navLinkHoverColor;};mgA.onmouseleave=()=>{mgA.style.color=navLinkColor;};
+  mgA.onclick=()=>{openGamePage();};navEl.appendChild(mgA);
+}
+rebuildNav();
 
 /* ── Clock ── */
 if(showClock){
   const ls=document.getElementById('header-left-slot');
+  // Lang picker
+  const lp=document.createElement('div');lp.className='lang-picker';lp.id='lang-picker';
+  const lb=document.createElement('button');lb.className='lang-btn';
+  lb.innerHTML=`<span id="lang-btn-label">${LANG_NAMES[currentLang]||'EN'}</span><svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>`;
+  lb.onclick=e=>{e.stopPropagation();lp.classList.toggle('open');};
+  const dd=document.createElement('div');dd.className='lang-dropdown';
+  Object.entries(LANG_LABELS).forEach(([code,name])=>{
+    const opt=document.createElement('button');opt.className='lang-option'+(code===currentLang?' active':'');
+    opt.textContent=name;opt.onclick=()=>{setLang(code);lp.classList.remove('open');dd.querySelectorAll('.lang-option').forEach(o=>o.classList.remove('active'));opt.classList.add('active');};
+    dd.appendChild(opt);
+  });
+  lp.appendChild(lb);lp.appendChild(dd);ls.appendChild(lp);
+  document.addEventListener('click',()=>lp.classList.remove('open'));
+
   const cs=document.createElement('span');cs.className='header-clock';cs.style.fontSize=clockFontSize;cs.style.color=clockColor;
-  const tz=document.createElement('span');tz.className='header-clock-tz';tz.textContent='local';tz.style.fontSize='0.68em';tz.style.color=clockTzColor;
+  const tz=document.createElement('span');tz.className='header-clock-tz';tz.textContent=t('local');tz.style.fontSize='0.68em';tz.style.color=clockTzColor;
   ls.appendChild(cs);ls.appendChild(tz);
   function updateClock(){const n=new Date();cs.textContent=`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')} `;}
   updateClock();setInterval(updateClock,1000);
@@ -761,143 +927,40 @@ const launches=[
   {rocket:'SunOrbit One SN4 (V2.2)', date:'2026-03-06 11:00',status:'Completed',nameId:'sunorbit',site:'Miami, FL (RSS)',        type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN4 (V2.2)', desc:'1st Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30}
 ];
 launches.forEach(l=>{
-  const[d,t]=l.date.split(' ');const[year,month,day]=d.split('-').map(Number);const[hour,minute]=t.split(':').map(Number);
+  const[d,t2]=l.date.split(' ');const[year,month,day]=d.split('-').map(Number);const[hour,minute]=t2.split(':').map(Number);
   l.dateObj=new Date(Date.UTC(year,month-1,day,hour-5,minute));
   l.endObj=new Date(l.dateObj.getTime()+l.durationMin*60*1000);
 });
 function launchCountFor(nameId){return launches.filter(l=>l.nameId===nameId&&l.status==='Completed').length;}
 
-(function(){
+function rebuildDaysSince(){
   const completed=launches.filter(l=>l.status==='Completed');if(!completed.length)return;
   const latest=completed.reduce((a,b)=>a.dateObj>b.dateObj?a:b);
   const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
   const launchLocal=new Date(latest.dateObj.toLocaleDateString('en-CA'));
   const diffDays=Math.max(0,Math.floor((today-launchLocal)/86400000));
-  document.getElementById('days-since-text').textContent=diffDays<1?'<1 day since last launch':`${diffDays} day${diffDays!==1?'s':''} since last launch`;
+  const single=t('daysSince'), plural=t('daysSincePl');
+  document.getElementById('days-since-text').textContent=diffDays<1?`<1 ${plural}`:`${diffDays} ${diffDays!==1?plural:single}`;
   document.getElementById('days-since-wrap').style.display='block';
-})();
+}
+rebuildDaysSince();
 
 /* ══════════════════════════════════════
    VEHICLES
 ══════════════════════════════════════ */
-const vehicles = [
-  {
-    id: 'sunorbit',
-    name: 'SunOrbit',
-    class: 'Interplanetary Vehicle',
-    color: '#00aaff',
-    image: '991ef2dcfcd94c0f95050b657d1c6134.png',
-    description: "SunOrbit is InSpace's primary interplanetary vehicle, built in modular stages.<br>It is equally capable of crewed and uncrewed missions to Low Earth Orbit and to other planets. For Earth orbit, the third stage can function as a crewed mini-station or as an uncrewed satellite that separates directly in orbit. For missions to other planets, the third stage can serve as the main crew habitat and command module with life support systems, or operate fully autonomously without pilots - including orbital insertion around other planets.<br>The first and second stages are reusable and designed for precise suicide burn landings on Earth and other planetary bodies. The vehicle features advanced docking capabilities and high-bandwidth communication relay systems.",
-    specs: [
-      { val: '205m', lbl: 'Height' },
-      { val: '3370 t', lbl: 'Mass' },
-      { val: '79.1 km/s', lbl: 'Delta-V' },
-      { val: '14.64×', lbl: 'TWR' },
-      { val: 'Feb 2026', lbl: 'First Flight' }
-    ],
-    stages: [
-      {
-        title: 'Stage 1 — Booster',
-        rows: [
-          { key: 'Engines', val: '42' },
-          { key: 'Thrust (SL)', val: '484,000 kN' },
-          { key: 'Burn time', val: '33.8 min' },
-          { key: 'Propellant', val: '2,560 t' },
-          { key: 'Recovery', val: 'Vertical landing' },
-          { key: 'Reusable', val: 'Yes' }
-        ]
-      },
-      {
-        title: 'Stage 2 — Upper',
-        rows: [
-          { key: 'Engines', val: '90' },
-          { key: 'Thrust (vac)', val: '120,000 kN' },
-          { key: 'Burn time', val: '1.6 min' },
-          { key: 'Propellant', val: '2,330 t' },
-          { key: 'Recovery', val: 'Vertical landing' },
-          { key: 'Reusable', val: 'Yes' }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'sunpower',
-    name: 'SunPower',
-    class: 'Earth Orbit',
-    color: '#ffaa00',
-    image: null,
-    description: "SunPower is InSpace's heavy-lift workhorse, designed specifically for Low Earth Orbit missions.<br>It evolved from a rapid prototype through multiple generations into a reliable high-performance launcher, optimized for delivering large payloads, solar arrays, and orbital stations. The name SunPower was coined on the fly by Haisess during the very first test campaign.<br>Although public records show 0 launches, more than 20 SunPower vehicles have already been built and successfully flown in classified InSpace test and operational missions.",
-    specs: [
-      { val: '—', lbl: 'Height' },
-      { val: '—', lbl: 'Mass' },
-      { val: '—', lbl: 'Delta-V' },
-      { val: '—', lbl: 'TWR' },
-      { val: 'Feb 2026', lbl: 'First Flight' }
-    ],
-    stages: [
-      {
-        title: 'Stage 1 — Booster',
-        rows: [
-          { key: 'Engines', val: '—' },
-          { key: 'Thrust (SL)', val: '—' },
-          { key: 'Burn time', val: '—' },
-          { key: 'Propellant', val: '—' },
-          { key: 'Recovery', val: 'Vertical landing' },
-          { key: 'Reusable', val: 'Yes' }
-        ]
-      },
-      {
-        title: 'Stage 2 — Upper',
-        rows: [
-          { key: 'Engines', val: '—' },
-          { key: 'Thrust (vac)', val: '—' },
-          { key: 'Burn time', val: '—' },
-          { key: 'Propellant', val: '—' },
-          { key: 'Recovery', val: '—' },
-          { key: 'Reusable', val: '—' }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'planetsrockets',
-    name: 'PlanetsRockets',
-    class: 'COMING SOON',
-    color: '#cc66ff',
-    image: null,
-    description: "PlanetsRockets is InSpace's next-generation interplanetary vehicle, currently in the early concept and planning phase.<br>All detailed information about its design, capabilities, and specific mission targets remains confidential at this stage.<br>It is being developed as part of InSpace's long-term ambitions for deep-space exploration.",
-    specs: [
-      { val: '—', lbl: 'Height' },
-      { val: '—', lbl: 'Mass' },
-      { val: '—', lbl: 'Delta-V' },
-      { val: '—', lbl: 'TWR' },
-      { val: 'Apr 2026', lbl: 'First Flight' }
-    ],
-    stages: [
-      {
-        title: 'Stage 1 — Booster',
-        rows: [
-          { key: 'Engines', val: '—' },
-          { key: 'Thrust (SL)', val: '—' },
-          { key: 'Burn time', val: '—' },
-          { key: 'Propellant', val: '—' },
-          { key: 'Recovery', val: 'TBD' },
-          { key: 'Reusable', val: 'TBD' }
-        ]
-      },
-      {
-        title: 'Stage 2 — Upper',
-        rows: [
-          { key: 'Engines', val: '—' },
-          { key: 'Thrust (vac)', val: '—' },
-          { key: 'Burn time', val: '—' },
-          { key: 'Propellant', val: '—' },
-          { key: 'Recovery', val: '—' },
-          { key: 'Reusable', val: '—' }
-        ]
-      }
-    ]
-  }
+const vehicles=[
+  {id:'sunorbit',name:'SunOrbit',class:'Interplanetary Vehicle',color:'#00aaff',image:'991ef2dcfcd94c0f95050b657d1c6134.png',
+   description:"SunOrbit is InSpace's primary interplanetary vehicle, built in modular stages.<br>It is equally capable of crewed and uncrewed missions to Low Earth Orbit and to other planets. For Earth orbit, the third stage can function as a crewed mini-station or as an uncrewed satellite that separates directly in orbit. For missions to other planets, the third stage can serve as the main crew habitat and command module with life support systems, or operate fully autonomously without pilots - including orbital insertion around other planets.<br>The first and second stages are reusable and designed for precise suicide burn landings on Earth and other planetary bodies. The vehicle features advanced docking capabilities and high-bandwidth communication relay systems.",
+   specs:[{val:'205m',lbl:'Height'},{val:'3370 t',lbl:'Mass'},{val:'79.1 km/s',lbl:'Delta-V'},{val:'14.64×',lbl:'TWR'},{val:'Feb 2026',lbl:'First Flight'}],
+   stages:[{title:'Stage 1 — Booster',rows:[{key:'Engines',val:'42'},{key:'Thrust (SL)',val:'484,000 kN'},{key:'Burn time',val:'33.8 min'},{key:'Propellant',val:'2,560 t'},{key:'Recovery',val:'Vertical landing'},{key:'Reusable',val:'Yes'}]},{title:'Stage 2 — Upper',rows:[{key:'Engines',val:'90'},{key:'Thrust (vac)',val:'120,000 kN'},{key:'Burn time',val:'1.6 min'},{key:'Propellant',val:'2,330 t'},{key:'Recovery',val:'Vertical landing'},{key:'Reusable',val:'Yes'}]}]},
+  {id:'sunpower',name:'SunPower',class:'Earth Orbit',color:'#ffaa00',image:null,
+   description:"SunPower is InSpace's heavy-lift workhorse, designed specifically for Low Earth Orbit missions.<br>It evolved from a rapid prototype through multiple generations into a reliable high-performance launcher, optimized for delivering large payloads, solar arrays, and orbital stations. The name SunPower was coined on the fly by Haisess during the very first test campaign.<br>Although public records show 0 launches, more than 20 SunPower vehicles have already been built and successfully flown in classified InSpace test and operational missions.",
+   specs:[{val:'—',lbl:'Height'},{val:'—',lbl:'Mass'},{val:'—',lbl:'Delta-V'},{val:'—',lbl:'TWR'},{val:'Feb 2026',lbl:'First Flight'}],
+   stages:[{title:'Stage 1 — Booster',rows:[{key:'Engines',val:'—'},{key:'Thrust (SL)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'Vertical landing'},{key:'Reusable',val:'Yes'}]},{title:'Stage 2 — Upper',rows:[{key:'Engines',val:'—'},{key:'Thrust (vac)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'—'},{key:'Reusable',val:'—'}]}]},
+  {id:'planetsrockets',name:'PlanetsRockets',class:'COMING SOON',color:'#cc66ff',image:null,
+   description:"PlanetsRockets is InSpace's next-generation interplanetary vehicle, currently in the early concept and planning phase.<br>All detailed information about its design, capabilities, and specific mission targets remains confidential at this stage.<br>It is being developed as part of InSpace's long-term ambitions for deep-space exploration.",
+   specs:[{val:'—',lbl:'Height'},{val:'—',lbl:'Mass'},{val:'—',lbl:'Delta-V'},{val:'—',lbl:'TWR'},{val:'Apr 2026',lbl:'First Flight'}],
+   stages:[{title:'Stage 1 — Booster',rows:[{key:'Engines',val:'—'},{key:'Thrust (SL)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'TBD'},{key:'Reusable',val:'TBD'}]},{title:'Stage 2 — Upper',rows:[{key:'Engines',val:'—'},{key:'Thrust (vac)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'—'},{key:'Reusable',val:'—'}]}]}
 ];
 
 const vcContainer=document.getElementById('vehicle-cards');
@@ -906,8 +969,8 @@ vehicles.forEach(v=>{
   const hSpec=v.specs.find(s=>s.lbl==='Height');
   const mSpec=v.specs.find(s=>s.lbl==='Mass');
   const cells=[
-    {lbl:'Height',  val:hSpec?.val??'—'},
-    {lbl:'Mass',    val:mSpec?.val??'—'},
+    {lbl:'Height',val:hSpec?.val??'—'},
+    {lbl:'Mass',  val:mSpec?.val??'—'},
     {lbl:'Launches',val:count>0?count+'×':'—'},
   ];
   const specHTML=cells.map(c=>`<div class="vc-sc"><div class="vc-sl">${c.lbl}</div><div class="vc-sv">${c.val}</div></div>`).join('');
@@ -920,10 +983,11 @@ vehicles.forEach(v=>{
         <div class="vc-name">${v.name}</div>
         <div class="vc-sub">${v.class}</div>
       </div>
+      <div class="vc-count">${count>0?count+' flight'+(count!==1?'s':''):'No flights'}</div>
     </div>
     <div class="vc-specs">${specHTML}</div>
     <div class="vc-foot">
-      <span class="vc-foot-txt">Full Details</span>
+      <span class="vc-foot-txt">${t('fullDetails')}</span>
       <span class="vc-foot-arr">&#8599;</span>
     </div>`;
   card.addEventListener('click',()=>{playSound('details');openVehicle(v.id);});
@@ -934,16 +998,16 @@ function openVehicle(id){
   const v=vehicles.find(x=>x.id===id);if(!v)return;
   ensureVpStars();playSound('modal');
   document.getElementById('vp-header-title').textContent=v.name;
-  const imgHTML=v.image?`<img src="${v.image}" alt="${v.name}">`:`<div class="vp-img-ph">No data. Image coming soon</div>`;
+  const imgHTML=v.image?`<img src="${v.image}" alt="${v.name}">`:`<div class="vp-img-ph">${t('noImage')}</div>`;
   const specsHTML=v.specs.map(s=>`<div class="vp-spec"><div class="vp-spec-lbl">${s.lbl}</div><div class="vp-spec-val">${s.val}</div></div>`).join('');
   const stagesHTML=v.stages.map(st=>{const cells=st.rows.map(r=>`<div class="vp-stage-cell"><div class="vp-stage-key">${r.key}</div><div class="vp-stage-val">${r.val}</div></div>`).join('');return`<div class="vp-stage"><div class="vp-stage-title">${st.title}</div><div class="vp-stage-rows">${cells}</div></div>`;}).join('');
   document.getElementById('vp-body').innerHTML=`
     <div class="vp-hero-name" style="color:${v.color}">${v.name}</div>
     <div class="vp-hero-class">${v.class}</div>
     <div class="vp-img-wrap">${imgHTML}</div>
-    <div class="vp-sec-title">Specifications</div><div class="vp-specs-grid">${specsHTML}</div>
-    <div class="vp-sec-title">Stages</div><div class="vp-stages">${stagesHTML}</div>
-    <div class="vp-sec-title">Overview</div><div class="vp-desc">${v.description}</div>`;
+    <div class="vp-sec-title">${t('specifications')}</div><div class="vp-specs-grid">${specsHTML}</div>
+    <div class="vp-sec-title">${t('stages')}</div><div class="vp-stages">${stagesHTML}</div>
+    <div class="vp-sec-title">${t('overview')}</div><div class="vp-desc">${v.description}</div>`;
   const overlay=document.getElementById('vehicle-overlay');
   overlay.classList.add('active');requestAnimationFrame(()=>{requestAnimationFrame(()=>overlay.classList.add('visible'));});
   overlay.scrollTop=0;document.body.style.overflow='hidden';
@@ -954,9 +1018,9 @@ function closeVehicle(){
 }
 
 /* ══════════════════════════════════════
-   MISSION STATS
+   HERO STATS
 ══════════════════════════════════════ */
-(function(){
+function rebuildStats(){
   const totalFlights  =launches.filter(l=>l.status==='Completed').length;
   const uniqueVehicles=[...new Set(launches.map(l=>l.nameId))].length;
   const cutoff=Date.now()-365*24*60*60*1000;
@@ -964,18 +1028,20 @@ function closeVehicle(){
   const earliest=launches.reduce((a,b)=>a.dateObj<b.dateObj?a:b);
   const daysActive=Math.floor((Date.now()-earliest.dateObj.getTime())/86400000);
   const cells=[
-    {num:totalFlights,   label:'Completed Flights'},
-    {num:last365,        label:'Launches in Last 365 Days'},
-    {num:uniqueVehicles, label:'Active Vehicles'},
-    {num:daysActive,     label:'Days Since First Launch'},
+    {num:totalFlights,   label:t('statFlights')},
+    {num:last365,        label:t('stat365')},
+    {num:uniqueVehicles, label:t('statVehicles')},
+    {num:daysActive,     label:t('statDays')},
   ];
-  const grid=document.getElementById('stats-grid');
+  const grid=document.getElementById('hero-stats-grid');
+  grid.innerHTML='';
   cells.forEach(c=>{
-    const el=document.createElement('div');el.className='stat-cell';
-    el.innerHTML=`<div class="stat-num">${c.num}</div><div class="stat-label">${c.label}</div>`;
+    const el=document.createElement('div');el.className='hero-stat-cell';
+    el.innerHTML=`<div class="hero-stat-num">${c.num}</div><div class="hero-stat-lbl">${c.label}</div>`;
     grid.appendChild(el);
   });
-})();
+}
+rebuildStats();
 
 /* ══════════════════════════════════════
    NEWS
@@ -992,7 +1058,7 @@ function renderNews(){
   const grid=document.getElementById('rocket-cards'),btn=document.getElementById('load-more-btn');
   allRockets.slice(newsShown,newsShown+NEWS_PER_PAGE).forEach((r,li)=>{
     const gi=newsShown+li;const card=document.createElement('div');card.className='rocket';card.style.animationDelay=(li*0.08)+'s';
-    card.innerHTML=`<div class="rocket-top-bar"></div><div class="rocket-body"><h3>${r.name}</h3><p class="rocket-desc">${r.description}</p></div><div class="rocket-footer"><span class="rocket-date">${r.date}</span><button class="rocket-details-btn" onclick="openNews(${gi})">Details <span class="rd-arrow">&#8599;</span></button></div>`;
+    card.innerHTML=`<div class="rocket-top-bar"></div><div class="rocket-body"><h3>${r.name}</h3><p class="rocket-desc">${r.description}</p></div><div class="rocket-footer"><span class="rocket-date">${r.date}</span><button class="rocket-details-btn" onclick="openNews(${gi})">${t('details')} <span class="rd-arrow">&#8599;</span></button></div>`;
     grid.appendChild(card);
   });
   newsShown+=Math.min(NEWS_PER_PAGE,allRockets.length-newsShown);
@@ -1045,12 +1111,12 @@ function closeNews(){
     if(msE<=0){hideRW(cur);cur=null;cur=findNext();if(!cur){wEl.style.display='none';return;}mEl.textContent=cur.rocket;}
     wEl.style.display='block';mEl.textContent=cur.rocket;
     if(msL<=0&&msE>0){
-      lEl.textContent='Mission in progress';
+      lEl.textContent=t('missionInProgress');
       const el=Math.floor((now-cur.dateObj.getTime())/1000);
       showDays(false);hEl.textContent=pad(Math.floor(el/3600));mEl2.textContent=pad(Math.floor((el%3600)/60));sEl.textContent=pad(el%60);
       showRW(cur);return;
     }
-    lEl.textContent='Next launch in';
+    lEl.textContent=t('nextLaunch');
     const ts=Math.floor(msL/1000);
     showDays(Math.floor(ts/86400)>0);
     dEl.textContent=pad(Math.floor(ts/86400));hEl.textContent=pad(Math.floor((ts%86400)/3600));
@@ -1077,7 +1143,7 @@ function openLaunchModal(idx){
   document.getElementById('lm-grid').innerHTML=`<div class="lm-cell"><div class="lm-cell-lbl">Vehicle</div><div class="lm-cell-val">${l.vehicle}</div></div><div class="lm-cell"><div class="lm-cell-lbl">Launch Site</div><div class="lm-cell-val">${l.site}</div></div><div class="lm-cell"><div class="lm-cell-lbl">Date</div><div class="lm-cell-val">${ds}</div></div><div class="lm-cell"><div class="lm-cell-lbl">Time</div><div class="lm-cell-val">${ts}</div></div><div class="lm-cell"><div class="lm-cell-lbl">Target</div><div class="lm-cell-val">${l.target}</div></div><div class="lm-cell"><div class="lm-cell-lbl">Duration</div><div class="lm-cell-val">~${l.durationMin} min</div></div>`;
   document.getElementById('lm-desc').textContent=l.desc;
   const wr=document.getElementById('lm-watch-row'),wl=document.getElementById('lm-watch-link');
-  if(l.watchUrl){wl.href=l.watchUrl;wr.style.display='';}else{wr.style.display='none';}
+  if(l.watchUrl){wl.href=l.watchUrl;wl.textContent=t('watchLaunchLink');wr.style.display='';}else{wr.style.display='none';}
   const bd=document.getElementById('launch-modal-backdrop');bd.classList.add('active');
   requestAnimationFrame(()=>{requestAnimationFrame(()=>bd.classList.add('visible'));});
   document.body.style.overflow='hidden';
@@ -1087,7 +1153,7 @@ function closeLaunchModal(e,force){
   const bd=document.getElementById('launch-modal-backdrop');bd.classList.remove('visible');
   setTimeout(()=>{bd.classList.remove('active');document.body.style.overflow='';},320);
 }
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLaunchModal(null,true);closeNews();closeVehicle();closeGameModal(null,true);}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLaunchModal(null,true);closeNews();closeVehicle();closeGamePage();}});
 
 /* ── Accordion ── */
 const groups=[
@@ -1108,7 +1174,7 @@ groups.forEach(g=>{
     const ds=l.dateObj.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
     const ts=l.dateObj.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false})+' (local)';
     const row=document.createElement('div');row.className='launch-row';row.title='Click for details';
-    const wlHTML=l.watchUrl?`<a class="row-watch-link" id="row-watch-${l._idx}" href="${l.watchUrl}" target="_blank" onclick="event.stopPropagation()">Watch Live <span class="rw-arrow">&#8599;</span></a>`:'';
+    const wlHTML=l.watchUrl?`<a class="row-watch-link" id="row-watch-${l._idx}" href="${l.watchUrl}" target="_blank" onclick="event.stopPropagation()">${t('watchLive')} <span class="rw-arrow">&#8599;</span></a>`:'';
     row.innerHTML=`<div><strong>${l.rocket}</strong></div><div style="color:#aaa;font-family:var(--mono);font-size:0.88em;">${ds}</div><div style="color:#666;font-size:0.84em;font-family:var(--mono);">${ts}</div><div style="display:flex;align-items:center;gap:14px;justify-content:flex-end;">${wlHTML}<div class="status-badge" style="color:${statusColor(l.status)};">${l.status}</div></div>`;
     row.addEventListener('click',()=>openLaunchModal(l._idx));
     if(l.watchUrl){setTimeout(()=>{const el=document.getElementById(`row-watch-${l._idx}`);if(el)window.registerRowWatch(l._idx,el);},0);}
@@ -1118,12 +1184,12 @@ groups.forEach(g=>{
   let lmBtn=null;
   if(g.paginate&&allItems.length>accLoadMorePerPage){
     lmBtn=document.createElement('button');lmBtn.className='acc-load-more';
-    lmBtn.textContent=`Load more (${allItems.length-visibleCount} remaining)`;
-    lmBtn.addEventListener('click',e=>{
-      e.stopPropagation();const prev=visibleCount;
+    lmBtn.textContent=`${t('loadMore')} (${allItems.length-visibleCount} remaining)`;
+    lmBtn.addEventListener('click',e2=>{
+      e2.stopPropagation();const prev=visibleCount;
       visibleCount=Math.min(visibleCount+accLoadMorePerPage,allItems.length);
       for(let i=prev;i<visibleCount;i++){rowEls[i].style.display='';}
-      if(visibleCount>=allItems.length){lmBtn.remove();lmBtn=null;}else{lmBtn.textContent=`Load more (${allItems.length-visibleCount} remaining)`;}
+      if(visibleCount>=allItems.length){lmBtn.remove();lmBtn=null;}else{lmBtn.textContent=`${t('loadMore')} (${allItems.length-visibleCount} remaining)`;}
       rw.style.maxHeight=rw.scrollHeight+'px';
     });rw.appendChild(lmBtn);
   }
@@ -1136,26 +1202,25 @@ groups.forEach(g=>{
 });
 
 /* ══════════════════════════════════════
-   GAME MODAL CONTROLS
+   GAME PAGE — full-screen overlay like vehicle/news
 ══════════════════════════════════════ */
-let gameActive=false;
-function openGameModal(){
-  const bd=document.getElementById('game-modal-bd');bd.classList.add('active');
-  requestAnimationFrame(()=>{requestAnimationFrame(()=>bd.classList.add('visible'));});
-  document.body.style.overflow='hidden';
-  // Setup canvas sizing after modal is visible
-  setTimeout(()=>{ setupGameCanvas(); },50);
+function openGamePage(){
+  ensureGameStars();playSound('details');
+  const page=document.getElementById('game-overlay-page');
+  page.classList.add('active');
+  requestAnimationFrame(()=>{requestAnimationFrame(()=>page.classList.add('visible'));});
+  page.scrollTop=0;document.body.style.overflow='hidden';
+  setTimeout(()=>setupGameCanvas(),80);
+  applyLang(); // refresh translations in game page
 }
-function closeGameModal(e,force){
-  if(!force&&e&&e.target!==document.getElementById('game-modal-bd'))return;
+function closeGamePage(){
   stopGame();
-  const bd=document.getElementById('game-modal-bd');bd.classList.remove('visible');
-  setTimeout(()=>{bd.classList.remove('active');document.body.style.overflow='';},320);
+  const page=document.getElementById('game-overlay-page');page.classList.remove('visible');
+  setTimeout(()=>{page.classList.remove('active');document.body.style.overflow='';},350);
 }
 
 /* ══════════════════════════════════════
-   GAME — Fly in Space (Asteroid Dodge)
-   Canvas lives inside a modal → proper sizing
+   GAME — Fly in Space
 ══════════════════════════════════════ */
 (function(){
   const canvas=document.getElementById('game-canvas');
@@ -1168,8 +1233,8 @@ function closeGameModal(e,force){
   window.setupGameCanvas=function(){
     dpr=window.devicePixelRatio||1;
     const wrap=canvas.parentElement;
-    W=wrap.clientWidth;
-    H=wrap.clientHeight||360;
+    W=wrap.clientWidth||700;
+    H=canvas.offsetHeight||420;
     canvas.width=W*dpr;canvas.height=H*dpr;
     canvas.style.width=W+'px';canvas.style.height=H+'px';
     ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
@@ -1184,12 +1249,8 @@ function closeGameModal(e,force){
     document.getElementById('gm-score').textContent='0';
   }
 
-  function addInput(){
-    canvas.addEventListener('mousemove',onMM);canvas.addEventListener('touchmove',onTM,{passive:false});
-  }
-  function removeInput(){
-    canvas.removeEventListener('mousemove',onMM);canvas.removeEventListener('touchmove',onTM);
-  }
+  function addInput(){canvas.addEventListener('mousemove',onMM);canvas.addEventListener('touchmove',onTM,{passive:false});}
+  function removeInput(){canvas.removeEventListener('mousemove',onMM);canvas.removeEventListener('touchmove',onTM);}
   function onMM(e){if(!running)return;const r=canvas.getBoundingClientRect();ship.tx=(e.clientX-r.left)*(W/r.width);ship.ty=(e.clientY-r.top)*(H/r.height);}
   function onTM(e){if(!running)return;e.preventDefault();const r=canvas.getBoundingClientRect();ship.tx=(e.touches[0].clientX-r.left)*(W/r.width);ship.ty=(e.touches[0].clientY-r.top)*(H/r.height);}
 
@@ -1225,43 +1286,40 @@ function closeGameModal(e,force){
     const sr=Math.max(0.4,1.5-diffLvl*0.09);
     if(spawnT>sr){spawnT=0;spawnAst();if(Math.random()<0.18)spawnFuel();}
     ctx.clearRect(0,0,W,H);
-    // bg stars
     bgStars.forEach(s=>{s.x-=s.sp*(1+diffLvl*0.05);if(s.x<0)s.x=W;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${s.op})`;ctx.fill();});
-    // ship
     ship.x+=(ship.tx-ship.x)*Math.min(1,7*dt);ship.y+=(ship.ty-ship.y)*Math.min(1,7*dt);
     ship.x=Math.max(12,Math.min(W-12,ship.x));ship.y=Math.max(12,Math.min(H-12,ship.y));
     ship.trail.unshift({x:ship.x,y:ship.y});if(ship.trail.length>18)ship.trail.pop();
     for(let i=1;i<ship.trail.length;i++){const a=(1-i/ship.trail.length)*0.35;ctx.beginPath();ctx.arc(ship.trail[i].x,ship.trail[i].y,(1-i/ship.trail.length)*3.5,0,Math.PI*2);ctx.fillStyle=`rgba(100,180,255,${a})`;ctx.fill();}
-    // particles
     particles=particles.filter(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=0.92;p.vy*=0.92;p.life-=p.decay*dt;if(p.life<=0)return false;ctx.beginPath();ctx.arc(p.x,p.y,p.r*p.life,0,Math.PI*2);ctx.fillStyle=p.color.replace(')',`,${p.life})`).replace('rgb','rgba');ctx.fill();return true;});
-    // fuel cells
     fuelCells=fuelCells.filter(f=>{f.x+=f.vx*dt;f.y+=f.vy*dt;if(f.x<-20)return false;f.pulse+=dt*3;const gw=0.5+0.5*Math.sin(f.pulse);ctx.save();ctx.translate(f.x,f.y);const gd=ctx.createRadialGradient(0,0,0,0,0,f.r*(1.8+gw*0.5));gd.addColorStop(0,'rgba(0,210,120,0.9)');gd.addColorStop(0.5,'rgba(0,180,100,0.4)');gd.addColorStop(1,'rgba(0,180,100,0)');ctx.beginPath();ctx.arc(0,0,f.r*(1.8+gw*0.5),0,Math.PI*2);ctx.fillStyle=gd;ctx.fill();ctx.beginPath();ctx.arc(0,0,f.r,0,Math.PI*2);ctx.fillStyle='rgba(0,220,130,0.95)';ctx.fill();ctx.restore();if(chit(ship.x,ship.y,ship.size,f.x,f.y,f.r+4)){score+=50;document.getElementById('gm-score').textContent=Math.floor(score);spawnParts(f.x,f.y,'rgb(0,220,130)',12);return false;}return true;});
-    // asteroids
     let isHit=false;
     asteroids=asteroids.filter(a=>{a.x+=a.vx*dt;a.y+=a.vy*dt;a.rot+=a.rotSpeed*dt;if(a.x<-60||a.y<-60||a.y>H+60)return false;ctx.save();ctx.translate(a.x,a.y);ctx.rotate(a.rot);ctx.beginPath();a.verts.forEach((v,i)=>{const px=Math.cos(v.a)*v.d,py=Math.sin(v.a)*v.d;i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);});ctx.closePath();ctx.strokeStyle='rgba(180,190,200,0.8)';ctx.lineWidth=1.4;ctx.fillStyle='rgba(40,42,48,0.9)';ctx.fill();ctx.stroke();ctx.restore();if(invTimer<=0&&chit(ship.x,ship.y,ship.size-3,a.x,a.y,a.r*0.72)){isHit=true;spawnParts(ship.x,ship.y,'rgb(255,120,80)',20);spawnParts(a.x,a.y,'rgb(180,190,200)',10);}return!isHit;});
     const sa=invTimer>0?(0.4+0.6*Math.abs(Math.sin(invTimer*12))):1;
     drawShip(ship.x,ship.y,sa);
     if(isHit){
       running=false;if(score>best){best=Math.floor(score);document.getElementById('gm-best').textContent=best;}
-      document.getElementById('gm-over-title').textContent='Mission Failed';
-      document.getElementById('gm-over-sub').textContent=`Score: ${Math.floor(score)}  ·  Best: ${best}`;
-      document.querySelector('.gm-start-btn').textContent='Retry';
-      document.getElementById('gm-overlay').classList.remove('hidden');
+      document.getElementById('gop-over-title').textContent=t('missionFailed');
+      document.getElementById('gop-over-sub').textContent=`${t('scoreLabel')}: ${Math.floor(score)}  ·  ${t('bestLabel')}: ${best}`;
+      document.querySelector('.gop-start-btn').textContent=t('launch');
+      document.getElementById('gop-game-overlay').classList.remove('hidden');
       removeInput();return;
     }
     raf=requestAnimationFrame(loop);
   }
 
   function stopGame(){running=false;if(raf){cancelAnimationFrame(raf);raf=null;}removeInput();}
-
   window.startGame=function(){
     if(!ctx)setupGameCanvas();
     reset();running=true;addInput();
-    document.getElementById('gm-overlay').classList.add('hidden');
+    document.getElementById('gop-game-overlay').classList.add('hidden');
     lastTs=performance.now();raf=requestAnimationFrame(loop);
   };
   window.stopGame=stopGame;
 })();
+
+/* ── Apply initial lang ── */
+applyLang();
 </script>
 <script>document.documentElement.style.zoom="1.09";</script>
 </body>
