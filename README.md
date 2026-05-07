@@ -2,4 +2,4 @@
 ## This website is for informational purposes only and does NOT engage in any commercial activity.
 #### X/Twitter: @OXeallCorp
 #### X/Twitter: @hi9eSs
-hi9es.github.io/InSpace/
+[WEBSITE (LATEST VERSION)](https://hi9es.github.io/InSpace)
