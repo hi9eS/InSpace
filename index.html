@@ -31,12 +31,7 @@ button{font-family:inherit;}
 @keyframes twinkle{0%{opacity:0;transform:scale(0.8);}50%{opacity:var(--op,0.5);}100%{opacity:0.08;transform:scale(1.1);}}
 #flyby-canvas{position:fixed;inset:0;pointer-events:none;z-index:1;}
 
-/* Subtle ambient gradient orb behind hero */
-.ambient-orb{position:fixed;width:600px;height:600px;border-radius:50%;
-  background:radial-gradient(circle,rgba(120,180,255,0.08) 0%,rgba(120,180,255,0) 65%);
-  top:-100px;left:50%;transform:translateX(-50%);pointer-events:none;z-index:0;
-  filter:blur(40px);animation:orbBreath 9s ease-in-out infinite alternate;}
-@keyframes orbBreath{from{opacity:0.6;transform:translateX(-50%) scale(0.95);}to{opacity:1;transform:translateX(-50%) scale(1.05);}}
+/* ambient-orb removed */
 
 /* ══════════════════════════════════════
    HEADER — sticky, overlay-trigger nav
@@ -65,10 +60,10 @@ header::after{content:'';position:absolute;bottom:0;left:50%;transform:translate
 /* ── LANG PICKER ── */
 .lang-picker{position:relative;}
 .lang-btn{
-  font-family:var(--mono);font-size:0.68em;letter-spacing:0.06em;
-  color:var(--muted);background:transparent;border:none;cursor:pointer;
-  padding:5px 8px;border-radius:7px;transition:color 0.2s,background 0.2s;
-  display:flex;align-items:center;gap:4px;white-space:nowrap;
+  font-family:var(--mono);font-size:0.76em;letter-spacing:0.06em;
+  color:rgba(255,255,255,0.55);background:transparent;border:1px solid rgba(255,255,255,0.08);cursor:pointer;
+  padding:5px 10px;border-radius:8px;transition:color 0.2s,background 0.2s,border-color 0.2s;
+  display:flex;align-items:center;gap:5px;white-space:nowrap;
 }
 .lang-btn:hover{color:rgba(255,255,255,0.8);background:rgba(255,255,255,0.06);}
 .lang-btn svg{width:9px;height:9px;fill:currentColor;flex-shrink:0;transition:transform 0.25s var(--ease);}
@@ -76,7 +71,7 @@ header::after{content:'';position:absolute;bottom:0;left:50%;transform:translate
 .lang-dropdown{
   position:absolute;top:calc(100% + 8px);left:0;
   background:var(--bg2);border:1px solid var(--border-h);border-radius:14px;
-  padding:5px;min-width:140px;box-shadow:0 12px 40px rgba(0,0,0,0.5);
+  padding:5px;min-width:160px;box-shadow:0 12px 40px rgba(0,0,0,0.5);
   opacity:0;pointer-events:none;transform:translateY(-6px) scale(0.97);
   transition:opacity 0.22s var(--ease),transform 0.22s var(--ease);
   z-index:200;
@@ -114,13 +109,7 @@ header::after{content:'';position:absolute;bottom:0;left:50%;transform:translate
   min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:120px 20px 60px;max-width:1100px;margin:0 auto;position:relative;z-index:2;text-align:center;
 }
-.hero-status-chip{
-  display:inline-flex;align-items:center;gap:8px;
-  font-family:var(--mono);font-size:0.66em;letter-spacing:0.18em;text-transform:uppercase;
-  padding:6px 14px;border-radius:100px;background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.08);color:#888;margin-bottom:22px;
-  animation:fadeUp 0.7s var(--ease) both;
-}
+.hero-status-chip{display:none;}
 .status-chip-dot{width:6px;height:6px;border-radius:50%;background:var(--accent-good);box-shadow:0 0 8px var(--accent-good);
   animation:dotPulse 1.6s ease-in-out infinite;}
 @keyframes dotPulse{0%,100%{opacity:0.4;}50%{opacity:1;}}
@@ -200,7 +189,7 @@ header::after{content:'';position:absolute;bottom:0;left:50%;transform:translate
   display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;
 }
 .quick-card::after{content:'';position:absolute;top:0;left:0;width:2px;height:100%;background:var(--qc,#fff);opacity:0.4;transition:opacity 0.25s;}
-.quick-card:hover{background:var(--bg3);border-color:var(--border-h);transform:translateY(-2px);}
+.quick-card:hover{background:var(--bg3);border-color:var(--border-h);transform:scale(1.02);}
 .quick-card:hover::after{opacity:1;}
 .quick-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;
   background:rgba(255,255,255,0.04);flex-shrink:0;}
@@ -215,9 +204,9 @@ header::after{content:'';position:absolute;bottom:0;left:50%;transform:translate
    UNIVERSAL OVERLAY SYSTEM
 ══════════════════════════════════════ */
 .overlay-page{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;overflow-y:auto;
-  opacity:0;transition:opacity 0.4s var(--ease);}
+  opacity:0;transform:translateY(12px);transition:opacity 0.38s var(--out),transform 0.38s var(--out);}
 .overlay-page.active{display:block;}
-.overlay-page.visible{opacity:1;}
+.overlay-page.visible{opacity:1;transform:translateY(0);}
 
 .overlay-page .op-header{
   position:sticky;top:0;background:rgba(7,7,8,0.88);backdrop-filter:blur(16px);
@@ -245,36 +234,54 @@ header::after{content:'';position:absolute;bottom:0;left:50%;transform:translate
 /* ══════════════════════════════════════
    VEHICLES OVERLAY
 ══════════════════════════════════════ */
-.vehicle-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;align-items:stretch;}
+.vehicle-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;align-items:stretch;}
+@media(max-width:900px){.vehicle-cards{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:580px){.vehicle-cards{grid-template-columns:1fr;}}
+
 .vehicle-card{
-  background:var(--bg2);border-radius:18px;cursor:pointer;
-  border:1px solid rgba(255,255,255,0.08);
+  background:var(--bg2);border-radius:14px;cursor:pointer;
+  border:1px solid rgba(255,255,255,0.07);
   display:flex;flex-direction:column;
-  transition:box-shadow 0.3s var(--ease),border-color 0.3s var(--ease);
-  position:relative;overflow:hidden;transform:translateZ(0);
+  transition:border-color 0.25s var(--ease),background 0.25s var(--ease);
+  position:relative;overflow:hidden;
+  opacity:0;animation:vcardIn 0.45s var(--out) forwards;
 }
-.vehicle-card:hover{box-shadow:0 0 0 1px rgba(255,255,255,0.14),0 16px 50px rgba(0,0,0,0.6);border-color:rgba(255,255,255,0.16);}
-.vc-bar{height:3px;flex-shrink:0;opacity:0.5;transition:opacity 0.28s,height 0.2s;}
-.vehicle-card:hover .vc-bar{opacity:1;}
-.vc-head{padding:18px 20px 14px;border-bottom:1px solid rgba(255,255,255,0.05);
-  display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
-.vc-head-left{display:flex;flex-direction:column;gap:3px;}
-.vc-dot{width:6px;height:6px;border-radius:50%;background:var(--vc,#fff);opacity:0.4;
-  transition:opacity 0.28s,box-shadow 0.28s;margin-bottom:5px;}
-.vehicle-card:hover .vc-dot{opacity:1;box-shadow:0 0 8px var(--vc,#fff);}
-.vc-name{font-size:1.2em;font-weight:500;letter-spacing:-0.01em;line-height:1.2;color:var(--text);}
-.vc-sub{font-size:0.62em;color:var(--muted);letter-spacing:0.16em;text-transform:uppercase;font-family:var(--mono);}
-.vc-specs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(255,255,255,0.05);flex:1;}
-.vc-sc{background:var(--bg3);padding:13px 14px;transition:background 0.2s;display:flex;flex-direction:column;justify-content:center;}
-.vehicle-card:hover .vc-sc{background:#161620;}
-.vc-sl{font-size:0.55em;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:4px;}
-.vc-sv{font-size:0.92em;font-weight:300;font-family:var(--mono);color:var(--text);line-height:1.2;}
-.vc-foot{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;
-  border-top:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.01);flex-shrink:0;}
-.vc-foot-txt{font-size:0.66em;color:var(--muted2);letter-spacing:0.1em;text-transform:uppercase;font-family:var(--mono);transition:color 0.2s;}
-.vc-foot-arr{font-size:0.78em;color:var(--muted2);transition:transform 0.22s var(--spring),color 0.2s;}
-.vehicle-card:hover .vc-foot-txt{color:rgba(255,255,255,0.6);}
-.vehicle-card:hover .vc-foot-arr{color:rgba(255,255,255,0.6);transform:translate(3px,-3px);}
+@keyframes vcardIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+.vehicle-card:hover{
+  border-color:rgba(255,255,255,0.15);
+  background:var(--bg3);
+}
+
+/* Left color stripe */
+.vc-stripe{position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--vc,#888);opacity:0.55;transition:opacity 0.25s;}
+.vehicle-card:hover .vc-stripe{opacity:0.9;}
+
+/* Top section */
+.vc-top{padding:24px 22px 18px 26px;}
+.vc-class-tag{
+  font-family:var(--mono);font-size:0.55em;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--vc,#888);opacity:0.65;margin-bottom:10px;display:block;
+}
+.vc-name{font-size:1.5em;font-weight:300;letter-spacing:-0.02em;line-height:1.1;color:var(--text);}
+
+/* Specs: horizontal 3-col grid */
+.vc-specs{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid rgba(255,255,255,0.055);}
+.vc-sc{padding:13px 16px 13px 26px;display:flex;flex-direction:column;gap:4px;
+  border-right:1px solid rgba(255,255,255,0.05);}
+.vc-sc:first-child{padding-left:26px;}
+.vc-sc:last-child{border-right:none;}
+.vc-sl{font-size:0.5em;color:var(--muted2);text-transform:uppercase;letter-spacing:0.14em;font-family:var(--mono);}
+.vc-sv{font-size:0.95em;font-weight:300;font-family:var(--mono);color:var(--text);}
+
+/* Footer */
+.vc-foot{display:flex;align-items:center;justify-content:space-between;
+  padding:11px 22px 11px 26px;border-top:1px solid rgba(255,255,255,0.05);
+  flex-shrink:0;margin-top:auto;}
+.vc-foot-txt{font-size:0.62em;color:var(--muted2);letter-spacing:0.14em;text-transform:uppercase;
+  font-family:var(--mono);transition:color 0.22s;}
+.vehicle-card:hover .vc-foot-txt{color:rgba(255,255,255,0.45);}
+.vc-foot-arr{font-size:0.8em;color:var(--muted2);transition:transform 0.25s var(--spring),color 0.22s;opacity:0.4;}
+.vehicle-card:hover .vc-foot-arr{color:var(--vc,#fff);transform:translate(4px,-4px);opacity:1;}
 
 /* Vehicle DETAIL view (same overlay container, second screen) */
 .vp-img-wrap{width:100%;aspect-ratio:16/7;background:var(--bg2);border:1px solid var(--border);border-radius:18px;margin-bottom:42px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
@@ -350,13 +357,22 @@ header::after{content:'';position:absolute;bottom:0;left:50%;transform:translate
 .sch-tab-count{font-size:0.85em;color:var(--muted2);}
 .sch-tab.active .sch-tab-count{color:var(--muted);}
 
-#launch-list{display:flex;flex-direction:column;gap:8px;}
+#launch-list{display:flex;flex-direction:column;gap:8px;transition:opacity 0.18s var(--ease);}
+#launch-list.fading{opacity:0;}
 .launch-row{display:grid;grid-template-columns:2fr 1.6fr 1fr 1fr;align-items:center;
   padding:15px 20px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:12px;
   transition:background 0.2s,border-color 0.2s,transform 0.2s;cursor:pointer;
-  opacity:0;transform:translateY(10px);animation:rowIn 0.45s var(--out) forwards;}
+  opacity:0;transform:translateY(8px);animation:rowIn 0.3s var(--out) forwards;}
 @keyframes rowIn{to{opacity:1;transform:translateY(0);}}
 .launch-row:hover{background:rgba(255,255,255,0.05);transform:translateX(3px);border-color:var(--border-h);}
+/* Load More row — same style as launch-row but centered button only */
+.launch-load-more{
+  padding:12px 20px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:background 0.2s,border-color 0.2s;}
+.launch-load-more:hover{background:rgba(255,255,255,0.05);border-color:var(--border-h);}
+.launch-load-more span{font-family:var(--mono);font-size:0.75em;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);}
+.launch-load-more:hover span{color:var(--text);}
 .launch-row strong{font-size:0.96em;color:#fff;}
 .launch-row div{font-size:0.86em;}
 .status-badge{text-align:center;font-size:0.72em;font-weight:600;text-transform:uppercase;
@@ -487,7 +503,7 @@ footer{text-align:center;padding:24px;border-top:1px solid var(--border);
 <body>
 
 <div id="starfield"></div>
-<div class="ambient-orb"></div>
+
 <canvas id="flyby-canvas"></canvas>
 
 <!-- ═══════ HEADER ═══════ -->
@@ -710,6 +726,7 @@ const TRANSLATIONS = {
     notifGameStart:'Game started', notifGameStartSub:'Stay sharp, pilot',
     notifT10:'T-10 seconds', notifT10Sub:'Final countdown',
     statusPlanned:'Planned', statusCompleted:'Completed', statusCanceled:'Cancelled',
+    specHeight:'Height',specMass:'Mass',specLaunches:'Launches',vehicles:'vehicles',newsEntries:'entries',launchesCount:'launches',
   },
   es: {
     heroTitle:'Bienvenido a InSpace', heroSub:'Mantente al tanto de las actualizaciones',
@@ -744,6 +761,7 @@ const TRANSLATIONS = {
     notifGameStart:'Juego iniciado', notifGameStartSub:'Atento, piloto',
     notifT10:'T-10 segundos', notifT10Sub:'Cuenta atrás final',
     statusPlanned:'Planificado', statusCompleted:'Completado', statusCanceled:'Cancelado',
+    specHeight:'Altura',specMass:'Masa',specLaunches:'Lanzamientos',vehicles:'vehículos',newsEntries:'entradas',launchesCount:'lanzamientos',
   },
   de: {
     heroTitle:'Willkommen bei InSpace', heroSub:'Bleib auf dem Laufenden',
@@ -778,6 +796,7 @@ const TRANSLATIONS = {
     notifGameStart:'Spiel gestartet', notifGameStartSub:'Bleib wachsam, Pilot',
     notifT10:'T-10 Sekunden', notifT10Sub:'Letzter Countdown',
     statusPlanned:'Geplant', statusCompleted:'Abgeschlossen', statusCanceled:'Abgesagt',
+    specHeight:'Höhe',specMass:'Masse',specLaunches:'Starts',vehicles:'Fahrzeuge',newsEntries:'Einträge',launchesCount:'Starts',
   },
   fr: {
     heroTitle:'Bienvenue sur InSpace', heroSub:'Restez informé des mises à jour',
@@ -812,6 +831,7 @@ const TRANSLATIONS = {
     notifGameStart:'Jeu lancé', notifGameStartSub:'Restez alerte, pilote',
     notifT10:'T-10 secondes', notifT10Sub:'Décompte final',
     statusPlanned:'Planifié', statusCompleted:'Complété', statusCanceled:'Annulé',
+    specHeight:'Hauteur',specMass:'Masse',specLaunches:'Lancements',vehicles:'véhicules',newsEntries:'articles',launchesCount:'lancements',
   },
   ru: {
     heroTitle:'Добро пожаловать в InSpace', heroSub:'Следите за обновлениями',
@@ -846,6 +866,7 @@ const TRANSLATIONS = {
     notifGameStart:'Игра запущена', notifGameStartSub:'Будь начеку, пилот',
     notifT10:'T-10 секунд', notifT10Sub:'Финальный отсчёт',
     statusPlanned:'Запланирован', statusCompleted:'Завершён', statusCanceled:'Отменён',
+    specHeight:'Высота',specMass:'Масса',specLaunches:'Запуски',vehicles:'аппаратов',newsEntries:'записей',launchesCount:'запусков',
   },
   zh: {
     heroTitle:'欢迎来到 InSpace', heroSub:'关注最新动态',
@@ -880,6 +901,7 @@ const TRANSLATIONS = {
     notifGameStart:'游戏已开始', notifGameStartSub:'保持专注，飞行员',
     notifT10:'T-10 秒', notifT10Sub:'最终倒计时',
     statusPlanned:'计划中', statusCompleted:'已完成', statusCanceled:'已取消',
+    specHeight:'高度',specMass:'质量',specLaunches:'发射次数',vehicles:'飞行器',newsEntries:'条目',launchesCount:'次发射',
   },
   pt: {
     heroTitle:'Bem-vindo ao InSpace', heroSub:'Fique atento às atualizações',
@@ -914,11 +936,192 @@ const TRANSLATIONS = {
     notifGameStart:'Jogo iniciado', notifGameStartSub:'Atento, piloto',
     notifT10:'T-10 segundos', notifT10Sub:'Contagem final',
     statusPlanned:'Planejado', statusCompleted:'Concluído', statusCanceled:'Cancelado',
+    specHeight:'Altura',specMass:'Massa',specLaunches:'Lançamentos',vehicles:'veículos',newsEntries:'entradas',launchesCount:'lançamentos',
+  },
+  hi: {
+    heroTitle:'InSpace में आपका स्वागत है', heroSub:'अपडेट के लिए नज़र रखें',
+    nextLaunch:'अगला प्रक्षेपण', missionInProgress:'मिशन जारी है',
+    watchLaunch:'प्रक्षेपण देखें', ourVehicles:'हमारे वाहन',
+    ourVehiclesSub:'सक्रिय बेड़ा · मिशन के लिए तैयार',
+    latestNews:'ताज़ा समाचार', latestNewsSub:'मिशन अपडेट · कार्यक्रम घोषणाएं',
+    launchSchedule:'प्रक्षेपण कार्यक्रम', launchScheduleSub:'आगामी · पूर्ण · रद्द',
+    loadMore:'और लोड करें', details:'विवरण', back:'वापस', backToList:'सूची पर वापस',
+    fullDetails:'पूरी जानकारी', noSave:'स्कोर सत्रों के बीच सहेजा नहीं जाता।',
+    flyTitle:'अंतरिक्ष में उड़ें', flySubtitle:'मिनी गेम',
+    flyDesc:'क्षुद्रग्रहों से बचें · ईंधन कोशिकाएं एकत्र करें · जीवित रहें',
+    launch:'प्रक्षेपण', steerHint:'माउस / टच से नियंत्रण',
+    scoreLabel:'स्कोर', bestLabel:'सर्वश्रेष्ठ',
+    missionFailed:'मिशन विफल',
+    statFlights:'पूर्ण उड़ानें', stat365:'पिछले 365 दिनों में प्रक्षेपण',
+    statVehicles:'सक्रिय वाहन', statDays:'पहले प्रक्षेपण के बाद से दिन',
+    daysSince:'दिन पिछले प्रक्षेपण के बाद से', daysSincePl:'दिन पिछले प्रक्षेपण के बाद से',
+    watchLive:'सीधा देखें', footerNote:'यह वेबसाइट केवल सूचना के लिए है और कोई व्यावसायिक गतिविधि नहीं करती।',
+    watchLaunchLink:'प्रक्षेपण देखें',
+    local:'स्थानीय', miniGame:'मिनी गेम',
+    specifications:'विशिष्टताएं', stages:'चरण', overview:'अवलोकन',
+    noImage:'कोई डेटा नहीं। चित्र जल्द आएगा',
+    systemOnline:'सभी सिस्टम ऑनलाइन',
+    navHome:'होम', navVehicles:'वाहन', navNews:'समाचार', navSchedule:'कार्यक्रम', navGame:'मिनी गेम',
+    quickVehiclesSub:'बेड़ा अवलोकन', quickNewsSub:'कार्यक्रम अपडेट', quickScheduleSub:'सभी प्रक्षेपण',
+    toastLangChanged:'भाषा बदली', toastLangChangedSub:'इंटरफ़ेस अपडेट हुआ',
+    toastSectionOpened:'अनुभाग खुला', toastWelcome:'आपका स्वागत है',
+    toastWelcomeSub:'अगले मिशन को ट्रैक कर रहे हैं',
+    noLaunches:'इस श्रेणी में कोई प्रक्षेपण नहीं',
+    schedAll:'सभी', schedPlanned:'नियोजित', schedCompleted:'पूर्ण', schedCanceled:'रद्द',
+    notifGameStart:'गेम शुरू', notifGameStartSub:'सतर्क रहें, पायलट',
+    notifT10:'T-10 सेकंड', notifT10Sub:'अंतिम काउंटडाउन',
+    statusPlanned:'नियोजित', statusCompleted:'पूर्ण', statusCanceled:'रद्द',
+    specHeight:'ऊंचाई', specMass:'द्रव्यमान', specLaunches:'प्रक्षेपण',
+    vehicles:'वाहन', newsEntries:'प्रविष्टियां', launchesCount:'प्रक्षेपण',
+  },
+  pl: {
+    heroTitle:'Witamy w InSpace', heroSub:'Śledź aktualizacje',
+    nextLaunch:'Następny start za', missionInProgress:'Misja w toku',
+    watchLaunch:'Oglądaj start', ourVehicles:'Nasze pojazdy',
+    ourVehiclesSub:'Aktywna flota · Gotowi do misji',
+    latestNews:'Najnowsze wiadomości', latestNewsSub:'Aktualizacje misji · Ogłoszenia programu',
+    launchSchedule:'Harmonogram startów', launchScheduleSub:'Planowane · Ukończone · Anulowane',
+    loadMore:'Załaduj więcej', details:'Szczegóły', back:'Wstecz', backToList:'Powrót do listy',
+    fullDetails:'Pełne szczegóły', noSave:'Wynik i rekord nie są zapisywane między sesjami.',
+    flyTitle:'Leć w kosmos', flySubtitle:'Mini gra',
+    flyDesc:'Omijaj asteroidy · Zbieraj ogniwa paliwowe · Przeżyj',
+    launch:'Start', steerHint:'Mysz / Dotyk do sterowania',
+    scoreLabel:'Wynik', bestLabel:'Rekord',
+    missionFailed:'Misja nieudana',
+    statFlights:'Ukończone loty', stat365:'Starty w ostatnich 365 dniach',
+    statVehicles:'Aktywne pojazdy', statDays:'Dni od pierwszego startu',
+    daysSince:'dzień od ostatniego startu', daysSincePl:'dni od ostatniego startu',
+    watchLive:'Oglądaj na żywo', footerNote:'Ta strona służy wyłącznie celom informacyjnym i nie prowadzi działalności komercyjnej.',
+    watchLaunchLink:'Oglądaj start',
+    local:'lokalny', miniGame:'Mini gra',
+    specifications:'Specyfikacje', stages:'Człony', overview:'Przegląd',
+    noImage:'Brak danych. Obraz wkrótce',
+    systemOnline:'Wszystkie systemy online',
+    navHome:'Strona główna', navVehicles:'Pojazdy', navNews:'Wiadomości', navSchedule:'Harmonogram', navGame:'Mini gra',
+    quickVehiclesSub:'Przegląd floty', quickNewsSub:'Aktualizacje programu', quickScheduleSub:'Wszystkie starty',
+    toastLangChanged:'Język zmieniony', toastLangChangedSub:'Interfejs zaktualizowany',
+    toastSectionOpened:'Sekcja otwarta', toastWelcome:'Witaj na pokładzie',
+    toastWelcomeSub:'Śledzenie następnej misji',
+    noLaunches:'Brak startów w tej kategorii',
+    schedAll:'Wszystkie', schedPlanned:'Planowane', schedCompleted:'Ukończone', schedCanceled:'Anulowane',
+    notifGameStart:'Gra rozpoczęta', notifGameStartSub:'Bądź czujny, piloci',
+    notifT10:'T-10 sekund', notifT10Sub:'Ostatnie odliczanie',
+    statusPlanned:'Planowany', statusCompleted:'Ukończony', statusCanceled:'Anulowany',
+    specHeight:'Wysokość', specMass:'Masa', specLaunches:'Starty',
+    vehicles:'pojazdy', newsEntries:'wpisy', launchesCount:'startów',
+  },
+  ja: {
+    heroTitle:'InSpaceへようこそ', heroSub:'最新情報をチェック',
+    nextLaunch:'次の打ち上げまで', missionInProgress:'ミッション進行中',
+    watchLaunch:'打ち上げを観る', ourVehicles:'ロケット一覧',
+    ourVehiclesSub:'現役艦隊 · ミッション準備完了',
+    latestNews:'最新ニュース', latestNewsSub:'ミッション更新 · プログラム発表',
+    launchSchedule:'打ち上げスケジュール', launchScheduleSub:'予定 · 完了 · キャンセル',
+    loadMore:'もっと読む', details:'詳細', back:'戻る', backToList:'一覧に戻る',
+    fullDetails:'詳細情報', noSave:'スコアはセッション間で保存されません。',
+    flyTitle:'宇宙を飛ぼう', flySubtitle:'ミニゲーム',
+    flyDesc:'小惑星を避けて · 燃料セルを集めて · 生き残れ',
+    launch:'発射', steerHint:'マウス・タッチで操作',
+    scoreLabel:'スコア', bestLabel:'ベスト',
+    missionFailed:'ミッション失敗',
+    statFlights:'完了フライト', stat365:'過去365日の打ち上げ',
+    statVehicles:'現役機体', statDays:'初打ち上げからの日数',
+    daysSince:'日前最終打ち上げ', daysSincePl:'日前最終打ち上げ',
+    watchLive:'ライブ観戦', footerNote:'このサイトは情報提供のみを目的としており、商業活動は行いません。',
+    watchLaunchLink:'打ち上げを観る',
+    local:'現地時間', miniGame:'ミニゲーム',
+    specifications:'仕様', stages:'ステージ', overview:'概要',
+    noImage:'データなし。画像は近日公開',
+    systemOnline:'全システム正常',
+    navHome:'ホーム', navVehicles:'ロケット', navNews:'ニュース', navSchedule:'スケジュール', navGame:'ミニゲーム',
+    quickVehiclesSub:'艦隊概要', quickNewsSub:'プログラム更新', quickScheduleSub:'全打ち上げ',
+    toastLangChanged:'言語変更', toastLangChangedSub:'インターフェース更新',
+    toastSectionOpened:'セクション開', toastWelcome:'ようこそ',
+    toastWelcomeSub:'次のミッションを追跡中',
+    noLaunches:'このカテゴリの打ち上げはありません',
+    schedAll:'全て', schedPlanned:'予定', schedCompleted:'完了', schedCanceled:'キャンセル',
+    notifGameStart:'ゲーム開始', notifGameStartSub:'集中して、パイロット',
+    notifT10:'T-10秒', notifT10Sub:'最終カウントダウン',
+    statusPlanned:'予定', statusCompleted:'完了', statusCanceled:'キャンセル',
+    specHeight:'高さ', specMass:'質量', specLaunches:'打ち上げ回数',
+    vehicles:'機体', newsEntries:'記事', launchesCount:'打ち上げ',
+  },
+  af: {
+    heroTitle:'Welkom by InSpace', heroSub:'Hou nuus dop',
+    nextLaunch:'Volgende lansering in', missionInProgress:'Missie aan die gang',
+    watchLaunch:'Kyk Lansering', ourVehicles:'Ons Voertuie',
+    ourVehiclesSub:'Aktiewe vloot · Gereed vir missie',
+    latestNews:'Nuutste Nuus', latestNewsSub:'Missie-opdaterings · Programaankondigings',
+    launchSchedule:'Lanseringskedule', launchScheduleSub:'Aanstaande · Voltooi · Gekanselleer',
+    loadMore:'Laai meer', details:'Besonderhede', back:'Terug', backToList:'Terug na lys',
+    fullDetails:'Volledige besonderhede', noSave:'Telling word nie gestoor nie.',
+    flyTitle:'Vlieg in die Ruimte', flySubtitle:'Minispeletjie',
+    flyDesc:'Vermy asteroïdes · Versamel brandstofelle · Oorleef',
+    launch:'Lanseer', steerHint:'Muis / Raak om te stuur',
+    scoreLabel:'Telling', bestLabel:'Beste',
+    missionFailed:'Missie Misluk',
+    statFlights:'Voltooide Vlugte', stat365:'Lanserings in laaste 365 dae',
+    statVehicles:'Aktiewe Voertuie', statDays:'Dae sedert eerste lansering',
+    daysSince:'dag sedert laaste lansering', daysSincePl:'dae sedert laaste lansering',
+    watchLive:'Kyk Regstreeks', footerNote:'Hierdie webwerf is slegs vir inligtingsdoeleindes.',
+    watchLaunchLink:'Kyk Lansering',
+    local:'plaaslik', miniGame:'Minispeletjie',
+    specifications:'Spesifikasies', stages:'Stadiums', overview:'Oorsig',
+    noImage:'Geen data nie. Prent kom binnekort',
+    systemOnline:'Alle stelsels aanlyn',
+    navHome:'Tuis', navVehicles:'Voertuie', navNews:'Nuus', navSchedule:'Skedule', navGame:'Speletjie',
+    quickVehiclesSub:'Vlootoorsig', quickNewsSub:'Programopdaterings', quickScheduleSub:'Alle lanserings',
+    toastLangChanged:'Taal verander', toastLangChangedSub:'Koppelvlak opgedateer',
+    toastSectionOpened:'Afdeling oop', toastWelcome:'Welkom aan boord',
+    toastWelcomeSub:'Volgende missie dophou',
+    noLaunches:'Geen lanserings in hierdie kategorie',
+    schedAll:'Almal', schedPlanned:'Beplan', schedCompleted:'Voltooi', schedCanceled:'Gekanselleer',
+    notifGameStart:'Spel begin', notifGameStartSub:'Wees skerp, vlieënier',
+    notifT10:'T-10 sekondes', notifT10Sub:'Finale aftel',
+    statusPlanned:'Beplan', statusCompleted:'Voltooi', statusCanceled:'Gekanselleer',
+    specHeight:'Hoogte', specMass:'Massa', specLaunches:'Lanserings',
+    vehicles:'voertuie', newsEntries:'inskrywings', launchesCount:'lanserings',
+  },
+  hu: {
+    heroTitle:'Üdvözöl az InSpace', heroSub:'Kövesd a frissítéseket',
+    nextLaunch:'Következő indítás', missionInProgress:'Misszió folyamatban',
+    watchLaunch:'Indítás megtekintése', ourVehicles:'Járműveink',
+    ourVehiclesSub:'Aktív flotta · Misszióra kész',
+    latestNews:'Legfrissebb hírek', latestNewsSub:'Misszió frissítések · Program bejelentések',
+    launchSchedule:'Indítási ütemterv', launchScheduleSub:'Tervezett · Befejezett · Lemondott',
+    loadMore:'Több betöltése', details:'Részletek', back:'Vissza', backToList:'Vissza a listához',
+    fullDetails:'Teljes részletek', noSave:'A pontszám nem kerül mentésre.',
+    flyTitle:'Repülj az Űrben', flySubtitle:'Mini játék',
+    flyDesc:'Kerüld az aszteroidákat · Gyűjts üzemanyagcellákat · Éld túl',
+    launch:'Indítás', steerHint:'Egér / Érintés a vezérléshez',
+    scoreLabel:'Pontszám', bestLabel:'Legjobb',
+    missionFailed:'Misszió sikertelen',
+    statFlights:'Befejezett repülések', stat365:'Indítások az utóbbi 365 napban',
+    statVehicles:'Aktív járművek', statDays:'Napok az első indítás óta',
+    daysSince:'nap az utolsó indítás óta', daysSincePl:'nap az utolsó indítás óta',
+    watchLive:'Élő közvetítés', footerNote:'Ez a weboldal kizárólag tájékoztatási célokat szolgál.',
+    watchLaunchLink:'Indítás megtekintése',
+    local:'helyi', miniGame:'Mini játék',
+    specifications:'Műszaki adatok', stages:'Fokozatok', overview:'Áttekintés',
+    noImage:'Nincs adat. Kép hamarosan',
+    systemOnline:'Minden rendszer online',
+    navHome:'Főoldal', navVehicles:'Járművek', navNews:'Hírek', navSchedule:'Ütemterv', navGame:'Mini játék',
+    quickVehiclesSub:'Flotta áttekintés', quickNewsSub:'Program frissítések', quickScheduleSub:'Összes indítás',
+    toastLangChanged:'Nyelv megváltozott', toastLangChangedSub:'Felület frissítve',
+    toastSectionOpened:'Szakasz megnyitva', toastWelcome:'Üdvözöljük a fedélzeten',
+    toastWelcomeSub:'Következő misszió követése',
+    noLaunches:'Nincs indítás ebben a kategóriában',
+    schedAll:'Összes', schedPlanned:'Tervezett', schedCompleted:'Befejezett', schedCanceled:'Lemondott',
+    notifGameStart:'Játék elindult', notifGameStartSub:'Légy éber, pilóta',
+    notifT10:'T-10 másodperc', notifT10Sub:'Végső visszaszámlálás',
+    statusPlanned:'Tervezett', statusCompleted:'Befejezett', statusCanceled:'Lemondott',
+    specHeight:'Magasság', specMass:'Tömeg', specLaunches:'Indítások',
+    vehicles:'jármű', newsEntries:'bejegyzés', launchesCount:'indítás',
   },
 };
 
-const LANG_NAMES = {en:'EN',es:'ES',de:'DE',fr:'FR',ru:'RU',zh:'中文',pt:'PT'};
-const LANG_LABELS = {en:'English (US)',es:'Spanish',de:'German',fr:'French',ru:'Russian',zh:'Chinese',pt:'Brazilian'};
+const LANG_NAMES = {en:'EN',es:'ES',de:'DE',fr:'FR',ru:'RU',zh:'中文',pt:'PT',hi:'HI',pl:'PL',ja:'JA',af:'AF',hu:'HU'};
+const LANG_LABELS = {en:'English (US)',es:'Spanish',de:'German',fr:'French',ru:'Russian',zh:'Chinese',pt:'Brazilian',hi:'Hindi',pl:'Polish',ja:'Japanese',af:'Afrikaans (SA)',hu:'Hungarian'};
 
 let currentLang = localStorage.getItem('inspace_lang') || 'en';
 function t(key){ return (TRANSLATIONS[currentLang]||TRANSLATIONS.en)[key] || TRANSLATIONS.en[key] || key; }
@@ -945,11 +1148,11 @@ function setLang(code){
   rebuildHeroQuick();
   rebuildScheduleTabs();
   renderScheduleRows();
-  showToast({
-    icon:'lang',color:'#7eb6ff',
-    title:t('toastLangChanged'),sub:LANG_LABELS[code]||code,
-    duration:3000
-  });
+  // Re-render vehicle cards only if overlay is open (so spec labels update)
+  if(document.getElementById('ov-vehicles').classList.contains('active')){
+    renderVehicleCards();
+  }
+  playSound('lang');
 }
 
 /* ══════════════════════════════════════
@@ -958,13 +1161,56 @@ function setLang(code){
 const showClock=true;
 const enableSounds=true;
 const sounds = {
-  accordion:{ file:null,volume:0.18,enabled:true,freq:520,duration:0.06,type:'sine' },
-  details:  { file:null,volume:0.14,enabled:true,freq:600,duration:0.05,type:'sine' },
-  modal:    { file:null,volume:0.16,enabled:true,freq:480,duration:0.08,type:'triangle' },
-  news:     { file:null,volume:0.14,enabled:true,freq:560,duration:0.06,type:'sine' },
-  final10:  { file:null,volume:0.25,enabled:true,freq:880,duration:0.12,type:'sine' },
-  toast:    { file:null,volume:0.10,enabled:true,freq:660,duration:0.04,type:'sine' },
+  nav:      { volume:0.13,freq:520,freq2:680,duration:0.07,type:'sine',envelope:'click' },
+  back:     { volume:0.11,freq:380,freq2:260,duration:0.07,type:'sine',envelope:'click' },
+  details:  { volume:0.13,freq:600,freq2:780,duration:0.09,type:'sine',envelope:'click' },
+  modal:    { volume:0.14,freq:480,freq2:380,duration:0.12,type:'triangle',envelope:'soft' },
+  news:     { volume:0.12,freq:560,freq2:720,duration:0.08,type:'sine',envelope:'click' },
+  final10:  { volume:0.22,freq:880,freq2:1100,duration:0.15,type:'sine',envelope:'ping' },
+  toast:    { volume:0.08,freq:660,freq2:880,duration:0.06,type:'sine',envelope:'click' },
+  tab:      { volume:0.10,freq:440,freq2:540,duration:0.06,type:'sine',envelope:'click' },
+  lang:     { volume:0.10,freq:580,freq2:740,duration:0.08,type:'sine',envelope:'soft' },
+  close:    { volume:0.10,freq:320,freq2:220,duration:0.08,type:'triangle',envelope:'soft' },
+  quick:    { volume:0.12,freq:500,freq2:660,duration:0.07,type:'sine',envelope:'click' },
 };
+
+/* ── SOUND ENGINE — deduplication guard ── */
+let audioCtx=null;
+const _soundLast={};
+const _soundCooldown=80; // ms minimum between same sound
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+function playSound(key){
+  if(!enableSounds)return;
+  const cfg=sounds[key];if(!cfg)return;
+  const now=performance.now();
+  if(_soundLast[key]&&now-_soundLast[key]<_soundCooldown)return;
+  _soundLast[key]=now;
+  try{
+    const ctx=getAudioCtx();
+    const o=ctx.createOscillator();const g=ctx.createGain();
+    o.type=cfg.type||'sine';
+    const t0=ctx.currentTime;
+    o.frequency.setValueAtTime(cfg.freq,t0);
+    if(cfg.envelope==='ping'){
+      o.frequency.setValueAtTime(cfg.freq,t0);
+      o.frequency.exponentialRampToValueAtTime(cfg.freq2||cfg.freq,t0+cfg.duration*0.3);
+      g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(cfg.volume,t0+0.008);
+      g.gain.exponentialRampToValueAtTime(0.0001,t0+cfg.duration);
+    } else if(cfg.envelope==='soft'){
+      o.frequency.setValueAtTime(cfg.freq,t0);
+      o.frequency.linearRampToValueAtTime(cfg.freq2||cfg.freq,t0+cfg.duration);
+      g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(cfg.volume,t0+0.015);
+      g.gain.exponentialRampToValueAtTime(0.0001,t0+cfg.duration+0.04);
+    } else {
+      o.frequency.setValueAtTime(cfg.freq,t0);
+      o.frequency.exponentialRampToValueAtTime(cfg.freq2||cfg.freq*1.05,t0+cfg.duration*0.5);
+      g.gain.setValueAtTime(cfg.volume,t0);
+      g.gain.exponentialRampToValueAtTime(0.0001,t0+cfg.duration);
+    }
+    o.connect(g);g.connect(ctx.destination);
+    o.start(t0);o.stop(t0+cfg.duration+0.06);
+  }catch(e){}
+}
 
 const socialButtons = [
   {
@@ -978,22 +1224,6 @@ const socialButtons = [
     svg:`<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`
   },
 ];
-
-/* ── SOUND ── */
-let audioCtx=null;
-function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
-function playSound(key){
-  if(!enableSounds)return;const cfg=sounds[key];if(!cfg||!cfg.enabled)return;
-  try{
-    const ctx=getAudioCtx();
-    const o=ctx.createOscillator();const g=ctx.createGain();
-    o.type=cfg.type||'sine';o.frequency.setValueAtTime(cfg.freq,ctx.currentTime);
-    g.gain.setValueAtTime(cfg.volume,ctx.currentTime);
-    g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+cfg.duration);
-    o.connect(g);g.connect(ctx.destination);
-    o.start();o.stop(ctx.currentTime+cfg.duration+0.01);
-  }catch(e){}
-}
 
 /* ══════════════════════════════════════
    TOAST NOTIFICATION SYSTEM
@@ -1164,7 +1394,7 @@ function rebuildNav(){
   const navEl=document.getElementById('header-nav');
   navEl.innerHTML='';
   const items=[
-    {key:'navHome',action:()=>{closeAllOverlays();window.scrollTo({top:0,behavior:'smooth'});},dotColor:'#fff'},
+    {key:'navHome',action:()=>{playSound('close');closeAllOverlays();window.scrollTo({top:0,behavior:'smooth'});},dotColor:'#fff'},
     {key:'navVehicles',action:()=>openOverlay('vehicles'),dotColor:'#7eb6ff'},
     {key:'navNews',action:()=>openOverlay('news'),dotColor:'#5dd6a0'},
     {key:'navSchedule',action:()=>openOverlay('schedule'),dotColor:'#ffb380'},
@@ -1256,124 +1486,19 @@ function rebuildDaysSince(){
 /* ══════════════════════════════════════
    VEHICLES — preserved exactly
 ══════════════════════════════════════ */
-const vehicles = [
-  {
-    id: 'sunorbit',
-    name: 'SunOrbit',
-    class: 'Interplanetary Vehicle',
-    color: '#00aaff',
-    image: '991ef2dcfcd94c0f95050b657d1c6134.png',
-    description: "SunOrbit is InSpace's primary interplanetary vehicle, built in modular stages.<br>It is equally capable of crewed and uncrewed missions to Low Earth Orbit and to other planets. For Earth orbit, the third stage can function as a crewed mini-station or as an uncrewed satellite that separates directly in orbit. For missions to other planets, the third stage can serve as the main crew habitat and command module with life support systems, or operate fully autonomously without pilots - including orbital insertion around other planets.<br>The first and second stages are reusable and designed for precise suicide burn landings on Earth and other planetary bodies. The vehicle features advanced docking capabilities and high-bandwidth communication relay systems.",
-    specs: [
-      { val: '205m', lbl: 'Height' },
-      { val: '3370 t', lbl: 'Mass' },
-      { val: '79.1 km/s', lbl: 'Delta-V' },
-      { val: '14.64×', lbl: 'TWR' },
-      { val: 'Feb 2026', lbl: 'First Flight' }
-    ],
-    stages: [
-      {
-        title: 'Stage 1 — Booster',
-        rows: [
-          { key: 'Engines', val: '42' },
-          { key: 'Thrust (SL)', val: '484,000 kN' },
-          { key: 'Burn time', val: '33.8 min' },
-          { key: 'Propellant', val: '2,560 t' },
-          { key: 'Recovery', val: 'Vertical landing' },
-          { key: 'Reusable', val: 'Yes' }
-        ]
-      },
-      {
-        title: 'Stage 2 — Upper',
-        rows: [
-          { key: 'Engines', val: '90' },
-          { key: 'Thrust (vac)', val: '120,000 kN' },
-          { key: 'Burn time', val: '1.6 min' },
-          { key: 'Propellant', val: '2,330 t' },
-          { key: 'Recovery', val: 'Vertical landing' },
-          { key: 'Reusable', val: 'Yes' }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'sunpower',
-    name: 'SunPower',
-    class: 'Earth Orbit',
-    color: '#ffaa00',
-    image: null,
-    description: "SunPower is InSpace's heavy-lift workhorse, designed specifically for Low Earth Orbit missions.<br>It evolved from a rapid prototype through multiple generations into a reliable high-performance launcher, optimized for delivering large payloads, solar arrays, and orbital stations. The name SunPower was coined on the fly by Haisess during the very first test campaign.<br>Although public records show 0 launches, more than 20 SunPower vehicles have already been built and successfully flown in classified InSpace test and operational missions.",
-    specs: [
-      { val: '—', lbl: 'Height' },
-      { val: '—', lbl: 'Mass' },
-      { val: '—', lbl: 'Delta-V' },
-      { val: '—', lbl: 'TWR' },
-      { val: 'Feb 2026', lbl: 'First Flight' }
-    ],
-    stages: [
-      {
-        title: 'Stage 1 — Booster',
-        rows: [
-          { key: 'Engines', val: '—' },
-          { key: 'Thrust (SL)', val: '—' },
-          { key: 'Burn time', val: '—' },
-          { key: 'Propellant', val: '—' },
-          { key: 'Recovery', val: 'Vertical landing' },
-          { key: 'Reusable', val: 'Yes' }
-        ]
-      },
-      {
-        title: 'Stage 2 — Upper',
-        rows: [
-          { key: 'Engines', val: '—' },
-          { key: 'Thrust (vac)', val: '—' },
-          { key: 'Burn time', val: '—' },
-          { key: 'Propellant', val: '—' },
-          { key: 'Recovery', val: '—' },
-          { key: 'Reusable', val: '—' }
-        ]
-      }
-    ]
-  },
-  {
-    id: 'planetsrockets',
-    name: 'PlanetsRockets',
-    class: 'COMING SOON',
-    color: '#cc66ff',
-    image: null,
-    description: "PlanetsRockets is InSpace's next-generation interplanetary vehicle, currently in the early concept and planning phase.<br>All detailed information about its design, capabilities, and specific mission targets remains confidential at this stage.<br>It is being developed as part of InSpace's long-term ambitions for deep-space exploration.",
-    specs: [
-      { val: '—', lbl: 'Height' },
-      { val: '—', lbl: 'Mass' },
-      { val: '—', lbl: 'Delta-V' },
-      { val: '—', lbl: 'TWR' },
-      { val: 'Apr 2026', lbl: 'First Flight' }
-    ],
-    stages: [
-      {
-        title: 'Stage 1 — Booster',
-        rows: [
-          { key: 'Engines', val: '—' },
-          { key: 'Thrust (SL)', val: '—' },
-          { key: 'Burn time', val: '—' },
-          { key: 'Propellant', val: '—' },
-          { key: 'Recovery', val: 'TBD' },
-          { key: 'Reusable', val: 'TBD' }
-        ]
-      },
-      {
-        title: 'Stage 2 — Upper',
-        rows: [
-          { key: 'Engines', val: '—' },
-          { key: 'Thrust (vac)', val: '—' },
-          { key: 'Burn time', val: '—' },
-          { key: 'Propellant', val: '—' },
-          { key: 'Recovery', val: '—' },
-          { key: 'Reusable', val: '—' }
-        ]
-      }
-    ]
-  }
+const vehicles=[
+  {id:'sunorbit',name:'SunOrbit',class:'Interplanetary Vehicle',color:'#00aaff',image:'991ef2dcfcd94c0f95050b657d1c6134.png',
+   description:"SunOrbit is InSpace's primary interplanetary vehicle, built in modular stages.<br>It is equally capable of crewed and uncrewed missions to Low Earth Orbit and to other planets. For Earth orbit, the third stage can function as a crewed mini-station or as an uncrewed satellite that separates directly in orbit. For missions to other planets, the third stage can serve as the main crew habitat and command module with life support systems, or operate fully autonomously without pilots - including orbital insertion around other planets.<br>The first and second stages are reusable and designed for precise suicide burn landings on Earth and other planetary bodies. The vehicle features advanced docking capabilities and high-bandwidth communication relay systems.",
+   specs:[{val:'205m',lbl:'Height'},{val:'3370 t',lbl:'Mass'},{val:'79.1 km/s',lbl:'Delta-V'},{val:'14.64×',lbl:'TWR'},{val:'Feb 2026',lbl:'First Flight'}],
+   stages:[{title:'Stage 1 — Booster',rows:[{key:'Engines',val:'42'},{key:'Thrust (SL)',val:'484,000 kN'},{key:'Burn time',val:'33.8 min'},{key:'Propellant',val:'2,560 t'},{key:'Recovery',val:'Vertical landing'},{key:'Reusable',val:'Yes'}]},{title:'Stage 2 — Upper',rows:[{key:'Engines',val:'90'},{key:'Thrust (vac)',val:'120,000 kN'},{key:'Burn time',val:'1.6 min'},{key:'Propellant',val:'2,330 t'},{key:'Recovery',val:'Vertical landing'},{key:'Reusable',val:'Yes'}]}]},
+  {id:'sunpower',name:'SunPower',class:'Earth Orbit',color:'#ffaa00',image:null,
+   description:"SunPower is InSpace's heavy-lift workhorse, designed specifically for Low Earth Orbit missions.<br>It evolved from a rapid prototype through multiple generations into a reliable high-performance launcher, optimized for delivering large payloads, solar arrays, and orbital stations. The name SunPower was coined on the fly by Haisess during the very first test campaign.<br>Although public records show 0 launches, more than 20 SunPower vehicles have already been built and successfully flown in classified InSpace test and operational missions.",
+   specs:[{val:'—',lbl:'Height'},{val:'—',lbl:'Mass'},{val:'—',lbl:'Delta-V'},{val:'—',lbl:'TWR'},{val:'Feb 2026',lbl:'First Flight'}],
+   stages:[{title:'Stage 1 — Booster',rows:[{key:'Engines',val:'—'},{key:'Thrust (SL)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'Vertical landing'},{key:'Reusable',val:'Yes'}]},{title:'Stage 2 — Upper',rows:[{key:'Engines',val:'—'},{key:'Thrust (vac)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'—'},{key:'Reusable',val:'—'}]}]},
+  {id:'planetsrockets',name:'PlanetsRockets',class:'COMING SOON',color:'#cc66ff',image:null,
+   description:"PlanetsRockets is InSpace's next-generation interplanetary vehicle, currently in the early concept and planning phase.<br>All detailed information about its design, capabilities, and specific mission targets remains confidential at this stage.<br>It is being developed as part of InSpace's long-term ambitions for deep-space exploration.",
+   specs:[{val:'—',lbl:'Height'},{val:'—',lbl:'Mass'},{val:'—',lbl:'Delta-V'},{val:'—',lbl:'TWR'},{val:'Apr 2026',lbl:'First Flight'}],
+   stages:[{title:'Stage 1 — Booster',rows:[{key:'Engines',val:'—'},{key:'Thrust (SL)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'TBD'},{key:'Reusable',val:'TBD'}]},{title:'Stage 2 — Upper',rows:[{key:'Engines',val:'—'},{key:'Thrust (vac)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'—'},{key:'Reusable',val:'—'}]}]}
 ];
 
 function renderVehicleCards(){
@@ -1384,20 +1509,17 @@ function renderVehicleCards(){
     const hSpec=v.specs.find(s=>s.lbl==='Height');
     const mSpec=v.specs.find(s=>s.lbl==='Mass');
     const cells=[
-      {lbl:'Height',val:hSpec?.val??'—'},
-      {lbl:'Mass',  val:mSpec?.val??'—'},
-      {lbl:'Launches',val:count>0?count+'×':'—'},
+      {lbl:t('specHeight'),val:hSpec?.val??'—'},
+      {lbl:t('specMass'),  val:mSpec?.val??'—'},
+      {lbl:t('specLaunches'),val:count>0?count+'×':'—'},
     ];
     const specHTML=cells.map(c=>`<div class="vc-sc"><div class="vc-sl">${c.lbl}</div><div class="vc-sv">${c.val}</div></div>`).join('');
     const card=document.createElement('div');card.className='vehicle-card';card.style.setProperty('--vc',v.color);
     card.innerHTML=`
-      <div class="vc-bar" style="background:${v.color};"></div>
-      <div class="vc-head">
-        <div class="vc-head-left">
-          <div class="vc-dot"></div>
-          <div class="vc-name">${v.name}</div>
-          <div class="vc-sub">${v.class}</div>
-        </div>
+      <div class="vc-stripe"></div>
+      <div class="vc-top">
+        <span class="vc-class-tag">${v.class}</span>
+        <div class="vc-name">${v.name}</div>
       </div>
       <div class="vc-specs">${specHTML}</div>
       <div class="vc-foot">
@@ -1407,7 +1529,7 @@ function renderVehicleCards(){
     card.addEventListener('click',()=>{playSound('details');showVehicleDetail(v.id);});
     container.appendChild(card);
   });
-  document.getElementById('ov-vehicles-meta').textContent=`${vehicles.length} ${currentLang==='ru'?'аппарата':'vehicles'}`;
+  document.getElementById('ov-vehicles-meta').textContent=`${vehicles.length} ${t('vehicles')}`;
 }
 
 function showVehicleDetail(id){
@@ -1432,6 +1554,7 @@ function showVehicleDetail(id){
   const ov=document.getElementById('ov-vehicles');ov.scrollTop=0;
 }
 function showVehicleList(){
+  playSound('back');
   document.getElementById('vp-detail').classList.remove('active');
   document.getElementById('vp-list').classList.add('active');
   document.getElementById('ov-vehicles-title').textContent=t('ourVehicles');
@@ -1488,7 +1611,7 @@ function rebuildHeroQuick(){
         <div class="quick-sub">${t(it.sub)}</div>
       </div>
       <span class="quick-arr">&#8599;</span>`;
-    c.onclick=it.action;
+    c.onclick=()=>{playSound('quick');it.action();};
     grid.appendChild(c);
   });
 }
@@ -1517,7 +1640,7 @@ function renderNews(reset=false){
   });
   newsShown+=Math.min(NEWS_PER_PAGE,allRockets.length-newsShown);
   btn.style.display=newsShown<allRockets.length?'inline-flex':'none';
-  document.getElementById('ov-news-meta').textContent=`${allRockets.length} ${currentLang==='ru'?'записей':'entries'}`;
+  document.getElementById('ov-news-meta').textContent=`${allRockets.length} ${t('newsEntries')}`;
 }
 function loadMore(){renderNews();}
 
@@ -1534,6 +1657,7 @@ function showNewsDetail(idx){
   document.getElementById('ov-news').scrollTop=0;
 }
 function showNewsList(){
+  playSound('back');
   document.getElementById('np-detail').classList.remove('active');
   document.getElementById('np-list').classList.add('active');
   document.getElementById('ov-news-title').textContent=t('latestNews');
@@ -1613,32 +1737,54 @@ function rebuildScheduleTabs(){
     b.className='sch-tab'+(currentSchedTab===tab.id?' active':'');
     b.style.setProperty('--td',tab.color);
     b.innerHTML=`<span class="sch-tab-dot"></span><span>${t(tab.key)}</span><span class="sch-tab-count">${count}</span>`;
-    b.onclick=()=>{currentSchedTab=tab.id;rebuildScheduleTabs();renderScheduleRows();};
+    b.onclick=()=>{
+      playSound('tab');
+      currentSchedTab=tab.id;
+      rebuildScheduleTabs();
+      const list=document.getElementById('launch-list');
+      list.classList.add('fading');
+      setTimeout(()=>{renderScheduleRows();list.classList.remove('fading');},160);
+    };
     tabsEl.appendChild(b);
   });
 }
-function renderScheduleRows(){
-  const list=document.getElementById('launch-list');list.innerHTML='';
-  const tab=SCHED_TABS.find(t=>t.id===currentSchedTab);
-  let items=launches.map((l,i)=>({...l,_idx:i}));
-  if(tab.status)items=items.filter(l=>l.status===tab.status);
-  // sort: planned ascending (soonest first), completed/canceled descending (newest first)
-  if(tab.id==='planned')items.sort((a,b)=>a.dateObj-b.dateObj);
-  else items.sort((a,b)=>b.dateObj-a.dateObj);
-  if(items.length===0){document.getElementById('sch-empty').style.display='block';return;}
+const SCHED_PAGE_SIZE=10;let schedShown=0;let schedItems=[];
+function renderScheduleRows(reset=true){
+  const list=document.getElementById('launch-list');
+  if(reset){
+    list.innerHTML='';schedShown=0;
+    const tab=SCHED_TABS.find(tb=>tb.id===currentSchedTab);
+    schedItems=launches.map((l,i)=>({...l,_idx:i}));
+    if(tab.status)schedItems=schedItems.filter(l=>l.status===tab.status);
+    if(tab.id==='planned')schedItems.sort((a,b)=>a.dateObj-b.dateObj);
+    else schedItems.sort((a,b)=>b.dateObj-a.dateObj);
+  }
+  if(schedItems.length===0){document.getElementById('sch-empty').style.display='block';return;}
   document.getElementById('sch-empty').style.display='none';
-  items.forEach((l,i)=>{
+  // Remove existing load-more row if present
+  const oldLM=list.querySelector('.launch-load-more');if(oldLM)oldLM.remove();
+  const slice=schedItems.slice(schedShown,schedShown+SCHED_PAGE_SIZE);
+  slice.forEach((l,i)=>{
+    const globalI=schedShown+i;
     const ds=l.dateObj.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
     const ts=l.dateObj.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false})+' (local)';
     const row=document.createElement('div');row.className='launch-row';row.title='Click for details';
-    row.style.animationDelay=(Math.min(i,8)*0.04)+'s';
+    row.style.animationDelay=(Math.min(i,8)*0.025)+'s';
     const wlHTML=l.watchUrl?`<a class="row-watch-link" id="row-watch-${l._idx}" href="${l.watchUrl}" target="_blank" onclick="event.stopPropagation()">${t('watchLive')} &#8599;</a>`:'';
     row.innerHTML=`<div><strong>${l.rocket}</strong></div><div style="color:#aaa;font-family:var(--mono);font-size:0.86em;">${ds}</div><div style="color:#666;font-size:0.82em;font-family:var(--mono);">${ts}</div><div style="display:flex;align-items:center;gap:14px;justify-content:flex-end;">${wlHTML}<div class="status-badge" style="color:${statusColor(l.status)};">${statusLabel(l.status)}</div></div>`;
     row.addEventListener('click',()=>openLaunchModal(l._idx));
     if(l.watchUrl){setTimeout(()=>{const el=document.getElementById(`row-watch-${l._idx}`);if(el)window.registerRowWatch(l._idx,el);},0);}
     list.appendChild(row);
   });
-  document.getElementById('ov-schedule-meta').textContent=`${items.length} ${currentLang==='ru'?'запусков':'launches'}`;
+  schedShown+=slice.length;
+  // Show Load More row if more items remain AND total > 10
+  if(schedItems.length>SCHED_PAGE_SIZE&&schedShown<schedItems.length){
+    const lm=document.createElement('div');lm.className='launch-load-more';
+    lm.innerHTML=`<span>${t('loadMore')} (${schedItems.length})</span>`;
+    lm.onclick=()=>{renderScheduleRows(false);};
+    list.appendChild(lm);
+  }
+  document.getElementById('ov-schedule-meta').textContent=`${schedItems.length} ${t('launchesCount')}`;
 }
 
 /* ══════════════════════════════════════
@@ -1680,7 +1826,7 @@ function openOverlay(name){
   closeAllOverlays(true);
   const ov=document.getElementById('ov-'+name);if(!ov)return;
   if(OVERLAY_STARFIELDS[name])ensureOverlayStars(OVERLAY_STARFIELDS[name],75);
-  playSound('details');
+  playSound('nav');
   if(name==='vehicles'){renderVehicleCards();showVehicleList();}
   else if(name==='news'){renderNews(true);showNewsList();}
   else if(name==='schedule'){rebuildScheduleTabs();renderScheduleRows();}
@@ -1689,16 +1835,11 @@ function openOverlay(name){
   requestAnimationFrame(()=>{requestAnimationFrame(()=>ov.classList.add('visible'));});
   ov.scrollTop=0;
   document.body.style.overflow='hidden';
-  showToast({
-    icon:'check',color:'#5dd6a0',
-    title:t(OVERLAY_TITLES[name]),
-    sub:t('toastSectionOpened'),
-    duration:2200
-  });
 }
 function closeOverlay(name){
   const ov=document.getElementById('ov-'+name);if(!ov)return;
   if(name==='game')stopGame();
+  playSound('close');
   ov.classList.remove('visible');
   setTimeout(()=>{ov.classList.remove('active');if(!anyOverlayOpen())document.body.style.overflow='';},400);
 }
@@ -1823,7 +1964,7 @@ document.addEventListener('keydown',e=>{
     reset();running=true;addInput();
     document.getElementById('gop-game-overlay').classList.add('hidden');
     lastTs=performance.now();raf=requestAnimationFrame(loop);
-    showToast({icon:'rocket',color:'#cc88ff',title:t('notifGameStart'),sub:t('notifGameStartSub'),duration:2500});
+    playSound('nav');
   };
   window.stopGame=stopGame;
 })();
@@ -1832,15 +1973,6 @@ document.addEventListener('keydown',e=>{
    INIT
 ══════════════════════════════════════ */
 applyLang();
-
-// Welcome toast
-setTimeout(()=>{
-  showToast({
-    icon:'rocket',color:'#7eb6ff',
-    title:t('toastWelcome'),sub:t('toastWelcomeSub'),
-    duration:3800
-  });
-},800);
 </script>
 </body>
 </html>
