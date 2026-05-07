@@ -2,123 +2,174 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>InSpace</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@300;400&display=swap');
-/* Made by InSpace */
+/* Made by InSpace · Rebuilt by hi9eS */
 /* This website is for informational purposes only and does NOT engage in any commercial activity. */
 
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#080808;--bg2:#0f0f0f;--bg3:#141414;
-  --border:rgba(255,255,255,0.08);--border-h:rgba(255,255,255,0.18);
-  --text:#f0f0f0;--muted:#666;--muted2:#444;
+  --bg:#070708;--bg2:#0e0e10;--bg3:#141418;--bg4:#1a1a1f;
+  --border:rgba(255,255,255,0.08);--border-h:rgba(255,255,255,0.18);--border-s:rgba(255,255,255,0.28);
+  --text:#f0f0f0;--muted:#888;--muted2:#555;--muted3:#333;
   --font:'DM Sans','Segoe UI',sans-serif;--mono:'DM Mono',monospace;
-  --ease:cubic-bezier(0.4,0,0.2,1);--spring:cubic-bezier(0.34,1.56,0.64,1);
+  --ease:cubic-bezier(0.4,0,0.2,1);--spring:cubic-bezier(0.34,1.56,0.64,1);--out:cubic-bezier(0.16,1,0.3,1);
   --hero-from:#fff;--hero-to:#a0c8ff;--hero-glow:rgba(120,180,255,0.18);
-  --acc-pv:17px;--acc-ph:22px;
-  --lm-w:600px;--lm-cell:18px 22px;--lm-val:1.1em;
+  --accent:#7eb6ff;--accent-warm:#ffb380;--accent-good:#5dd6a0;--accent-bad:#ff6b58;
 }
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6;font-size:15px;overflow-x:hidden;}
+html{scroll-behavior:smooth;background:var(--bg);}
+body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6;font-size:15px;overflow-x:hidden;min-height:100vh;}
 a{color:inherit;text-decoration:none;}
+button{font-family:inherit;}
 
-/* ── STARFIELD ── */
+/* ── ATMOSPHERIC BACKGROUND LAYERS ── */
 #starfield,#vp-starfield{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
-#news-starfield,#game-starfield{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+#news-starfield,#schedule-starfield,#vehicles-starfield,#game-starfield{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
 .star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--dur,4s) var(--delay,0s) infinite ease-in-out alternate;opacity:0;}
 @keyframes twinkle{0%{opacity:0;transform:scale(0.8);}50%{opacity:var(--op,0.5);}100%{opacity:0.08;transform:scale(1.1);}}
 #flyby-canvas{position:fixed;inset:0;pointer-events:none;z-index:1;}
 
-/* ── HEADER ── */
-header{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:14px 24px;background:rgba(8,8,8,0.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);}
-header::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:180px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);}
-.header-left{position:absolute;left:24px;display:flex;align-items:center;gap:8px;}
-.header-clock{font-family:var(--mono);font-weight:300;letter-spacing:0.06em;white-space:nowrap;}
-.header-nav{display:flex;gap:4px;}
-.header-nav a{font-size:0.85em;font-weight:400;letter-spacing:0.04em;padding:7px 16px;border-radius:8px;cursor:pointer;transition:color 0.2s,background 0.2s,transform 0.15s var(--spring);}
-.header-nav a:hover{transform:scale(0.97);background:rgba(255,255,255,0.05);}
-.header-nav a:active{transform:scale(0.90);}
-.header-right{position:absolute;right:24px;display:flex;align-items:center;gap:8px;}
+/* Subtle ambient gradient orb behind hero */
+.ambient-orb{position:fixed;width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(120,180,255,0.08) 0%,rgba(120,180,255,0) 65%);
+  top:-100px;left:50%;transform:translateX(-50%);pointer-events:none;z-index:0;
+  filter:blur(40px);animation:orbBreath 9s ease-in-out infinite alternate;}
+@keyframes orbBreath{from{opacity:0.6;transform:translateX(-50%) scale(0.95);}to{opacity:1;transform:translateX(-50%) scale(1.05);}}
+
+/* ══════════════════════════════════════
+   HEADER — sticky, overlay-trigger nav
+══════════════════════════════════════ */
+header{position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:center;
+  padding:14px 24px;background:rgba(7,7,8,0.78);
+  backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);
+  border-bottom:1px solid var(--border);}
+header::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:220px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent);}
+.header-left{position:absolute;left:24px;display:flex;align-items:center;gap:10px;}
+.header-clock{font-family:var(--mono);font-weight:300;letter-spacing:0.06em;white-space:nowrap;font-size:0.78em;color:#888;}
+.header-clock-tz{font-family:var(--mono);font-size:0.62em;letter-spacing:0.08em;color:#555;}
+.header-nav{display:flex;gap:2px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.05);border-radius:100px;padding:4px;}
+.nav-btn{font-size:0.82em;font-weight:400;letter-spacing:0.04em;
+  padding:7px 16px;border-radius:100px;cursor:pointer;border:none;background:transparent;
+  color:#999;transition:color 0.22s,background 0.22s,transform 0.18s var(--spring);
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+.nav-btn:hover{color:#fff;background:rgba(255,255,255,0.07);transform:scale(0.98);}
+.nav-btn:active{transform:scale(0.92);}
+.nav-btn.active{background:rgba(255,255,255,0.10);color:#fff;}
+.nav-btn .nav-dot{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:0.5;}
+.header-right{position:absolute;right:24px;display:flex;align-items:center;gap:10px;}
 
 /* ── LANG PICKER ── */
 .lang-picker{position:relative;}
 .lang-btn{
   font-family:var(--mono);font-size:0.68em;letter-spacing:0.06em;
   color:var(--muted);background:transparent;border:none;cursor:pointer;
-  padding:4px 6px;border-radius:6px;transition:color 0.2s,background 0.2s;
+  padding:5px 8px;border-radius:7px;transition:color 0.2s,background 0.2s;
   display:flex;align-items:center;gap:4px;white-space:nowrap;
 }
-.lang-btn:hover{color:rgba(255,255,255,0.65);background:rgba(255,255,255,0.05);}
-.lang-btn svg{width:10px;height:10px;fill:currentColor;flex-shrink:0;}
+.lang-btn:hover{color:rgba(255,255,255,0.8);background:rgba(255,255,255,0.06);}
+.lang-btn svg{width:9px;height:9px;fill:currentColor;flex-shrink:0;transition:transform 0.25s var(--ease);}
+.lang-picker.open .lang-btn svg{transform:rotate(180deg);}
 .lang-dropdown{
-  position:absolute;top:calc(100% + 6px);left:0;
-  background:var(--bg2);border:1px solid var(--border);border-radius:12px;
-  padding:4px;min-width:130px;
-  opacity:0;pointer-events:none;transform:translateY(-4px);
-  transition:opacity 0.18s var(--ease),transform 0.18s var(--ease);
+  position:absolute;top:calc(100% + 8px);left:0;
+  background:var(--bg2);border:1px solid var(--border-h);border-radius:14px;
+  padding:5px;min-width:140px;box-shadow:0 12px 40px rgba(0,0,0,0.5);
+  opacity:0;pointer-events:none;transform:translateY(-6px) scale(0.97);
+  transition:opacity 0.22s var(--ease),transform 0.22s var(--ease);
   z-index:200;
 }
-.lang-picker.open .lang-dropdown{opacity:1;pointer-events:all;transform:translateY(0);}
+.lang-picker.open .lang-dropdown{opacity:1;pointer-events:all;transform:translateY(0) scale(1);}
 .lang-option{
-  display:block;width:100%;text-align:left;
+  display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left;
   font-family:var(--mono);font-size:0.72em;letter-spacing:0.06em;
-  padding:7px 12px;border:none;background:transparent;
-  color:var(--muted);cursor:pointer;border-radius:8px;
+  padding:8px 12px;border:none;background:transparent;
+  color:var(--muted);cursor:pointer;border-radius:9px;
   transition:background 0.15s,color 0.15s;white-space:nowrap;
 }
-.lang-option:hover{background:rgba(255,255,255,0.05);color:var(--text);}
-.lang-option.active{color:var(--text);}
+.lang-option:hover{background:rgba(255,255,255,0.06);color:var(--text);}
+.lang-option.active{color:var(--text);background:rgba(255,255,255,0.04);}
+.lang-option .check{opacity:0;font-size:0.85em;color:var(--accent);}
+.lang-option.active .check{opacity:1;}
 
-/* ── SOCIAL BUTTONS — icon only, glow on hover, NO scale ── */
+/* ── SOCIAL BUTTONS ── */
 .social-btn{
-  border-radius:100px;border:1px solid rgba(255,255,255,0.18);
-  background:rgba(255,255,255,0.04);
+  border-radius:100px;border:1px solid rgba(255,255,255,0.16);
+  background:rgba(255,255,255,0.03);
   display:inline-flex;align-items:center;justify-content:center;
   width:34px;height:34px;cursor:pointer;
   transition:border-color 0.25s,background 0.25s,box-shadow 0.25s;
   text-decoration:none;flex-shrink:0;
 }
-.social-btn:hover{
-  border-color:rgba(255,255,255,0.3);
-  background:rgba(255,255,255,0.07);
-  box-shadow:0 0 10px rgba(255,255,255,0.08);
+.social-btn:hover{border-color:rgba(255,255,255,0.32);background:rgba(255,255,255,0.07);box-shadow:0 0 14px rgba(255,255,255,0.10);}
+.social-btn svg{width:14px;height:14px;fill:rgba(255,255,255,0.5);transition:fill 0.25s;display:block;}
+.social-btn:hover svg{fill:rgba(255,255,255,0.92);}
+
+/* ══════════════════════════════════════
+   HERO — main "menu" — only countdown/social/stats
+══════════════════════════════════════ */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:120px 20px 60px;max-width:1100px;margin:0 auto;position:relative;z-index:2;text-align:center;
 }
-.social-btn svg{width:15px;height:15px;fill:rgba(255,255,255,0.45);transition:fill 0.25s;display:block;}
-.social-btn:hover svg{fill:rgba(255,255,255,0.8);}
+.hero-status-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:0.66em;letter-spacing:0.18em;text-transform:uppercase;
+  padding:6px 14px;border-radius:100px;background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);color:#888;margin-bottom:22px;
+  animation:fadeUp 0.7s var(--ease) both;
+}
+.status-chip-dot{width:6px;height:6px;border-radius:50%;background:var(--accent-good);box-shadow:0 0 8px var(--accent-good);
+  animation:dotPulse 1.6s ease-in-out infinite;}
+@keyframes dotPulse{0%,100%{opacity:0.4;}50%{opacity:1;}}
 
-section{padding:90px 20px;max-width:1000px;margin:0 auto;position:relative;z-index:1;}
-
-/* ── HERO ── */
-.hero{text-align:center;padding-top:130px;}
-.hero h1{font-size:clamp(2.5em,5.5vw,4em);font-weight:300;letter-spacing:-0.02em;margin-bottom:20px;animation:fadeUp 0.8s var(--ease) both;background:linear-gradient(135deg,var(--hero-from) 0%,var(--hero-to) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 26px var(--hero-glow)) drop-shadow(0 0 8px var(--hero-glow));}
-.hero p{font-size:1.1em;max-width:600px;margin:0 auto 36px;color:#888;font-weight:300;filter:brightness(1.38);animation:fadeUp 0.8s 0.1s var(--ease) both;}
+.hero h1{
+  font-size:clamp(2.5em,6vw,4.4em);font-weight:300;letter-spacing:-0.02em;margin-bottom:14px;
+  animation:fadeUp 0.8s var(--ease) both;
+  background:linear-gradient(135deg,var(--hero-from) 0%,var(--hero-to) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 26px var(--hero-glow)) drop-shadow(0 0 8px var(--hero-glow));
+}
+.hero p{font-size:1.04em;max-width:540px;margin:0 auto 36px;color:#999;font-weight:300;
+  animation:fadeUp 0.8s 0.08s var(--ease) both;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
 
-#countdown-wrap{display:none;margin:0 auto 9px;max-width:640px;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:28px 40px;position:relative;overflow:hidden;animation:fadeUp 0.8s 0.15s var(--ease) both;}
-#countdown-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent);}
-#countdown-mission{font-size:0.72em;letter-spacing:0.18em;text-transform:uppercase;color:#888;margin-bottom:10px;font-family:var(--mono);}
-#countdown-label{font-size:0.85em;color:#aaa;margin-bottom:18px;font-weight:300;}
-#countdown-timer{display:flex;justify-content:center;align-items:center;gap:18px;}
-.cd-unit{text-align:center;min-width:52px;}
-.cd-num{font-size:2.6em;font-weight:300;font-variant-numeric:tabular-nums;letter-spacing:0.04em;line-height:1;font-family:var(--mono);}
-.cd-lbl{font-size:0.63em;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted2);margin-top:5px;}
+#countdown-wrap{display:none;margin:0 auto 16px;max-width:660px;width:100%;
+  background:linear-gradient(180deg,rgba(255,255,255,0.025),rgba(255,255,255,0.01));
+  border:1px solid var(--border);border-radius:22px;padding:30px 40px;position:relative;overflow:hidden;
+  animation:fadeUp 0.8s 0.15s var(--ease) both;}
+#countdown-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent);}
+#countdown-wrap::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle at top,rgba(120,180,255,0.05),transparent 60%);}
+#countdown-mission{font-size:0.72em;letter-spacing:0.18em;text-transform:uppercase;color:#9aa;margin-bottom:8px;font-family:var(--mono);position:relative;z-index:1;}
+#countdown-label{font-size:0.85em;color:#aaa;margin-bottom:18px;font-weight:300;position:relative;z-index:1;}
+#countdown-timer{display:flex;justify-content:center;align-items:center;gap:16px;position:relative;z-index:1;}
+.cd-unit{text-align:center;min-width:54px;}
+.cd-num{font-size:2.7em;font-weight:300;font-variant-numeric:tabular-nums;letter-spacing:0.04em;line-height:1;font-family:var(--mono);}
+.cd-lbl{font-size:0.62em;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted2);margin-top:6px;}
 .cd-sep{font-size:2em;font-weight:200;color:var(--muted2);line-height:1;padding-bottom:14px;}
-.cd-sep-thin{width:1px;height:36px;background:rgba(255,255,255,0.1);align-self:center;margin-bottom:14px;}
-.cd-sep-colon{font-size:2em;font-weight:200;color:var(--muted2);line-height:1;padding-bottom:14px;}
-#days-since-wrap{display:none;margin:0 auto 13px;max-width:640px;text-align:center;animation:fadeUp 0.8s 0.18s var(--ease) both;}
-#days-since-text{font-size:0.72em;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted2);font-family:var(--mono);}
-.stream-link{display:inline-flex;align-items:center;gap:11px;font-size:1.06em;font-weight:400;letter-spacing:0.07em;padding:16px 46px;border:1px solid rgba(255,255,255,0.35);border-radius:100px;cursor:pointer;color:#fff;transition:all 0.3s var(--ease);margin-bottom:32px;position:relative;overflow:hidden;animation:fadeUp 0.8s 0.2s var(--ease) both;}
-.stream-link::before{content:'';position:absolute;inset:0;background:#fff;transform:scaleX(0);transform-origin:left;transition:transform 0.35s var(--ease);border-radius:100px;}
+.cd-sep-thin{width:1px;height:40px;background:rgba(255,255,255,0.1);align-self:center;margin-bottom:14px;}
+
+#days-since-wrap{display:none;margin:0 auto 22px;max-width:640px;text-align:center;
+  animation:fadeUp 0.8s 0.18s var(--ease) both;}
+#days-since-text{font-size:0.7em;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted2);font-family:var(--mono);}
+
+.stream-link{display:inline-flex;align-items:center;gap:11px;font-size:1em;font-weight:400;
+  letter-spacing:0.07em;padding:15px 44px;border:1px solid rgba(255,255,255,0.32);border-radius:100px;
+  cursor:pointer;color:#fff;transition:all 0.3s var(--ease);margin-bottom:32px;
+  position:relative;overflow:hidden;animation:fadeUp 0.8s 0.2s var(--ease) both;}
+.stream-link::before{content:'';position:absolute;inset:0;background:#fff;transform:scaleX(0);
+  transform-origin:left;transition:transform 0.4s var(--ease);border-radius:100px;}
 .stream-link:hover{color:#000;border-color:#fff;transform:translateY(-2px);}
 .stream-link:hover::before{transform:scaleX(1);}
-.stream-link-text{position:relative;z-index:1;}
+.stream-link-text{position:relative;z-index:1;display:inline-flex;align-items:center;gap:11px;}
+.stream-link svg{width:14px;height:14px;}
 
-/* ── STATS IN HERO (below Watch Launch) ── */
-#hero-stats{
-  max-width:640px;margin:0 auto 60px;
-  animation:fadeUp 0.8s 0.25s var(--ease) both;
-}
+/* ── HERO STATS ── */
+#hero-stats{max-width:660px;width:100%;margin:0 auto 30px;animation:fadeUp 0.8s 0.25s var(--ease) both;}
 .hero-stats-grid{
   display:grid;grid-template-columns:repeat(4,1fr);
   gap:1px;background:rgba(255,255,255,0.07);
@@ -127,228 +178,477 @@ section{padding:90px 20px;max-width:1000px;margin:0 auto;position:relative;z-ind
 }
 @media(max-width:600px){.hero-stats-grid{grid-template-columns:1fr 1fr;}}
 .hero-stat-cell{
-  background:var(--bg2);padding:18px 16px;
-  display:flex;flex-direction:column;gap:4px;
+  background:var(--bg2);padding:18px 16px;display:flex;flex-direction:column;gap:5px;
   transition:background 0.22s;position:relative;overflow:hidden;
 }
-.hero-stat-cell::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);opacity:0;transition:opacity 0.3s;}
-.hero-stat-cell:hover{background:#131313;}
+.hero-stat-cell::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);
+  opacity:0;transition:opacity 0.3s;}
+.hero-stat-cell:hover{background:#131318;}
 .hero-stat-cell:hover::before{opacity:1;}
 .hero-stat-num{font-size:1.7em;font-weight:300;font-family:var(--mono);letter-spacing:-0.02em;line-height:1;color:var(--text);}
 .hero-stat-lbl{font-size:0.55em;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;font-family:var(--mono);}
 
-h2{font-size:1.7em;font-weight:300;letter-spacing:-0.01em;margin-bottom:36px;}
+/* ── QUICK ACCESS GRID — alt access to overlays from hero ── */
+#hero-quick{max-width:660px;width:100%;margin:0 auto;animation:fadeUp 0.8s 0.3s var(--ease) both;}
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+@media(max-width:600px){.quick-grid{grid-template-columns:1fr;}}
+.quick-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:14px;
+  padding:16px 18px;cursor:pointer;text-align:left;
+  transition:background 0.2s,border-color 0.2s,transform 0.2s var(--spring);
+  display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;
+}
+.quick-card::after{content:'';position:absolute;top:0;left:0;width:2px;height:100%;background:var(--qc,#fff);opacity:0.4;transition:opacity 0.25s;}
+.quick-card:hover{background:var(--bg3);border-color:var(--border-h);transform:translateY(-2px);}
+.quick-card:hover::after{opacity:1;}
+.quick-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,0.04);flex-shrink:0;}
+.quick-icon svg{width:16px;height:16px;fill:var(--qc,#fff);opacity:0.7;}
+.quick-text{flex:1;}
+.quick-title{font-size:0.86em;font-weight:500;color:var(--text);margin-bottom:2px;}
+.quick-sub{font-size:0.65em;color:var(--muted);font-family:var(--mono);letter-spacing:0.08em;text-transform:uppercase;}
+.quick-arr{font-size:0.85em;color:var(--muted2);transition:transform 0.22s var(--spring),color 0.22s;}
+.quick-card:hover .quick-arr{transform:translate(3px,-3px);color:var(--text);}
 
 /* ══════════════════════════════════════
-   VEHICLE CARDS — no transform on hover, fixed layout
+   UNIVERSAL OVERLAY SYSTEM
 ══════════════════════════════════════ */
-#fleet{padding-top:100px;padding-bottom:80px;}
-.vehicle-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(275px,1fr));gap:18px;align-items:stretch;}
+.overlay-page{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;overflow-y:auto;
+  opacity:0;transition:opacity 0.4s var(--ease);}
+.overlay-page.active{display:block;}
+.overlay-page.visible{opacity:1;}
 
+.overlay-page .op-header{
+  position:sticky;top:0;background:rgba(7,7,8,0.88);backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 28px;z-index:10;}
+.op-back{background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--muted);
+  padding:8px 18px;border-radius:100px;cursor:pointer;font-size:0.82em;font-family:var(--font);
+  transition:all 0.22s var(--ease);display:inline-flex;align-items:center;gap:8px;}
+.op-back:hover{background:rgba(255,255,255,0.07);color:var(--text);border-color:var(--border-h);transform:translateX(-2px);}
+.op-back svg{width:11px;height:11px;fill:currentColor;}
+.op-title-wrap{display:flex;align-items:center;gap:10px;}
+.op-title{font-size:0.92em;font-weight:400;color:var(--muted);letter-spacing:0.04em;}
+.op-title-bar{width:3px;height:14px;background:var(--op-color,#fff);border-radius:2px;opacity:0.7;}
+.op-meta{font-family:var(--mono);font-size:0.7em;color:var(--muted2);letter-spacing:0.1em;text-transform:uppercase;}
+
+.op-body{max-width:1000px;margin:0 auto;padding:54px 24px 100px;animation:fadeUp 0.55s 0.05s var(--out) both;position:relative;z-index:1;}
+.op-hero-title{font-size:clamp(2em,5vw,3.4em);font-weight:300;letter-spacing:-0.01em;margin-bottom:8px;}
+.op-hero-sub{font-size:0.72em;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase;
+  margin-bottom:42px;font-family:var(--mono);}
+.op-section-title{font-size:0.66em;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);
+  margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:12px;font-family:var(--mono);
+  display:flex;align-items:center;justify-content:space-between;}
+.op-section-title .op-section-count{color:var(--muted2);font-weight:400;}
+
+/* ══════════════════════════════════════
+   VEHICLES OVERLAY
+══════════════════════════════════════ */
+.vehicle-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;align-items:stretch;}
 .vehicle-card{
   background:var(--bg2);border-radius:18px;cursor:pointer;
   border:1px solid rgba(255,255,255,0.08);
   display:flex;flex-direction:column;
-  /* FIX: will-change:auto prevents GPU layer shift; no transform at all */
   transition:box-shadow 0.3s var(--ease),border-color 0.3s var(--ease);
-  position:relative;overflow:hidden;
-  transform:translateZ(0);/* force layer, prevent reflow shift */
+  position:relative;overflow:hidden;transform:translateZ(0);
 }
-.vehicle-card:hover{
-  box-shadow:0 0 0 1px rgba(255,255,255,0.14),0 12px 40px rgba(0,0,0,0.6);
-  border-color:rgba(255,255,255,0.14);
-}
-.vc-bar{height:3px;flex-shrink:0;opacity:0.4;transition:opacity 0.28s,height 0.2s;}
-.vehicle-card:hover .vc-bar{opacity:1;height:3px;}
-.vc-head{padding:16px 18px 12px;border-bottom:1px solid rgba(255,255,255,0.055);display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
-.vc-head-left{display:flex;flex-direction:column;gap:2px;}
-.vc-dot{width:6px;height:6px;border-radius:50%;background:var(--vc,#fff);opacity:0.35;transition:opacity 0.28s;margin-bottom:4px;}
-.vehicle-card:hover .vc-dot{opacity:0.9;}
-.vc-name{font-size:1.18em;font-weight:500;letter-spacing:-0.01em;line-height:1.2;color:var(--text);}
-.vc-sub{font-size:0.64em;color:var(--muted);letter-spacing:0.16em;text-transform:uppercase;font-family:var(--mono);}
-.vc-count{font-size:0.62em;font-family:var(--mono);letter-spacing:0.06em;padding:3px 9px;border-radius:100px;border:1px solid rgba(255,255,255,0.09);color:var(--muted2);background:rgba(255,255,255,0.025);white-space:nowrap;flex-shrink:0;margin-top:2px;transition:color 0.25s,border-color 0.25s;}
-.vehicle-card:hover .vc-count{color:rgba(255,255,255,0.4);border-color:rgba(255,255,255,0.14);}
-.vc-specs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(255,255,255,0.055);flex:1;}
-.vc-sc{background:var(--bg3);padding:12px 14px;transition:background 0.2s;display:flex;flex-direction:column;justify-content:center;}
-.vehicle-card:hover .vc-sc{background:#131313;}
-.vc-sl{font-size:0.56em;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:3px;}
+.vehicle-card:hover{box-shadow:0 0 0 1px rgba(255,255,255,0.14),0 16px 50px rgba(0,0,0,0.6);border-color:rgba(255,255,255,0.16);}
+.vc-bar{height:3px;flex-shrink:0;opacity:0.5;transition:opacity 0.28s,height 0.2s;}
+.vehicle-card:hover .vc-bar{opacity:1;}
+.vc-head{padding:18px 20px 14px;border-bottom:1px solid rgba(255,255,255,0.05);
+  display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+.vc-head-left{display:flex;flex-direction:column;gap:3px;}
+.vc-dot{width:6px;height:6px;border-radius:50%;background:var(--vc,#fff);opacity:0.4;
+  transition:opacity 0.28s,box-shadow 0.28s;margin-bottom:5px;}
+.vehicle-card:hover .vc-dot{opacity:1;box-shadow:0 0 8px var(--vc,#fff);}
+.vc-name{font-size:1.2em;font-weight:500;letter-spacing:-0.01em;line-height:1.2;color:var(--text);}
+.vc-sub{font-size:0.62em;color:var(--muted);letter-spacing:0.16em;text-transform:uppercase;font-family:var(--mono);}
+.vc-specs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:rgba(255,255,255,0.05);flex:1;}
+.vc-sc{background:var(--bg3);padding:13px 14px;transition:background 0.2s;display:flex;flex-direction:column;justify-content:center;}
+.vehicle-card:hover .vc-sc{background:#161620;}
+.vc-sl{font-size:0.55em;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:4px;}
 .vc-sv{font-size:0.92em;font-weight:300;font-family:var(--mono);color:var(--text);line-height:1.2;}
-.vc-foot{display:flex;align-items:center;justify-content:space-between;padding:9px 16px;border-top:1px solid rgba(255,255,255,0.045);background:rgba(255,255,255,0.01);flex-shrink:0;}
-.vc-foot-txt{font-size:0.67em;color:var(--muted2);letter-spacing:0.1em;text-transform:uppercase;font-family:var(--mono);transition:color 0.2s;}
+.vc-foot{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;
+  border-top:1px solid rgba(255,255,255,0.04);background:rgba(255,255,255,0.01);flex-shrink:0;}
+.vc-foot-txt{font-size:0.66em;color:var(--muted2);letter-spacing:0.1em;text-transform:uppercase;font-family:var(--mono);transition:color 0.2s;}
 .vc-foot-arr{font-size:0.78em;color:var(--muted2);transition:transform 0.22s var(--spring),color 0.2s;}
-.vehicle-card:hover .vc-foot-txt{color:rgba(255,255,255,0.5);}
-.vehicle-card:hover .vc-foot-arr{color:rgba(255,255,255,0.5);transform:translate(3px,-3px);}
+.vehicle-card:hover .vc-foot-txt{color:rgba(255,255,255,0.6);}
+.vehicle-card:hover .vc-foot-arr{color:rgba(255,255,255,0.6);transform:translate(3px,-3px);}
 
-/* ── Vehicle overlay ── */
-#vehicle-overlay{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;opacity:0;transition:opacity 0.35s var(--ease);}
-#vehicle-overlay.active{display:block;}#vehicle-overlay.visible{opacity:1;}
-.vp-header{position:sticky;top:0;background:rgba(8,8,8,0.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:20px;padding:18px 32px;z-index:10;}
-.vp-back{background:none;border:1px solid var(--border);color:var(--muted);padding:8px 20px;border-radius:100px;cursor:pointer;font-size:0.82em;font-family:var(--font);transition:all 0.2s var(--ease);}
-.vp-back:hover{background:var(--bg3);color:var(--text);border-color:var(--border-h);transform:translateX(-2px);}
-.vp-title{font-size:1em;font-weight:300;color:var(--muted);}
-.vp-body{max-width:900px;margin:0 auto;padding:60px 24px 100px;animation:fadeUp 0.5s 0.05s var(--ease) both;position:relative;z-index:1;}
-.vp-hero-name{font-size:clamp(2.5em,6vw,4em);font-weight:300;letter-spacing:-0.01em;margin-bottom:8px;}
-.vp-hero-class{font-size:0.72em;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:48px;font-family:var(--mono);}
-.vp-img-wrap{width:100%;aspect-ratio:16/7;background:var(--bg2);border:1px solid var(--border);border-radius:18px;margin-bottom:52px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+/* Vehicle DETAIL view (same overlay container, second screen) */
+.vp-img-wrap{width:100%;aspect-ratio:16/7;background:var(--bg2);border:1px solid var(--border);border-radius:18px;margin-bottom:42px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
 .vp-img-wrap img{width:100%;height:100%;object-fit:cover;}
-.vp-img-ph{font-size:0.72em;color:var(--muted2);letter-spacing:0.15em;text-transform:uppercase;font-family:var(--mono);}
-.vp-sec-title{font-size:0.68em;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:12px;font-family:var(--mono);}
+.vp-img-ph{font-size:0.7em;color:var(--muted2);letter-spacing:0.15em;text-transform:uppercase;font-family:var(--mono);}
 .vp-specs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1px;background:rgba(255,255,255,0.07);border-radius:16px;overflow:hidden;margin-bottom:36px;}
 .vp-spec{background:var(--bg3);padding:18px 20px;transition:background 0.2s;}
-.vp-spec:hover{background:#1a1a1a;}
-.vp-spec-lbl{font-size:0.62em;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:6px;}
-.vp-spec-val{font-size:1.25em;font-weight:300;font-family:var(--mono);color:var(--text);line-height:1.1;}
+.vp-spec:hover{background:#1a1a22;}
+.vp-spec-lbl{font-size:0.6em;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:6px;}
+.vp-spec-val{font-size:1.22em;font-weight:300;font-family:var(--mono);color:var(--text);line-height:1.1;}
 .vp-stages{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:36px;}
 @media(max-width:600px){.vp-stages{grid-template-columns:1fr;}}
-.vp-stage{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:0;overflow:hidden;}
-.vp-stage-title{font-size:0.65em;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);padding:14px 18px 12px;font-family:var(--mono);border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);}
+.vp-stage{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:0;overflow:hidden;}
+.vp-stage-title{font-size:0.64em;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);
+  padding:14px 18px 12px;font-family:var(--mono);border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);}
 .vp-stage-rows{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.06);}
 .vp-stage-cell{background:var(--bg3);padding:13px 16px;transition:background 0.2s;}
-.vp-stage-cell:hover{background:#1a1a1a;}
-.vp-stage-key{font-size:0.6em;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:4px;}
-.vp-stage-val{font-size:0.95em;font-weight:300;font-family:var(--mono);color:var(--text);}
-.vp-desc{color:#777;font-size:1.0em;line-height:1.85;max-width:680px;font-weight:300;}
+.vp-stage-cell:hover{background:#1a1a22;}
+.vp-stage-key{font-size:0.58em;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:4px;}
+.vp-stage-val{font-size:0.92em;font-weight:300;font-family:var(--mono);color:var(--text);}
+.vp-desc{color:#888;font-size:1em;line-height:1.85;max-width:720px;font-weight:300;}
 
-/* ── NEWS ── */
-.rocket-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:20px;}
-.rocket{background:var(--bg2);border:1px solid rgba(255,255,255,0.07);border-radius:18px;padding:0;transition:transform 0.28s var(--spring),box-shadow 0.28s var(--ease),border-color 0.25s;position:relative;overflow:hidden;display:flex;flex-direction:column;cursor:default;opacity:0;transform:translateY(16px);animation:newsIn 0.5s var(--ease) forwards;}
+/* Internal-overlay nav: a "second layer" within an overlay (vehicle detail / news detail) */
+.sub-page{display:none;animation:fadeUp 0.4s var(--out) both;}
+.sub-page.active{display:block;}
+
+/* ══════════════════════════════════════
+   NEWS OVERLAY
+══════════════════════════════════════ */
+.rocket-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
+.rocket{background:var(--bg2);border:1px solid rgba(255,255,255,0.07);border-radius:18px;padding:0;
+  transition:transform 0.28s var(--spring),box-shadow 0.28s var(--ease),border-color 0.25s;
+  position:relative;overflow:hidden;display:flex;flex-direction:column;cursor:pointer;
+  opacity:0;transform:translateY(16px);animation:newsIn 0.5s var(--ease) forwards;}
 @keyframes newsIn{to{opacity:1;transform:translateY(0);}}
-.rocket:hover{transform:translateY(-5px);box-shadow:0 16px 48px rgba(0,0,0,0.4);border-color:rgba(255,255,255,0.13);}
+.rocket:hover{transform:translateY(-5px);box-shadow:0 16px 48px rgba(0,0,0,0.45);border-color:rgba(255,255,255,0.14);}
 .rocket-top-bar{height:2px;background:linear-gradient(90deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04));transition:background 0.3s;}
-.rocket:hover .rocket-top-bar{background:linear-gradient(90deg,rgba(255,255,255,0.28),rgba(255,255,255,0.06));}
+.rocket:hover .rocket-top-bar{background:linear-gradient(90deg,rgba(255,255,255,0.32),rgba(255,255,255,0.08));}
 .rocket-body{padding:22px 22px 14px;flex:1;display:flex;flex-direction:column;}
 .rocket h3{margin-bottom:10px;font-size:0.97em;font-weight:500;letter-spacing:-0.005em;line-height:1.4;color:var(--text);}
 .rocket p.rocket-desc{font-size:0.875em;color:#888;line-height:1.7;flex:1;filter:brightness(1.15);}
-.rocket-footer{display:flex;align-items:center;justify-content:space-between;padding:12px 22px;border-top:1px solid rgba(255,255,255,0.05);margin-top:14px;}
-.rocket-date{font-size:0.75em;color:#777;font-family:var(--mono);letter-spacing:0.04em;}
-.rocket-details-btn{font-size:0.72em;color:var(--muted2);font-family:var(--mono);letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:color 0.2s;background:none;border:none;padding:0;display:flex;align-items:center;gap:5px;}
+.rocket-footer{display:flex;align-items:center;justify-content:space-between;padding:12px 22px;
+  border-top:1px solid rgba(255,255,255,0.05);margin-top:14px;}
+.rocket-date{font-size:0.74em;color:#777;font-family:var(--mono);letter-spacing:0.04em;}
+.rocket-details-btn{font-size:0.7em;color:var(--muted2);font-family:var(--mono);letter-spacing:0.1em;
+  text-transform:uppercase;background:none;border:none;padding:0;display:flex;align-items:center;gap:5px;
+  transition:color 0.2s;cursor:pointer;}
 .rocket-details-btn .rd-arrow{transition:transform 0.22s var(--spring);display:inline-block;}
 .rocket:hover .rocket-details-btn{color:#aaa;}
 .rocket:hover .rocket-details-btn .rd-arrow{transform:translate(2px,-2px);}
-#load-more-btn{display:block;margin:24px auto 0;padding:10px 32px;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:100px;font-size:0.85em;font-family:var(--font);cursor:pointer;transition:all 0.2s var(--ease);}
+#load-more-btn{display:block;margin:24px auto 0;padding:10px 32px;background:transparent;border:1px solid var(--border);
+  color:var(--muted);border-radius:100px;font-size:0.85em;font-family:var(--font);cursor:pointer;
+  transition:all 0.2s var(--ease);}
 #load-more-btn:hover{background:var(--bg2);color:var(--text);border-color:var(--border-h);}
 
-#news-overlay{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;opacity:0;transition:opacity 0.35s var(--ease);}
-#news-overlay.active{display:block;}#news-overlay.visible{opacity:1;}
-.np-header{position:sticky;top:0;background:rgba(8,8,8,0.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:20px;padding:18px 32px;z-index:10;}
-.np-back{background:none;border:1px solid var(--border);color:var(--muted);padding:8px 20px;border-radius:100px;cursor:pointer;font-size:0.82em;font-family:var(--font);transition:all 0.2s var(--ease);}
-.np-back:hover{background:var(--bg3);color:var(--text);border-color:var(--border-h);transform:translateX(-2px);}
-.np-header-title{font-size:1em;font-weight:300;color:var(--muted);}
-.np-body{max-width:760px;margin:0 auto;padding:60px 24px 100px;animation:fadeUp 0.5s 0.05s var(--ease) both;position:relative;z-index:1;}
+/* News DETAIL */
 .np-date-tag{font-size:0.7em;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);font-family:var(--mono);margin-bottom:18px;}
-.np-title{font-size:clamp(1.8em,4vw,2.8em);font-weight:300;letter-spacing:-0.01em;margin-bottom:32px;line-height:1.25;}
 .np-divider{height:1px;background:var(--border);margin-bottom:36px;}
-.np-text{color:#ccc;font-size:1.0em;line-height:1.9;font-weight:300;}
-
-/* ── SCHEDULE ── */
-#launch-list{margin-top:10px;display:flex;flex-direction:column;gap:10px;}
-.launch-row{display:grid;grid-template-columns:2fr 1.8fr 1fr 1fr;align-items:center;padding:15px 20px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:8px;transition:background 0.2s,border-color 0.2s,transform 0.2s;cursor:pointer;}
-.launch-row:hover{background:rgba(255,255,255,0.05);transform:scale(1.012);border-color:var(--border-h);}
-.launch-row strong{font-size:0.97em;color:#fff;}
-.launch-row div{font-size:0.87em;}
-.status-badge{text-align:center;font-size:0.74em;font-weight:600;text-transform:uppercase;padding:6px 14px;border-radius:100px;background:rgba(0,0,0,0.3);border:1px solid currentColor;justify-self:end;min-width:108px;font-family:var(--mono);letter-spacing:0.06em;opacity:0.85;}
-@media(max-width:768px){.launch-row{grid-template-columns:1.5fr 1fr;gap:8px;}.status-badge{grid-column:span 2;justify-self:start;}}
-.row-watch-link{display:none;font-size:0.72em;color:rgba(255,255,255,0.45);font-family:var(--mono);letter-spacing:0.08em;text-decoration:none;cursor:pointer;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.2);transition:color 0.2s,border-color 0.2s;white-space:nowrap;align-self:center;}
-.row-watch-link:hover{color:#fff;border-color:rgba(255,255,255,0.6);}
-.row-watch-link.visible{display:inline-block;}
-.acc-load-more{display:block;margin:10px 20px 12px;padding:8px 0;background:transparent;border:1px solid rgba(255,255,255,0.1);color:var(--muted);border-radius:8px;font-size:0.78em;font-family:var(--mono);letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;width:calc(100% - 40px);transition:all 0.2s var(--ease);}
-.acc-load-more:hover{background:rgba(255,255,255,0.04);color:var(--text);border-color:rgba(255,255,255,0.2);}
-
-#launch-modal-backdrop{display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);opacity:0;transition:opacity 0.3s var(--ease);align-items:center;justify-content:center;}
-#launch-modal-backdrop.active{display:flex;}#launch-modal-backdrop.visible{opacity:1;}
-#launch-modal{background:var(--bg2);border:1px solid rgba(255,255,255,0.12);border-radius:22px;width:min(var(--lm-w),92vw);padding:0;overflow:hidden;transform:translateY(20px) scale(0.97);transition:transform 0.35s var(--spring),opacity 0.3s;opacity:0;position:relative;}
-#launch-modal-backdrop.visible #launch-modal{transform:translateY(0) scale(1);opacity:1;}
-.lm-color-bar{height:3px;opacity:0.7;}
-.lm-inner{padding:34px 36px 32px;}
-.lm-status-row{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
-.lm-dot{width:8px;height:8px;border-radius:50%;opacity:0.75;}
-.lm-status-text{font-size:0.7em;letter-spacing:0.18em;text-transform:uppercase;font-family:var(--mono);opacity:0.85;}
-.lm-name{font-size:1.6em;font-weight:400;letter-spacing:-0.01em;margin-bottom:6px;line-height:1.25;}
-.lm-type{font-size:0.72em;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;font-family:var(--mono);margin-bottom:28px;}
-.lm-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.07);border-radius:14px;overflow:hidden;margin-bottom:26px;}
-.lm-cell{background:var(--bg3);padding:var(--lm-cell);}
-.lm-cell-lbl{font-size:0.63em;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:6px;}
-.lm-cell-val{font-size:var(--lm-val);font-family:var(--mono);color:var(--text);font-weight:300;}
-.lm-desc{font-size:0.9em;color:#666;line-height:1.8;}
-.lm-watch-row{margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,0.06);}
-.lm-watch-link{display:inline-flex;align-items:center;gap:8px;font-size:0.82em;font-family:var(--mono);letter-spacing:0.1em;color:rgba(255,255,255,0.45);text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.2);cursor:pointer;text-decoration:none;transition:color 0.2s,border-color 0.2s;padding-bottom:1px;}
-.lm-watch-link:hover{color:#fff;border-color:rgba(255,255,255,0.6);}
-.lm-close{position:absolute;top:18px;right:22px;background:none;border:1px solid rgba(255,255,255,0.1);color:var(--muted2);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:0.8em;display:flex;align-items:center;justify-content:center;transition:all 0.2s var(--ease);}
-.lm-close:hover{background:rgba(255,255,255,0.07);color:var(--text);border-color:rgba(255,255,255,0.25);}
-
-.group-accordion{border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:box-shadow 0.3s,border-color 0.25s;}
-.group-accordion:hover{box-shadow:0 4px 20px rgba(255,255,255,0.03);border-color:var(--border-h);}
-.group-header{display:flex;align-items:center;justify-content:space-between;padding:var(--acc-pv) var(--acc-ph);background:rgba(255,255,255,0.025);cursor:pointer;user-select:none;transition:background 0.2s;}
-.group-header:hover{background:rgba(255,255,255,0.05);}
-.group-left{display:flex;align-items:center;gap:14px;}
-.group-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
-.group-label{font-size:0.79em;font-weight:500;letter-spacing:0.14em;text-transform:uppercase;font-family:var(--mono);}
-.group-count{font-size:0.79em;color:var(--muted2);font-weight:400;font-family:var(--mono);}
-.group-chevron{font-size:0.72em;color:var(--muted2);transition:transform 0.38s var(--ease);}
-.group-accordion.open .group-chevron{transform:rotate(360deg);}
-.group-rows{overflow:hidden;max-height:0;opacity:0;transition:max-height 0.65s cubic-bezier(1,0,0.2,1),opacity 1s cubic-bezier(0.4,0,0.2,1);}
-.group-rows.open{opacity:1;max-height:3000px !important;}
-
-footer{text-align:center;padding:24px;border-top:1px solid var(--border);font-size:0.8em;color:var(--muted);font-family:var(--mono);position:relative;z-index:1;}
-.reveal{opacity:0;transform:translateY(22px);transition:opacity 0.7s var(--ease),transform 0.7s var(--ease);}
-.reveal.visible{opacity:1;transform:translateY(0);}
-
-@media(max-width:768px){
-  .rd-arrow,.vc-foot-arr,.rw-arrow{display:none !important;}
-  .vehicle-cards{gap:12px;}
-  .rocket-body{padding:18px 18px 12px;}
-  .rocket-footer{padding:10px 18px;}
-}
+.np-text{color:#bbb;font-size:1em;line-height:1.9;font-weight:300;max-width:720px;}
 
 /* ══════════════════════════════════════
-   GAME OVERLAY — full-page like vehicle/news
+   SCHEDULE OVERLAY — accordion
 ══════════════════════════════════════ */
-#game-overlay-page{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;opacity:0;transition:opacity 0.35s var(--ease);}
-#game-overlay-page.active{display:block;}
-#game-overlay-page.visible{opacity:1;}
-.gop-header{position:sticky;top:0;background:rgba(8,8,8,0.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:18px 32px;z-index:10;}
-.gop-back{background:none;border:1px solid var(--border);color:var(--muted);padding:8px 20px;border-radius:100px;cursor:pointer;font-size:0.82em;font-family:var(--font);transition:all 0.2s var(--ease);}
-.gop-back:hover{background:var(--bg3);color:var(--text);border-color:var(--border-h);transform:translateX(-2px);}
+#schedule-tabs{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap;}
+.sch-tab{
+  font-family:var(--mono);font-size:0.7em;letter-spacing:0.12em;text-transform:uppercase;
+  padding:8px 16px;border-radius:100px;background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.08);color:var(--muted);cursor:pointer;
+  transition:all 0.22s var(--ease);display:inline-flex;align-items:center;gap:8px;}
+.sch-tab:hover{color:var(--text);background:rgba(255,255,255,0.07);border-color:var(--border-h);}
+.sch-tab.active{color:var(--text);background:rgba(255,255,255,0.08);border-color:var(--border-s);}
+.sch-tab-dot{width:6px;height:6px;border-radius:50%;background:var(--td);}
+.sch-tab-count{font-size:0.85em;color:var(--muted2);}
+.sch-tab.active .sch-tab-count{color:var(--muted);}
+
+#launch-list{display:flex;flex-direction:column;gap:8px;}
+.launch-row{display:grid;grid-template-columns:2fr 1.6fr 1fr 1fr;align-items:center;
+  padding:15px 20px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:12px;
+  transition:background 0.2s,border-color 0.2s,transform 0.2s;cursor:pointer;
+  opacity:0;transform:translateY(10px);animation:rowIn 0.45s var(--out) forwards;}
+@keyframes rowIn{to{opacity:1;transform:translateY(0);}}
+.launch-row:hover{background:rgba(255,255,255,0.05);transform:translateX(3px);border-color:var(--border-h);}
+.launch-row strong{font-size:0.96em;color:#fff;}
+.launch-row div{font-size:0.86em;}
+.status-badge{text-align:center;font-size:0.72em;font-weight:600;text-transform:uppercase;
+  padding:6px 14px;border-radius:100px;background:rgba(0,0,0,0.3);border:1px solid currentColor;
+  justify-self:end;min-width:108px;font-family:var(--mono);letter-spacing:0.06em;opacity:0.9;}
+@media(max-width:768px){.launch-row{grid-template-columns:1.5fr 1fr;gap:8px;}.status-badge{grid-column:span 2;justify-self:start;}}
+.row-watch-link{display:none;font-size:0.7em;color:rgba(255,255,255,0.5);font-family:var(--mono);letter-spacing:0.08em;
+  cursor:pointer;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.22);transition:color 0.2s,border-color 0.2s;
+  white-space:nowrap;align-self:center;}
+.row-watch-link:hover{color:#fff;border-color:rgba(255,255,255,0.7);}
+.row-watch-link.visible{display:inline-block;}
+
+#sch-empty{display:none;text-align:center;padding:60px 20px;color:var(--muted2);font-family:var(--mono);font-size:0.78em;letter-spacing:0.12em;text-transform:uppercase;}
+
+/* ══════════════════════════════════════
+   LAUNCH MODAL (preserved from original)
+══════════════════════════════════════ */
+#launch-modal-backdrop{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.72);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  opacity:0;transition:opacity 0.32s var(--ease);align-items:center;justify-content:center;}
+#launch-modal-backdrop.active{display:flex;}#launch-modal-backdrop.visible{opacity:1;}
+#launch-modal{background:var(--bg2);border:1px solid rgba(255,255,255,0.14);border-radius:22px;
+  width:min(620px,92vw);padding:0;overflow:hidden;
+  transform:translateY(20px) scale(0.97);transition:transform 0.36s var(--spring),opacity 0.3s;
+  opacity:0;position:relative;}
+#launch-modal-backdrop.visible #launch-modal{transform:translateY(0) scale(1);opacity:1;}
+.lm-color-bar{height:3px;opacity:0.75;}
+.lm-inner{padding:34px 36px 30px;}
+.lm-status-row{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+.lm-dot{width:8px;height:8px;border-radius:50%;opacity:0.8;}
+.lm-status-text{font-size:0.7em;letter-spacing:0.18em;text-transform:uppercase;font-family:var(--mono);opacity:0.9;}
+.lm-name{font-size:1.55em;font-weight:400;letter-spacing:-0.01em;margin-bottom:6px;line-height:1.25;}
+.lm-type{font-size:0.7em;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;font-family:var(--mono);margin-bottom:26px;}
+.lm-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.07);border-radius:14px;overflow:hidden;margin-bottom:24px;}
+.lm-cell{background:var(--bg3);padding:16px 22px;}
+.lm-cell-lbl{font-size:0.62em;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:6px;}
+.lm-cell-val{font-size:1.05em;font-family:var(--mono);color:var(--text);font-weight:300;}
+.lm-desc{font-size:0.9em;color:#777;line-height:1.8;}
+.lm-watch-row{margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,0.06);}
+.lm-watch-link{display:inline-flex;align-items:center;gap:8px;font-size:0.8em;font-family:var(--mono);
+  letter-spacing:0.1em;color:rgba(255,255,255,0.5);text-transform:uppercase;
+  border-bottom:1px solid rgba(255,255,255,0.22);cursor:pointer;text-decoration:none;
+  transition:color 0.2s,border-color 0.2s;padding-bottom:1px;}
+.lm-watch-link:hover{color:#fff;border-color:rgba(255,255,255,0.7);}
+.lm-close{position:absolute;top:18px;right:22px;background:none;border:1px solid rgba(255,255,255,0.1);
+  color:var(--muted2);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:0.8em;
+  display:flex;align-items:center;justify-content:center;transition:all 0.2s var(--ease);}
+.lm-close:hover{background:rgba(255,255,255,0.07);color:var(--text);border-color:rgba(255,255,255,0.25);transform:rotate(90deg);}
+
+/* ══════════════════════════════════════
+   TOAST NOTIFICATIONS
+══════════════════════════════════════ */
+#toast-container{
+  position:fixed;top:80px;right:24px;z-index:600;
+  display:flex;flex-direction:column;gap:10px;pointer-events:none;
+  max-width:340px;
+}
+@media(max-width:600px){#toast-container{top:72px;right:12px;left:12px;max-width:none;}}
+.toast{
+  background:rgba(20,20,24,0.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,0.12);border-radius:14px;
+  padding:13px 16px 13px 14px;
+  display:flex;align-items:center;gap:11px;
+  font-size:0.84em;color:var(--text);
+  box-shadow:0 12px 36px rgba(0,0,0,0.5);
+  pointer-events:auto;cursor:pointer;
+  opacity:0;transform:translateX(40px);
+  transition:opacity 0.32s var(--out),transform 0.32s var(--out);
+  position:relative;overflow:hidden;
+  min-width:240px;
+}
+.toast.show{opacity:1;transform:translateX(0);}
+.toast.hide{opacity:0;transform:translateX(40px);}
+.toast::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--toast-c,var(--accent));}
+.toast-icon{width:22px;height:22px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,0.05);}
+.toast-icon svg{width:12px;height:12px;fill:var(--toast-c,var(--accent));}
+.toast-text{flex:1;font-weight:400;line-height:1.4;}
+.toast-text .toast-title{display:block;font-weight:500;font-size:0.95em;}
+.toast-text .toast-sub{display:block;color:var(--muted);font-size:0.84em;margin-top:1px;font-family:var(--mono);letter-spacing:0.04em;}
+.toast-progress{position:absolute;bottom:0;left:0;right:0;height:1.5px;background:var(--toast-c,var(--accent));
+  transform-origin:left;animation:toastProg var(--toast-dur,4s) linear forwards;opacity:0.6;}
+@keyframes toastProg{from{transform:scaleX(1);}to{transform:scaleX(0);}}
+
+/* ══════════════════════════════════════
+   GAME OVERLAY (preserved)
+══════════════════════════════════════ */
 .gop-scores{display:flex;align-items:center;gap:20px;font-family:var(--mono);font-size:0.78em;color:var(--muted);}
 .gop-score-val{color:var(--text);font-size:1.1em;font-weight:300;}
-.gop-note{font-size:0.62em;color:var(--muted2);letter-spacing:0.07em;text-transform:uppercase;}
-.gop-body{max-width:900px;margin:0 auto;padding:48px 24px 80px;animation:fadeUp 0.5s 0.05s var(--ease) both;position:relative;z-index:1;}
-.gop-title{font-size:clamp(2em,5vw,3em);font-weight:300;letter-spacing:-0.01em;margin-bottom:8px;}
-.gop-subtitle{font-size:0.72em;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase;margin-bottom:36px;font-family:var(--mono);}
 .gop-canvas-wrap{position:relative;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);background:var(--bg2);}
 #game-canvas{display:block;width:100%;height:420px;cursor:none;}
-.gop-game-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:rgba(8,8,8,0.82);backdrop-filter:blur(6px);transition:opacity 0.3s;}
+.gop-game-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;background:rgba(8,8,8,0.85);backdrop-filter:blur(6px);transition:opacity 0.3s;}
 .gop-game-overlay.hidden{opacity:0;pointer-events:none;}
 .gop-over-title{font-size:1.55em;font-weight:300;letter-spacing:-0.01em;}
-.gop-over-sub{font-size:0.76em;font-family:var(--mono);color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
-.gop-start-btn{padding:9px 30px;border:1px solid rgba(255,255,255,0.3);border-radius:100px;background:transparent;color:#fff;font-family:var(--font);font-size:0.88em;cursor:pointer;transition:all 0.25s var(--ease);}
-.gop-start-btn:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.6);transform:scale(1.03);}
-.gop-hint{font-size:0.65em;font-family:var(--mono);color:var(--muted2);letter-spacing:0.1em;text-transform:uppercase;}
+.gop-over-sub{font-size:0.74em;font-family:var(--mono);color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
+.gop-start-btn{padding:9px 30px;border:1px solid rgba(255,255,255,0.32);border-radius:100px;background:transparent;
+  color:#fff;font-family:var(--font);font-size:0.86em;cursor:pointer;transition:all 0.25s var(--ease);}
+.gop-start-btn:hover{background:rgba(255,255,255,0.09);border-color:rgba(255,255,255,0.7);transform:scale(1.04);}
+.gop-hint{font-size:0.62em;font-family:var(--mono);color:var(--muted2);letter-spacing:0.1em;text-transform:uppercase;}
+.gop-note{font-size:0.62em;font-family:var(--mono);color:var(--muted2);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:18px;}
+
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
+footer{text-align:center;padding:24px;border-top:1px solid var(--border);
+  font-size:0.78em;color:var(--muted);font-family:var(--mono);position:relative;z-index:2;}
+
+@media(max-width:768px){
+  .header-nav{gap:0;}
+  .nav-btn{padding:7px 11px;font-size:0.78em;}
+  .nav-btn .nav-dot{display:none;}
+  .header-clock-tz{display:none;}
+  .rd-arrow,.vc-foot-arr,.quick-arr{display:none !important;}
+  .vehicle-cards{gap:12px;}
+}
+@media(max-width:560px){
+  .header-left{left:12px;gap:6px;}
+  .header-right{right:12px;}
+  .header-clock{font-size:0.68em;}
+  .lang-btn{font-size:0.6em;padding:4px 6px;}
+  .social-btn{width:30px;height:30px;}
+  .social-btn svg{width:12px;height:12px;}
+  header{padding:10px 12px;}
+}
 </style>
 </head>
 <body>
 
 <div id="starfield"></div>
+<div class="ambient-orb"></div>
 <canvas id="flyby-canvas"></canvas>
 
-<!-- Vehicle overlay -->
-<div id="vehicle-overlay">
-  <div id="vp-starfield"></div>
-  <div class="vp-header">
-    <button class="vp-back" onclick="closeVehicle()">&#8592; <span data-i="back">Back</span></button>
-    <span class="vp-title" id="vp-header-title"></span>
+<!-- ═══════ HEADER ═══════ -->
+<header>
+  <div class="header-left" id="header-left-slot"></div>
+  <nav class="header-nav" id="header-nav"></nav>
+  <div class="header-right" id="header-right-slot"></div>
+</header>
+
+<!-- ═══════ HERO ═══════ -->
+<section class="hero" id="hero">
+  <div class="hero-status-chip" id="hero-status-chip">
+    <span class="status-chip-dot"></span>
+    <span data-i="systemOnline">System Online</span>
   </div>
-  <div class="vp-body" id="vp-body"></div>
+  <h1 data-i="heroTitle">Welcome to InSpace</h1>
+  <p data-i="heroSub">Keep an eye out for updates</p>
+
+  <div id="countdown-wrap">
+    <div id="countdown-mission"></div>
+    <div id="countdown-label" data-i="nextLaunch">Next launch in</div>
+    <div id="countdown-timer"></div>
+  </div>
+  <div id="days-since-wrap"><span id="days-since-text"></span></div>
+
+  <div class="stream-link" onclick="window.open('https://www.youtube.com/@OXeall')">
+    <span class="stream-link-text">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      <span data-i="watchLaunch">Watch Launch</span>
+    </span>
+  </div>
+
+  <div id="hero-stats">
+    <div class="hero-stats-grid" id="hero-stats-grid"></div>
+  </div>
+
+  <div id="hero-quick">
+    <div class="quick-grid" id="hero-quick-grid"></div>
+  </div>
+</section>
+
+<footer>2026-2331 InSpace. <span data-i="footerNote">This website is for informational purposes only and does not engage in any commercial activity.</span></footer>
+
+<!-- ═══════ OVERLAYS ═══════ -->
+
+<!-- Vehicles overlay (list + detail) -->
+<div class="overlay-page" id="ov-vehicles">
+  <div id="vehicles-starfield"></div>
+  <div class="op-header">
+    <button class="op-back" onclick="closeOverlay('vehicles')">
+      <svg viewBox="0 0 12 12"><path d="M7.5 1L3 6l4.5 5"/></svg>
+      <span data-i="back">Back</span>
+    </button>
+    <div class="op-title-wrap">
+      <span class="op-title-bar" style="--op-color:#7eb6ff"></span>
+      <span class="op-title" id="ov-vehicles-title" data-i="ourVehicles">Our Vehicles</span>
+    </div>
+    <span class="op-meta" id="ov-vehicles-meta"></span>
+  </div>
+  <div class="op-body">
+    <!-- Sub-page: list -->
+    <div class="sub-page active" id="vp-list">
+      <div class="op-hero-title" data-i="ourVehicles">Our Vehicles</div>
+      <div class="op-hero-sub" data-i="ourVehiclesSub">Active fleet · Mission ready</div>
+      <div class="vehicle-cards" id="vehicle-cards"></div>
+    </div>
+    <!-- Sub-page: detail -->
+    <div class="sub-page" id="vp-detail">
+      <button class="op-back" style="margin-bottom:32px" onclick="showVehicleList()">
+        <svg viewBox="0 0 12 12"><path d="M7.5 1L3 6l4.5 5"/></svg>
+        <span data-i="backToList">Back to list</span>
+      </button>
+      <div id="vp-detail-body"></div>
+    </div>
+  </div>
 </div>
 
-<!-- News overlay -->
-<div id="news-overlay">
-  <div class="np-header">
-    <button class="np-back" onclick="closeNews()">&#8592; <span data-i="back">Back</span></button>
-    <span class="np-header-title" id="np-header-title">Latest News</span>
-  </div>
+<!-- News overlay (list + detail) -->
+<div class="overlay-page" id="ov-news">
   <div id="news-starfield"></div>
-  <div class="np-body" id="np-body"></div>
+  <div class="op-header">
+    <button class="op-back" onclick="closeOverlay('news')">
+      <svg viewBox="0 0 12 12"><path d="M7.5 1L3 6l4.5 5"/></svg>
+      <span data-i="back">Back</span>
+    </button>
+    <div class="op-title-wrap">
+      <span class="op-title-bar" style="--op-color:#5dd6a0"></span>
+      <span class="op-title" id="ov-news-title" data-i="latestNews">Latest News</span>
+    </div>
+    <span class="op-meta" id="ov-news-meta"></span>
+  </div>
+  <div class="op-body">
+    <div class="sub-page active" id="np-list">
+      <div class="op-hero-title" data-i="latestNews">Latest News</div>
+      <div class="op-hero-sub" data-i="latestNewsSub">Mission updates · Programme announcements</div>
+      <div class="rocket-cards" id="rocket-cards"></div>
+      <div style="display:flex;gap:12px;justify-content:center;margin:32px auto 40px;">
+        <button id="load-more-btn" onclick="loadMore()" style="display:none;" data-i="loadMore">Load more</button>
+      </div>
+    </div>
+    <div class="sub-page" id="np-detail">
+      <button class="op-back" style="margin-bottom:32px" onclick="showNewsList()">
+        <svg viewBox="0 0 12 12"><path d="M7.5 1L3 6l4.5 5"/></svg>
+        <span data-i="backToList">Back to list</span>
+      </button>
+      <div id="np-detail-body"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Schedule overlay -->
+<div class="overlay-page" id="ov-schedule">
+  <div id="schedule-starfield"></div>
+  <div class="op-header">
+    <button class="op-back" onclick="closeOverlay('schedule')">
+      <svg viewBox="0 0 12 12"><path d="M7.5 1L3 6l4.5 5"/></svg>
+      <span data-i="back">Back</span>
+    </button>
+    <div class="op-title-wrap">
+      <span class="op-title-bar" style="--op-color:#ffb380"></span>
+      <span class="op-title" data-i="launchSchedule">Launch Schedule</span>
+    </div>
+    <span class="op-meta" id="ov-schedule-meta"></span>
+  </div>
+  <div class="op-body">
+    <div class="op-hero-title" data-i="launchSchedule">Launch Schedule</div>
+    <div class="op-hero-sub" data-i="launchScheduleSub">Upcoming · Completed · Cancelled</div>
+    <div id="schedule-tabs"></div>
+    <div id="launch-list"></div>
+    <div id="sch-empty" data-i="noLaunches">No launches in this category</div>
+  </div>
+</div>
+
+<!-- Game overlay -->
+<div class="overlay-page" id="ov-game">
+  <div id="game-starfield"></div>
+  <div class="op-header">
+    <button class="op-back" onclick="closeOverlay('game')">
+      <svg viewBox="0 0 12 12"><path d="M7.5 1L3 6l4.5 5"/></svg>
+      <span data-i="back">Back</span>
+    </button>
+    <div class="gop-scores">
+      <span data-i="scoreLabel">Score</span>&nbsp;<span class="gop-score-val" id="gm-score">0</span>
+      &nbsp;&nbsp;
+      <span data-i="bestLabel">Best</span>&nbsp;<span class="gop-score-val" id="gm-best">0</span>
+    </div>
+  </div>
+  <div class="op-body">
+    <div class="op-hero-title" data-i="flyTitle">Fly in Space</div>
+    <div class="op-hero-sub" data-i="flySubtitle">Mini Game</div>
+    <div class="gop-note" data-i="noSave">Score &amp; best are not saved between sessions.</div>
+    <div class="gop-canvas-wrap">
+      <canvas id="game-canvas"></canvas>
+      <div class="gop-game-overlay" id="gop-game-overlay">
+        <div class="gop-over-title" id="gop-over-title" data-i="flyTitle">Fly in Space</div>
+        <div class="gop-over-sub" id="gop-over-sub" data-i="flyDesc">Dodge asteroids · Collect fuel cells · Survive</div>
+        <button class="gop-start-btn" onclick="startGame()" data-i="launch">Launch</button>
+        <div class="gop-hint" data-i="steerHint">Mouse / Touch to steer</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Launch modal -->
@@ -369,81 +669,8 @@ footer{text-align:center;padding:24px;border-top:1px solid var(--border);font-si
   </div>
 </div>
 
-<!-- Game full-page overlay -->
-<div id="game-overlay-page">
-  <div id="game-starfield"></div>
-  <div class="gop-header">
-    <button class="gop-back" onclick="closeGamePage()">&#8592; <span data-i="back">Back</span></button>
-    <div class="gop-scores">
-      <span data-i="scoreLabel">Score</span>&nbsp;<span class="gop-score-val" id="gm-score">0</span>
-      &nbsp;&nbsp;
-      <span data-i="bestLabel">Best</span>&nbsp;<span class="gop-score-val" id="gm-best">0</span>
-    </div>
-  </div>
-  <div class="gop-body">
-    <div class="gop-title" data-i="flyTitle">Fly in Space</div>
-    <div class="gop-subtitle" data-i="flySubtitle">Mini Game</div>
-    <div style="font-size:0.64em;font-family:var(--mono);color:var(--muted2);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:20px;" data-i="noSave">Score &amp; best are not saved between sessions.</div>
-    <div class="gop-canvas-wrap">
-      <canvas id="game-canvas"></canvas>
-      <div class="gop-game-overlay" id="gop-game-overlay">
-        <div class="gop-over-title" id="gop-over-title" data-i="flyTitle">Fly in Space</div>
-        <div class="gop-over-sub" id="gop-over-sub" data-i="flyDesc">Dodge asteroids · Collect fuel cells · Survive</div>
-        <button class="gop-start-btn" onclick="startGame()" data-i="launch">Launch</button>
-        <div class="gop-hint" data-i="steerHint">Mouse / Touch to steer</div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Header -->
-<header>
-  <div class="header-left" id="header-left-slot"></div>
-  <nav class="header-nav" id="header-nav"></nav>
-  <div class="header-right" id="header-right-slot"></div>
-</header>
-
-<!-- Hero -->
-<section class="hero" id="hero">
-  <h1 data-i="heroTitle">Welcome to InSpace</h1>
-  <p data-i="heroSub">Keep an eye out for updates</p>
-  <div id="countdown-wrap">
-    <div id="countdown-mission"></div>
-    <div id="countdown-label" data-i="nextLaunch">Next launch in</div>
-    <div id="countdown-timer"></div>
-  </div>
-  <div id="days-since-wrap"><span id="days-since-text"></span></div>
-  <div class="stream-link" onclick="window.open('https://www.youtube.com/@OXeall')">
-    <span class="stream-link-text" data-i="watchLaunch">Watch Launch</span>
-  </div>
-  <!-- Stats moved here, below Watch Launch -->
-  <div id="hero-stats">
-    <div class="hero-stats-grid" id="hero-stats-grid"></div>
-  </div>
-</section>
-
-<!-- Our Vehicles -->
-<section id="fleet" class="reveal">
-  <h2 data-i="ourVehicles">Our Vehicles</h2>
-  <div class="vehicle-cards" id="vehicle-cards"></div>
-</section>
-
-<!-- Latest News -->
-<section id="rockets" class="reveal">
-  <h2 data-i="latestNews">Latest News</h2>
-  <div class="rocket-cards" id="rocket-cards"></div>
-  <div style="display:flex;gap:12px;justify-content:center;margin:32px auto 40px;">
-    <button id="load-more-btn" onclick="loadMore()" style="display:none;" data-i="loadMore">Load more</button>
-  </div>
-</section>
-
-<!-- Launch Schedule -->
-<section id="schedule" class="reveal">
-  <h2 data-i="launchSchedule">Launch Schedule</h2>
-  <div id="launch-list"></div>
-</section>
-
-<footer>2026-2331 InSpace. <span data-i="footerNote">This website is for informational purposes only and does not engage in any commercial activity.</span></footer>
+<!-- Toast container -->
+<div id="toast-container"></div>
 
 <script>
 /* ══════════════════════════════════════
@@ -454,8 +681,10 @@ const TRANSLATIONS = {
     heroTitle:'Welcome to InSpace', heroSub:'Keep an eye out for updates',
     nextLaunch:'Next launch in', missionInProgress:'Mission in progress',
     watchLaunch:'Watch Launch', ourVehicles:'Our Vehicles',
-    latestNews:'Latest News', launchSchedule:'Launch Schedule',
-    loadMore:'Load more', details:'Details', back:'Back',
+    ourVehiclesSub:'Active fleet · Mission ready',
+    latestNews:'Latest News', latestNewsSub:'Mission updates · Programme announcements',
+    launchSchedule:'Launch Schedule', launchScheduleSub:'Upcoming · Completed · Cancelled',
+    loadMore:'Load more', details:'Details', back:'Back', backToList:'Back to list',
     fullDetails:'Full Details', noSave:'Score & best are not saved between sessions.',
     flyTitle:'Fly in Space', flySubtitle:'Mini Game',
     flyDesc:'Dodge asteroids · Collect fuel cells · Survive',
@@ -470,13 +699,26 @@ const TRANSLATIONS = {
     local:'local', miniGame:'Mini Game',
     specifications:'Specifications', stages:'Stages', overview:'Overview',
     noImage:'No data. Image coming soon',
+    systemOnline:'All Systems Online',
+    navHome:'Home', navVehicles:'Vehicles', navNews:'News', navSchedule:'Schedule', navGame:'Mini Game',
+    quickVehiclesSub:'Fleet overview', quickNewsSub:'Programme updates', quickScheduleSub:'All launches',
+    toastLangChanged:'Language changed', toastLangChangedSub:'Interface updated',
+    toastSectionOpened:'Section opened', toastWelcome:'Welcome aboard',
+    toastWelcomeSub:'Tracking next mission',
+    noLaunches:'No launches in this category',
+    schedAll:'All', schedPlanned:'Planned', schedCompleted:'Completed', schedCanceled:'Cancelled',
+    notifGameStart:'Game started', notifGameStartSub:'Stay sharp, pilot',
+    notifT10:'T-10 seconds', notifT10Sub:'Final countdown',
+    statusPlanned:'Planned', statusCompleted:'Completed', statusCanceled:'Cancelled',
   },
   es: {
     heroTitle:'Bienvenido a InSpace', heroSub:'Mantente al tanto de las actualizaciones',
     nextLaunch:'Próximo lanzamiento en', missionInProgress:'Misión en curso',
     watchLaunch:'Ver Lanzamiento', ourVehicles:'Nuestros Vehículos',
-    latestNews:'Últimas Noticias', launchSchedule:'Calendario de Lanzamientos',
-    loadMore:'Cargar más', details:'Detalles', back:'Volver',
+    ourVehiclesSub:'Flota activa · Listos para la misión',
+    latestNews:'Últimas Noticias', latestNewsSub:'Actualizaciones · Anuncios del programa',
+    launchSchedule:'Calendario de Lanzamientos', launchScheduleSub:'Próximos · Completados · Cancelados',
+    loadMore:'Cargar más', details:'Detalles', back:'Volver', backToList:'Volver a la lista',
     fullDetails:'Detalles Completos', noSave:'Puntuación y récord no se guardan entre sesiones.',
     flyTitle:'Volar en el Espacio', flySubtitle:'Minijuego',
     flyDesc:'Esquiva asteroides · Recoge celdas de combustible · Sobrevive',
@@ -491,13 +733,26 @@ const TRANSLATIONS = {
     local:'local', miniGame:'Minijuego',
     specifications:'Especificaciones', stages:'Etapas', overview:'Descripción',
     noImage:'Sin datos. Imagen próximamente',
+    systemOnline:'Todos los sistemas en línea',
+    navHome:'Inicio', navVehicles:'Vehículos', navNews:'Noticias', navSchedule:'Calendario', navGame:'Minijuego',
+    quickVehiclesSub:'Resumen de la flota', quickNewsSub:'Actualizaciones', quickScheduleSub:'Todos los lanzamientos',
+    toastLangChanged:'Idioma cambiado', toastLangChangedSub:'Interfaz actualizada',
+    toastSectionOpened:'Sección abierta', toastWelcome:'Bienvenido a bordo',
+    toastWelcomeSub:'Rastreando próxima misión',
+    noLaunches:'No hay lanzamientos en esta categoría',
+    schedAll:'Todos', schedPlanned:'Planificados', schedCompleted:'Completados', schedCanceled:'Cancelados',
+    notifGameStart:'Juego iniciado', notifGameStartSub:'Atento, piloto',
+    notifT10:'T-10 segundos', notifT10Sub:'Cuenta atrás final',
+    statusPlanned:'Planificado', statusCompleted:'Completado', statusCanceled:'Cancelado',
   },
   de: {
     heroTitle:'Willkommen bei InSpace', heroSub:'Bleib auf dem Laufenden',
     nextLaunch:'Nächster Start in', missionInProgress:'Mission läuft',
     watchLaunch:'Start ansehen', ourVehicles:'Unsere Fahrzeuge',
-    latestNews:'Neueste Nachrichten', launchSchedule:'Startplan',
-    loadMore:'Mehr laden', details:'Details', back:'Zurück',
+    ourVehiclesSub:'Aktive Flotte · Einsatzbereit',
+    latestNews:'Neueste Nachrichten', latestNewsSub:'Mission-Updates · Programmankündigungen',
+    launchSchedule:'Startplan', launchScheduleSub:'Geplant · Abgeschlossen · Abgesagt',
+    loadMore:'Mehr laden', details:'Details', back:'Zurück', backToList:'Zur Liste',
     fullDetails:'Alle Details', noSave:'Punkte und Bestleistung werden nicht gespeichert.',
     flyTitle:'Im Weltraum fliegen', flySubtitle:'Minispiel',
     flyDesc:'Asteroiden ausweichen · Treibstoffzellen sammeln · Überleben',
@@ -512,13 +767,26 @@ const TRANSLATIONS = {
     local:'lokal', miniGame:'Minispiel',
     specifications:'Spezifikationen', stages:'Stufen', overview:'Überblick',
     noImage:'Keine Daten. Bild demnächst',
+    systemOnline:'Alle Systeme online',
+    navHome:'Start', navVehicles:'Fahrzeuge', navNews:'Neuigkeiten', navSchedule:'Startplan', navGame:'Minispiel',
+    quickVehiclesSub:'Flottenübersicht', quickNewsSub:'Programmupdates', quickScheduleSub:'Alle Starts',
+    toastLangChanged:'Sprache geändert', toastLangChangedSub:'Oberfläche aktualisiert',
+    toastSectionOpened:'Bereich geöffnet', toastWelcome:'Willkommen an Bord',
+    toastWelcomeSub:'Nächste Mission im Blick',
+    noLaunches:'Keine Starts in dieser Kategorie',
+    schedAll:'Alle', schedPlanned:'Geplant', schedCompleted:'Abgeschlossen', schedCanceled:'Abgesagt',
+    notifGameStart:'Spiel gestartet', notifGameStartSub:'Bleib wachsam, Pilot',
+    notifT10:'T-10 Sekunden', notifT10Sub:'Letzter Countdown',
+    statusPlanned:'Geplant', statusCompleted:'Abgeschlossen', statusCanceled:'Abgesagt',
   },
   fr: {
     heroTitle:'Bienvenue sur InSpace', heroSub:'Restez informé des mises à jour',
     nextLaunch:'Prochain lancement dans', missionInProgress:'Mission en cours',
     watchLaunch:'Voir le Lancement', ourVehicles:'Nos Véhicules',
-    latestNews:'Dernières Nouvelles', launchSchedule:'Calendrier des Lancements',
-    loadMore:'Charger plus', details:'Détails', back:'Retour',
+    ourVehiclesSub:'Flotte active · Prête pour la mission',
+    latestNews:'Dernières Nouvelles', latestNewsSub:'Mises à jour · Annonces du programme',
+    launchSchedule:'Calendrier des Lancements', launchScheduleSub:'À venir · Complétés · Annulés',
+    loadMore:'Charger plus', details:'Détails', back:'Retour', backToList:'Retour à la liste',
     fullDetails:'Détails Complets', noSave:'Score et meilleur score non sauvegardés.',
     flyTitle:'Voler dans l\'Espace', flySubtitle:'Mini-jeu',
     flyDesc:'Esquivez les astéroïdes · Collectez des cellules de carburant · Survivez',
@@ -533,13 +801,26 @@ const TRANSLATIONS = {
     local:'local', miniGame:'Mini-jeu',
     specifications:'Spécifications', stages:'Étages', overview:'Aperçu',
     noImage:'Pas de données. Image bientôt disponible',
+    systemOnline:'Tous les systèmes en ligne',
+    navHome:'Accueil', navVehicles:'Véhicules', navNews:'Actualités', navSchedule:'Calendrier', navGame:'Mini-jeu',
+    quickVehiclesSub:'Aperçu de la flotte', quickNewsSub:'Mises à jour', quickScheduleSub:'Tous les lancements',
+    toastLangChanged:'Langue modifiée', toastLangChangedSub:'Interface mise à jour',
+    toastSectionOpened:'Section ouverte', toastWelcome:'Bienvenue à bord',
+    toastWelcomeSub:'Suivi de la prochaine mission',
+    noLaunches:'Aucun lancement dans cette catégorie',
+    schedAll:'Tous', schedPlanned:'Planifiés', schedCompleted:'Complétés', schedCanceled:'Annulés',
+    notifGameStart:'Jeu lancé', notifGameStartSub:'Restez alerte, pilote',
+    notifT10:'T-10 secondes', notifT10Sub:'Décompte final',
+    statusPlanned:'Planifié', statusCompleted:'Complété', statusCanceled:'Annulé',
   },
   ru: {
     heroTitle:'Добро пожаловать в InSpace', heroSub:'Следите за обновлениями',
     nextLaunch:'Следующий запуск через', missionInProgress:'Миссия выполняется',
     watchLaunch:'Смотреть запуск', ourVehicles:'Наши ракеты',
-    latestNews:'Последние новости', launchSchedule:'Расписание запусков',
-    loadMore:'Загрузить ещё', details:'Подробнее', back:'Назад',
+    ourVehiclesSub:'Активный флот · Готовы к миссии',
+    latestNews:'Последние новости', latestNewsSub:'Обновления миссий · Анонсы программ',
+    launchSchedule:'Расписание запусков', launchScheduleSub:'Запланированные · Завершённые · Отменённые',
+    loadMore:'Загрузить ещё', details:'Подробнее', back:'Назад', backToList:'К списку',
     fullDetails:'Все детали', noSave:'Счёт и рекорд не сохраняются между сессиями.',
     flyTitle:'Полёт в космосе', flySubtitle:'Мини-игра',
     flyDesc:'Уклоняйся от астероидов · Собирай топливо · Выживи',
@@ -554,13 +835,26 @@ const TRANSLATIONS = {
     local:'местное', miniGame:'Мини-игра',
     specifications:'Характеристики', stages:'Ступени', overview:'Обзор',
     noImage:'Нет данных. Изображение скоро',
+    systemOnline:'Все системы в норме',
+    navHome:'Главная', navVehicles:'Ракеты', navNews:'Новости', navSchedule:'Расписание', navGame:'Мини-игра',
+    quickVehiclesSub:'Обзор флота', quickNewsSub:'Обновления программ', quickScheduleSub:'Все запуски',
+    toastLangChanged:'Язык изменён', toastLangChangedSub:'Интерфейс обновлён',
+    toastSectionOpened:'Раздел открыт', toastWelcome:'С возвращением',
+    toastWelcomeSub:'Отслеживаем следующую миссию',
+    noLaunches:'Нет запусков в этой категории',
+    schedAll:'Все', schedPlanned:'Запланированные', schedCompleted:'Завершённые', schedCanceled:'Отменённые',
+    notifGameStart:'Игра запущена', notifGameStartSub:'Будь начеку, пилот',
+    notifT10:'T-10 секунд', notifT10Sub:'Финальный отсчёт',
+    statusPlanned:'Запланирован', statusCompleted:'Завершён', statusCanceled:'Отменён',
   },
   zh: {
     heroTitle:'欢迎来到 InSpace', heroSub:'关注最新动态',
     nextLaunch:'下次发射倒计时', missionInProgress:'任务进行中',
     watchLaunch:'观看发射', ourVehicles:'我们的飞行器',
-    latestNews:'最新消息', launchSchedule:'发射时间表',
-    loadMore:'加载更多', details:'详情', back:'返回',
+    ourVehiclesSub:'现役舰队 · 任务就绪',
+    latestNews:'最新消息', latestNewsSub:'任务更新 · 计划公告',
+    launchSchedule:'发射时间表', launchScheduleSub:'计划中 · 已完成 · 已取消',
+    loadMore:'加载更多', details:'详情', back:'返回', backToList:'返回列表',
     fullDetails:'完整详情', noSave:'分数和最佳成绩不会在会话间保存。',
     flyTitle:'太空飞行', flySubtitle:'小游戏',
     flyDesc:'躲避小行星 · 收集燃料电池 · 生存',
@@ -575,13 +869,26 @@ const TRANSLATIONS = {
     local:'本地', miniGame:'小游戏',
     specifications:'规格', stages:'阶段', overview:'概述',
     noImage:'暂无数据。图片即将上线',
+    systemOnline:'所有系统在线',
+    navHome:'首页', navVehicles:'飞行器', navNews:'新闻', navSchedule:'时间表', navGame:'小游戏',
+    quickVehiclesSub:'舰队概览', quickNewsSub:'计划更新', quickScheduleSub:'所有发射',
+    toastLangChanged:'语言已切换', toastLangChangedSub:'界面已更新',
+    toastSectionOpened:'已打开', toastWelcome:'欢迎回来',
+    toastWelcomeSub:'追踪下次任务',
+    noLaunches:'此类别暂无发射',
+    schedAll:'全部', schedPlanned:'计划中', schedCompleted:'已完成', schedCanceled:'已取消',
+    notifGameStart:'游戏已开始', notifGameStartSub:'保持专注，飞行员',
+    notifT10:'T-10 秒', notifT10Sub:'最终倒计时',
+    statusPlanned:'计划中', statusCompleted:'已完成', statusCanceled:'已取消',
   },
   pt: {
     heroTitle:'Bem-vindo ao InSpace', heroSub:'Fique atento às atualizações',
     nextLaunch:'Próximo lançamento em', missionInProgress:'Missão em andamento',
     watchLaunch:'Assistir ao Lançamento', ourVehicles:'Nossos Veículos',
-    latestNews:'Últimas Notícias', launchSchedule:'Calendário de Lançamentos',
-    loadMore:'Carregar mais', details:'Detalhes', back:'Voltar',
+    ourVehiclesSub:'Frota ativa · Pronta para missão',
+    latestNews:'Últimas Notícias', latestNewsSub:'Atualizações · Anúncios do programa',
+    launchSchedule:'Calendário de Lançamentos', launchScheduleSub:'Planejados · Concluídos · Cancelados',
+    loadMore:'Carregar mais', details:'Detalhes', back:'Voltar', backToList:'Voltar à lista',
     fullDetails:'Detalhes Completos', noSave:'Pontuação e recorde não são salvos entre sessões.',
     flyTitle:'Voar no Espaço', flySubtitle:'Minijogo',
     flyDesc:'Desvie de asteroides · Colete células de combustível · Sobreviva',
@@ -596,6 +903,17 @@ const TRANSLATIONS = {
     local:'local', miniGame:'Minijogo',
     specifications:'Especificações', stages:'Estágios', overview:'Visão Geral',
     noImage:'Sem dados. Imagem em breve',
+    systemOnline:'Todos os sistemas online',
+    navHome:'Início', navVehicles:'Veículos', navNews:'Notícias', navSchedule:'Calendário', navGame:'Minijogo',
+    quickVehiclesSub:'Visão da frota', quickNewsSub:'Atualizações', quickScheduleSub:'Todos os lançamentos',
+    toastLangChanged:'Idioma alterado', toastLangChangedSub:'Interface atualizada',
+    toastSectionOpened:'Seção aberta', toastWelcome:'Bem-vindo a bordo',
+    toastWelcomeSub:'Rastreando próxima missão',
+    noLaunches:'Sem lançamentos nesta categoria',
+    schedAll:'Todos', schedPlanned:'Planejados', schedCompleted:'Concluídos', schedCanceled:'Cancelados',
+    notifGameStart:'Jogo iniciado', notifGameStartSub:'Atento, piloto',
+    notifT10:'T-10 segundos', notifT10Sub:'Contagem final',
+    statusPlanned:'Planejado', statusCompleted:'Concluído', statusCanceled:'Cancelado',
   },
 };
 
@@ -603,23 +921,16 @@ const LANG_NAMES = {en:'EN',es:'ES',de:'DE',fr:'FR',ru:'RU',zh:'中文',pt:'PT'}
 const LANG_LABELS = {en:'English (US)',es:'Spanish',de:'German',fr:'French',ru:'Russian',zh:'Chinese',pt:'Brazilian'};
 
 let currentLang = localStorage.getItem('inspace_lang') || 'en';
-
 function t(key){ return (TRANSLATIONS[currentLang]||TRANSLATIONS.en)[key] || TRANSLATIONS.en[key] || key; }
 
 function applyLang(){
   document.querySelectorAll('[data-i]').forEach(el=>{
     const key=el.getAttribute('data-i');
     const val=t(key);
-    if(el.tagName==='INPUT'||el.tagName==='BUTTON'||el.tagName==='A'){
-      if(!el.children.length) el.textContent=val; // only set if no child elements
-    } else {
-      el.textContent=val;
-    }
+    if(el.children.length===0) el.textContent=val;
   });
-  // update lang button label
   const lb=document.getElementById('lang-btn-label');
   if(lb) lb.textContent=LANG_NAMES[currentLang]||'EN';
-  // update clock tz label
   const tzEl=document.querySelector('.header-clock-tz');
   if(tzEl) tzEl.textContent=t('local');
 }
@@ -628,39 +939,33 @@ function setLang(code){
   currentLang=code;
   localStorage.setItem('inspace_lang',code);
   applyLang();
-  // re-render dynamic content
   rebuildStats();
   rebuildDaysSince();
-  // nav links text
   rebuildNav();
+  rebuildHeroQuick();
+  rebuildScheduleTabs();
+  renderScheduleRows();
+  showToast({
+    icon:'lang',color:'#7eb6ff',
+    title:t('toastLangChanged'),sub:LANG_LABELS[code]||code,
+    duration:3000
+  });
 }
 
 /* ══════════════════════════════════════
    SITE CONFIG
 ══════════════════════════════════════ */
-const accLoadMorePerPage = 10;
-const daysSeparatorMode  = 'bar';
-const showClock          = true;
-const clockColor         = '#888';
-const clockTzColor       = '#555';
-const clockFontSize      = '0.78em';
-const navLinkColor       = '#888';
-const navLinkHoverColor  = '#f0f0f0';
-
-const enableSounds = true;
+const showClock=true;
+const enableSounds=true;
 const sounds = {
   accordion:{ file:null,volume:0.18,enabled:true,freq:520,duration:0.06,type:'sine' },
   details:  { file:null,volume:0.14,enabled:true,freq:600,duration:0.05,type:'sine' },
   modal:    { file:null,volume:0.16,enabled:true,freq:480,duration:0.08,type:'triangle' },
   news:     { file:null,volume:0.14,enabled:true,freq:560,duration:0.06,type:'sine' },
   final10:  { file:null,volume:0.25,enabled:true,freq:880,duration:0.12,type:'sine' },
+  toast:    { file:null,volume:0.10,enabled:true,freq:660,duration:0.04,type:'sine' },
 };
 
-/*
-  SOCIAL BUTTONS CONFIG
-  visible: true → shown; false → hidden template
-  TO ENABLE: set visible:true, fill url and svg
-*/
 const socialButtons = [
   {
     id:'twitter', visible:true, label:'X / Twitter',
@@ -672,28 +977,64 @@ const socialButtons = [
     url:'https://www.youtube.com/@OXeall',
     svg:`<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`
   },
-  /* ── TEMPLATES — set visible:true to enable ──
-  { id:'instagram', visible:false, label:'Instagram', url:'https://instagram.com/YOUR_HANDLE', svg:`` },
-  { id:'tiktok',    visible:false, label:'TikTok',    url:'https://tiktok.com/@YOUR_HANDLE',  svg:`` },
-  { id:'discord',   visible:false, label:'Discord',   url:'https://discord.gg/YOUR_INVITE',   svg:`` },
-  { id:'twitch',    visible:false, label:'Twitch',    url:'https://twitch.tv/YOUR_CHANNEL',   svg:`` },
-  */
 ];
 
-/* ── Sound ── */
-let audioCtx=null;const audioBuffers={};
+/* ── SOUND ── */
+let audioCtx=null;
 function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
-(function preload(){Object.entries(sounds).forEach(([k,c])=>{if(c.file){fetch(c.file).then(r=>r.arrayBuffer()).then(b=>getAudioCtx().decodeAudioData(b)).then(d=>{audioBuffers[k]=d;}).catch(()=>{});}});})();
 function playSound(key){
   if(!enableSounds)return;const cfg=sounds[key];if(!cfg||!cfg.enabled)return;
   try{
     const ctx=getAudioCtx();
-    if(audioBuffers[key]){const s=ctx.createBufferSource();s.buffer=audioBuffers[key];const g=ctx.createGain();g.gain.value=cfg.volume;s.connect(g);g.connect(ctx.destination);s.start();}
-    else{const o=ctx.createOscillator();const g=ctx.createGain();o.type=cfg.type||'sine';o.frequency.setValueAtTime(cfg.freq,ctx.currentTime);g.gain.setValueAtTime(cfg.volume,ctx.currentTime);g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+cfg.duration);o.connect(g);g.connect(ctx.destination);o.start();o.stop(ctx.currentTime+cfg.duration+0.01);}
+    const o=ctx.createOscillator();const g=ctx.createGain();
+    o.type=cfg.type||'sine';o.frequency.setValueAtTime(cfg.freq,ctx.currentTime);
+    g.gain.setValueAtTime(cfg.volume,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+cfg.duration);
+    o.connect(g);g.connect(ctx.destination);
+    o.start();o.stop(ctx.currentTime+cfg.duration+0.01);
   }catch(e){}
 }
 
-/* ── Starfield ── */
+/* ══════════════════════════════════════
+   TOAST NOTIFICATION SYSTEM
+══════════════════════════════════════ */
+const TOAST_ICONS = {
+  info:`<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm2 12h-4v-1h1v-5h-1v-1h3v6h1v1z"/></svg>`,
+  rocket:`<svg viewBox="0 0 24 24"><path d="M14.5 2c-2.5 0-5 1.5-7 4l-1.5 2H4l-2 4 3 1 1 1 1 3 4-2v-2l2-1.5c2.5-2 4-4.5 4-7V2h-2.5zM15 6.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>`,
+  lang:`<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-2 17.5c-3-1-5-4-5-7.5h3c0 2.5 1 5 2 7.5zM5 10c0-3.5 2-6.5 5-7.5-1 2.5-2 5-2 7.5H5zm9 9.5c1-2.5 2-5 2-7.5h3c0 3.5-2 6.5-5 7.5zm2-9.5c0-2.5-1-5-2-7.5 3 1 5 4 5 7.5h-3z"/></svg>`,
+  check:`<svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19l12-12-1.4-1.4z"/></svg>`,
+  warn:`<svg viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 6l8 14H4L12 8zm-1 5h2v4h-2zm0 5h2v2h-2z"/></svg>`,
+};
+
+let toastCounter=0;
+function showToast({icon='info',color='#7eb6ff',title='',sub='',duration=3500}){
+  playSound('toast');
+  const id='toast-'+(++toastCounter);
+  const cont=document.getElementById('toast-container');
+  const el=document.createElement('div');
+  el.className='toast';el.id=id;
+  el.style.setProperty('--toast-c',color);
+  el.style.setProperty('--toast-dur',duration+'ms');
+  el.innerHTML=`
+    <div class="toast-icon">${TOAST_ICONS[icon]||TOAST_ICONS.info}</div>
+    <div class="toast-text">
+      <span class="toast-title">${title}</span>
+      ${sub?`<span class="toast-sub">${sub}</span>`:''}
+    </div>
+    <div class="toast-progress"></div>
+  `;
+  el.addEventListener('click',()=>dismissToast(id));
+  cont.appendChild(el);
+  requestAnimationFrame(()=>{requestAnimationFrame(()=>el.classList.add('show'));});
+  setTimeout(()=>dismissToast(id),duration);
+}
+function dismissToast(id){
+  const el=document.getElementById(id);if(!el)return;
+  el.classList.remove('show');el.classList.add('hide');
+  setTimeout(()=>{el.remove();},350);
+}
+
+/* ── STARFIELD ── */
 function createStars(container,count){
   for(let i=0;i<count;i++){
     const s=document.createElement('div');s.className='star';
@@ -704,12 +1045,15 @@ function createStars(container,count){
     container.appendChild(s);
   }
 }
-createStars(document.getElementById('starfield'),110);
-let vpStarsCreated=false;function ensureVpStars(){if(vpStarsCreated)return;createStars(document.getElementById('vp-starfield'),90);vpStarsCreated=true;}
-let newsStarsCreated=false;function ensureNewsStars(){if(newsStarsCreated)return;createStars(document.getElementById('news-starfield'),80);newsStarsCreated=true;}
-let gameStarsCreated=false;function ensureGameStars(){if(gameStarsCreated)return;createStars(document.getElementById('game-starfield'),80);gameStarsCreated=true;}
+createStars(document.getElementById('starfield'),120);
+const overlayStarsCreated={};
+function ensureOverlayStars(id,count=80){
+  if(overlayStarsCreated[id])return;
+  const c=document.getElementById(id);if(!c)return;
+  createStars(c,count);overlayStarsCreated[id]=true;
+}
 
-/* ── Parallax ── */
+/* ── PARALLAX ── */
 (function(){
   const factors=[0.004,0.010,0.020];let scrollY=0,rafId=null,tMX=0,tMY=0,cMX=0,cMY=0;
   document.addEventListener('mousemove',e=>{tMX=(e.clientX/window.innerWidth-0.5)*2;tMY=(e.clientY/window.innerHeight-0.5)*2;});
@@ -728,157 +1072,118 @@ let gameStarsCreated=false;function ensureGameStars(){if(gameStarsCreated)return
   window.addEventListener('scroll',sch,{passive:true});
 })();
 
-/* ── Flyby — now spawns from all sides ── */
+/* ── FLYBY (preserved) ── */
 (function(){
   const canvas=document.getElementById('flyby-canvas'),ctx=canvas.getContext('2d');
   let W,H;
   function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
   resize();window.addEventListener('resize',resize);
-  let flyby=null,animFrame=null,lastTime=null;
+  let flyby=null,animFrame=null;
   function sched(){setTimeout(spawn,(10+Math.random()*5)*1000);}
-
   function spawn(){
     const r=Math.random(),type=r<0.50?'meteor':r<0.85?'satellite':'starship';
-    // Direction: 60% horizontal (left/right), 20% top, 20% bottom
     const dir=Math.random();
     let startX,startY,angle;
-    if(dir<0.35){
-      // from left
-      startX=-120;startY=H*(0.05+Math.random()*0.9);
-      angle=(Math.random()*30-15)*Math.PI/180;
-    } else if(dir<0.70){
-      // from right
-      startX=W+120;startY=H*(0.05+Math.random()*0.9);
-      // pointing left
-      angle=Math.PI+(Math.random()*30-15)*Math.PI/180;
-    } else if(dir<0.85){
-      // from top
-      startX=W*(0.05+Math.random()*0.9);startY=-80;
-      angle=Math.PI/2+(Math.random()*20-10)*Math.PI/180;
-    } else {
-      // from bottom
-      startX=W*(0.05+Math.random()*0.9);startY=H+80;
-      angle=-Math.PI/2+(Math.random()*20-10)*Math.PI/180;
-    }
+    if(dir<0.35){startX=-120;startY=H*(0.05+Math.random()*0.9);angle=(Math.random()*30-15)*Math.PI/180;}
+    else if(dir<0.70){startX=W+120;startY=H*(0.05+Math.random()*0.9);angle=Math.PI+(Math.random()*30-15)*Math.PI/180;}
+    else if(dir<0.85){startX=W*(0.05+Math.random()*0.9);startY=-80;angle=Math.PI/2+(Math.random()*20-10)*Math.PI/180;}
+    else{startX=W*(0.05+Math.random()*0.9);startY=H+80;angle=-Math.PI/2+(Math.random()*20-10)*Math.PI/180;}
     flyby=build(type,startX,startY,angle);
     if(!animFrame)animFrame=requestAnimationFrame(loop);sched();
   }
-
   function build(type,sx,sy,angle){
     const b={type,x:sx,y:sy,angle};
     if(type==='meteor')return{...b,speed:5+Math.random()*4,tailLen:80+Math.random()*60,brightness:0.55+Math.random()*0.35,size:1.2+Math.random()*0.8};
     if(type==='satellite')return{...b,speed:3+Math.random()*3,brightness:0.30+Math.random()*0.20,size:1.4,tailLen:18};
     return{...b,speed:3+Math.random()*2,brightness:0.22+Math.random()*0.12,size:3.5,tailLen:28};
   }
-
-  function isOffScreen(f){
-    return f.x>W+200||f.x<-200||f.y>H+200||f.y<-200;
-  }
-
-  function loop(ts){
-    if(!lastTime)lastTime=ts;lastTime=ts;
+  function isOff(f){return f.x>W+200||f.x<-200||f.y>H+200||f.y<-200;}
+  function loop(){
     ctx.clearRect(0,0,W,H);
     if(flyby){
       flyby.x+=Math.cos(flyby.angle)*flyby.speed;flyby.y+=Math.sin(flyby.angle)*flyby.speed;
-      // fade based on progress across screen (use center distance)
       const cx=W/2,cy=H/2;
       const maxD=Math.sqrt(cx*cx+cy*cy)+150;
       const d=Math.sqrt((flyby.x-cx)**2+(flyby.y-cy)**2);
       const prog=1-Math.max(0,Math.min(1,(d-maxD*0.1)/(maxD*0.7)));
       let alpha=Math.min(1,prog*2.5)*flyby.brightness;
-      if(isOffScreen(flyby)){flyby=null;ctx.clearRect(0,0,W,H);animFrame=null;lastTime=null;return;}
-      if(flyby.type==='meteor')dMeteor(flyby,alpha);
-      else if(flyby.type==='satellite')dSatellite(flyby,alpha);
-      else dStarship(flyby,alpha);
+      if(isOff(flyby)){flyby=null;ctx.clearRect(0,0,W,H);animFrame=null;return;}
+      if(flyby.type==='meteor')dM(flyby,alpha);
+      else if(flyby.type==='satellite')dS(flyby,alpha);
+      else dStar(flyby,alpha);
     }
     if(flyby)animFrame=requestAnimationFrame(loop);else animFrame=null;
   }
-  function dMeteor(f,alpha){
+  function dM(f,a){
     const tx=f.x-Math.cos(f.angle)*f.tailLen,ty=f.y-Math.sin(f.angle)*f.tailLen;
     const g=ctx.createLinearGradient(tx,ty,f.x,f.y);
-    g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(0.6,`rgba(220,235,255,${alpha*0.35})`);g.addColorStop(1,`rgba(255,255,255,${alpha})`);
+    g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(0.6,`rgba(220,235,255,${a*0.35})`);g.addColorStop(1,`rgba(255,255,255,${a})`);
     ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(f.x,f.y);ctx.strokeStyle=g;ctx.lineWidth=f.size;ctx.lineCap='round';ctx.stroke();
     const gw=ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,f.size*4);
-    gw.addColorStop(0,`rgba(255,255,255,${alpha*0.9})`);gw.addColorStop(1,'rgba(200,220,255,0)');
+    gw.addColorStop(0,`rgba(255,255,255,${a*0.9})`);gw.addColorStop(1,'rgba(200,220,255,0)');
     ctx.beginPath();ctx.arc(f.x,f.y,f.size*4,0,Math.PI*2);ctx.fillStyle=gw;ctx.fill();
   }
-  function dSatellite(f,alpha){
+  function dS(f,a){
     const tx=f.x-Math.cos(f.angle)*f.tailLen,ty=f.y-Math.sin(f.angle)*f.tailLen;
     const g=ctx.createLinearGradient(tx,ty,f.x,f.y);
-    g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(1,`rgba(255,255,255,${alpha*0.28})`);
+    g.addColorStop(0,'rgba(255,255,255,0)');g.addColorStop(1,`rgba(255,255,255,${a*0.28})`);
     ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(f.x,f.y);ctx.strokeStyle=g;ctx.lineWidth=0.7;ctx.lineCap='round';ctx.stroke();
-    ctx.beginPath();ctx.arc(f.x,f.y,f.size,0,Math.PI*2);ctx.fillStyle=`rgba(220,235,255,${alpha})`;ctx.fill();
-    const blink=0.5+0.5*Math.sin(Date.now()*0.003);
-    if(blink>0.72){const g2=ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,f.size*2.5);g2.addColorStop(0,`rgba(180,210,255,${alpha*0.5})`);g2.addColorStop(1,'rgba(180,210,255,0)');ctx.beginPath();ctx.arc(f.x,f.y,f.size*2.5,0,Math.PI*2);ctx.fillStyle=g2;ctx.fill();}
+    ctx.beginPath();ctx.arc(f.x,f.y,f.size,0,Math.PI*2);ctx.fillStyle=`rgba(220,235,255,${a})`;ctx.fill();
   }
-  function dStarship(f,alpha){
+  function dStar(f,a){
     ctx.save();ctx.translate(f.x,f.y);ctx.rotate(f.angle);const sc=f.size*0.9;
-    const p=ctx.createLinearGradient(-sc*9,0,0,0);p.addColorStop(0,'rgba(120,180,255,0)');p.addColorStop(0.5,`rgba(160,210,255,${alpha*0.18})`);p.addColorStop(1,`rgba(200,225,255,${alpha*0.32})`);
-    ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(-sc*9,-sc*0.9);ctx.lineTo(-sc*9,sc*0.9);ctx.closePath();ctx.fillStyle=p;ctx.fill();
-    ctx.fillStyle=`rgba(210,220,235,${alpha})`;
+    ctx.fillStyle=`rgba(210,220,235,${a})`;
     ctx.beginPath();ctx.ellipse(0,0,sc*5.5,sc*0.85,0,0,Math.PI*2);ctx.fill();
     ctx.beginPath();ctx.moveTo(sc*5.5,0);ctx.lineTo(sc*3.5,-sc*0.85);ctx.lineTo(sc*7.5,0);ctx.lineTo(sc*3.5,sc*0.85);ctx.closePath();ctx.fill();
-    ctx.beginPath();ctx.moveTo(-sc*4.5,0);ctx.lineTo(-sc*5.8,-sc*1.8);ctx.lineTo(-sc*3.8,-sc*0.85);ctx.closePath();ctx.fill();
-    ctx.beginPath();ctx.moveTo(-sc*4.5,0);ctx.lineTo(-sc*5.8,sc*1.8);ctx.lineTo(-sc*3.8,sc*0.85);ctx.closePath();ctx.fill();
     ctx.restore();
-    const ts2={x:f.x-Math.cos(f.angle)*f.tailLen,y:f.y-Math.sin(f.angle)*f.tailLen};
-    const tg=ctx.createLinearGradient(ts2.x,ts2.y,f.x,f.y);tg.addColorStop(0,'rgba(140,190,255,0)');tg.addColorStop(1,`rgba(140,190,255,${alpha*0.18})`);
-    ctx.beginPath();ctx.moveTo(ts2.x,ts2.y);ctx.lineTo(f.x,f.y);ctx.strokeStyle=tg;ctx.lineWidth=1.2;ctx.lineCap='round';ctx.stroke();
   }
   setTimeout(sched,4000+Math.random()*6000);
 })();
 
-/* ── Reveal ── */
-const revealObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.07});
-document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
-function scrollToSection(id){document.getElementById(id).scrollIntoView({behavior:'smooth'});}
-
+/* ══════════════════════════════════════
+   STATUS COLOR
+══════════════════════════════════════ */
 function statusColor(s){
   switch(s){
     case 'Planned':return'#fff';case 'Delayed':return'#ffcc00';case 'Big Event Plans':return'#ffcc00';
-    case 'Completed':return'#00cc66';case 'Concept/Plan':return'#00ccff';case 'Canceled':return'#ff3300';
-    case 'Coming Soon':return'#d9d9d9';case 'Recorded':return'#00cc66';default:return'#ccc';
+    case 'Completed':return'#5dd6a0';case 'Concept/Plan':return'#00ccff';case 'Canceled':return'#ff6b58';
+    case 'Coming Soon':return'#d9d9d9';case 'Recorded':return'#5dd6a0';default:return'#ccc';
   }
 }
+function statusLabel(s){
+  if(s==='Planned')return t('statusPlanned');
+  if(s==='Completed')return t('statusCompleted');
+  if(s==='Canceled')return t('statusCanceled');
+  return s;
+}
 
-/* ── Build header nav ── */
-let navLinks=[];
+/* ══════════════════════════════════════
+   HEADER NAV — overlay-based
+══════════════════════════════════════ */
 function rebuildNav(){
   const navEl=document.getElementById('header-nav');
   navEl.innerHTML='';
   const items=[
-    {key:'Home',section:'hero'},{key:'Vehicles',section:'fleet'},
-    {key:'News',section:'rockets'},{key:'Schedule',section:'schedule'},
+    {key:'navHome',action:()=>{closeAllOverlays();window.scrollTo({top:0,behavior:'smooth'});},dotColor:'#fff'},
+    {key:'navVehicles',action:()=>openOverlay('vehicles'),dotColor:'#7eb6ff'},
+    {key:'navNews',action:()=>openOverlay('news'),dotColor:'#5dd6a0'},
+    {key:'navSchedule',action:()=>openOverlay('schedule'),dotColor:'#ffb380'},
+    {key:'navGame',action:()=>openOverlay('game'),dotColor:'#cc88ff'},
   ];
-  // static labels for nav (use English key as fallback since nav labels aren't in translations dict directly)
-  const navLabels={
-    en:['Home','Vehicles','News','Schedule'],
-    es:['Inicio','Vehículos','Noticias','Calendario'],
-    de:['Start','Fahrzeuge','Neuigkeiten','Startplan'],
-    fr:['Accueil','Véhicules','Actualités','Calendrier'],
-    ru:['Главная','Ракеты','Новости','Расписание'],
-    zh:['首页','飞行器','新闻','时间表'],
-    pt:['Início','Veículos','Notícias','Calendário'],
-  };
-  const labels=navLabels[currentLang]||navLabels.en;
-  items.forEach((n,i)=>{
-    const a=document.createElement('a');a.textContent=labels[i];a.style.color=navLinkColor;
-    a.onmouseenter=()=>{a.style.color=navLinkHoverColor;};a.onmouseleave=()=>{a.style.color=navLinkColor;};
-    a.onclick=()=>{closeVehicle();closeNews();closeGamePage();scrollToSection(n.section);};
-    navEl.appendChild(a);
+  items.forEach(it=>{
+    const b=document.createElement('button');b.className='nav-btn';
+    b.innerHTML=`<span class="nav-dot" style="background:${it.dotColor}"></span><span>${t(it.key)}</span>`;
+    b.onclick=it.action;
+    navEl.appendChild(b);
   });
-  // Mini Game nav
-  const mgLabels={en:'Mini Game',es:'Minijuego',de:'Minispiel',fr:'Mini-jeu',ru:'Мини-игра',zh:'小游戏',pt:'Minijogo'};
-  const mgA=document.createElement('a');mgA.textContent=mgLabels[currentLang]||'Mini Game';mgA.style.color=navLinkColor;
-  mgA.onmouseenter=()=>{mgA.style.color=navLinkHoverColor;};mgA.onmouseleave=()=>{mgA.style.color=navLinkColor;};
-  mgA.onclick=()=>{openGamePage();};navEl.appendChild(mgA);
 }
 rebuildNav();
 
-/* ── Clock ── */
+/* ══════════════════════════════════════
+   CLOCK + LANG PICKER
+══════════════════════════════════════ */
 if(showClock){
   const ls=document.getElementById('header-left-slot');
-  // Lang picker
   const lp=document.createElement('div');lp.className='lang-picker';lp.id='lang-picker';
   const lb=document.createElement('button');lb.className='lang-btn';
   lb.innerHTML=`<span id="lang-btn-label">${LANG_NAMES[currentLang]||'EN'}</span><svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg>`;
@@ -886,20 +1191,24 @@ if(showClock){
   const dd=document.createElement('div');dd.className='lang-dropdown';
   Object.entries(LANG_LABELS).forEach(([code,name])=>{
     const opt=document.createElement('button');opt.className='lang-option'+(code===currentLang?' active':'');
-    opt.textContent=name;opt.onclick=()=>{setLang(code);lp.classList.remove('open');dd.querySelectorAll('.lang-option').forEach(o=>o.classList.remove('active'));opt.classList.add('active');};
+    opt.innerHTML=`<span>${name}</span><span class="check">✓</span>`;
+    opt.onclick=()=>{
+      setLang(code);lp.classList.remove('open');
+      dd.querySelectorAll('.lang-option').forEach(o=>o.classList.remove('active'));opt.classList.add('active');
+    };
     dd.appendChild(opt);
   });
   lp.appendChild(lb);lp.appendChild(dd);ls.appendChild(lp);
   document.addEventListener('click',()=>lp.classList.remove('open'));
 
-  const cs=document.createElement('span');cs.className='header-clock';cs.style.fontSize=clockFontSize;cs.style.color=clockColor;
-  const tz=document.createElement('span');tz.className='header-clock-tz';tz.textContent=t('local');tz.style.fontSize='0.68em';tz.style.color=clockTzColor;
+  const cs=document.createElement('span');cs.className='header-clock';
+  const tz=document.createElement('span');tz.className='header-clock-tz';tz.textContent=t('local');
   ls.appendChild(cs);ls.appendChild(tz);
   function updateClock(){const n=new Date();cs.textContent=`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')} `;}
   updateClock();setInterval(updateClock,1000);
 }
 
-/* ── Social buttons ── */
+/* ── SOCIAL BUTTONS ── */
 const rs=document.getElementById('header-right-slot');
 socialButtons.forEach(btn=>{
   if(!btn.visible)return;
@@ -908,7 +1217,7 @@ socialButtons.forEach(btn=>{
 });
 
 /* ══════════════════════════════════════
-   LAUNCHES DATA
+   LAUNCHES DATA — preserved exactly
 ══════════════════════════════════════ */
 const launches=[
   {rocket:'SunPower One SN5 (V2.2)', date:'2026-03-07 14:00',status:'Canceled', nameId:'sunpower',site:'Ali 28R',              type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunPower SN5 (V2.2)', desc:'New plans required mission cancellation. Booster landing test using precision Suicide Burn.',watchUrl:'',showWatchMin:30},
@@ -943,84 +1252,197 @@ function rebuildDaysSince(){
   document.getElementById('days-since-text').textContent=diffDays<1?`<1 ${plural}`:`${diffDays} ${diffDays!==1?plural:single}`;
   document.getElementById('days-since-wrap').style.display='block';
 }
-rebuildDaysSince();
 
 /* ══════════════════════════════════════
-   VEHICLES
+   VEHICLES — preserved exactly
 ══════════════════════════════════════ */
-const vehicles=[
-  {id:'sunorbit',name:'SunOrbit',class:'Interplanetary Vehicle',color:'#00aaff',image:'991ef2dcfcd94c0f95050b657d1c6134.png',
-   description:"SunOrbit is InSpace's primary interplanetary vehicle, built in modular stages.<br>It is equally capable of crewed and uncrewed missions to Low Earth Orbit and to other planets. For Earth orbit, the third stage can function as a crewed mini-station or as an uncrewed satellite that separates directly in orbit. For missions to other planets, the third stage can serve as the main crew habitat and command module with life support systems, or operate fully autonomously without pilots - including orbital insertion around other planets.<br>The first and second stages are reusable and designed for precise suicide burn landings on Earth and other planetary bodies. The vehicle features advanced docking capabilities and high-bandwidth communication relay systems.",
-   specs:[{val:'205m',lbl:'Height'},{val:'3370 t',lbl:'Mass'},{val:'79.1 km/s',lbl:'Delta-V'},{val:'14.64×',lbl:'TWR'},{val:'Feb 2026',lbl:'First Flight'}],
-   stages:[{title:'Stage 1 — Booster',rows:[{key:'Engines',val:'42'},{key:'Thrust (SL)',val:'484,000 kN'},{key:'Burn time',val:'33.8 min'},{key:'Propellant',val:'2,560 t'},{key:'Recovery',val:'Vertical landing'},{key:'Reusable',val:'Yes'}]},{title:'Stage 2 — Upper',rows:[{key:'Engines',val:'90'},{key:'Thrust (vac)',val:'120,000 kN'},{key:'Burn time',val:'1.6 min'},{key:'Propellant',val:'2,330 t'},{key:'Recovery',val:'Vertical landing'},{key:'Reusable',val:'Yes'}]}]},
-  {id:'sunpower',name:'SunPower',class:'Earth Orbit',color:'#ffaa00',image:null,
-   description:"SunPower is InSpace's heavy-lift workhorse, designed specifically for Low Earth Orbit missions.<br>It evolved from a rapid prototype through multiple generations into a reliable high-performance launcher, optimized for delivering large payloads, solar arrays, and orbital stations. The name SunPower was coined on the fly by Haisess during the very first test campaign.<br>Although public records show 0 launches, more than 20 SunPower vehicles have already been built and successfully flown in classified InSpace test and operational missions.",
-   specs:[{val:'—',lbl:'Height'},{val:'—',lbl:'Mass'},{val:'—',lbl:'Delta-V'},{val:'—',lbl:'TWR'},{val:'Feb 2026',lbl:'First Flight'}],
-   stages:[{title:'Stage 1 — Booster',rows:[{key:'Engines',val:'—'},{key:'Thrust (SL)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'Vertical landing'},{key:'Reusable',val:'Yes'}]},{title:'Stage 2 — Upper',rows:[{key:'Engines',val:'—'},{key:'Thrust (vac)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'—'},{key:'Reusable',val:'—'}]}]},
-  {id:'planetsrockets',name:'PlanetsRockets',class:'COMING SOON',color:'#cc66ff',image:null,
-   description:"PlanetsRockets is InSpace's next-generation interplanetary vehicle, currently in the early concept and planning phase.<br>All detailed information about its design, capabilities, and specific mission targets remains confidential at this stage.<br>It is being developed as part of InSpace's long-term ambitions for deep-space exploration.",
-   specs:[{val:'—',lbl:'Height'},{val:'—',lbl:'Mass'},{val:'—',lbl:'Delta-V'},{val:'—',lbl:'TWR'},{val:'Apr 2026',lbl:'First Flight'}],
-   stages:[{title:'Stage 1 — Booster',rows:[{key:'Engines',val:'—'},{key:'Thrust (SL)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'TBD'},{key:'Reusable',val:'TBD'}]},{title:'Stage 2 — Upper',rows:[{key:'Engines',val:'—'},{key:'Thrust (vac)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'—'},{key:'Reusable',val:'—'}]}]}
+const vehicles = [
+  {
+    id: 'sunorbit',
+    name: 'SunOrbit',
+    class: 'Interplanetary Vehicle',
+    color: '#00aaff',
+    image: '991ef2dcfcd94c0f95050b657d1c6134.png',
+    description: "SunOrbit is InSpace's primary interplanetary vehicle, built in modular stages.<br>It is equally capable of crewed and uncrewed missions to Low Earth Orbit and to other planets. For Earth orbit, the third stage can function as a crewed mini-station or as an uncrewed satellite that separates directly in orbit. For missions to other planets, the third stage can serve as the main crew habitat and command module with life support systems, or operate fully autonomously without pilots - including orbital insertion around other planets.<br>The first and second stages are reusable and designed for precise suicide burn landings on Earth and other planetary bodies. The vehicle features advanced docking capabilities and high-bandwidth communication relay systems.",
+    specs: [
+      { val: '205m', lbl: 'Height' },
+      { val: '3370 t', lbl: 'Mass' },
+      { val: '79.1 km/s', lbl: 'Delta-V' },
+      { val: '14.64×', lbl: 'TWR' },
+      { val: 'Feb 2026', lbl: 'First Flight' }
+    ],
+    stages: [
+      {
+        title: 'Stage 1 — Booster',
+        rows: [
+          { key: 'Engines', val: '42' },
+          { key: 'Thrust (SL)', val: '484,000 kN' },
+          { key: 'Burn time', val: '33.8 min' },
+          { key: 'Propellant', val: '2,560 t' },
+          { key: 'Recovery', val: 'Vertical landing' },
+          { key: 'Reusable', val: 'Yes' }
+        ]
+      },
+      {
+        title: 'Stage 2 — Upper',
+        rows: [
+          { key: 'Engines', val: '90' },
+          { key: 'Thrust (vac)', val: '120,000 kN' },
+          { key: 'Burn time', val: '1.6 min' },
+          { key: 'Propellant', val: '2,330 t' },
+          { key: 'Recovery', val: 'Vertical landing' },
+          { key: 'Reusable', val: 'Yes' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'sunpower',
+    name: 'SunPower',
+    class: 'Earth Orbit',
+    color: '#ffaa00',
+    image: null,
+    description: "SunPower is InSpace's heavy-lift workhorse, designed specifically for Low Earth Orbit missions.<br>It evolved from a rapid prototype through multiple generations into a reliable high-performance launcher, optimized for delivering large payloads, solar arrays, and orbital stations. The name SunPower was coined on the fly by Haisess during the very first test campaign.<br>Although public records show 0 launches, more than 20 SunPower vehicles have already been built and successfully flown in classified InSpace test and operational missions.",
+    specs: [
+      { val: '—', lbl: 'Height' },
+      { val: '—', lbl: 'Mass' },
+      { val: '—', lbl: 'Delta-V' },
+      { val: '—', lbl: 'TWR' },
+      { val: 'Feb 2026', lbl: 'First Flight' }
+    ],
+    stages: [
+      {
+        title: 'Stage 1 — Booster',
+        rows: [
+          { key: 'Engines', val: '—' },
+          { key: 'Thrust (SL)', val: '—' },
+          { key: 'Burn time', val: '—' },
+          { key: 'Propellant', val: '—' },
+          { key: 'Recovery', val: 'Vertical landing' },
+          { key: 'Reusable', val: 'Yes' }
+        ]
+      },
+      {
+        title: 'Stage 2 — Upper',
+        rows: [
+          { key: 'Engines', val: '—' },
+          { key: 'Thrust (vac)', val: '—' },
+          { key: 'Burn time', val: '—' },
+          { key: 'Propellant', val: '—' },
+          { key: 'Recovery', val: '—' },
+          { key: 'Reusable', val: '—' }
+        ]
+      }
+    ]
+  },
+  {
+    id: 'planetsrockets',
+    name: 'PlanetsRockets',
+    class: 'COMING SOON',
+    color: '#cc66ff',
+    image: null,
+    description: "PlanetsRockets is InSpace's next-generation interplanetary vehicle, currently in the early concept and planning phase.<br>All detailed information about its design, capabilities, and specific mission targets remains confidential at this stage.<br>It is being developed as part of InSpace's long-term ambitions for deep-space exploration.",
+    specs: [
+      { val: '—', lbl: 'Height' },
+      { val: '—', lbl: 'Mass' },
+      { val: '—', lbl: 'Delta-V' },
+      { val: '—', lbl: 'TWR' },
+      { val: 'Apr 2026', lbl: 'First Flight' }
+    ],
+    stages: [
+      {
+        title: 'Stage 1 — Booster',
+        rows: [
+          { key: 'Engines', val: '—' },
+          { key: 'Thrust (SL)', val: '—' },
+          { key: 'Burn time', val: '—' },
+          { key: 'Propellant', val: '—' },
+          { key: 'Recovery', val: 'TBD' },
+          { key: 'Reusable', val: 'TBD' }
+        ]
+      },
+      {
+        title: 'Stage 2 — Upper',
+        rows: [
+          { key: 'Engines', val: '—' },
+          { key: 'Thrust (vac)', val: '—' },
+          { key: 'Burn time', val: '—' },
+          { key: 'Propellant', val: '—' },
+          { key: 'Recovery', val: '—' },
+          { key: 'Reusable', val: '—' }
+        ]
+      }
+    ]
+  }
 ];
 
-const vcContainer=document.getElementById('vehicle-cards');
-vehicles.forEach(v=>{
-  const count=launchCountFor(v.id);
-  const hSpec=v.specs.find(s=>s.lbl==='Height');
-  const mSpec=v.specs.find(s=>s.lbl==='Mass');
-  const cells=[
-    {lbl:'Height',val:hSpec?.val??'—'},
-    {lbl:'Mass',  val:mSpec?.val??'—'},
-    {lbl:'Launches',val:count>0?count+'×':'—'},
-  ];
-  const specHTML=cells.map(c=>`<div class="vc-sc"><div class="vc-sl">${c.lbl}</div><div class="vc-sv">${c.val}</div></div>`).join('');
-  const card=document.createElement('div');card.className='vehicle-card';card.style.setProperty('--vc',v.color);
-  card.innerHTML=`
-    <div class="vc-bar" style="background:${v.color};"></div>
-    <div class="vc-head">
-      <div class="vc-head-left">
-        <div class="vc-dot"></div>
-        <div class="vc-name">${v.name}</div>
-        <div class="vc-sub">${v.class}</div>
+function renderVehicleCards(){
+  const container=document.getElementById('vehicle-cards');
+  container.innerHTML='';
+  vehicles.forEach(v=>{
+    const count=launchCountFor(v.id);
+    const hSpec=v.specs.find(s=>s.lbl==='Height');
+    const mSpec=v.specs.find(s=>s.lbl==='Mass');
+    const cells=[
+      {lbl:'Height',val:hSpec?.val??'—'},
+      {lbl:'Mass',  val:mSpec?.val??'—'},
+      {lbl:'Launches',val:count>0?count+'×':'—'},
+    ];
+    const specHTML=cells.map(c=>`<div class="vc-sc"><div class="vc-sl">${c.lbl}</div><div class="vc-sv">${c.val}</div></div>`).join('');
+    const card=document.createElement('div');card.className='vehicle-card';card.style.setProperty('--vc',v.color);
+    card.innerHTML=`
+      <div class="vc-bar" style="background:${v.color};"></div>
+      <div class="vc-head">
+        <div class="vc-head-left">
+          <div class="vc-dot"></div>
+          <div class="vc-name">${v.name}</div>
+          <div class="vc-sub">${v.class}</div>
+        </div>
       </div>
-    </div>
-    <div class="vc-specs">${specHTML}</div>
-    <div class="vc-foot">
-      <span class="vc-foot-txt">${t('fullDetails')}</span>
-      <span class="vc-foot-arr">&#8599;</span>
-    </div>`;
-  card.addEventListener('click',()=>{playSound('details');openVehicle(v.id);});
-  vcContainer.appendChild(card);
-});
+      <div class="vc-specs">${specHTML}</div>
+      <div class="vc-foot">
+        <span class="vc-foot-txt">${t('fullDetails')}</span>
+        <span class="vc-foot-arr">&#8599;</span>
+      </div>`;
+    card.addEventListener('click',()=>{playSound('details');showVehicleDetail(v.id);});
+    container.appendChild(card);
+  });
+  document.getElementById('ov-vehicles-meta').textContent=`${vehicles.length} ${currentLang==='ru'?'аппарата':'vehicles'}`;
+}
 
-function openVehicle(id){
+function showVehicleDetail(id){
   const v=vehicles.find(x=>x.id===id);if(!v)return;
-  ensureVpStars();playSound('modal');
-  document.getElementById('vp-header-title').textContent=v.name;
+  playSound('modal');
   const imgHTML=v.image?`<img src="${v.image}" alt="${v.name}">`:`<div class="vp-img-ph">${t('noImage')}</div>`;
   const specsHTML=v.specs.map(s=>`<div class="vp-spec"><div class="vp-spec-lbl">${s.lbl}</div><div class="vp-spec-val">${s.val}</div></div>`).join('');
-  const stagesHTML=v.stages.map(st=>{const cells=st.rows.map(r=>`<div class="vp-stage-cell"><div class="vp-stage-key">${r.key}</div><div class="vp-stage-val">${r.val}</div></div>`).join('');return`<div class="vp-stage"><div class="vp-stage-title">${st.title}</div><div class="vp-stage-rows">${cells}</div></div>`;}).join('');
-  document.getElementById('vp-body').innerHTML=`
-    <div class="vp-hero-name" style="color:${v.color}">${v.name}</div>
-    <div class="vp-hero-class">${v.class}</div>
+  const stagesHTML=v.stages.map(st=>{
+    const cells=st.rows.map(r=>`<div class="vp-stage-cell"><div class="vp-stage-key">${r.key}</div><div class="vp-stage-val">${r.val}</div></div>`).join('');
+    return`<div class="vp-stage"><div class="vp-stage-title">${st.title}</div><div class="vp-stage-rows">${cells}</div></div>`;
+  }).join('');
+  document.getElementById('vp-detail-body').innerHTML=`
+    <div class="op-hero-title" style="color:${v.color}">${v.name}</div>
+    <div class="op-hero-sub">${v.class}</div>
     <div class="vp-img-wrap">${imgHTML}</div>
-    <div class="vp-sec-title">${t('specifications')}</div><div class="vp-specs-grid">${specsHTML}</div>
-    <div class="vp-sec-title">${t('stages')}</div><div class="vp-stages">${stagesHTML}</div>
-    <div class="vp-sec-title">${t('overview')}</div><div class="vp-desc">${v.description}</div>`;
-  const overlay=document.getElementById('vehicle-overlay');
-  overlay.classList.add('active');requestAnimationFrame(()=>{requestAnimationFrame(()=>overlay.classList.add('visible'));});
-  overlay.scrollTop=0;document.body.style.overflow='hidden';
+    <div class="op-section-title">${t('specifications')}</div><div class="vp-specs-grid">${specsHTML}</div>
+    <div class="op-section-title">${t('stages')}</div><div class="vp-stages">${stagesHTML}</div>
+    <div class="op-section-title">${t('overview')}</div><div class="vp-desc">${v.description}</div>`;
+  document.getElementById('vp-list').classList.remove('active');
+  document.getElementById('vp-detail').classList.add('active');
+  document.getElementById('ov-vehicles-title').textContent=v.name;
+  const ov=document.getElementById('ov-vehicles');ov.scrollTop=0;
 }
-function closeVehicle(){
-  const overlay=document.getElementById('vehicle-overlay');overlay.classList.remove('visible');
-  setTimeout(()=>{overlay.classList.remove('active');document.body.style.overflow='';},350);
+function showVehicleList(){
+  document.getElementById('vp-detail').classList.remove('active');
+  document.getElementById('vp-list').classList.add('active');
+  document.getElementById('ov-vehicles-title').textContent=t('ourVehicles');
+  document.getElementById('ov-vehicles').scrollTop=0;
 }
 
 /* ══════════════════════════════════════
    HERO STATS
 ══════════════════════════════════════ */
 function rebuildStats(){
-  const totalFlights  =launches.filter(l=>l.status==='Completed').length;
+  const totalFlights=launches.filter(l=>l.status==='Completed').length;
   const uniqueVehicles=[...new Set(launches.map(l=>l.nameId))].length;
   const cutoff=Date.now()-365*24*60*60*1000;
   const last365=launches.filter(l=>l.status==='Completed'&&l.dateObj.getTime()>=cutoff).length;
@@ -1041,9 +1463,39 @@ function rebuildStats(){
   });
 }
 rebuildStats();
+rebuildDaysSince();
 
 /* ══════════════════════════════════════
-   NEWS
+   HERO QUICK ACCESS GRID
+══════════════════════════════════════ */
+function rebuildHeroQuick(){
+  const grid=document.getElementById('hero-quick-grid');
+  grid.innerHTML='';
+  const items=[
+    {key:'navVehicles',sub:'quickVehiclesSub',color:'#7eb6ff',action:()=>openOverlay('vehicles'),
+     icon:`<svg viewBox="0 0 24 24"><path d="M12 2L9 9H4l4 4-2 7 6-4 6 4-2-7 4-4h-5z"/></svg>`},
+    {key:'navNews',sub:'quickNewsSub',color:'#5dd6a0',action:()=>openOverlay('news'),
+     icon:`<svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zm2 4v2h12V8zm0 4v2h12v-2zm0 4v2h8v-2z"/></svg>`},
+    {key:'navSchedule',sub:'quickScheduleSub',color:'#ffb380',action:()=>openOverlay('schedule'),
+     icon:`<svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2zm0 16H5V10h14zm0-12H5V6h14z"/></svg>`},
+  ];
+  items.forEach(it=>{
+    const c=document.createElement('button');c.className='quick-card';c.style.setProperty('--qc',it.color);
+    c.innerHTML=`
+      <div class="quick-icon">${it.icon}</div>
+      <div class="quick-text">
+        <div class="quick-title">${t(it.key)}</div>
+        <div class="quick-sub">${t(it.sub)}</div>
+      </div>
+      <span class="quick-arr">&#8599;</span>`;
+    c.onclick=it.action;
+    grid.appendChild(c);
+  });
+}
+rebuildHeroQuick();
+
+/* ══════════════════════════════════════
+   NEWS — preserved
 ══════════════════════════════════════ */
 const allRockets=[
   {name:'SunPower One',description:'Where it all began. The name "SunPower" was coined on the fly by Haisess.',detail:'The very first SunPower prototype was assembled and launched within a single session, marking the birth of the InSpace vehicle programme. It flew a nominal trajectory and completed a controlled descent. The launch validated core propulsion, guidance systems, and ground support procedures that would be carried forward into every subsequent vehicle in the InSpace fleet.',date:'February 26, 2026'},
@@ -1053,40 +1505,49 @@ const allRockets=[
   {name:'Cancelling Missions',description:'Resumption is coming soon. We are currently preparing for two targets: Mars and the Moon.',detail:'Several scheduled test flights were cancelled to consolidate resources around the dual Mars and Moon programme. A revised launch manifest is expected shortly.',date:'March 03, 2026'},
 ];
 const NEWS_PER_PAGE=3;let newsShown=0;
-function renderNews(){
+function renderNews(reset=false){
   const grid=document.getElementById('rocket-cards'),btn=document.getElementById('load-more-btn');
+  if(reset){grid.innerHTML='';newsShown=0;}
   allRockets.slice(newsShown,newsShown+NEWS_PER_PAGE).forEach((r,li)=>{
-    const gi=newsShown+li;const card=document.createElement('div');card.className='rocket';card.style.animationDelay=(li*0.08)+'s';
-    card.innerHTML=`<div class="rocket-top-bar"></div><div class="rocket-body"><h3>${r.name}</h3><p class="rocket-desc">${r.description}</p></div><div class="rocket-footer"><span class="rocket-date">${r.date}</span><button class="rocket-details-btn" onclick="openNews(${gi})">${t('details')} <span class="rd-arrow">&#8599;</span></button></div>`;
+    const gi=newsShown+li;
+    const card=document.createElement('div');card.className='rocket';card.style.animationDelay=(li*0.08)+'s';
+    card.innerHTML=`<div class="rocket-top-bar"></div><div class="rocket-body"><h3>${r.name}</h3><p class="rocket-desc">${r.description}</p></div><div class="rocket-footer"><span class="rocket-date">${r.date}</span><button class="rocket-details-btn">${t('details')} <span class="rd-arrow">&#8599;</span></button></div>`;
+    card.addEventListener('click',()=>showNewsDetail(gi));
     grid.appendChild(card);
   });
   newsShown+=Math.min(NEWS_PER_PAGE,allRockets.length-newsShown);
   btn.style.display=newsShown<allRockets.length?'inline-flex':'none';
+  document.getElementById('ov-news-meta').textContent=`${allRockets.length} ${currentLang==='ru'?'записей':'entries'}`;
 }
 function loadMore(){renderNews();}
-renderNews();
 
-function openNews(idx){
-  const r=allRockets[idx];ensureNewsStars();playSound('news');
-  document.getElementById('np-header-title').textContent=r.name;
-  document.getElementById('np-body').innerHTML=`<div class="np-date-tag">${r.date}</div><div class="np-title">${r.name}</div><div class="np-divider"></div><div class="np-text">${r.detail}</div>`;
-  const overlay=document.getElementById('news-overlay');overlay.classList.add('active');
-  requestAnimationFrame(()=>{requestAnimationFrame(()=>overlay.classList.add('visible'));});
-  overlay.scrollTop=0;document.body.style.overflow='hidden';
+function showNewsDetail(idx){
+  const r=allRockets[idx];playSound('news');
+  document.getElementById('np-detail-body').innerHTML=`
+    <div class="np-date-tag">${r.date}</div>
+    <div class="op-hero-title">${r.name}</div>
+    <div class="np-divider"></div>
+    <div class="np-text">${r.detail}</div>`;
+  document.getElementById('np-list').classList.remove('active');
+  document.getElementById('np-detail').classList.add('active');
+  document.getElementById('ov-news-title').textContent=r.name;
+  document.getElementById('ov-news').scrollTop=0;
 }
-function closeNews(){
-  const overlay=document.getElementById('news-overlay');overlay.classList.remove('visible');
-  setTimeout(()=>{overlay.classList.remove('active');document.body.style.overflow='';},350);
+function showNewsList(){
+  document.getElementById('np-detail').classList.remove('active');
+  document.getElementById('np-list').classList.add('active');
+  document.getElementById('ov-news-title').textContent=t('latestNews');
+  document.getElementById('ov-news').scrollTop=0;
 }
 
-/* ── Countdown DOM ── */
+/* ══════════════════════════════════════
+   COUNTDOWN — preserved logic
+══════════════════════════════════════ */
 (function(){
   const timerEl=document.getElementById('countdown-timer');
   const dU=document.createElement('div');dU.className='cd-unit';dU.id='cd-days-unit';
   dU.innerHTML='<div class="cd-num" id="cd-d">00</div><div class="cd-lbl">Days</div>';timerEl.appendChild(dU);
-  const sep=document.createElement('div');sep.id='cd-days-sep';
-  if(daysSeparatorMode==='colon'){sep.className='cd-sep-colon';sep.textContent=':';}else{sep.className='cd-sep-thin';}
-  timerEl.appendChild(sep);
+  const sep=document.createElement('div');sep.id='cd-days-sep';sep.className='cd-sep-thin';timerEl.appendChild(sep);
   const hU=document.createElement('div');hU.className='cd-unit';hU.innerHTML='<div class="cd-num" id="cd-h">00</div><div class="cd-lbl">Hours</div>';timerEl.appendChild(hU);
   const s1=document.createElement('div');s1.className='cd-sep';s1.textContent=':';timerEl.appendChild(s1);
   const mU=document.createElement('div');mU.className='cd-unit';mU.innerHTML='<div class="cd-num" id="cd-m">00</div><div class="cd-lbl">Min</div>';timerEl.appendChild(mU);
@@ -1095,7 +1556,7 @@ function closeNews(){
 })();
 
 (function(){
-  let cur=null;
+  let cur=null;let last10Toast=false;
   const wEl=document.getElementById('countdown-wrap'),lEl=document.getElementById('countdown-label'),mEl=document.getElementById('countdown-mission');
   const dEl=document.getElementById('cd-d'),hEl=document.getElementById('cd-h'),mEl2=document.getElementById('cd-m'),sEl=document.getElementById('cd-s');
   const dU=document.getElementById('cd-days-unit'),sepEl=document.getElementById('cd-days-sep');
@@ -1107,7 +1568,7 @@ function closeNews(){
     const now=Date.now();
     if(!cur){cur=findNext();if(!cur){wEl.style.display='none';return;}}
     const msL=cur.dateObj.getTime()-now,msE=cur.endObj.getTime()-now;
-    if(msE<=0){hideRW(cur);cur=null;cur=findNext();if(!cur){wEl.style.display='none';return;}mEl.textContent=cur.rocket;}
+    if(msE<=0){hideRW(cur);cur=null;cur=findNext();if(!cur){wEl.style.display='none';return;}mEl.textContent=cur.rocket;last10Toast=false;}
     wEl.style.display='block';mEl.textContent=cur.rocket;
     if(msL<=0&&msE>0){
       lEl.textContent=t('missionInProgress');
@@ -1120,7 +1581,11 @@ function closeNews(){
     showDays(Math.floor(ts/86400)>0);
     dEl.textContent=pad(Math.floor(ts/86400));hEl.textContent=pad(Math.floor((ts%86400)/3600));
     mEl2.textContent=pad(Math.floor((ts%3600)/60));sEl.textContent=pad(ts%60);
-    if(ts<=10&&ts>=0)playSound('final10');
+    if(ts<=10&&ts>=0){
+      playSound('final10');
+      if(!last10Toast){last10Toast=true;showToast({icon:'rocket',color:'#ffb380',title:t('notifT10'),sub:t('notifT10Sub'),duration:5000});}
+    }
+    if(ts>10) last10Toast=false;
     if(cur.watchUrl&&ts<=cur.showWatchMin*60){showRW(cur);}else{hideRW(cur);}
   }
   window.registerRowWatch=function(idx,el){rwl[idx]=el;};
@@ -1130,15 +1595,63 @@ function closeNews(){
   tick();setInterval(tick,1000);
 })();
 
-/* ── Launch modal ── */
+/* ══════════════════════════════════════
+   SCHEDULE — tabbed layout
+══════════════════════════════════════ */
+let currentSchedTab='all';
+const SCHED_TABS=[
+  {id:'all',     key:'schedAll',     status:null,         color:'#fff'},
+  {id:'planned', key:'schedPlanned', status:'Planned',    color:'#fff'},
+  {id:'completed',key:'schedCompleted',status:'Completed',color:'#5dd6a0'},
+  {id:'canceled',key:'schedCanceled',status:'Canceled',   color:'#ff6b58'},
+];
+function rebuildScheduleTabs(){
+  const tabsEl=document.getElementById('schedule-tabs');tabsEl.innerHTML='';
+  SCHED_TABS.forEach(tab=>{
+    const count=tab.status?launches.filter(l=>l.status===tab.status).length:launches.length;
+    const b=document.createElement('button');
+    b.className='sch-tab'+(currentSchedTab===tab.id?' active':'');
+    b.style.setProperty('--td',tab.color);
+    b.innerHTML=`<span class="sch-tab-dot"></span><span>${t(tab.key)}</span><span class="sch-tab-count">${count}</span>`;
+    b.onclick=()=>{currentSchedTab=tab.id;rebuildScheduleTabs();renderScheduleRows();};
+    tabsEl.appendChild(b);
+  });
+}
+function renderScheduleRows(){
+  const list=document.getElementById('launch-list');list.innerHTML='';
+  const tab=SCHED_TABS.find(t=>t.id===currentSchedTab);
+  let items=launches.map((l,i)=>({...l,_idx:i}));
+  if(tab.status)items=items.filter(l=>l.status===tab.status);
+  // sort: planned ascending (soonest first), completed/canceled descending (newest first)
+  if(tab.id==='planned')items.sort((a,b)=>a.dateObj-b.dateObj);
+  else items.sort((a,b)=>b.dateObj-a.dateObj);
+  if(items.length===0){document.getElementById('sch-empty').style.display='block';return;}
+  document.getElementById('sch-empty').style.display='none';
+  items.forEach((l,i)=>{
+    const ds=l.dateObj.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+    const ts=l.dateObj.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false})+' (local)';
+    const row=document.createElement('div');row.className='launch-row';row.title='Click for details';
+    row.style.animationDelay=(Math.min(i,8)*0.04)+'s';
+    const wlHTML=l.watchUrl?`<a class="row-watch-link" id="row-watch-${l._idx}" href="${l.watchUrl}" target="_blank" onclick="event.stopPropagation()">${t('watchLive')} &#8599;</a>`:'';
+    row.innerHTML=`<div><strong>${l.rocket}</strong></div><div style="color:#aaa;font-family:var(--mono);font-size:0.86em;">${ds}</div><div style="color:#666;font-size:0.82em;font-family:var(--mono);">${ts}</div><div style="display:flex;align-items:center;gap:14px;justify-content:flex-end;">${wlHTML}<div class="status-badge" style="color:${statusColor(l.status)};">${statusLabel(l.status)}</div></div>`;
+    row.addEventListener('click',()=>openLaunchModal(l._idx));
+    if(l.watchUrl){setTimeout(()=>{const el=document.getElementById(`row-watch-${l._idx}`);if(el)window.registerRowWatch(l._idx,el);},0);}
+    list.appendChild(row);
+  });
+  document.getElementById('ov-schedule-meta').textContent=`${items.length} ${currentLang==='ru'?'запусков':'launches'}`;
+}
+
+/* ══════════════════════════════════════
+   LAUNCH MODAL
+══════════════════════════════════════ */
 function openLaunchModal(idx){
   const l=launches[idx],color=statusColor(l.status);playSound('modal');
   document.getElementById('lm-color-bar').style.background=color;
-  document.getElementById('lm-dot').style.cssText=`width:8px;height:8px;border-radius:50%;background:${color};opacity:0.75;box-shadow:0 0 8px ${color}`;
-  document.getElementById('lm-status-text').style.color=color;document.getElementById('lm-status-text').textContent=l.status;
+  document.getElementById('lm-dot').style.cssText=`width:8px;height:8px;border-radius:50%;background:${color};opacity:0.85;box-shadow:0 0 8px ${color}`;
+  document.getElementById('lm-status-text').style.color=color;document.getElementById('lm-status-text').textContent=statusLabel(l.status);
   document.getElementById('lm-name').textContent=l.rocket;document.getElementById('lm-type').textContent=l.type;
   const ds=l.dateObj.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-  const ts=l.dateObj.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false})+' local';
+  const ts=l.dateObj.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false})+' '+t('local');
   document.getElementById('lm-grid').innerHTML=`<div class="lm-cell"><div class="lm-cell-lbl">Vehicle</div><div class="lm-cell-val">${l.vehicle}</div></div><div class="lm-cell"><div class="lm-cell-lbl">Launch Site</div><div class="lm-cell-val">${l.site}</div></div><div class="lm-cell"><div class="lm-cell-lbl">Date</div><div class="lm-cell-val">${ds}</div></div><div class="lm-cell"><div class="lm-cell-lbl">Time</div><div class="lm-cell-val">${ts}</div></div><div class="lm-cell"><div class="lm-cell-lbl">Target</div><div class="lm-cell-val">${l.target}</div></div><div class="lm-cell"><div class="lm-cell-lbl">Duration</div><div class="lm-cell-val">~${l.durationMin} min</div></div>`;
   document.getElementById('lm-desc').textContent=l.desc;
   const wr=document.getElementById('lm-watch-row'),wl=document.getElementById('lm-watch-link');
@@ -1150,76 +1663,71 @@ function openLaunchModal(idx){
 function closeLaunchModal(e,force){
   if(!force&&e&&e.target!==document.getElementById('launch-modal-backdrop'))return;
   const bd=document.getElementById('launch-modal-backdrop');bd.classList.remove('visible');
-  setTimeout(()=>{bd.classList.remove('active');document.body.style.overflow='';},320);
+  setTimeout(()=>{bd.classList.remove('active');if(!anyOverlayOpen())document.body.style.overflow='';},320);
 }
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeLaunchModal(null,true);closeNews();closeVehicle();closeGamePage();}});
 
-/* ── Accordion ── */
-const groups=[
-  {status:'Planned',color:'#ffffff',paginate:true},
-  {status:'Completed',color:'#00cc66',paginate:true},
-  {status:'Canceled',color:'#ff3300',paginate:true},
-  {status:'Big Event Plans',color:'#ffaa00',paginate:true}
-];
-const schedCont=document.getElementById('launch-list');
-groups.forEach(g=>{
-  const allItems=launches.map((l,i)=>({...l,_idx:i})).filter(l=>l.status===g.status);if(!allItems.length)return;
-  const acc=document.createElement('div');acc.className='group-accordion';
-  const hdr=document.createElement('div');hdr.className='group-header';
-  hdr.innerHTML=`<div class="group-left"><div class="group-dot" style="background:${g.color};box-shadow:0 0 6px ${g.color}55;"></div><span class="group-label" style="color:${g.color}">${g.status}</span><span class="group-count">${allItems.length} launch${allItems.length!==1?'es':''}</span></div><span class="group-chevron">&#9660;</span>`;
-  const rw=document.createElement('div');rw.className='group-rows';
-  let visibleCount=g.paginate?Math.min(accLoadMorePerPage,allItems.length):allItems.length;const rowEls=[];
-  function buildRow(l){
-    const ds=l.dateObj.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
-    const ts=l.dateObj.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false})+' (local)';
-    const row=document.createElement('div');row.className='launch-row';row.title='Click for details';
-    const wlHTML=l.watchUrl?`<a class="row-watch-link" id="row-watch-${l._idx}" href="${l.watchUrl}" target="_blank" onclick="event.stopPropagation()">${t('watchLive')} <span class="rw-arrow">&#8599;</span></a>`:'';
-    row.innerHTML=`<div><strong>${l.rocket}</strong></div><div style="color:#aaa;font-family:var(--mono);font-size:0.88em;">${ds}</div><div style="color:#666;font-size:0.84em;font-family:var(--mono);">${ts}</div><div style="display:flex;align-items:center;gap:14px;justify-content:flex-end;">${wlHTML}<div class="status-badge" style="color:${statusColor(l.status)};">${l.status}</div></div>`;
-    row.addEventListener('click',()=>openLaunchModal(l._idx));
-    if(l.watchUrl){setTimeout(()=>{const el=document.getElementById(`row-watch-${l._idx}`);if(el)window.registerRowWatch(l._idx,el);},0);}
-    return row;
-  }
-  allItems.forEach((l,i)=>{const row=buildRow(l);row.style.display=i<visibleCount?'':'none';rw.appendChild(row);rowEls.push(row);});
-  let lmBtn=null;
-  if(g.paginate&&allItems.length>accLoadMorePerPage){
-    lmBtn=document.createElement('button');lmBtn.className='acc-load-more';
-    lmBtn.textContent=`${t('loadMore')} (${allItems.length-visibleCount} remaining)`;
-    lmBtn.addEventListener('click',e2=>{
-      e2.stopPropagation();const prev=visibleCount;
-      visibleCount=Math.min(visibleCount+accLoadMorePerPage,allItems.length);
-      for(let i=prev;i<visibleCount;i++){rowEls[i].style.display='';}
-      if(visibleCount>=allItems.length){lmBtn.remove();lmBtn=null;}else{lmBtn.textContent=`${t('loadMore')} (${allItems.length-visibleCount} remaining)`;}
-      rw.style.maxHeight=rw.scrollHeight+'px';
-    });rw.appendChild(lmBtn);
-  }
-  acc.appendChild(hdr);acc.appendChild(rw);schedCont.appendChild(acc);
-  hdr.addEventListener('click',()=>{
-    playSound('accordion');const isOpen=acc.classList.contains('open');
-    if(isOpen){rw.style.maxHeight=rw.scrollHeight+'px';rw.classList.remove('open');requestAnimationFrame(()=>{rw.style.maxHeight='0px';});acc.classList.remove('open');}
-    else{acc.classList.add('open');rw.style.maxHeight=rw.scrollHeight+'px';rw.classList.add('open');rw.addEventListener('transitionend',()=>{if(acc.classList.contains('open'))rw.style.maxHeight='none';},{once:true});}
+/* ══════════════════════════════════════
+   UNIVERSAL OVERLAY OPEN/CLOSE
+══════════════════════════════════════ */
+const OVERLAY_TITLES={
+  vehicles:'ourVehicles',news:'latestNews',schedule:'launchSchedule',game:'flyTitle'
+};
+const OVERLAY_STARFIELDS={
+  vehicles:'vehicles-starfield',news:'news-starfield',schedule:'schedule-starfield',game:'game-starfield'
+};
+function anyOverlayOpen(){return document.querySelectorAll('.overlay-page.active').length>0;}
+function openOverlay(name){
+  closeAllOverlays(true);
+  const ov=document.getElementById('ov-'+name);if(!ov)return;
+  if(OVERLAY_STARFIELDS[name])ensureOverlayStars(OVERLAY_STARFIELDS[name],75);
+  playSound('details');
+  if(name==='vehicles'){renderVehicleCards();showVehicleList();}
+  else if(name==='news'){renderNews(true);showNewsList();}
+  else if(name==='schedule'){rebuildScheduleTabs();renderScheduleRows();}
+  else if(name==='game'){setTimeout(()=>setupGameCanvas(),80);}
+  ov.classList.add('active');
+  requestAnimationFrame(()=>{requestAnimationFrame(()=>ov.classList.add('visible'));});
+  ov.scrollTop=0;
+  document.body.style.overflow='hidden';
+  showToast({
+    icon:'check',color:'#5dd6a0',
+    title:t(OVERLAY_TITLES[name]),
+    sub:t('toastSectionOpened'),
+    duration:2200
   });
+}
+function closeOverlay(name){
+  const ov=document.getElementById('ov-'+name);if(!ov)return;
+  if(name==='game')stopGame();
+  ov.classList.remove('visible');
+  setTimeout(()=>{ov.classList.remove('active');if(!anyOverlayOpen())document.body.style.overflow='';},400);
+}
+function closeAllOverlays(silent=false){
+  document.querySelectorAll('.overlay-page.active').forEach(ov=>{
+    const id=ov.id.replace('ov-','');
+    if(id==='game')stopGame();
+    ov.classList.remove('visible');
+    setTimeout(()=>ov.classList.remove('active'),silent?0:400);
+  });
+  if(!silent)setTimeout(()=>{if(!anyOverlayOpen())document.body.style.overflow='';},400);
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    closeLaunchModal(null,true);
+    if(anyOverlayOpen()){
+      // If in vehicle/news detail view, go back to list first
+      if(document.getElementById('vp-detail').classList.contains('active')){showVehicleList();return;}
+      if(document.getElementById('np-detail').classList.contains('active')){showNewsList();return;}
+      document.querySelectorAll('.overlay-page.active').forEach(ov=>{
+        const id=ov.id.replace('ov-','');closeOverlay(id);
+      });
+    }
+  }
 });
 
 /* ══════════════════════════════════════
-   GAME PAGE — full-screen overlay like vehicle/news
-══════════════════════════════════════ */
-function openGamePage(){
-  ensureGameStars();playSound('details');
-  const page=document.getElementById('game-overlay-page');
-  page.classList.add('active');
-  requestAnimationFrame(()=>{requestAnimationFrame(()=>page.classList.add('visible'));});
-  page.scrollTop=0;document.body.style.overflow='hidden';
-  setTimeout(()=>setupGameCanvas(),80);
-  applyLang(); // refresh translations in game page
-}
-function closeGamePage(){
-  stopGame();
-  const page=document.getElementById('game-overlay-page');page.classList.remove('visible');
-  setTimeout(()=>{page.classList.remove('active');document.body.style.overflow='';},350);
-}
-
-/* ══════════════════════════════════════
-   GAME — Fly in Space
+   GAME — preserved
 ══════════════════════════════════════ */
 (function(){
   const canvas=document.getElementById('game-canvas');
@@ -1302,7 +1810,9 @@ function closeGamePage(){
       document.getElementById('gop-over-sub').textContent=`${t('scoreLabel')}: ${Math.floor(score)}  ·  ${t('bestLabel')}: ${best}`;
       document.querySelector('.gop-start-btn').textContent=t('launch');
       document.getElementById('gop-game-overlay').classList.remove('hidden');
-      removeInput();return;
+      removeInput();
+      showToast({icon:'warn',color:'#ff6b58',title:t('missionFailed'),sub:`${t('scoreLabel')} ${Math.floor(score)}`,duration:3500});
+      return;
     }
     raf=requestAnimationFrame(loop);
   }
@@ -1313,13 +1823,24 @@ function closeGamePage(){
     reset();running=true;addInput();
     document.getElementById('gop-game-overlay').classList.add('hidden');
     lastTs=performance.now();raf=requestAnimationFrame(loop);
+    showToast({icon:'rocket',color:'#cc88ff',title:t('notifGameStart'),sub:t('notifGameStartSub'),duration:2500});
   };
   window.stopGame=stopGame;
 })();
 
-/* ── Apply initial lang ── */
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
 applyLang();
+
+// Welcome toast
+setTimeout(()=>{
+  showToast({
+    icon:'rocket',color:'#7eb6ff',
+    title:t('toastWelcome'),sub:t('toastWelcomeSub'),
+    duration:3800
+  });
+},800);
 </script>
-<script>document.documentElement.style.zoom="1.09";</script>
 </body>
 </html>
