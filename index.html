@@ -5,505 +5,628 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>InSpace</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@300;400&display=swap');
-/* Made by InSpace · Rebuilt by hi9eS */
-/* This website is for informational purposes only and does NOT engage in any commercial activity. */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
 
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#070708;--bg2:#0e0e10;--bg3:#141418;--bg4:#1a1a1f;
-  --border:rgba(255,255,255,0.08);--border-h:rgba(255,255,255,0.18);--border-s:rgba(255,255,255,0.28);
-  --text:#f0f0f0;--muted:#888;--muted2:#555;--muted3:#333;
-  --font:'DM Sans','Segoe UI',sans-serif;--mono:'DM Mono',monospace;
+  --bg:#050507;--bg2:#09090d;--bg3:#0e0e14;--bg4:#131319;
+  --border:rgba(255,255,255,0.06);--border-h:rgba(255,255,255,0.14);--border-s:rgba(255,255,255,0.24);
+  --text:#ededf0;--muted:#70707a;--muted2:#40404a;--muted3:#282830;
+  --font:'Space Grotesk','Segoe UI',sans-serif;--mono:'Space Mono',monospace;
   --ease:cubic-bezier(0.4,0,0.2,1);--spring:cubic-bezier(0.34,1.56,0.64,1);--out:cubic-bezier(0.16,1,0.3,1);
-  --hero-from:#fff;--hero-to:#a0c8ff;--hero-glow:rgba(120,180,255,0.18);
-  --accent:#7eb6ff;--accent-warm:#ffb380;--accent-good:#5dd6a0;--accent-bad:#ff6b58;
+  --accent:#4f8eff;--accent2:#ff4f7a;--accent-good:#3de89a;--accent-bad:#ff4f4f;--accent-warm:#ffac4f;
+  --hero-from:#fff;--hero-to:#7aaeff;--hero-glow:rgba(79,142,255,0.15);
 }
 html{scroll-behavior:smooth;background:var(--bg);}
 body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6;font-size:15px;overflow-x:hidden;min-height:100vh;}
 a{color:inherit;text-decoration:none;}
 button{font-family:inherit;}
 
-/* ── ATMOSPHERIC BACKGROUND LAYERS ── */
+/* ── PAGE SCALE ── */
+html{zoom:1.1;}
+
+/* ── SCANLINE ATMOSPHERE ── */
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:1000;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
+  mix-blend-mode:multiply;
+}
+
+/* ── GRID OVERLAY ── */
+body::after{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.016) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.016) 1px,transparent 1px);
+  background-size:60px 60px;
+  mask-image:radial-gradient(ellipse 80% 80% at 50% 10%,#000 30%,transparent 100%);
+}
+
 #starfield,#vp-starfield{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
 #news-starfield,#schedule-starfield,#vehicles-starfield,#game-starfield{position:absolute;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
 .star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--dur,4s) var(--delay,0s) infinite ease-in-out alternate;opacity:0;}
-@keyframes twinkle{0%{opacity:0;transform:scale(0.8);}50%{opacity:var(--op,0.5);}100%{opacity:0.08;transform:scale(1.1);}}
+@keyframes twinkle{0%{opacity:0;transform:scale(0.8);}50%{opacity:var(--op,0.5);}100%{opacity:0.06;transform:scale(1.1);}}
 #flyby-canvas{position:fixed;inset:0;pointer-events:none;z-index:1;}
 
-/* ambient-orb removed */
-
 /* ══════════════════════════════════════
-   HEADER — sticky, overlay-trigger nav
+   HEADER
 ══════════════════════════════════════ */
-header{position:fixed;top:0;left:0;right:0;z-index:100;
+header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
   display:flex;align-items:center;justify-content:center;
-  padding:14px 24px;background:rgba(7,7,8,0.78);
-  backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);
-  border-bottom:1px solid var(--border);}
-header::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);
-  width:220px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent);}
-.header-left{position:absolute;left:24px;display:flex;align-items:center;gap:10px;}
-.header-clock{font-family:var(--mono);font-weight:300;letter-spacing:0.06em;white-space:nowrap;font-size:0.78em;color:#888;}
-.header-clock-tz{font-family:var(--mono);font-size:0.62em;letter-spacing:0.08em;color:#555;}
-.header-nav{display:flex;gap:2px;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.05);border-radius:100px;padding:4px;}
-.nav-btn{font-size:0.82em;font-weight:400;letter-spacing:0.04em;
-  padding:7px 16px;border-radius:100px;cursor:pointer;border:none;background:transparent;
-  color:#999;transition:color 0.22s,background 0.22s,transform 0.18s var(--spring);
-  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
-.nav-btn:hover{color:#fff;background:rgba(255,255,255,0.07);transform:scale(0.98);}
-.nav-btn:active{transform:scale(0.92);}
-.nav-btn.active{background:rgba(255,255,255,0.10);color:#fff;}
-.nav-btn .nav-dot{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:0.5;}
-.header-right{position:absolute;right:24px;display:flex;align-items:center;gap:10px;}
+  padding:0 28px;height:58px;
+  background:rgba(5,5,7,0.82);
+  backdrop-filter:blur(24px) saturate(160%);-webkit-backdrop-filter:blur(24px) saturate(160%);
+  border-bottom:1px solid var(--border);
+}
+header::after{
+  content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent 0%,var(--accent) 30%,rgba(79,142,255,0.4) 50%,transparent 100%);
+  opacity:0.35;
+}
+.header-left{position:absolute;left:28px;display:flex;align-items:center;gap:12px;}
+.header-clock{
+  font-family:var(--mono);font-size:0.72em;letter-spacing:0.08em;
+  color:var(--muted);white-space:nowrap;
+  background:rgba(255,255,255,0.03);border:1px solid var(--border);
+  padding:4px 10px;border-radius:4px;
+}
+.header-clock-tz{font-family:var(--mono);font-size:0.58em;letter-spacing:0.1em;color:var(--muted2);}
+
+/* ── NAV ── */
+.header-nav{display:flex;gap:1px;align-items:center;}
+.nav-btn{
+  font-size:0.78em;font-weight:400;letter-spacing:0.06em;
+  padding:6px 14px;height:36px;cursor:pointer;border:none;background:transparent;
+  color:var(--muted);transition:color 0.2s,background 0.2s,transform 0.2s var(--spring);
+  display:inline-flex;align-items:center;gap:7px;white-space:nowrap;
+  position:relative;border-radius:2px;
+}
+.nav-btn::after{
+  content:'';position:absolute;bottom:-1px;left:50%;right:50%;height:2px;
+  background:var(--accent);transition:left 0.25s var(--out),right 0.25s var(--out);
+  border-radius:0;
+}
+.nav-btn:hover{color:var(--text);background:rgba(255,255,255,0.05);transform:scale(1.05);}
+.nav-btn:hover::after{left:0;right:0;}
+.nav-btn.active{color:var(--text);}
+.nav-btn.active::after{left:0;right:0;background:var(--accent);}
+.nav-btn .nav-dot{width:4px;height:4px;border-radius:50%;background:currentColor;opacity:0.4;flex-shrink:0;transition:box-shadow 0.2s,opacity 0.2s;}
+.nav-btn:hover .nav-dot{opacity:1;box-shadow:0 0 6px currentColor;}
 
 /* ── LANG PICKER ── */
+.header-right{position:absolute;right:28px;display:flex;align-items:center;gap:8px;}
 .lang-picker{position:relative;}
 .lang-btn{
-  font-family:var(--mono);font-size:0.76em;letter-spacing:0.06em;
-  color:rgba(255,255,255,0.55);background:transparent;border:1px solid rgba(255,255,255,0.08);cursor:pointer;
-  padding:5px 10px;border-radius:8px;transition:color 0.2s,background 0.2s,border-color 0.2s;
-  display:flex;align-items:center;gap:5px;white-space:nowrap;
+  font-family:var(--mono);font-size:0.7em;letter-spacing:0.1em;
+  color:var(--muted);background:transparent;border:1px solid var(--border);cursor:pointer;
+  padding:4px 10px;border-radius:4px;transition:color 0.2s,border-color 0.2s,background 0.2s,transform 0.2s var(--spring);
+  display:flex;align-items:center;gap:6px;white-space:nowrap;
 }
-.lang-btn:hover{color:rgba(255,255,255,0.8);background:rgba(255,255,255,0.06);}
-.lang-btn svg{width:9px;height:9px;fill:currentColor;flex-shrink:0;transition:transform 0.25s var(--ease);}
+.lang-btn:hover{color:var(--text);border-color:var(--border-h);background:rgba(255,255,255,0.05);transform:scale(1.05);}
+.lang-btn svg{width:8px;height:8px;fill:currentColor;transition:transform 0.2s;}
 .lang-picker.open .lang-btn svg{transform:rotate(180deg);}
 .lang-dropdown{
   position:absolute;top:calc(100% + 8px);left:0;
-  background:var(--bg2);border:1px solid var(--border-h);border-radius:14px;
-  padding:5px;min-width:160px;box-shadow:0 12px 40px rgba(0,0,0,0.5);
-  opacity:0;pointer-events:none;transform:translateY(-6px) scale(0.97);
-  transition:opacity 0.22s var(--ease),transform 0.22s var(--ease);
-  z-index:200;
+  background:var(--bg2);border:1px solid var(--border-h);border-radius:8px;
+  padding:4px;min-width:170px;box-shadow:0 24px 60px rgba(0,0,0,0.7),0 0 0 1px rgba(79,142,255,0.08);
+  opacity:0;pointer-events:none;transform:translateY(-8px);
+  transition:opacity 0.2s var(--ease),transform 0.2s var(--ease);z-index:200;
 }
-.lang-picker.open .lang-dropdown{opacity:1;pointer-events:all;transform:translateY(0) scale(1);}
+.lang-picker.open .lang-dropdown{opacity:1;pointer-events:all;transform:translateY(0);}
 .lang-option{
-  display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left;
-  font-family:var(--mono);font-size:0.72em;letter-spacing:0.06em;
-  padding:8px 12px;border:none;background:transparent;
-  color:var(--muted);cursor:pointer;border-radius:9px;
-  transition:background 0.15s,color 0.15s;white-space:nowrap;
+  display:flex;align-items:center;justify-content:space-between;width:100%;
+  font-family:var(--mono);font-size:0.68em;letter-spacing:0.08em;
+  padding:7px 11px;border:none;background:transparent;
+  color:var(--muted);cursor:pointer;border-radius:5px;
+  transition:background 0.12s,color 0.12s;
 }
-.lang-option:hover{background:rgba(255,255,255,0.06);color:var(--text);}
-.lang-option.active{color:var(--text);background:rgba(255,255,255,0.04);}
-.lang-option .check{opacity:0;font-size:0.85em;color:var(--accent);}
+.lang-option:hover{background:rgba(255,255,255,0.05);color:var(--text);}
+.lang-option.active{color:var(--text);background:rgba(79,142,255,0.08);}
+.lang-option .check{opacity:0;font-size:0.8em;color:var(--accent);}
 .lang-option.active .check{opacity:1;}
 
 /* ── SOCIAL BUTTONS ── */
 .social-btn{
-  border-radius:100px;border:1px solid rgba(255,255,255,0.16);
-  background:rgba(255,255,255,0.03);
-  display:inline-flex;align-items:center;justify-content:center;
-  width:34px;height:34px;cursor:pointer;
-  transition:border-color 0.25s,background 0.25s,box-shadow 0.25s;
-  text-decoration:none;flex-shrink:0;
+  width:32px;height:32px;border-radius:4px;border:1px solid var(--border);
+  background:transparent;display:inline-flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:border-color 0.2s,background 0.2s,transform 0.2s var(--spring),box-shadow 0.2s;text-decoration:none;flex-shrink:0;
 }
-.social-btn:hover{border-color:rgba(255,255,255,0.32);background:rgba(255,255,255,0.07);box-shadow:0 0 14px rgba(255,255,255,0.10);}
-.social-btn svg{width:14px;height:14px;fill:rgba(255,255,255,0.5);transition:fill 0.25s;display:block;}
-.social-btn:hover svg{fill:rgba(255,255,255,0.92);}
+.social-btn:hover{border-color:var(--border-h);background:rgba(255,255,255,0.06);transform:scale(1.1);box-shadow:0 4px 14px rgba(0,0,0,0.3);}
+.social-btn svg{width:13px;height:13px;fill:var(--muted);transition:fill 0.2s;display:block;}
+.social-btn:hover svg{fill:var(--text);}
 
 /* ══════════════════════════════════════
-   HERO — main "menu" — only countdown/social/stats
+   HERO
 ══════════════════════════════════════ */
 .hero{
   min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:120px 20px 60px;max-width:1100px;margin:0 auto;position:relative;z-index:2;text-align:center;
+  padding:58px 20px 40px;max-width:1060px;margin:-80px auto 0;position:relative;z-index:2;text-align:center;
 }
 .hero-status-chip{display:none;}
-.status-chip-dot{width:6px;height:6px;border-radius:50%;background:var(--accent-good);box-shadow:0 0 8px var(--accent-good);
-  animation:dotPulse 1.6s ease-in-out infinite;}
-@keyframes dotPulse{0%,100%{opacity:0.4;}50%{opacity:1;}}
+.status-chip-dot{width:5px;height:5px;border-radius:50%;background:var(--accent-good);
+  animation:dotPulse 2s ease-in-out infinite;box-shadow:0 0 6px var(--accent-good);}
+@keyframes dotPulse{0%,100%{opacity:0.3;}50%{opacity:1;}}
 
 .hero h1{
-  font-size:clamp(2.5em,6vw,4.4em);font-weight:300;letter-spacing:-0.02em;margin-bottom:14px;
-  animation:fadeUp 0.8s var(--ease) both;
-  background:linear-gradient(135deg,var(--hero-from) 0%,var(--hero-to) 100%);
+  font-size:clamp(2.8em,6.5vw,5em);font-weight:300;letter-spacing:-0.03em;margin-bottom:12px;
+  animation:fadeUp 0.7s var(--ease) both,heroShimmer 8s 1s ease-in-out infinite;
+  background:linear-gradient(150deg,var(--hero-from) 0%,rgba(255,255,255,0.7) 40%,var(--hero-to) 100%);
+  background-size:200% 100%;
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  filter:drop-shadow(0 0 26px var(--hero-glow)) drop-shadow(0 0 8px var(--hero-glow));
+  line-height:1.1;
 }
-.hero p{font-size:1.04em;max-width:540px;margin:0 auto 36px;color:#999;font-weight:300;
-  animation:fadeUp 0.8s 0.08s var(--ease) both;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+@keyframes heroShimmer{
+  0%,100%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+}
+.hero p{
+  font-size:1em;max-width:480px;margin:0 auto 40px;
+  color:var(--muted);font-weight:400;letter-spacing:0.01em;
+  animation:fadeUp 0.7s 0.07s var(--ease) both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
 
-#countdown-wrap{display:none;margin:0 auto 16px;max-width:660px;width:100%;
-  background:linear-gradient(180deg,rgba(255,255,255,0.025),rgba(255,255,255,0.01));
-  border:1px solid var(--border);border-radius:22px;padding:30px 40px;position:relative;overflow:hidden;
-  animation:fadeUp 0.8s 0.15s var(--ease) both;}
-#countdown-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.25),transparent);}
-#countdown-wrap::after{content:'';position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(circle at top,rgba(120,180,255,0.05),transparent 60%);}
-#countdown-mission{font-size:0.72em;letter-spacing:0.18em;text-transform:uppercase;color:#9aa;margin-bottom:8px;font-family:var(--mono);position:relative;z-index:1;}
-#countdown-label{font-size:0.85em;color:#aaa;margin-bottom:18px;font-weight:300;position:relative;z-index:1;}
-#countdown-timer{display:flex;justify-content:center;align-items:center;gap:16px;position:relative;z-index:1;}
-.cd-unit{text-align:center;min-width:54px;}
-.cd-num{font-size:2.7em;font-weight:300;font-variant-numeric:tabular-nums;letter-spacing:0.04em;line-height:1;font-family:var(--mono);}
-.cd-lbl{font-size:0.62em;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted2);margin-top:6px;}
-.cd-sep{font-size:2em;font-weight:200;color:var(--muted2);line-height:1;padding-bottom:14px;}
-.cd-sep-thin{width:1px;height:40px;background:rgba(255,255,255,0.1);align-self:center;margin-bottom:14px;}
+/* ── COUNTDOWN ── */
+#countdown-wrap{
+  display:none;margin:0 auto 14px;max-width:640px;width:100%;
+  border:1px solid var(--border);border-radius:8px;padding:28px 36px;
+  position:relative;overflow:hidden;background:var(--bg2);
+  animation:fadeUp 0.7s 0.12s var(--ease) both;
+  transition:border-color 0.3s,box-shadow 0.3s;
+}
+#countdown-wrap:hover{border-color:rgba(79,142,255,0.25);box-shadow:0 0 40px rgba(79,142,255,0.05);}
+#countdown-wrap::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  animation:countdownBarPulse 3s ease-in-out infinite;
+}
+@keyframes countdownBarPulse{0%,100%{opacity:0.3;}50%{opacity:0.9;}}
+#countdown-mission{font-size:0.65em;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;font-family:var(--mono);}
+#countdown-label{font-size:0.78em;color:var(--muted);margin-bottom:20px;font-weight:400;font-family:var(--mono);letter-spacing:0.08em;}
+#countdown-timer{display:flex;justify-content:center;align-items:center;gap:14px;}
+.cd-unit{text-align:center;min-width:52px;}
+.cd-num{
+  font-size:2.8em;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-0.02em;
+  line-height:1;font-family:var(--mono);color:var(--text);display:inline-block;
+}
+.cd-lbl{font-size:0.55em;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted2);margin-top:7px;font-family:var(--mono);}
+.cd-sep{font-size:2em;font-weight:700;color:var(--muted2);line-height:1;padding-bottom:14px;font-family:var(--mono);}
+.cd-sep-thin{width:1px;height:38px;background:var(--border);align-self:center;margin-bottom:14px;}
 
-#days-since-wrap{display:none;margin:0 auto 22px;max-width:640px;text-align:center;
-  animation:fadeUp 0.8s 0.18s var(--ease) both;}
-#days-since-text{font-size:0.7em;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted2);font-family:var(--mono);}
+#days-since-wrap{display:none;margin:0 auto 22px;max-width:640px;text-align:center;animation:fadeUp 0.7s 0.15s var(--ease) both;}
+#days-since-text{font-size:0.65em;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted2);font-family:var(--mono);}
 
-.stream-link{display:inline-flex;align-items:center;gap:11px;font-size:1em;font-weight:400;
-  letter-spacing:0.07em;padding:15px 44px;border:1px solid rgba(255,255,255,0.32);border-radius:100px;
-  cursor:pointer;color:#fff;transition:all 0.3s var(--ease);margin-bottom:32px;
-  position:relative;overflow:hidden;animation:fadeUp 0.8s 0.2s var(--ease) both;}
-.stream-link::before{content:'';position:absolute;inset:0;background:#fff;transform:scaleX(0);
-  transform-origin:left;transition:transform 0.4s var(--ease);border-radius:100px;}
-.stream-link:hover{color:#000;border-color:#fff;transform:translateY(-2px);}
+/* ── PRIMARY CTA ── */
+.stream-link{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:0.88em;font-weight:500;letter-spacing:0.08em;
+  padding:12px 32px;border-radius:4px;
+  cursor:pointer;color:#000;
+  background:var(--text);
+  transition:color 0.35s var(--ease),box-shadow 0.3s var(--ease),transform 0.2s var(--ease);
+  margin-bottom:36px;
+  position:relative;overflow:hidden;
+  animation:fadeUp 0.7s 0.17s var(--ease) both;
+  border:1px solid var(--text);
+}
+/* wipe layer — slides in from left on hover, exactly like original */
+.stream-link::before{
+  content:'';position:absolute;inset:0;
+  background:var(--accent);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform 0.38s var(--ease);border-radius:3px;
+}
+.stream-link::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent);
+  pointer-events:none;z-index:1;
+}
+.stream-link:hover{color:#fff;transform:translateY(-2px);box-shadow:0 10px 36px rgba(79,142,255,0.4);}
 .stream-link:hover::before{transform:scaleX(1);}
-.stream-link-text{position:relative;z-index:1;display:inline-flex;align-items:center;gap:11px;}
-.stream-link svg{width:14px;height:14px;}
+.stream-link:active{transform:translateY(0);}
+.stream-link-text{position:relative;z-index:2;display:inline-flex;align-items:center;gap:10px;}
+.stream-link svg{width:13px;height:13px;transition:transform 0.28s var(--spring);}
+.stream-link:hover svg{transform:scale(1.25);}
 
 /* ── HERO STATS ── */
-#hero-stats{max-width:660px;width:100%;margin:0 auto 30px;animation:fadeUp 0.8s 0.25s var(--ease) both;}
+#hero-stats{max-width:640px;width:100%;margin:0 auto 24px;animation:fadeUp 0.7s 0.21s var(--ease) both;}
 .hero-stats-grid{
   display:grid;grid-template-columns:repeat(4,1fr);
-  gap:1px;background:rgba(255,255,255,0.07);
-  border-radius:16px;overflow:hidden;
-  border:1px solid rgba(255,255,255,0.07);
+  gap:1px;background:var(--border);
+  border-radius:6px;overflow:hidden;
+  border:1px solid var(--border);
 }
 @media(max-width:600px){.hero-stats-grid{grid-template-columns:1fr 1fr;}}
 .hero-stat-cell{
-  background:var(--bg2);padding:18px 16px;display:flex;flex-direction:column;gap:5px;
-  transition:background 0.22s;position:relative;overflow:hidden;
+  background:var(--bg2);padding:16px 14px;display:flex;flex-direction:column;gap:5px;
+  transition:background 0.22s;
+  cursor:default;
 }
-.hero-stat-cell::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.12),transparent);
-  opacity:0;transition:opacity 0.3s;}
-.hero-stat-cell:hover{background:#131318;}
-.hero-stat-cell:hover::before{opacity:1;}
-.hero-stat-num{font-size:1.7em;font-weight:300;font-family:var(--mono);letter-spacing:-0.02em;line-height:1;color:var(--text);}
-.hero-stat-lbl{font-size:0.55em;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;font-family:var(--mono);}
+.hero-stat-cell:hover{background:var(--bg3);}
+.hero-stat-num{
+  font-size:1.8em;font-weight:700;font-family:var(--mono);letter-spacing:-0.03em;line-height:1;color:var(--text);
+  transition:color 0.22s;
+}
+.hero-stat-cell:hover .hero-stat-num{color:var(--accent);}
+.hero-stat-lbl{font-size:0.52em;color:var(--muted2);text-transform:uppercase;letter-spacing:0.14em;font-family:var(--mono);transition:color 0.22s;}
+.hero-stat-cell:hover .hero-stat-lbl{color:var(--muted);}
 
-/* ── QUICK ACCESS GRID — alt access to overlays from hero ── */
-#hero-quick{max-width:660px;width:100%;margin:0 auto;animation:fadeUp 0.8s 0.3s var(--ease) both;}
-.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+/* ── QUICK GRID ── */
+#hero-quick{max-width:640px;width:100%;margin:0 auto;animation:fadeUp 0.7s 0.26s var(--ease) both;}
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
 @media(max-width:600px){.quick-grid{grid-template-columns:1fr;}}
 .quick-card{
-  background:var(--bg2);border:1px solid var(--border);border-radius:14px;
-  padding:16px 18px;cursor:pointer;text-align:left;
-  transition:background 0.2s,border-color 0.2s,transform 0.2s var(--spring);
-  display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;
+  background:var(--bg2);border:1px solid var(--border);border-radius:6px;
+  padding:14px 16px;cursor:pointer;text-align:left;
+  transition:background 0.22s,border-color 0.22s,transform 0.22s var(--spring),box-shadow 0.22s;
+  display:flex;align-items:center;gap:11px;position:relative;overflow:hidden;
 }
-.quick-card::after{content:'';position:absolute;top:0;left:0;width:2px;height:100%;background:var(--qc,#fff);opacity:0.4;transition:opacity 0.25s;}
-.quick-card:hover{background:var(--bg3);border-color:var(--border-h);transform:scale(1.02);}
-.quick-card:hover::after{opacity:1;}
-.quick-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,0.04);flex-shrink:0;}
-.quick-icon svg{width:16px;height:16px;fill:var(--qc,#fff);opacity:0.7;}
-.quick-text{flex:1;}
-.quick-title{font-size:0.86em;font-weight:500;color:var(--text);margin-bottom:2px;}
-.quick-sub{font-size:0.65em;color:var(--muted);font-family:var(--mono);letter-spacing:0.08em;text-transform:uppercase;}
-.quick-arr{font-size:0.85em;color:var(--muted2);transition:transform 0.22s var(--spring),color 0.22s;}
-.quick-card:hover .quick-arr{transform:translate(3px,-3px);color:var(--text);}
+.quick-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:var(--qc,#fff);opacity:0;transition:opacity 0.22s;
+}
+.quick-card:hover{
+  background:var(--bg3);border-color:var(--border-h);
+  transform:scale(1.03);
+  box-shadow:0 6px 24px rgba(0,0,0,0.3),0 0 0 1px rgba(255,255,255,0.06) inset;
+}
+.quick-card:hover::before{opacity:0.7;}
+.quick-icon{
+  width:30px;height:30px;border-radius:4px;display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,0.04);flex-shrink:0;border:1px solid var(--border);
+  transition:background 0.22s,border-color 0.22s,box-shadow 0.22s;
+}
+.quick-card:hover .quick-icon{
+  background:rgba(255,255,255,0.08);
+  border-color:var(--border-h);
+  box-shadow:0 0 12px rgba(255,255,255,0.08);
+}
+.quick-icon svg{width:14px;height:14px;fill:var(--qc,#fff);opacity:0.7;transition:opacity 0.22s,transform 0.28s var(--spring);}
+.quick-card:hover .quick-icon svg{opacity:1;transform:scale(1.18);}
+.quick-text{flex:1;min-width:0;}
+.quick-title{font-size:0.84em;font-weight:500;color:var(--text);margin-bottom:2px;}
+.quick-sub{font-size:0.6em;color:var(--muted2);font-family:var(--mono);letter-spacing:0.1em;text-transform:uppercase;}
+.quick-arr{font-size:0.75em;color:var(--muted2);transition:transform 0.22s var(--spring),color 0.22s;flex-shrink:0;}
+.quick-card:hover .quick-arr{transform:translate(2px,-2px);color:var(--qc,#fff);}
 
 /* ══════════════════════════════════════
-   UNIVERSAL OVERLAY SYSTEM
+   OVERLAY SYSTEM
 ══════════════════════════════════════ */
-.overlay-page{display:none;position:fixed;inset:0;background:var(--bg);z-index:300;overflow-y:auto;
-  opacity:0;transform:translateY(12px);transition:opacity 0.38s var(--out),transform 0.38s var(--out);}
+.overlay-page{
+  display:none;position:fixed;inset:0;background:var(--bg);z-index:300;overflow-y:auto;
+  opacity:0;transform:translateY(10px);transition:opacity 0.32s var(--out),transform 0.32s var(--out);
+}
 .overlay-page.active{display:block;}
 .overlay-page.visible{opacity:1;transform:translateY(0);}
 
 .overlay-page .op-header{
-  position:sticky;top:0;background:rgba(7,7,8,0.88);backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 28px;z-index:10;}
-.op-back{background:rgba(255,255,255,0.03);border:1px solid var(--border);color:var(--muted);
-  padding:8px 18px;border-radius:100px;cursor:pointer;font-size:0.82em;font-family:var(--font);
-  transition:all 0.22s var(--ease);display:inline-flex;align-items:center;gap:8px;}
-.op-back:hover{background:rgba(255,255,255,0.07);color:var(--text);border-color:var(--border-h);transform:translateX(-2px);}
-.op-back svg{width:11px;height:11px;fill:currentColor;}
-.op-title-wrap{display:flex;align-items:center;gap:10px;}
-.op-title{font-size:0.92em;font-weight:400;color:var(--muted);letter-spacing:0.04em;}
-.op-title-bar{width:3px;height:14px;background:var(--op-color,#fff);border-radius:2px;opacity:0.7;}
-.op-meta{font-family:var(--mono);font-size:0.7em;color:var(--muted2);letter-spacing:0.1em;text-transform:uppercase;}
+  position:sticky;top:0;background:rgba(5,5,7,0.88);backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;gap:20px;padding:0 28px;height:54px;z-index:10;
+}
+.overlay-page .op-header::after{
+  content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--op-color,var(--accent)),transparent);opacity:0.3;
+}
+.op-back{
+  background:transparent;border:1px solid var(--border);color:var(--muted);
+  padding:6px 14px;height:32px;border-radius:4px;cursor:pointer;font-size:0.78em;font-family:var(--font);
+  transition:all 0.2s var(--spring);display:inline-flex;align-items:center;gap:7px;letter-spacing:0.04em;
+}
+.op-back:hover{background:rgba(255,255,255,0.06);color:var(--text);border-color:var(--border-h);transform:scale(1.04);}
+.op-back svg{width:10px;height:10px;fill:currentColor;transition:transform 0.2s var(--spring);}
+.op-back:hover svg{transform:scale(1.2);}
+.op-title-wrap{display:flex;align-items:center;gap:9px;}
+.op-title{font-size:0.88em;font-weight:400;color:var(--muted);letter-spacing:0.04em;}
+.op-title-bar{width:2px;height:12px;background:var(--op-color,var(--accent));border-radius:1px;}
+.op-meta{font-family:var(--mono);font-size:0.66em;color:var(--muted2);letter-spacing:0.12em;text-transform:uppercase;}
 
-.op-body{max-width:1000px;margin:0 auto;padding:54px 24px 100px;animation:fadeUp 0.55s 0.05s var(--out) both;position:relative;z-index:1;}
-.op-hero-title{font-size:clamp(2em,5vw,3.4em);font-weight:300;letter-spacing:-0.01em;margin-bottom:8px;}
-.op-hero-sub{font-size:0.72em;color:var(--muted);letter-spacing:0.2em;text-transform:uppercase;
-  margin-bottom:42px;font-family:var(--mono);}
-.op-section-title{font-size:0.66em;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);
-  margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:12px;font-family:var(--mono);
-  display:flex;align-items:center;justify-content:space-between;}
-.op-section-title .op-section-count{color:var(--muted2);font-weight:400;}
+.op-body{max-width:980px;margin:0 auto;padding:48px 24px 100px;animation:fadeUp 0.45s 0.04s var(--out) both;position:relative;z-index:1;}
+.op-hero-title{font-size:clamp(2em,5vw,3.2em);font-weight:300;letter-spacing:-0.02em;margin-bottom:7px;line-height:1.1;}
+.op-hero-sub{font-size:0.64em;color:var(--muted);letter-spacing:0.22em;text-transform:uppercase;margin-bottom:40px;font-family:var(--mono);}
+.op-section-title{
+  font-size:0.62em;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);
+  margin-bottom:12px;padding-bottom:10px;font-family:var(--mono);
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+}
+.op-section-title .op-section-count{color:var(--muted2);}
 
 /* ══════════════════════════════════════
-   VEHICLES OVERLAY
+   VEHICLES
 ══════════════════════════════════════ */
-.vehicle-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;align-items:stretch;}
+.vehicle-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;align-items:stretch;}
 @media(max-width:900px){.vehicle-cards{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:580px){.vehicle-cards{grid-template-columns:1fr;}}
 
 .vehicle-card{
-  background:var(--bg2);border-radius:14px;cursor:pointer;
-  border:1px solid rgba(255,255,255,0.07);
+  background:var(--bg2);border-radius:6px;cursor:pointer;
+  border:1px solid var(--border);
   display:flex;flex-direction:column;
-  transition:border-color 0.25s var(--ease),background 0.25s var(--ease);
+  transition:border-color 0.25s,background 0.25s,transform 0.25s var(--spring),box-shadow 0.25s;
   position:relative;overflow:hidden;
-  opacity:0;animation:vcardIn 0.45s var(--out) forwards;
+  opacity:0;animation:vcardIn 0.4s var(--out) forwards;
 }
-@keyframes vcardIn{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+@keyframes vcardIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 .vehicle-card:hover{
-  border-color:rgba(255,255,255,0.15);
-  background:var(--bg3);
+  border-color:rgba(255,255,255,0.16);background:var(--bg3);
+  transform:scale(1.025);
+  box-shadow:0 12px 40px rgba(0,0,0,0.4),0 0 0 1px rgba(255,255,255,0.06) inset;
 }
 
-/* Left color stripe */
-.vc-stripe{position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--vc,#888);opacity:0.55;transition:opacity 0.25s;}
-.vehicle-card:hover .vc-stripe{opacity:0.9;}
+.vc-stripe{position:absolute;top:0;left:0;right:0;height:2px;background:var(--vc,#888);opacity:0.5;transition:opacity 0.25s,height 0.25s;}
+.vehicle-card:hover .vc-stripe{opacity:1;height:3px;box-shadow:0 0 18px var(--vc,#888);}
 
-/* Top section */
-.vc-top{padding:24px 22px 18px 26px;}
-.vc-class-tag{
-  font-family:var(--mono);font-size:0.55em;letter-spacing:0.2em;text-transform:uppercase;
-  color:var(--vc,#888);opacity:0.65;margin-bottom:10px;display:block;
-}
-.vc-name{font-size:1.5em;font-weight:300;letter-spacing:-0.02em;line-height:1.1;color:var(--text);}
+.vc-top{padding:22px 20px 16px;}
+.vc-class-tag{font-family:var(--mono);font-size:0.52em;letter-spacing:0.22em;text-transform:uppercase;color:var(--vc,#888);opacity:0.75;margin-bottom:9px;display:block;transition:opacity 0.22s;}
+.vehicle-card:hover .vc-class-tag{opacity:1;}
+.vc-name{font-size:1.55em;font-weight:300;letter-spacing:-0.02em;line-height:1.1;color:var(--text);transition:color 0.22s;}
+.vehicle-card:hover .vc-name{color:#fff;}
 
-/* Specs: horizontal 3-col grid */
-.vc-specs{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid rgba(255,255,255,0.055);}
-.vc-sc{padding:13px 16px 13px 26px;display:flex;flex-direction:column;gap:4px;
-  border-right:1px solid rgba(255,255,255,0.05);}
-.vc-sc:first-child{padding-left:26px;}
+.vc-specs{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--border);}
+.vc-sc{padding:12px 14px 12px 20px;display:flex;flex-direction:column;gap:4px;border-right:1px solid var(--border);}
 .vc-sc:last-child{border-right:none;}
-.vc-sl{font-size:0.5em;color:var(--muted2);text-transform:uppercase;letter-spacing:0.14em;font-family:var(--mono);}
-.vc-sv{font-size:0.95em;font-weight:300;font-family:var(--mono);color:var(--text);}
+.vc-sl{font-size:0.48em;color:var(--muted2);text-transform:uppercase;letter-spacing:0.16em;font-family:var(--mono);}
+.vc-sv{font-size:0.9em;font-weight:400;font-family:var(--mono);color:var(--text);}
 
-/* Footer */
-.vc-foot{display:flex;align-items:center;justify-content:space-between;
-  padding:11px 22px 11px 26px;border-top:1px solid rgba(255,255,255,0.05);
-  flex-shrink:0;margin-top:auto;}
-.vc-foot-txt{font-size:0.62em;color:var(--muted2);letter-spacing:0.14em;text-transform:uppercase;
-  font-family:var(--mono);transition:color 0.22s;}
-.vehicle-card:hover .vc-foot-txt{color:rgba(255,255,255,0.45);}
-.vc-foot-arr{font-size:0.8em;color:var(--muted2);transition:transform 0.25s var(--spring),color 0.22s;opacity:0.4;}
-.vehicle-card:hover .vc-foot-arr{color:var(--vc,#fff);transform:translate(4px,-4px);opacity:1;}
+.vc-foot{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 20px 10px 20px;border-top:1px solid var(--border);
+  flex-shrink:0;margin-top:auto;
+}
+.vc-foot-txt{font-size:0.6em;color:var(--muted2);letter-spacing:0.16em;text-transform:uppercase;font-family:var(--mono);transition:color 0.2s;}
+.vehicle-card:hover .vc-foot-txt{color:var(--vc,#fff);opacity:0.8;}
+.vc-foot-arr{font-size:0.78em;color:var(--muted2);transition:transform 0.22s var(--spring),color 0.2s;opacity:0.35;}
+.vehicle-card:hover .vc-foot-arr{color:var(--vc,#fff);transform:translate(3px,-3px);opacity:1;}
 
-/* Vehicle DETAIL view (same overlay container, second screen) */
-.vp-img-wrap{width:100%;aspect-ratio:16/7;background:var(--bg2);border:1px solid var(--border);border-radius:18px;margin-bottom:42px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+/* Vehicle detail */
+.vp-img-wrap{width:100%;aspect-ratio:16/7;background:var(--bg2);border:1px solid var(--border);border-radius:6px;margin-bottom:40px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
 .vp-img-wrap img{width:100%;height:100%;object-fit:cover;}
-.vp-img-ph{font-size:0.7em;color:var(--muted2);letter-spacing:0.15em;text-transform:uppercase;font-family:var(--mono);}
-.vp-specs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1px;background:rgba(255,255,255,0.07);border-radius:16px;overflow:hidden;margin-bottom:36px;}
-.vp-spec{background:var(--bg3);padding:18px 20px;transition:background 0.2s;}
-.vp-spec:hover{background:#1a1a22;}
-.vp-spec-lbl{font-size:0.6em;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:6px;}
-.vp-spec-val{font-size:1.22em;font-weight:300;font-family:var(--mono);color:var(--text);line-height:1.1;}
-.vp-stages{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:36px;}
+.vp-img-ph{font-size:0.64em;color:var(--muted2);letter-spacing:0.18em;text-transform:uppercase;font-family:var(--mono);}
+.vp-specs-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:rgba(255,255,255,0.06);border-radius:6px;overflow:hidden;margin-bottom:32px;outline:1px solid rgba(255,255,255,0.06);}
+@media(max-width:700px){.vp-specs-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:480px){.vp-specs-grid{grid-template-columns:repeat(2,1fr);}}
+.vp-spec{background:var(--bg3);padding:16px 18px;transition:background 0.22s;}
+.vp-spec:hover{background:var(--bg4);}
+.vp-spec-lbl{font-size:0.56em;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;font-family:var(--mono);margin-bottom:5px;}
+.vp-spec-val{font-size:1.18em;font-weight:400;font-family:var(--mono);color:var(--text);line-height:1.1;}
+.vp-stages{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:32px;}
 @media(max-width:600px){.vp-stages{grid-template-columns:1fr;}}
-.vp-stage{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:0;overflow:hidden;}
-.vp-stage-title{font-size:0.64em;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);
-  padding:14px 18px 12px;font-family:var(--mono);border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.02);}
-.vp-stage-rows{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.06);}
-.vp-stage-cell{background:var(--bg3);padding:13px 16px;transition:background 0.2s;}
-.vp-stage-cell:hover{background:#1a1a22;}
-.vp-stage-key{font-size:0.58em;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:4px;}
-.vp-stage-val{font-size:0.92em;font-weight:300;font-family:var(--mono);color:var(--text);}
-.vp-desc{color:#888;font-size:1em;line-height:1.85;max-width:720px;font-weight:300;}
-
-/* Internal-overlay nav: a "second layer" within an overlay (vehicle detail / news detail) */
-.sub-page{display:none;animation:fadeUp 0.4s var(--out) both;}
+.vp-stage{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:0;overflow:hidden;}
+.vp-stage-title{font-size:0.6em;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);padding:12px 16px;font-family:var(--mono);border-bottom:1px solid var(--border);background:var(--bg3);}
+.vp-stage-rows{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);}
+.vp-stage-cell{background:var(--bg2);padding:11px 14px;transition:background 0.2s;}
+.vp-stage-cell:hover{background:var(--bg3);}
+.vp-stage-key{font-size:0.54em;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:3px;}
+.vp-stage-val{font-size:0.88em;font-weight:400;font-family:var(--mono);color:var(--text);}
+.vp-desc{color:var(--muted);font-size:0.96em;line-height:1.9;max-width:700px;font-weight:400;}
+.sub-page{display:none;animation:fadeUp 0.35s var(--out) both;}
 .sub-page.active{display:block;}
 
 /* ══════════════════════════════════════
-   NEWS OVERLAY
+   NEWS
 ══════════════════════════════════════ */
-.rocket-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;}
-.rocket{background:var(--bg2);border:1px solid rgba(255,255,255,0.07);border-radius:18px;padding:0;
-  transition:transform 0.28s var(--spring),box-shadow 0.28s var(--ease),border-color 0.25s;
+.rocket-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px;}
+.rocket{
+  background:var(--bg2);border:1px solid var(--border);border-radius:6px;
+  transition:border-color 0.25s,transform 0.25s var(--spring),box-shadow 0.25s,background 0.25s;
   position:relative;overflow:hidden;display:flex;flex-direction:column;cursor:pointer;
-  opacity:0;transform:translateY(16px);animation:newsIn 0.5s var(--ease) forwards;}
+  opacity:0;transform:translateY(14px);animation:newsIn 0.45s var(--ease) forwards;
+}
 @keyframes newsIn{to{opacity:1;transform:translateY(0);}}
-.rocket:hover{transform:translateY(-5px);box-shadow:0 16px 48px rgba(0,0,0,0.45);border-color:rgba(255,255,255,0.14);}
-.rocket-top-bar{height:2px;background:linear-gradient(90deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04));transition:background 0.3s;}
-.rocket:hover .rocket-top-bar{background:linear-gradient(90deg,rgba(255,255,255,0.32),rgba(255,255,255,0.08));}
-.rocket-body{padding:22px 22px 14px;flex:1;display:flex;flex-direction:column;}
-.rocket h3{margin-bottom:10px;font-size:0.97em;font-weight:500;letter-spacing:-0.005em;line-height:1.4;color:var(--text);}
-.rocket p.rocket-desc{font-size:0.875em;color:#888;line-height:1.7;flex:1;filter:brightness(1.15);}
-.rocket-footer{display:flex;align-items:center;justify-content:space-between;padding:12px 22px;
-  border-top:1px solid rgba(255,255,255,0.05);margin-top:14px;}
-.rocket-date{font-size:0.74em;color:#777;font-family:var(--mono);letter-spacing:0.04em;}
-.rocket-details-btn{font-size:0.7em;color:var(--muted2);font-family:var(--mono);letter-spacing:0.1em;
-  text-transform:uppercase;background:none;border:none;padding:0;display:flex;align-items:center;gap:5px;
-  transition:color 0.2s;cursor:pointer;}
-.rocket-details-btn .rd-arrow{transition:transform 0.22s var(--spring);display:inline-block;}
-.rocket:hover .rocket-details-btn{color:#aaa;}
-.rocket:hover .rocket-details-btn .rd-arrow{transform:translate(2px,-2px);}
-#load-more-btn{display:block;margin:24px auto 0;padding:10px 32px;background:transparent;border:1px solid var(--border);
-  color:var(--muted);border-radius:100px;font-size:0.85em;font-family:var(--font);cursor:pointer;
-  transition:all 0.2s var(--ease);}
-#load-more-btn:hover{background:var(--bg2);color:var(--text);border-color:var(--border-h);}
+.rocket:hover{
+  transform:scale(1.022);border-color:var(--border-h);background:var(--bg3);
+  box-shadow:0 10px 36px rgba(0,0,0,0.4);
+}
+.rocket-top-bar{height:1px;background:linear-gradient(90deg,var(--accent),transparent);opacity:0.35;transition:opacity 0.25s,height 0.25s;}
+.rocket:hover .rocket-top-bar{opacity:1;height:2px;}
+.rocket-body{padding:20px 20px 12px;flex:1;display:flex;flex-direction:column;}
+.rocket h3{margin-bottom:9px;font-size:0.95em;font-weight:500;line-height:1.45;color:var(--text);}
+.rocket p.rocket-desc{font-size:0.84em;color:var(--muted);line-height:1.75;flex:1;}
+.rocket-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:11px 20px;border-top:1px solid var(--border);margin-top:12px;
+}
+.rocket-date{font-size:0.7em;color:var(--muted2);font-family:var(--mono);letter-spacing:0.04em;}
+.rocket-details-btn{
+  font-size:0.65em;color:var(--muted2);font-family:var(--mono);letter-spacing:0.12em;
+  text-transform:uppercase;background:none;border:none;padding:0;
+  display:flex;align-items:center;gap:4px;transition:color 0.18s;cursor:pointer;
+}
+.rd-arrow{transition:transform 0.2s var(--spring);display:inline-block;}
+.rocket:hover .rocket-details-btn{color:var(--muted);}
+.rocket:hover .rd-arrow{transform:translate(2px,-2px);}
+#load-more-btn{
+  display:block;margin:20px auto 0;padding:9px 28px;background:transparent;
+  border:1px solid var(--border);color:var(--muted);border-radius:4px;
+  font-size:0.82em;font-family:var(--font);cursor:pointer;letter-spacing:0.04em;
+  transition:all 0.2s var(--spring);
+}
+#load-more-btn:hover{background:var(--bg2);color:var(--text);border-color:var(--border-h);transform:scale(1.04);}
 
-/* News DETAIL */
-.np-date-tag{font-size:0.7em;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);font-family:var(--mono);margin-bottom:18px;}
-.np-divider{height:1px;background:var(--border);margin-bottom:36px;}
-.np-text{color:#bbb;font-size:1em;line-height:1.9;font-weight:300;max-width:720px;}
+.np-date-tag{font-size:0.65em;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);font-family:var(--mono);margin-bottom:16px;}
+.np-divider{height:1px;background:var(--border);margin-bottom:32px;}
+.np-text{color:var(--muted);font-size:0.96em;line-height:1.95;font-weight:400;max-width:700px;}
 
 /* ══════════════════════════════════════
-   SCHEDULE OVERLAY — accordion
+   SCHEDULE
 ══════════════════════════════════════ */
-#schedule-tabs{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap;}
+#schedule-tabs{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap;}
 .sch-tab{
-  font-family:var(--mono);font-size:0.7em;letter-spacing:0.12em;text-transform:uppercase;
-  padding:8px 16px;border-radius:100px;background:rgba(255,255,255,0.03);
-  border:1px solid rgba(255,255,255,0.08);color:var(--muted);cursor:pointer;
-  transition:all 0.22s var(--ease);display:inline-flex;align-items:center;gap:8px;}
-.sch-tab:hover{color:var(--text);background:rgba(255,255,255,0.07);border-color:var(--border-h);}
-.sch-tab.active{color:var(--text);background:rgba(255,255,255,0.08);border-color:var(--border-s);}
-.sch-tab-dot{width:6px;height:6px;border-radius:50%;background:var(--td);}
+  font-family:var(--mono);font-size:0.68em;letter-spacing:0.14em;text-transform:uppercase;
+  padding:7px 16px;border-radius:4px;background:transparent;
+  border:1px solid var(--border);color:var(--muted);cursor:pointer;
+  transition:color 0.2s,background 0.2s,border-color 0.2s,box-shadow 0.2s;
+  display:inline-flex;align-items:center;gap:7px;
+}
+.sch-tab:hover{color:var(--text);background:rgba(255,255,255,0.05);border-color:var(--border-h);box-shadow:0 0 0 1px var(--border-h);}
+.sch-tab.active{color:var(--text);background:rgba(255,255,255,0.07);border-color:var(--border-s);}
+.sch-tab-dot{width:5px;height:5px;border-radius:50%;background:var(--td);flex-shrink:0;transition:box-shadow 0.22s;}
+.sch-tab:hover .sch-tab-dot{box-shadow:0 0 8px var(--td);}
+.sch-tab.active .sch-tab-dot{box-shadow:0 0 10px var(--td);animation:tabDotPulse 2s ease-in-out infinite;}
+@keyframes tabDotPulse{0%,100%{opacity:0.6;}50%{opacity:1;}}
 .sch-tab-count{font-size:0.85em;color:var(--muted2);}
 .sch-tab.active .sch-tab-count{color:var(--muted);}
 
-#launch-list{display:flex;flex-direction:column;gap:8px;transition:opacity 0.18s var(--ease);}
+#launch-list{display:flex;flex-direction:column;gap:6px;transition:opacity 0.16s;}
 #launch-list.fading{opacity:0;}
-.launch-row{display:grid;grid-template-columns:2fr 1.6fr 1fr 1fr;align-items:center;
-  padding:15px 20px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:12px;
-  transition:background 0.2s,border-color 0.2s,transform 0.2s;cursor:pointer;
-  opacity:0;transform:translateY(8px);animation:rowIn 0.3s var(--out) forwards;}
+.launch-row{
+  display:grid;grid-template-columns:2fr 1.6fr 1fr 1fr;align-items:center;
+  padding:13px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;
+  transition:background 0.2s,border-color 0.2s,box-shadow 0.2s;cursor:pointer;
+  opacity:0;transform:translateY(6px);animation:rowIn 0.28s var(--out) forwards;
+}
 @keyframes rowIn{to{opacity:1;transform:translateY(0);}}
-.launch-row:hover{background:rgba(255,255,255,0.05);transform:translateX(3px);border-color:var(--border-h);}
-/* Load More row — same style as launch-row but centered button only */
+.launch-row:hover{background:var(--bg3);border-color:var(--border-h);box-shadow:0 4px 20px rgba(0,0,0,0.3),0 0 0 1px rgba(255,255,255,0.05) inset;}
 .launch-load-more{
-  padding:12px 20px;background:rgba(255,255,255,0.025);border:1px solid var(--border);border-radius:12px;
+  padding:11px 18px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;
   display:flex;align-items:center;justify-content:center;cursor:pointer;
-  transition:background 0.2s,border-color 0.2s;}
-.launch-load-more:hover{background:rgba(255,255,255,0.05);border-color:var(--border-h);}
-.launch-load-more span{font-family:var(--mono);font-size:0.75em;letter-spacing:0.14em;text-transform:uppercase;color:var(--muted);}
+  transition:background 0.18s,border-color 0.18s;
+}
+.launch-load-more:hover{background:var(--bg3);border-color:var(--border-h);}
+.launch-load-more span{font-family:var(--mono);font-size:0.72em;letter-spacing:0.16em;text-transform:uppercase;color:var(--muted);}
 .launch-load-more:hover span{color:var(--text);}
-.launch-row strong{font-size:0.96em;color:#fff;}
-.launch-row div{font-size:0.86em;}
-.status-badge{text-align:center;font-size:0.72em;font-weight:600;text-transform:uppercase;
-  padding:6px 14px;border-radius:100px;background:rgba(0,0,0,0.3);border:1px solid currentColor;
-  justify-self:end;min-width:108px;font-family:var(--mono);letter-spacing:0.06em;opacity:0.9;}
+.launch-row strong{font-size:0.93em;color:var(--text);}
+.launch-row div{font-size:0.85em;}
+.status-badge{
+  text-align:center;font-size:0.7em;font-weight:700;text-transform:uppercase;
+  padding:4px 12px;border-radius:3px;
+  background:rgba(0,0,0,0.4);border:1px solid currentColor;
+  justify-self:end;min-width:100px;font-family:var(--mono);letter-spacing:0.08em;opacity:0.85;
+}
 @media(max-width:768px){.launch-row{grid-template-columns:1.5fr 1fr;gap:8px;}.status-badge{grid-column:span 2;justify-self:start;}}
-.row-watch-link{display:none;font-size:0.7em;color:rgba(255,255,255,0.5);font-family:var(--mono);letter-spacing:0.08em;
-  cursor:pointer;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.22);transition:color 0.2s,border-color 0.2s;
-  white-space:nowrap;align-self:center;}
-.row-watch-link:hover{color:#fff;border-color:rgba(255,255,255,0.7);}
+.row-watch-link{
+  display:none;font-size:0.66em;color:var(--muted);font-family:var(--mono);letter-spacing:0.1em;
+  cursor:pointer;padding:2px 0;border-bottom:1px solid rgba(255,255,255,0.18);
+  transition:color 0.18s,border-color 0.18s;white-space:nowrap;align-self:center;
+}
+.row-watch-link:hover{color:var(--text);border-color:rgba(255,255,255,0.6);}
 .row-watch-link.visible{display:inline-block;}
-
-#sch-empty{display:none;text-align:center;padding:60px 20px;color:var(--muted2);font-family:var(--mono);font-size:0.78em;letter-spacing:0.12em;text-transform:uppercase;}
+#sch-empty{display:none;text-align:center;padding:56px 20px;color:var(--muted2);font-family:var(--mono);font-size:0.75em;letter-spacing:0.14em;text-transform:uppercase;}
 
 /* ══════════════════════════════════════
-   LAUNCH MODAL (preserved from original)
+   LAUNCH MODAL
 ══════════════════════════════════════ */
-#launch-modal-backdrop{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.72);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  opacity:0;transition:opacity 0.32s var(--ease);align-items:center;justify-content:center;}
+#launch-modal-backdrop{
+  display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  opacity:0;transition:opacity 0.4s var(--ease);align-items:center;justify-content:center;
+}
 #launch-modal-backdrop.active{display:flex;}#launch-modal-backdrop.visible{opacity:1;}
-#launch-modal{background:var(--bg2);border:1px solid rgba(255,255,255,0.14);border-radius:22px;
-  width:min(620px,92vw);padding:0;overflow:hidden;
-  transform:translateY(20px) scale(0.97);transition:transform 0.36s var(--spring),opacity 0.3s;
-  opacity:0;position:relative;}
+#launch-modal{
+  background:var(--bg2);border:1px solid var(--border-h);border-radius:8px;
+  width:min(600px,92vw);padding:0;overflow:hidden;
+  transform:translateY(28px) scale(0.96);
+  transition:transform 0.45s var(--spring),opacity 0.4s var(--ease);
+  opacity:0;position:relative;
+}
 #launch-modal-backdrop.visible #launch-modal{transform:translateY(0) scale(1);opacity:1;}
-.lm-color-bar{height:3px;opacity:0.75;}
-.lm-inner{padding:34px 36px 30px;}
-.lm-status-row{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
-.lm-dot{width:8px;height:8px;border-radius:50%;opacity:0.8;}
-.lm-status-text{font-size:0.7em;letter-spacing:0.18em;text-transform:uppercase;font-family:var(--mono);opacity:0.9;}
-.lm-name{font-size:1.55em;font-weight:400;letter-spacing:-0.01em;margin-bottom:6px;line-height:1.25;}
-.lm-type{font-size:0.7em;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;font-family:var(--mono);margin-bottom:26px;}
-.lm-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,0.07);border-radius:14px;overflow:hidden;margin-bottom:24px;}
-.lm-cell{background:var(--bg3);padding:16px 22px;}
-.lm-cell-lbl{font-size:0.62em;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;font-family:var(--mono);margin-bottom:6px;}
-.lm-cell-val{font-size:1.05em;font-family:var(--mono);color:var(--text);font-weight:300;}
-.lm-desc{font-size:0.9em;color:#777;line-height:1.8;}
-.lm-watch-row{margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,0.06);}
-.lm-watch-link{display:inline-flex;align-items:center;gap:8px;font-size:0.8em;font-family:var(--mono);
-  letter-spacing:0.1em;color:rgba(255,255,255,0.5);text-transform:uppercase;
-  border-bottom:1px solid rgba(255,255,255,0.22);cursor:pointer;text-decoration:none;
-  transition:color 0.2s,border-color 0.2s;padding-bottom:1px;}
-.lm-watch-link:hover{color:#fff;border-color:rgba(255,255,255,0.7);}
-.lm-close{position:absolute;top:18px;right:22px;background:none;border:1px solid rgba(255,255,255,0.1);
-  color:var(--muted2);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:0.8em;
-  display:flex;align-items:center;justify-content:center;transition:all 0.2s var(--ease);}
-.lm-close:hover{background:rgba(255,255,255,0.07);color:var(--text);border-color:rgba(255,255,255,0.25);transform:rotate(90deg);}
+.lm-color-bar{height:2px;opacity:0.85;}
+.lm-inner{padding:28px 30px 26px;}
+.lm-status-row{display:flex;align-items:center;gap:9px;margin-bottom:16px;}
+.lm-dot{width:7px;height:7px;border-radius:50%;opacity:0.9;}
+.lm-status-text{font-size:0.65em;letter-spacing:0.2em;text-transform:uppercase;font-family:var(--mono);}
+.lm-name{font-size:1.45em;font-weight:400;letter-spacing:-0.01em;margin-bottom:5px;line-height:1.25;}
+.lm-type{font-size:0.65em;color:var(--muted);letter-spacing:0.14em;text-transform:uppercase;font-family:var(--mono);margin-bottom:22px;}
+.lm-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border-radius:5px;overflow:hidden;border:1px solid var(--border);margin-bottom:20px;}
+.lm-cell{background:var(--bg3);padding:14px 18px;}
+.lm-cell-lbl{font-size:0.58em;color:var(--muted);text-transform:uppercase;letter-spacing:0.12em;font-family:var(--mono);margin-bottom:5px;}
+.lm-cell-val{font-size:1em;font-family:var(--mono);color:var(--text);font-weight:400;}
+.lm-desc{font-size:0.88em;color:var(--muted);line-height:1.8;}
+.lm-watch-row{margin-top:18px;padding-top:16px;border-top:1px solid var(--border);}
+.lm-watch-link{
+  display:inline-flex;align-items:center;gap:7px;font-size:0.76em;font-family:var(--mono);
+  letter-spacing:0.12em;color:var(--muted);text-transform:uppercase;
+  border-bottom:1px solid rgba(255,255,255,0.2);cursor:pointer;text-decoration:none;
+  transition:color 0.18s,border-color 0.18s;padding-bottom:1px;
+}
+.lm-watch-link:hover{color:var(--text);border-color:rgba(255,255,255,0.6);}
+.lm-close{
+  position:absolute;top:14px;right:16px;background:transparent;border:1px solid var(--border);
+  color:var(--muted2);width:28px;height:28px;border-radius:4px;cursor:pointer;font-size:0.75em;
+  display:flex;align-items:center;justify-content:center;transition:all 0.2s var(--spring);
+}
+.lm-close:hover{background:rgba(255,255,255,0.07);color:var(--text);border-color:var(--border-h);transform:scale(1.1) rotate(90deg);}
 
 /* ══════════════════════════════════════
-   TOAST NOTIFICATIONS
+   TOAST
 ══════════════════════════════════════ */
 #toast-container{
-  position:fixed;top:80px;right:24px;z-index:600;
-  display:flex;flex-direction:column;gap:10px;pointer-events:none;
-  max-width:340px;
+  position:fixed;top:68px;right:20px;z-index:600;
+  display:flex;flex-direction:column;gap:8px;pointer-events:none;max-width:320px;
 }
-@media(max-width:600px){#toast-container{top:72px;right:12px;left:12px;max-width:none;}}
+@media(max-width:600px){#toast-container{top:62px;right:10px;left:10px;max-width:none;}}
 .toast{
-  background:rgba(20,20,24,0.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  border:1px solid rgba(255,255,255,0.12);border-radius:14px;
-  padding:13px 16px 13px 14px;
-  display:flex;align-items:center;gap:11px;
-  font-size:0.84em;color:var(--text);
-  box-shadow:0 12px 36px rgba(0,0,0,0.5);
-  pointer-events:auto;cursor:pointer;
-  opacity:0;transform:translateX(40px);
-  transition:opacity 0.32s var(--out),transform 0.32s var(--out);
-  position:relative;overflow:hidden;
-  min-width:240px;
+  background:rgba(14,14,20,0.95);backdrop-filter:blur(16px);
+  border:1px solid var(--border-h);border-radius:6px;
+  padding:11px 14px;display:flex;align-items:center;gap:10px;
+  font-size:0.82em;color:var(--text);box-shadow:0 16px 40px rgba(0,0,0,0.6);
+  pointer-events:auto;cursor:pointer;opacity:0;transform:translateX(32px);
+  transition:opacity 0.28s var(--out),transform 0.28s var(--out);
+  position:relative;overflow:hidden;min-width:220px;
 }
 .toast.show{opacity:1;transform:translateX(0);}
-.toast.hide{opacity:0;transform:translateX(40px);}
-.toast::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--toast-c,var(--accent));}
-.toast-icon{width:22px;height:22px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,0.05);}
-.toast-icon svg{width:12px;height:12px;fill:var(--toast-c,var(--accent));}
+.toast.hide{opacity:0;transform:translateX(32px);}
+.toast::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--toast-c,var(--accent));}
+.toast-icon{width:20px;height:20px;border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.04);}
+.toast-icon svg{width:11px;height:11px;fill:var(--toast-c,var(--accent));}
 .toast-text{flex:1;font-weight:400;line-height:1.4;}
-.toast-text .toast-title{display:block;font-weight:500;font-size:0.95em;}
-.toast-text .toast-sub{display:block;color:var(--muted);font-size:0.84em;margin-top:1px;font-family:var(--mono);letter-spacing:0.04em;}
-.toast-progress{position:absolute;bottom:0;left:0;right:0;height:1.5px;background:var(--toast-c,var(--accent));
-  transform-origin:left;animation:toastProg var(--toast-dur,4s) linear forwards;opacity:0.6;}
+.toast-text .toast-title{display:block;font-weight:500;font-size:0.93em;}
+.toast-text .toast-sub{display:block;color:var(--muted);font-size:0.82em;margin-top:1px;font-family:var(--mono);letter-spacing:0.04em;}
+.toast-progress{position:absolute;bottom:0;left:0;right:0;height:1px;background:var(--toast-c,var(--accent));transform-origin:left;animation:toastProg var(--toast-dur,4s) linear forwards;opacity:0.5;}
 @keyframes toastProg{from{transform:scaleX(1);}to{transform:scaleX(0);}}
 
 /* ══════════════════════════════════════
-   GAME OVERLAY (preserved)
+   GAME
 ══════════════════════════════════════ */
-.gop-scores{display:flex;align-items:center;gap:20px;font-family:var(--mono);font-size:0.78em;color:var(--muted);}
-.gop-score-val{color:var(--text);font-size:1.1em;font-weight:300;}
-.gop-canvas-wrap{position:relative;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);background:var(--bg2);}
+.gop-scores{display:flex;align-items:center;gap:18px;font-family:var(--mono);font-size:0.76em;color:var(--muted);}
+.gop-score-val{color:var(--text);font-size:1.1em;font-weight:700;}
+.gop-canvas-wrap{position:relative;border-radius:6px;overflow:hidden;border:1px solid var(--border);background:var(--bg2);}
 #game-canvas{display:block;width:100%;height:420px;cursor:none;}
-.gop-game-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:16px;background:rgba(8,8,8,0.85);backdrop-filter:blur(6px);transition:opacity 0.3s;}
+.gop-game-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(5,5,7,0.88);backdrop-filter:blur(8px);transition:opacity 0.28s;}
 .gop-game-overlay.hidden{opacity:0;pointer-events:none;}
-.gop-over-title{font-size:1.55em;font-weight:300;letter-spacing:-0.01em;}
-.gop-over-sub{font-size:0.74em;font-family:var(--mono);color:var(--muted);letter-spacing:0.1em;text-transform:uppercase;}
-.gop-start-btn{padding:9px 30px;border:1px solid rgba(255,255,255,0.32);border-radius:100px;background:transparent;
-  color:#fff;font-family:var(--font);font-size:0.86em;cursor:pointer;transition:all 0.25s var(--ease);}
-.gop-start-btn:hover{background:rgba(255,255,255,0.09);border-color:rgba(255,255,255,0.7);transform:scale(1.04);}
-.gop-hint{font-size:0.62em;font-family:var(--mono);color:var(--muted2);letter-spacing:0.1em;text-transform:uppercase;}
-.gop-note{font-size:0.62em;font-family:var(--mono);color:var(--muted2);letter-spacing:0.07em;text-transform:uppercase;margin-bottom:18px;}
+.gop-over-title{font-size:1.5em;font-weight:300;letter-spacing:-0.01em;}
+.gop-over-sub{font-size:0.7em;font-family:var(--mono);color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;}
+.gop-start-btn{
+  padding:9px 28px;border:1px solid var(--border-s);border-radius:4px;
+  background:transparent;color:var(--text);font-family:var(--font);font-size:0.84em;
+  cursor:pointer;transition:all 0.22s var(--spring);letter-spacing:0.04em;
+}
+.gop-start-btn:hover{background:rgba(255,255,255,0.09);border-color:rgba(255,255,255,0.5);transform:scale(1.07);box-shadow:0 4px 18px rgba(255,255,255,0.07);}
+.gop-hint{font-size:0.6em;font-family:var(--mono);color:var(--muted2);letter-spacing:0.12em;text-transform:uppercase;}
+.gop-note{font-size:0.6em;font-family:var(--mono);color:var(--muted2);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:16px;}
 
 /* ══════════════════════════════════════
    FOOTER
 ══════════════════════════════════════ */
-footer{text-align:center;padding:24px;border-top:1px solid var(--border);
-  font-size:0.78em;color:var(--muted);font-family:var(--mono);position:relative;z-index:2;}
+footer{
+  text-align:center;padding:22px;border-top:1px solid var(--border);
+  font-size:0.72em;color:var(--muted2);font-family:var(--mono);position:relative;z-index:2;
+}
 
+/* ── RESPONSIVE ── */
 @media(max-width:768px){
   .header-nav{gap:0;}
-  .nav-btn{padding:7px 11px;font-size:0.78em;}
+  .nav-btn{padding:6px 9px;font-size:0.74em;}
   .nav-btn .nav-dot{display:none;}
   .header-clock-tz{display:none;}
   .rd-arrow,.vc-foot-arr,.quick-arr{display:none !important;}
-  .vehicle-cards{gap:12px;}
 }
 @media(max-width:560px){
-  .header-left{left:12px;gap:6px;}
+  .header-left{left:12px;gap:7px;}
   .header-right{right:12px;}
-  .header-clock{font-size:0.68em;}
-  .lang-btn{font-size:0.6em;padding:4px 6px;}
-  .social-btn{width:30px;height:30px;}
-  .social-btn svg{width:12px;height:12px;}
-  header{padding:10px 12px;}
+  .header-clock{font-size:0.65em;}
+  .lang-btn{font-size:0.58em;padding:3px 7px;}
+  .social-btn{width:28px;height:28px;}
+  .social-btn svg{width:11px;height:11px;}
+  header{padding:0 12px;}
 }
 </style>
 </head>
 <body>
 
 <div id="starfield"></div>
-
 <canvas id="flyby-canvas"></canvas>
 
 <!-- ═══════ HEADER ═══════ -->
@@ -545,35 +668,33 @@ footer{text-align:center;padding:24px;border-top:1px solid var(--border);
   </div>
 </section>
 
-<footer>2026-2331 InSpace. <span data-i="footerNote">This website is for informational purposes only and does not engage in any commercial activity.</span></footer>
+<footer>2026–2331 InSpace. <span data-i="footerNote">This website is for informational purposes only and does not engage in any commercial activity.</span></footer>
 
 <!-- ═══════ OVERLAYS ═══════ -->
 
-<!-- Vehicles overlay (list + detail) -->
-<div class="overlay-page" id="ov-vehicles">
+<!-- Vehicles -->
+<div class="overlay-page" id="ov-vehicles" style="--op-color:#4f8eff">
   <div id="vehicles-starfield"></div>
   <div class="op-header">
     <button class="op-back" onclick="closeOverlay('vehicles')">
-      <svg viewBox="0 0 12 12"><path d="M7.5 1L3 6l4.5 5"/></svg>
+      <svg viewBox="0 0 12 12"><path d="M7.5 1L3 6l4.5 5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
       <span data-i="back">Back</span>
     </button>
     <div class="op-title-wrap">
-      <span class="op-title-bar" style="--op-color:#7eb6ff"></span>
+      <span class="op-title-bar"></span>
       <span class="op-title" id="ov-vehicles-title" data-i="ourVehicles">Our Vehicles</span>
     </div>
     <span class="op-meta" id="ov-vehicles-meta"></span>
   </div>
   <div class="op-body">
-    <!-- Sub-page: list -->
     <div class="sub-page active" id="vp-list">
       <div class="op-hero-title" data-i="ourVehicles">Our Vehicles</div>
       <div class="op-hero-sub" data-i="ourVehiclesSub">Active fleet · Mission ready</div>
       <div class="vehicle-cards" id="vehicle-cards"></div>
     </div>
-    <!-- Sub-page: detail -->
     <div class="sub-page" id="vp-detail">
-      <button class="op-back" style="margin-bottom:32px" onclick="showVehicleList()">
-        <svg viewBox="0 0 12 12"><path d="M7.5 1L3 6l4.5 5"/></svg>
+      <button class="op-back" style="margin-bottom:28px" onclick="showVehicleList()">
+        <svg viewBox="0 0 12 12"><path d="M7.5 1L3 6l4.5 5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
         <span data-i="backToList">Back to list</span>
       </button>
       <div id="vp-detail-body"></div>
@@ -581,16 +702,16 @@ footer{text-align:center;padding:24px;border-top:1px solid var(--border);
   </div>
 </div>
 
-<!-- News overlay (list + detail) -->
-<div class="overlay-page" id="ov-news">
+<!-- News -->
+<div class="overlay-page" id="ov-news" style="--op-color:#3de89a">
   <div id="news-starfield"></div>
   <div class="op-header">
     <button class="op-back" onclick="closeOverlay('news')">
-      <svg viewBox="0 0 12 12"><path d="M7.5 1L3 6l4.5 5"/></svg>
+      <svg viewBox="0 0 12 12"><path d="M7.5 1L3 6l4.5 5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
       <span data-i="back">Back</span>
     </button>
     <div class="op-title-wrap">
-      <span class="op-title-bar" style="--op-color:#5dd6a0"></span>
+      <span class="op-title-bar" style="background:#3de89a"></span>
       <span class="op-title" id="ov-news-title" data-i="latestNews">Latest News</span>
     </div>
     <span class="op-meta" id="ov-news-meta"></span>
@@ -600,13 +721,13 @@ footer{text-align:center;padding:24px;border-top:1px solid var(--border);
       <div class="op-hero-title" data-i="latestNews">Latest News</div>
       <div class="op-hero-sub" data-i="latestNewsSub">Mission updates · Programme announcements</div>
       <div class="rocket-cards" id="rocket-cards"></div>
-      <div style="display:flex;gap:12px;justify-content:center;margin:32px auto 40px;">
+      <div style="display:flex;justify-content:center;margin:28px auto 40px;">
         <button id="load-more-btn" onclick="loadMore()" style="display:none;" data-i="loadMore">Load more</button>
       </div>
     </div>
     <div class="sub-page" id="np-detail">
-      <button class="op-back" style="margin-bottom:32px" onclick="showNewsList()">
-        <svg viewBox="0 0 12 12"><path d="M7.5 1L3 6l4.5 5"/></svg>
+      <button class="op-back" style="margin-bottom:28px" onclick="showNewsList()">
+        <svg viewBox="0 0 12 12"><path d="M7.5 1L3 6l4.5 5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
         <span data-i="backToList">Back to list</span>
       </button>
       <div id="np-detail-body"></div>
@@ -614,16 +735,16 @@ footer{text-align:center;padding:24px;border-top:1px solid var(--border);
   </div>
 </div>
 
-<!-- Schedule overlay -->
-<div class="overlay-page" id="ov-schedule">
+<!-- Schedule -->
+<div class="overlay-page" id="ov-schedule" style="--op-color:#ffac4f">
   <div id="schedule-starfield"></div>
   <div class="op-header">
     <button class="op-back" onclick="closeOverlay('schedule')">
-      <svg viewBox="0 0 12 12"><path d="M7.5 1L3 6l4.5 5"/></svg>
+      <svg viewBox="0 0 12 12"><path d="M7.5 1L3 6l4.5 5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
       <span data-i="back">Back</span>
     </button>
     <div class="op-title-wrap">
-      <span class="op-title-bar" style="--op-color:#ffb380"></span>
+      <span class="op-title-bar" style="background:#ffac4f"></span>
       <span class="op-title" data-i="launchSchedule">Launch Schedule</span>
     </div>
     <span class="op-meta" id="ov-schedule-meta"></span>
@@ -637,12 +758,12 @@ footer{text-align:center;padding:24px;border-top:1px solid var(--border);
   </div>
 </div>
 
-<!-- Game overlay -->
-<div class="overlay-page" id="ov-game">
+<!-- Game -->
+<div class="overlay-page" id="ov-game" style="--op-color:#c46fff">
   <div id="game-starfield"></div>
   <div class="op-header">
     <button class="op-back" onclick="closeOverlay('game')">
-      <svg viewBox="0 0 12 12"><path d="M7.5 1L3 6l4.5 5"/></svg>
+      <svg viewBox="0 0 12 12"><path d="M7.5 1L3 6l4.5 5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
       <span data-i="back">Back</span>
     </button>
     <div class="gop-scores">
@@ -685,12 +806,11 @@ footer{text-align:center;padding:24px;border-top:1px solid var(--border);
   </div>
 </div>
 
-<!-- Toast container -->
 <div id="toast-container"></div>
 
 <script>
 /* ══════════════════════════════════════
-   TRANSLATIONS
+   TRANSLATIONS — unchanged
 ══════════════════════════════════════ */
 const TRANSLATIONS = {
   en: {
@@ -780,7 +900,7 @@ const TRANSLATIONS = {
     statFlights:'Abgeschlossene Flüge', stat365:'Starts in den letzten 365 Tagen',
     statVehicles:'Aktive Fahrzeuge', statDays:'Tage seit dem ersten Start',
     daysSince:'Tag seit dem letzten Start', daysSincePl:'Tage seit dem letzten Start',
-    watchLive:'Live ansehen', footerNote:'Diese Website dient nur zu Informationszwecken und ist nicht kommerziell tätig.',
+    watchLive:'Live ansehen', footerNote:'Diese Website dient nur zu Informationszwecken.',
     watchLaunchLink:'Start ansehen',
     local:'lokal', miniGame:'Minispiel',
     specifications:'Spezifikationen', stages:'Stufen', overview:'Überblick',
@@ -815,7 +935,7 @@ const TRANSLATIONS = {
     statFlights:'Vols Complétés', stat365:'Lancements sur 365 Derniers Jours',
     statVehicles:'Véhicules Actifs', statDays:'Jours depuis le Premier Lancement',
     daysSince:'jour depuis le dernier lancement', daysSincePl:'jours depuis le dernier lancement',
-    watchLive:'Regarder en Direct', footerNote:'Ce site est à titre informatif uniquement et ne mène aucune activité commerciale.',
+    watchLive:'Regarder en Direct', footerNote:'Ce site est à titre informatif uniquement.',
     watchLaunchLink:'Voir le Lancement',
     local:'local', miniGame:'Mini-jeu',
     specifications:'Spécifications', stages:'Étages', overview:'Aperçu',
@@ -850,7 +970,7 @@ const TRANSLATIONS = {
     statFlights:'Выполненных полётов', stat365:'Запусков за последние 365 дней',
     statVehicles:'Активных аппаратов', statDays:'Дней с первого запуска',
     daysSince:'день с последнего запуска', daysSincePl:'дней с последнего запуска',
-    watchLive:'Смотреть прямой эфир', footerNote:'Этот сайт носит исключительно информационный характер и не ведёт коммерческой деятельности.',
+    watchLive:'Смотреть прямой эфир', footerNote:'Этот сайт носит исключительно информационный характер.',
     watchLaunchLink:'Смотреть запуск',
     local:'местное', miniGame:'Мини-игра',
     specifications:'Характеристики', stages:'Ступени', overview:'Обзор',
@@ -868,391 +988,98 @@ const TRANSLATIONS = {
     statusPlanned:'Запланирован', statusCompleted:'Завершён', statusCanceled:'Отменён',
     specHeight:'Высота',specMass:'Масса',specLaunches:'Запуски',vehicles:'аппаратов',newsEntries:'записей',launchesCount:'запусков',
   },
-  zh: {
-    heroTitle:'欢迎来到 InSpace', heroSub:'关注最新动态',
-    nextLaunch:'下次发射倒计时', missionInProgress:'任务进行中',
-    watchLaunch:'观看发射', ourVehicles:'我们的飞行器',
-    ourVehiclesSub:'现役舰队 · 任务就绪',
-    latestNews:'最新消息', latestNewsSub:'任务更新 · 计划公告',
-    launchSchedule:'发射时间表', launchScheduleSub:'计划中 · 已完成 · 已取消',
-    loadMore:'加载更多', details:'详情', back:'返回', backToList:'返回列表',
-    fullDetails:'完整详情', noSave:'分数和最佳成绩不会在会话间保存。',
-    flyTitle:'太空飞行', flySubtitle:'小游戏',
-    flyDesc:'躲避小行星 · 收集燃料电池 · 生存',
-    launch:'发射', steerHint:'鼠标/触摸操控',
-    scoreLabel:'得分', bestLabel:'最高',
-    missionFailed:'任务失败',
-    statFlights:'已完成飞行', stat365:'过去365天的发射次数',
-    statVehicles:'活跃飞行器', statDays:'自首次发射以来的天数',
-    daysSince:'天前最后一次发射', daysSincePl:'天前最后一次发射',
-    watchLive:'观看直播', footerNote:'本网站仅供参考，不从事任何商业活动。',
-    watchLaunchLink:'观看发射',
-    local:'本地', miniGame:'小游戏',
-    specifications:'规格', stages:'阶段', overview:'概述',
-    noImage:'暂无数据。图片即将上线',
-    systemOnline:'所有系统在线',
-    navHome:'首页', navVehicles:'飞行器', navNews:'新闻', navSchedule:'时间表', navGame:'小游戏',
-    quickVehiclesSub:'舰队概览', quickNewsSub:'计划更新', quickScheduleSub:'所有发射',
-    toastLangChanged:'语言已切换', toastLangChangedSub:'界面已更新',
-    toastSectionOpened:'已打开', toastWelcome:'欢迎回来',
-    toastWelcomeSub:'追踪下次任务',
-    noLaunches:'此类别暂无发射',
-    schedAll:'全部', schedPlanned:'计划中', schedCompleted:'已完成', schedCanceled:'已取消',
-    notifGameStart:'游戏已开始', notifGameStartSub:'保持专注，飞行员',
-    notifT10:'T-10 秒', notifT10Sub:'最终倒计时',
-    statusPlanned:'计划中', statusCompleted:'已完成', statusCanceled:'已取消',
-    specHeight:'高度',specMass:'质量',specLaunches:'发射次数',vehicles:'飞行器',newsEntries:'条目',launchesCount:'次发射',
-  },
-  pt: {
-    heroTitle:'Bem-vindo ao InSpace', heroSub:'Fique atento às atualizações',
-    nextLaunch:'Próximo lançamento em', missionInProgress:'Missão em andamento',
-    watchLaunch:'Assistir ao Lançamento', ourVehicles:'Nossos Veículos',
-    ourVehiclesSub:'Frota ativa · Pronta para missão',
-    latestNews:'Últimas Notícias', latestNewsSub:'Atualizações · Anúncios do programa',
-    launchSchedule:'Calendário de Lançamentos', launchScheduleSub:'Planejados · Concluídos · Cancelados',
-    loadMore:'Carregar mais', details:'Detalhes', back:'Voltar', backToList:'Voltar à lista',
-    fullDetails:'Detalhes Completos', noSave:'Pontuação e recorde não são salvos entre sessões.',
-    flyTitle:'Voar no Espaço', flySubtitle:'Minijogo',
-    flyDesc:'Desvie de asteroides · Colete células de combustível · Sobreviva',
-    launch:'Lançar', steerHint:'Mouse / Toque para dirigir',
-    scoreLabel:'Pontos', bestLabel:'Recorde',
-    missionFailed:'Missão Falhou',
-    statFlights:'Voos Concluídos', stat365:'Lançamentos nos Últimos 365 Dias',
-    statVehicles:'Veículos Ativos', statDays:'Dias desde o Primeiro Lançamento',
-    daysSince:'dia desde o último lançamento', daysSincePl:'dias desde o último lançamento',
-    watchLive:'Assistir ao Vivo', footerNote:'Este site é apenas para fins informativos e não exerce nenhuma atividade comercial.',
-    watchLaunchLink:'Assistir ao Lançamento',
-    local:'local', miniGame:'Minijogo',
-    specifications:'Especificações', stages:'Estágios', overview:'Visão Geral',
-    noImage:'Sem dados. Imagem em breve',
-    systemOnline:'Todos os sistemas online',
-    navHome:'Início', navVehicles:'Veículos', navNews:'Notícias', navSchedule:'Calendário', navGame:'Minijogo',
-    quickVehiclesSub:'Visão da frota', quickNewsSub:'Atualizações', quickScheduleSub:'Todos os lançamentos',
-    toastLangChanged:'Idioma alterado', toastLangChangedSub:'Interface atualizada',
-    toastSectionOpened:'Seção aberta', toastWelcome:'Bem-vindo a bordo',
-    toastWelcomeSub:'Rastreando próxima missão',
-    noLaunches:'Sem lançamentos nesta categoria',
-    schedAll:'Todos', schedPlanned:'Planejados', schedCompleted:'Concluídos', schedCanceled:'Cancelados',
-    notifGameStart:'Jogo iniciado', notifGameStartSub:'Atento, piloto',
-    notifT10:'T-10 segundos', notifT10Sub:'Contagem final',
-    statusPlanned:'Planejado', statusCompleted:'Concluído', statusCanceled:'Cancelado',
-    specHeight:'Altura',specMass:'Massa',specLaunches:'Lançamentos',vehicles:'veículos',newsEntries:'entradas',launchesCount:'lançamentos',
-  },
-  hi: {
-    heroTitle:'InSpace में आपका स्वागत है', heroSub:'अपडेट के लिए नज़र रखें',
-    nextLaunch:'अगला प्रक्षेपण', missionInProgress:'मिशन जारी है',
-    watchLaunch:'प्रक्षेपण देखें', ourVehicles:'हमारे वाहन',
-    ourVehiclesSub:'सक्रिय बेड़ा · मिशन के लिए तैयार',
-    latestNews:'ताज़ा समाचार', latestNewsSub:'मिशन अपडेट · कार्यक्रम घोषणाएं',
-    launchSchedule:'प्रक्षेपण कार्यक्रम', launchScheduleSub:'आगामी · पूर्ण · रद्द',
-    loadMore:'और लोड करें', details:'विवरण', back:'वापस', backToList:'सूची पर वापस',
-    fullDetails:'पूरी जानकारी', noSave:'स्कोर सत्रों के बीच सहेजा नहीं जाता।',
-    flyTitle:'अंतरिक्ष में उड़ें', flySubtitle:'मिनी गेम',
-    flyDesc:'क्षुद्रग्रहों से बचें · ईंधन कोशिकाएं एकत्र करें · जीवित रहें',
-    launch:'प्रक्षेपण', steerHint:'माउस / टच से नियंत्रण',
-    scoreLabel:'स्कोर', bestLabel:'सर्वश्रेष्ठ',
-    missionFailed:'मिशन विफल',
-    statFlights:'पूर्ण उड़ानें', stat365:'पिछले 365 दिनों में प्रक्षेपण',
-    statVehicles:'सक्रिय वाहन', statDays:'पहले प्रक्षेपण के बाद से दिन',
-    daysSince:'दिन पिछले प्रक्षेपण के बाद से', daysSincePl:'दिन पिछले प्रक्षेपण के बाद से',
-    watchLive:'सीधा देखें', footerNote:'यह वेबसाइट केवल सूचना के लिए है और कोई व्यावसायिक गतिविधि नहीं करती।',
-    watchLaunchLink:'प्रक्षेपण देखें',
-    local:'स्थानीय', miniGame:'मिनी गेम',
-    specifications:'विशिष्टताएं', stages:'चरण', overview:'अवलोकन',
-    noImage:'कोई डेटा नहीं। चित्र जल्द आएगा',
-    systemOnline:'सभी सिस्टम ऑनलाइन',
-    navHome:'होम', navVehicles:'वाहन', navNews:'समाचार', navSchedule:'कार्यक्रम', navGame:'मिनी गेम',
-    quickVehiclesSub:'बेड़ा अवलोकन', quickNewsSub:'कार्यक्रम अपडेट', quickScheduleSub:'सभी प्रक्षेपण',
-    toastLangChanged:'भाषा बदली', toastLangChangedSub:'इंटरफ़ेस अपडेट हुआ',
-    toastSectionOpened:'अनुभाग खुला', toastWelcome:'आपका स्वागत है',
-    toastWelcomeSub:'अगले मिशन को ट्रैक कर रहे हैं',
-    noLaunches:'इस श्रेणी में कोई प्रक्षेपण नहीं',
-    schedAll:'सभी', schedPlanned:'नियोजित', schedCompleted:'पूर्ण', schedCanceled:'रद्द',
-    notifGameStart:'गेम शुरू', notifGameStartSub:'सतर्क रहें, पायलट',
-    notifT10:'T-10 सेकंड', notifT10Sub:'अंतिम काउंटडाउन',
-    statusPlanned:'नियोजित', statusCompleted:'पूर्ण', statusCanceled:'रद्द',
-    specHeight:'ऊंचाई', specMass:'द्रव्यमान', specLaunches:'प्रक्षेपण',
-    vehicles:'वाहन', newsEntries:'प्रविष्टियां', launchesCount:'प्रक्षेपण',
-  },
-  pl: {
-    heroTitle:'Witamy w InSpace', heroSub:'Śledź aktualizacje',
-    nextLaunch:'Następny start za', missionInProgress:'Misja w toku',
-    watchLaunch:'Oglądaj start', ourVehicles:'Nasze pojazdy',
-    ourVehiclesSub:'Aktywna flota · Gotowi do misji',
-    latestNews:'Najnowsze wiadomości', latestNewsSub:'Aktualizacje misji · Ogłoszenia programu',
-    launchSchedule:'Harmonogram startów', launchScheduleSub:'Planowane · Ukończone · Anulowane',
-    loadMore:'Załaduj więcej', details:'Szczegóły', back:'Wstecz', backToList:'Powrót do listy',
-    fullDetails:'Pełne szczegóły', noSave:'Wynik i rekord nie są zapisywane między sesjami.',
-    flyTitle:'Leć w kosmos', flySubtitle:'Mini gra',
-    flyDesc:'Omijaj asteroidy · Zbieraj ogniwa paliwowe · Przeżyj',
-    launch:'Start', steerHint:'Mysz / Dotyk do sterowania',
-    scoreLabel:'Wynik', bestLabel:'Rekord',
-    missionFailed:'Misja nieudana',
-    statFlights:'Ukończone loty', stat365:'Starty w ostatnich 365 dniach',
-    statVehicles:'Aktywne pojazdy', statDays:'Dni od pierwszego startu',
-    daysSince:'dzień od ostatniego startu', daysSincePl:'dni od ostatniego startu',
-    watchLive:'Oglądaj na żywo', footerNote:'Ta strona służy wyłącznie celom informacyjnym i nie prowadzi działalności komercyjnej.',
-    watchLaunchLink:'Oglądaj start',
-    local:'lokalny', miniGame:'Mini gra',
-    specifications:'Specyfikacje', stages:'Człony', overview:'Przegląd',
-    noImage:'Brak danych. Obraz wkrótce',
-    systemOnline:'Wszystkie systemy online',
-    navHome:'Strona główna', navVehicles:'Pojazdy', navNews:'Wiadomości', navSchedule:'Harmonogram', navGame:'Mini gra',
-    quickVehiclesSub:'Przegląd floty', quickNewsSub:'Aktualizacje programu', quickScheduleSub:'Wszystkie starty',
-    toastLangChanged:'Język zmieniony', toastLangChangedSub:'Interfejs zaktualizowany',
-    toastSectionOpened:'Sekcja otwarta', toastWelcome:'Witaj na pokładzie',
-    toastWelcomeSub:'Śledzenie następnej misji',
-    noLaunches:'Brak startów w tej kategorii',
-    schedAll:'Wszystkie', schedPlanned:'Planowane', schedCompleted:'Ukończone', schedCanceled:'Anulowane',
-    notifGameStart:'Gra rozpoczęta', notifGameStartSub:'Bądź czujny, piloci',
-    notifT10:'T-10 sekund', notifT10Sub:'Ostatnie odliczanie',
-    statusPlanned:'Planowany', statusCompleted:'Ukończony', statusCanceled:'Anulowany',
-    specHeight:'Wysokość', specMass:'Masa', specLaunches:'Starty',
-    vehicles:'pojazdy', newsEntries:'wpisy', launchesCount:'startów',
-  },
-  ja: {
-    heroTitle:'InSpaceへようこそ', heroSub:'最新情報をチェック',
-    nextLaunch:'次の打ち上げまで', missionInProgress:'ミッション進行中',
-    watchLaunch:'打ち上げを観る', ourVehicles:'ロケット一覧',
-    ourVehiclesSub:'現役艦隊 · ミッション準備完了',
-    latestNews:'最新ニュース', latestNewsSub:'ミッション更新 · プログラム発表',
-    launchSchedule:'打ち上げスケジュール', launchScheduleSub:'予定 · 完了 · キャンセル',
-    loadMore:'もっと読む', details:'詳細', back:'戻る', backToList:'一覧に戻る',
-    fullDetails:'詳細情報', noSave:'スコアはセッション間で保存されません。',
-    flyTitle:'宇宙を飛ぼう', flySubtitle:'ミニゲーム',
-    flyDesc:'小惑星を避けて · 燃料セルを集めて · 生き残れ',
-    launch:'発射', steerHint:'マウス・タッチで操作',
-    scoreLabel:'スコア', bestLabel:'ベスト',
-    missionFailed:'ミッション失敗',
-    statFlights:'完了フライト', stat365:'過去365日の打ち上げ',
-    statVehicles:'現役機体', statDays:'初打ち上げからの日数',
-    daysSince:'日前最終打ち上げ', daysSincePl:'日前最終打ち上げ',
-    watchLive:'ライブ観戦', footerNote:'このサイトは情報提供のみを目的としており、商業活動は行いません。',
-    watchLaunchLink:'打ち上げを観る',
-    local:'現地時間', miniGame:'ミニゲーム',
-    specifications:'仕様', stages:'ステージ', overview:'概要',
-    noImage:'データなし。画像は近日公開',
-    systemOnline:'全システム正常',
-    navHome:'ホーム', navVehicles:'ロケット', navNews:'ニュース', navSchedule:'スケジュール', navGame:'ミニゲーム',
-    quickVehiclesSub:'艦隊概要', quickNewsSub:'プログラム更新', quickScheduleSub:'全打ち上げ',
-    toastLangChanged:'言語変更', toastLangChangedSub:'インターフェース更新',
-    toastSectionOpened:'セクション開', toastWelcome:'ようこそ',
-    toastWelcomeSub:'次のミッションを追跡中',
-    noLaunches:'このカテゴリの打ち上げはありません',
-    schedAll:'全て', schedPlanned:'予定', schedCompleted:'完了', schedCanceled:'キャンセル',
-    notifGameStart:'ゲーム開始', notifGameStartSub:'集中して、パイロット',
-    notifT10:'T-10秒', notifT10Sub:'最終カウントダウン',
-    statusPlanned:'予定', statusCompleted:'完了', statusCanceled:'キャンセル',
-    specHeight:'高さ', specMass:'質量', specLaunches:'打ち上げ回数',
-    vehicles:'機体', newsEntries:'記事', launchesCount:'打ち上げ',
-  },
-  af: {
-    heroTitle:'Welkom by InSpace', heroSub:'Hou nuus dop',
-    nextLaunch:'Volgende lansering in', missionInProgress:'Missie aan die gang',
-    watchLaunch:'Kyk Lansering', ourVehicles:'Ons Voertuie',
-    ourVehiclesSub:'Aktiewe vloot · Gereed vir missie',
-    latestNews:'Nuutste Nuus', latestNewsSub:'Missie-opdaterings · Programaankondigings',
-    launchSchedule:'Lanseringskedule', launchScheduleSub:'Aanstaande · Voltooi · Gekanselleer',
-    loadMore:'Laai meer', details:'Besonderhede', back:'Terug', backToList:'Terug na lys',
-    fullDetails:'Volledige besonderhede', noSave:'Telling word nie gestoor nie.',
-    flyTitle:'Vlieg in die Ruimte', flySubtitle:'Minispeletjie',
-    flyDesc:'Vermy asteroïdes · Versamel brandstofelle · Oorleef',
-    launch:'Lanseer', steerHint:'Muis / Raak om te stuur',
-    scoreLabel:'Telling', bestLabel:'Beste',
-    missionFailed:'Missie Misluk',
-    statFlights:'Voltooide Vlugte', stat365:'Lanserings in laaste 365 dae',
-    statVehicles:'Aktiewe Voertuie', statDays:'Dae sedert eerste lansering',
-    daysSince:'dag sedert laaste lansering', daysSincePl:'dae sedert laaste lansering',
-    watchLive:'Kyk Regstreeks', footerNote:'Hierdie webwerf is slegs vir inligtingsdoeleindes.',
-    watchLaunchLink:'Kyk Lansering',
-    local:'plaaslik', miniGame:'Minispeletjie',
-    specifications:'Spesifikasies', stages:'Stadiums', overview:'Oorsig',
-    noImage:'Geen data nie. Prent kom binnekort',
-    systemOnline:'Alle stelsels aanlyn',
-    navHome:'Tuis', navVehicles:'Voertuie', navNews:'Nuus', navSchedule:'Skedule', navGame:'Speletjie',
-    quickVehiclesSub:'Vlootoorsig', quickNewsSub:'Programopdaterings', quickScheduleSub:'Alle lanserings',
-    toastLangChanged:'Taal verander', toastLangChangedSub:'Koppelvlak opgedateer',
-    toastSectionOpened:'Afdeling oop', toastWelcome:'Welkom aan boord',
-    toastWelcomeSub:'Volgende missie dophou',
-    noLaunches:'Geen lanserings in hierdie kategorie',
-    schedAll:'Almal', schedPlanned:'Beplan', schedCompleted:'Voltooi', schedCanceled:'Gekanselleer',
-    notifGameStart:'Spel begin', notifGameStartSub:'Wees skerp, vlieënier',
-    notifT10:'T-10 sekondes', notifT10Sub:'Finale aftel',
-    statusPlanned:'Beplan', statusCompleted:'Voltooi', statusCanceled:'Gekanselleer',
-    specHeight:'Hoogte', specMass:'Massa', specLaunches:'Lanserings',
-    vehicles:'voertuie', newsEntries:'inskrywings', launchesCount:'lanserings',
-  },
-  hu: {
-    heroTitle:'Üdvözöl az InSpace', heroSub:'Kövesd a frissítéseket',
-    nextLaunch:'Következő indítás', missionInProgress:'Misszió folyamatban',
-    watchLaunch:'Indítás megtekintése', ourVehicles:'Járműveink',
-    ourVehiclesSub:'Aktív flotta · Misszióra kész',
-    latestNews:'Legfrissebb hírek', latestNewsSub:'Misszió frissítések · Program bejelentések',
-    launchSchedule:'Indítási ütemterv', launchScheduleSub:'Tervezett · Befejezett · Lemondott',
-    loadMore:'Több betöltése', details:'Részletek', back:'Vissza', backToList:'Vissza a listához',
-    fullDetails:'Teljes részletek', noSave:'A pontszám nem kerül mentésre.',
-    flyTitle:'Repülj az Űrben', flySubtitle:'Mini játék',
-    flyDesc:'Kerüld az aszteroidákat · Gyűjts üzemanyagcellákat · Éld túl',
-    launch:'Indítás', steerHint:'Egér / Érintés a vezérléshez',
-    scoreLabel:'Pontszám', bestLabel:'Legjobb',
-    missionFailed:'Misszió sikertelen',
-    statFlights:'Befejezett repülések', stat365:'Indítások az utóbbi 365 napban',
-    statVehicles:'Aktív járművek', statDays:'Napok az első indítás óta',
-    daysSince:'nap az utolsó indítás óta', daysSincePl:'nap az utolsó indítás óta',
-    watchLive:'Élő közvetítés', footerNote:'Ez a weboldal kizárólag tájékoztatási célokat szolgál.',
-    watchLaunchLink:'Indítás megtekintése',
-    local:'helyi', miniGame:'Mini játék',
-    specifications:'Műszaki adatok', stages:'Fokozatok', overview:'Áttekintés',
-    noImage:'Nincs adat. Kép hamarosan',
-    systemOnline:'Minden rendszer online',
-    navHome:'Főoldal', navVehicles:'Járművek', navNews:'Hírek', navSchedule:'Ütemterv', navGame:'Mini játék',
-    quickVehiclesSub:'Flotta áttekintés', quickNewsSub:'Program frissítések', quickScheduleSub:'Összes indítás',
-    toastLangChanged:'Nyelv megváltozott', toastLangChangedSub:'Felület frissítve',
-    toastSectionOpened:'Szakasz megnyitva', toastWelcome:'Üdvözöljük a fedélzeten',
-    toastWelcomeSub:'Következő misszió követése',
-    noLaunches:'Nincs indítás ebben a kategóriában',
-    schedAll:'Összes', schedPlanned:'Tervezett', schedCompleted:'Befejezett', schedCanceled:'Lemondott',
-    notifGameStart:'Játék elindult', notifGameStartSub:'Légy éber, pilóta',
-    notifT10:'T-10 másodperc', notifT10Sub:'Végső visszaszámlálás',
-    statusPlanned:'Tervezett', statusCompleted:'Befejezett', statusCanceled:'Lemondott',
-    specHeight:'Magasság', specMass:'Tömeg', specLaunches:'Indítások',
-    vehicles:'jármű', newsEntries:'bejegyzés', launchesCount:'indítás',
-  },
+  zh:{heroTitle:'欢迎来到 InSpace',heroSub:'关注最新动态',nextLaunch:'下次发射倒计时',missionInProgress:'任务进行中',watchLaunch:'观看发射',ourVehicles:'我们的飞行器',ourVehiclesSub:'现役舰队 · 任务就绪',latestNews:'最新消息',latestNewsSub:'任务更新 · 计划公告',launchSchedule:'发射时间表',launchScheduleSub:'计划中 · 已完成 · 已取消',loadMore:'加载更多',details:'详情',back:'返回',backToList:'返回列表',fullDetails:'完整详情',noSave:'分数和最佳成绩不会在会话间保存。',flyTitle:'太空飞行',flySubtitle:'小游戏',flyDesc:'躲避小行星 · 收集燃料电池 · 生存',launch:'发射',steerHint:'鼠标/触摸操控',scoreLabel:'得分',bestLabel:'最高',missionFailed:'任务失败',statFlights:'已完成飞行',stat365:'过去365天的发射次数',statVehicles:'活跃飞行器',statDays:'自首次发射以来的天数',daysSince:'天前最后一次发射',daysSincePl:'天前最后一次发射',watchLive:'观看直播',footerNote:'本网站仅供参考，不从事任何商业活动。',watchLaunchLink:'观看发射',local:'本地',miniGame:'小游戏',specifications:'规格',stages:'阶段',overview:'概述',noImage:'暂无数据。图片即将上线',systemOnline:'所有系统在线',navHome:'首页',navVehicles:'飞行器',navNews:'新闻',navSchedule:'时间表',navGame:'小游戏',quickVehiclesSub:'舰队概览',quickNewsSub:'计划更新',quickScheduleSub:'所有发射',toastLangChanged:'语言已切换',toastLangChangedSub:'界面已更新',toastSectionOpened:'已打开',toastWelcome:'欢迎回来',toastWelcomeSub:'追踪下次任务',noLaunches:'此类别暂无发射',schedAll:'全部',schedPlanned:'计划中',schedCompleted:'已完成',schedCanceled:'已取消',notifGameStart:'游戏已开始',notifGameStartSub:'保持专注，飞行员',notifT10:'T-10 秒',notifT10Sub:'最终倒计时',statusPlanned:'计划中',statusCompleted:'已完成',statusCanceled:'已取消',specHeight:'高度',specMass:'质量',specLaunches:'发射次数',vehicles:'飞行器',newsEntries:'条目',launchesCount:'次发射'},
+  pt:{heroTitle:'Bem-vindo ao InSpace',heroSub:'Fique atento às atualizações',nextLaunch:'Próximo lançamento em',missionInProgress:'Missão em andamento',watchLaunch:'Assistir ao Lançamento',ourVehicles:'Nossos Veículos',ourVehiclesSub:'Frota ativa · Pronta para missão',latestNews:'Últimas Notícias',latestNewsSub:'Atualizações · Anúncios do programa',launchSchedule:'Calendário de Lançamentos',launchScheduleSub:'Planejados · Concluídos · Cancelados',loadMore:'Carregar mais',details:'Detalhes',back:'Voltar',backToList:'Voltar à lista',fullDetails:'Detalhes Completos',noSave:'Pontuação e recorde não são salvos entre sessões.',flyTitle:'Voar no Espaço',flySubtitle:'Minijogo',flyDesc:'Desvie de asteroides · Colete células de combustível · Sobreviva',launch:'Lançar',steerHint:'Mouse / Toque para dirigir',scoreLabel:'Pontos',bestLabel:'Recorde',missionFailed:'Missão Falhou',statFlights:'Voos Concluídos',stat365:'Lançamentos nos Últimos 365 Dias',statVehicles:'Veículos Ativos',statDays:'Dias desde o Primeiro Lançamento',daysSince:'dia desde o último lançamento',daysSincePl:'dias desde o último lançamento',watchLive:'Assistir ao Vivo',footerNote:'Este site é apenas para fins informativos.',watchLaunchLink:'Assistir ao Lançamento',local:'local',miniGame:'Minijogo',specifications:'Especificações',stages:'Estágios',overview:'Visão Geral',noImage:'Sem dados. Imagem em breve',systemOnline:'Todos os sistemas online',navHome:'Início',navVehicles:'Veículos',navNews:'Notícias',navSchedule:'Calendário',navGame:'Minijogo',quickVehiclesSub:'Visão da frota',quickNewsSub:'Atualizações',quickScheduleSub:'Todos os lançamentos',toastLangChanged:'Idioma alterado',toastLangChangedSub:'Interface atualizada',toastSectionOpened:'Seção aberta',toastWelcome:'Bem-vindo a bordo',toastWelcomeSub:'Rastreando próxima missão',noLaunches:'Sem lançamentos nesta categoria',schedAll:'Todos',schedPlanned:'Planejados',schedCompleted:'Concluídos',schedCanceled:'Cancelados',notifGameStart:'Jogo iniciado',notifGameStartSub:'Atento, piloto',notifT10:'T-10 segundos',notifT10Sub:'Contagem final',statusPlanned:'Planejado',statusCompleted:'Concluído',statusCanceled:'Cancelado',specHeight:'Altura',specMass:'Massa',specLaunches:'Lançamentos',vehicles:'veículos',newsEntries:'entradas',launchesCount:'lançamentos'},
+  hi:{heroTitle:'InSpace में आपका स्वागत है',heroSub:'अपडेट के लिए नज़र रखें',nextLaunch:'अगला प्रक्षेपण',missionInProgress:'मिशन जारी है',watchLaunch:'प्रक्षेपण देखें',ourVehicles:'हमारे वाहन',ourVehiclesSub:'सक्रिय बेड़ा · मिशन के लिए तैयार',latestNews:'ताज़ा समाचार',latestNewsSub:'मिशन अपडेट · कार्यक्रम घोषणाएं',launchSchedule:'प्रक्षेपण कार्यक्रम',launchScheduleSub:'आगामी · पूर्ण · रद्द',loadMore:'और लोड करें',details:'विवरण',back:'वापस',backToList:'सूची पर वापस',fullDetails:'पूरी जानकारी',noSave:'स्कोर सत्रों के बीच सहेजा नहीं जाता।',flyTitle:'अंतरिक्ष में उड़ें',flySubtitle:'मिनी गेम',flyDesc:'क्षुद्रग्रहों से बचें · ईंधन कोशिकाएं एकत्र करें · जीवित रहें',launch:'प्रक्षेपण',steerHint:'माउस / टच से नियंत्रण',scoreLabel:'स्कोर',bestLabel:'सर्वश्रेष्ठ',missionFailed:'मिशन विफल',statFlights:'पूर्ण उड़ानें',stat365:'पिछले 365 दिनों में प्रक्षेपण',statVehicles:'सक्रिय वाहन',statDays:'पहले प्रक्षेपण के बाद से दिन',daysSince:'दिन पिछले प्रक्षेपण के बाद से',daysSincePl:'दिन पिछले प्रक्षेपण के बाद से',watchLive:'सीधा देखें',footerNote:'यह वेबसाइट केवल सूचना के लिए है।',watchLaunchLink:'प्रक्षेपण देखें',local:'स्थानीय',miniGame:'मिनी गेम',specifications:'विशिष्टताएं',stages:'चरण',overview:'अवलोकन',noImage:'कोई डेटा नहीं। चित्र जल्द आएगा',systemOnline:'सभी सिस्टम ऑनलाइन',navHome:'होम',navVehicles:'वाहन',navNews:'समाचार',navSchedule:'कार्यक्रम',navGame:'मिनी गेम',quickVehiclesSub:'बेड़ा अवलोकन',quickNewsSub:'कार्यक्रम अपडेट',quickScheduleSub:'सभी प्रक्षेपण',toastLangChanged:'भाषा बदली',toastLangChangedSub:'इंटरफ़ेस अपडेट हुआ',toastSectionOpened:'अनुभाग खुला',toastWelcome:'आपका स्वागत है',toastWelcomeSub:'अगले मिशन को ट्रैक कर रहे हैं',noLaunches:'इस श्रेणी में कोई प्रक्षेपण नहीं',schedAll:'सभी',schedPlanned:'नियोजित',schedCompleted:'पूर्ण',schedCanceled:'रद्द',notifGameStart:'गेम शुरू',notifGameStartSub:'सतर्क रहें, पायलट',notifT10:'T-10 सेकंड',notifT10Sub:'अंतिम काउंटडाउन',statusPlanned:'नियोजित',statusCompleted:'पूर्ण',statusCanceled:'रद्द',specHeight:'ऊंचाई',specMass:'द्रव्यमान',specLaunches:'प्रक्षेपण',vehicles:'वाहन',newsEntries:'प्रविष्टियां',launchesCount:'प्रक्षेपण'},
+  pl:{heroTitle:'Witamy w InSpace',heroSub:'Śledź aktualizacje',nextLaunch:'Następny start za',missionInProgress:'Misja w toku',watchLaunch:'Oglądaj start',ourVehicles:'Nasze pojazdy',ourVehiclesSub:'Aktywna flota · Gotowi do misji',latestNews:'Najnowsze wiadomości',latestNewsSub:'Aktualizacje misji · Ogłoszenia programu',launchSchedule:'Harmonogram startów',launchScheduleSub:'Planowane · Ukończone · Anulowane',loadMore:'Załaduj więcej',details:'Szczegóły',back:'Wstecz',backToList:'Powrót do listy',fullDetails:'Pełne szczegóły',noSave:'Wynik i rekord nie są zapisywane między sesjami.',flyTitle:'Leć w kosmos',flySubtitle:'Mini gra',flyDesc:'Omijaj asteroidy · Zbieraj ogniwa paliwowe · Przeżyj',launch:'Start',steerHint:'Mysz / Dotyk do sterowania',scoreLabel:'Wynik',bestLabel:'Rekord',missionFailed:'Misja nieudana',statFlights:'Ukończone loty',stat365:'Starty w ostatnich 365 dniach',statVehicles:'Aktywne pojazdy',statDays:'Dni od pierwszego startu',daysSince:'dzień od ostatniego startu',daysSincePl:'dni od ostatniego startu',watchLive:'Oglądaj na żywo',footerNote:'Ta strona służy wyłącznie celom informacyjnym.',watchLaunchLink:'Oglądaj start',local:'lokalny',miniGame:'Mini gra',specifications:'Specyfikacje',stages:'Człony',overview:'Przegląd',noImage:'Brak danych. Obraz wkrótce',systemOnline:'Wszystkie systemy online',navHome:'Strona główna',navVehicles:'Pojazdy',navNews:'Wiadomości',navSchedule:'Harmonogram',navGame:'Mini gra',quickVehiclesSub:'Przegląd floty',quickNewsSub:'Aktualizacje programu',quickScheduleSub:'Wszystkie starty',toastLangChanged:'Język zmieniony',toastLangChangedSub:'Interfejs zaktualizowany',toastSectionOpened:'Sekcja otwarta',toastWelcome:'Witaj na pokładzie',toastWelcomeSub:'Śledzenie następnej misji',noLaunches:'Brak startów w tej kategorii',schedAll:'Wszystkie',schedPlanned:'Planowane',schedCompleted:'Ukończone',schedCanceled:'Anulowane',notifGameStart:'Gra rozpoczęta',notifGameStartSub:'Bądź czujny, piloci',notifT10:'T-10 sekund',notifT10Sub:'Ostatnie odliczanie',statusPlanned:'Planowany',statusCompleted:'Ukończony',statusCanceled:'Anulowany',specHeight:'Wysokość',specMass:'Masa',specLaunches:'Starty',vehicles:'pojazdy',newsEntries:'wpisy',launchesCount:'startów'},
+  ja:{heroTitle:'InSpaceへようこそ',heroSub:'最新情報をチェック',nextLaunch:'次の打ち上げまで',missionInProgress:'ミッション進行中',watchLaunch:'打ち上げを観る',ourVehicles:'ロケット一覧',ourVehiclesSub:'現役艦隊 · ミッション準備完了',latestNews:'最新ニュース',latestNewsSub:'ミッション更新 · プログラム発表',launchSchedule:'打ち上げスケジュール',launchScheduleSub:'予定 · 完了 · キャンセル',loadMore:'もっと読む',details:'詳細',back:'戻る',backToList:'一覧に戻る',fullDetails:'詳細情報',noSave:'スコアはセッション間で保存されません。',flyTitle:'宇宙を飛ぼう',flySubtitle:'ミニゲーム',flyDesc:'小惑星を避けて · 燃料セルを集めて · 生き残れ',launch:'発射',steerHint:'マウス・タッチで操作',scoreLabel:'スコア',bestLabel:'ベスト',missionFailed:'ミッション失敗',statFlights:'完了フライト',stat365:'過去365日の打ち上げ',statVehicles:'現役機体',statDays:'初打ち上げからの日数',daysSince:'日前最終打ち上げ',daysSincePl:'日前最終打ち上げ',watchLive:'ライブ観戦',footerNote:'このサイトは情報提供のみを目的としており、商業活動は行いません。',watchLaunchLink:'打ち上げを観る',local:'現地時間',miniGame:'ミニゲーム',specifications:'仕様',stages:'ステージ',overview:'概要',noImage:'データなし。画像は近日公開',systemOnline:'全システム正常',navHome:'ホーム',navVehicles:'ロケット',navNews:'ニュース',navSchedule:'スケジュール',navGame:'ミニゲーム',quickVehiclesSub:'艦隊概要',quickNewsSub:'プログラム更新',quickScheduleSub:'全打ち上げ',toastLangChanged:'言語変更',toastLangChangedSub:'インターフェース更新',toastSectionOpened:'セクション開',toastWelcome:'ようこそ',toastWelcomeSub:'次のミッションを追跡中',noLaunches:'このカテゴリの打ち上げはありません',schedAll:'全て',schedPlanned:'予定',schedCompleted:'完了',schedCanceled:'キャンセル',notifGameStart:'ゲーム開始',notifGameStartSub:'集中して、パイロット',notifT10:'T-10秒',notifT10Sub:'最終カウントダウン',statusPlanned:'予定',statusCompleted:'完了',statusCanceled:'キャンセル',specHeight:'高さ',specMass:'質量',specLaunches:'打ち上げ回数',vehicles:'機体',newsEntries:'記事',launchesCount:'打ち上げ'},
+  af:{heroTitle:'Welkom by InSpace',heroSub:'Hou nuus dop',nextLaunch:'Volgende lansering in',missionInProgress:'Missie aan die gang',watchLaunch:'Kyk Lansering',ourVehicles:'Ons Voertuie',ourVehiclesSub:'Aktiewe vloot · Gereed vir missie',latestNews:'Nuutste Nuus',latestNewsSub:'Missie-opdaterings · Programaankondigings',launchSchedule:'Lanseringskedule',launchScheduleSub:'Aanstaande · Voltooi · Gekanselleer',loadMore:'Laai meer',details:'Besonderhede',back:'Terug',backToList:'Terug na lys',fullDetails:'Volledige besonderhede',noSave:'Telling word nie gestoor nie.',flyTitle:'Vlieg in die Ruimte',flySubtitle:'Minispeletjie',flyDesc:'Vermy asteroïdes · Versamel brandstofelle · Oorleef',launch:'Lanseer',steerHint:'Muis / Raak om te stuur',scoreLabel:'Telling',bestLabel:'Beste',missionFailed:'Missie Misluk',statFlights:'Voltooide Vlugte',stat365:'Lanserings in laaste 365 dae',statVehicles:'Aktiewe Voertuie',statDays:'Dae sedert eerste lansering',daysSince:'dag sedert laaste lansering',daysSincePl:'dae sedert laaste lansering',watchLive:'Kyk Regstreeks',footerNote:'Hierdie webwerf is slegs vir inligtingsdoeleindes.',watchLaunchLink:'Kyk Lansering',local:'plaaslik',miniGame:'Minispeletjie',specifications:'Spesifikasies',stages:'Stadiums',overview:'Oorsig',noImage:'Geen data nie. Prent kom binnekort',systemOnline:'Alle stelsels aanlyn',navHome:'Tuis',navVehicles:'Voertuie',navNews:'Nuus',navSchedule:'Skedule',navGame:'Speletjie',quickVehiclesSub:'Vlootoorsig',quickNewsSub:'Programopdaterings',quickScheduleSub:'Alle lanserings',toastLangChanged:'Taal verander',toastLangChangedSub:'Koppelvlak opgedateer',toastSectionOpened:'Afdeling oop',toastWelcome:'Welkom aan boord',toastWelcomeSub:'Volgende missie dophou',noLaunches:'Geen lanserings in hierdie kategorie',schedAll:'Almal',schedPlanned:'Beplan',schedCompleted:'Voltooi',schedCanceled:'Gekanselleer',notifGameStart:'Spel begin',notifGameStartSub:'Wees skerp, vlieënier',notifT10:'T-10 sekondes',notifT10Sub:'Finale aftel',statusPlanned:'Beplan',statusCompleted:'Voltooi',statusCanceled:'Gekanselleer',specHeight:'Hoogte',specMass:'Massa',specLaunches:'Lanserings',vehicles:'voertuie',newsEntries:'inskrywings',launchesCount:'lanserings'},
+  hu:{heroTitle:'Üdvözöl az InSpace',heroSub:'Kövesd a frissítéseket',nextLaunch:'Következő indítás',missionInProgress:'Misszió folyamatban',watchLaunch:'Indítás megtekintése',ourVehicles:'Járműveink',ourVehiclesSub:'Aktív flotta · Misszióra kész',latestNews:'Legfrissebb hírek',latestNewsSub:'Misszió frissítések · Program bejelentések',launchSchedule:'Indítási ütemterv',launchScheduleSub:'Tervezett · Befejezett · Lemondott',loadMore:'Több betöltése',details:'Részletek',back:'Vissza',backToList:'Vissza a listához',fullDetails:'Teljes részletek',noSave:'A pontszám nem kerül mentésre.',flyTitle:'Repülj az Űrben',flySubtitle:'Mini játék',flyDesc:'Kerüld az aszteroidákat · Gyűjts üzemanyagcellákat · Éld túl',launch:'Indítás',steerHint:'Egér / Érintés a vezérléshez',scoreLabel:'Pontszám',bestLabel:'Legjobb',missionFailed:'Misszió sikertelen',statFlights:'Befejezett repülések',stat365:'Indítások az utóbbi 365 napban',statVehicles:'Aktív járművek',statDays:'Napok az első indítás óta',daysSince:'nap az utolsó indítás óta',daysSincePl:'nap az utolsó indítás óta',watchLive:'Élő közvetítés',footerNote:'Ez a weboldal kizárólag tájékoztatási célokat szolgál.',watchLaunchLink:'Indítás megtekintése',local:'helyi',miniGame:'Mini játék',specifications:'Műszaki adatok',stages:'Fokozatok',overview:'Áttekintés',noImage:'Nincs adat. Kép hamarosan',systemOnline:'Minden rendszer online',navHome:'Főoldal',navVehicles:'Járművek',navNews:'Hírek',navSchedule:'Ütemterv',navGame:'Mini játék',quickVehiclesSub:'Flotta áttekintés',quickNewsSub:'Program frissítések',quickScheduleSub:'Összes indítás',toastLangChanged:'Nyelv megváltozott',toastLangChangedSub:'Felület frissítve',toastSectionOpened:'Szakasz megnyitva',toastWelcome:'Üdvözöljük a fedélzeten',toastWelcomeSub:'Következő misszió követése',noLaunches:'Nincs indítás ebben a kategóriában',schedAll:'Összes',schedPlanned:'Tervezett',schedCompleted:'Befejezett',schedCanceled:'Lemondott',notifGameStart:'Játék elindult',notifGameStartSub:'Légy éber, pilóta',notifT10:'T-10 másodperc',notifT10Sub:'Végső visszaszámlálás',statusPlanned:'Tervezett',statusCompleted:'Befejezett',statusCanceled:'Lemondott',specHeight:'Magasság',specMass:'Tömeg',specLaunches:'Indítások',vehicles:'jármű',newsEntries:'bejegyzés',launchesCount:'indítás'},
 };
 
-const LANG_NAMES = {en:'EN',es:'ES',de:'DE',fr:'FR',ru:'RU',zh:'中文',pt:'PT',hi:'HI',pl:'PL',ja:'JA',af:'AF',hu:'HU'};
-const LANG_LABELS = {en:'English (US)',es:'Spanish',de:'German',fr:'French',ru:'Russian',zh:'Chinese',pt:'Brazilian',hi:'Hindi',pl:'Polish',ja:'Japanese',af:'Afrikaans (SA)',hu:'Hungarian'};
+const LANG_NAMES={en:'EN',es:'ES',de:'DE',fr:'FR',ru:'RU',zh:'中文',pt:'PT',hi:'HI',pl:'PL',ja:'JA',af:'AF',hu:'HU'};
+const LANG_LABELS={en:'English (US)',es:'Spanish',de:'German',fr:'French',ru:'Russian',zh:'Chinese',pt:'Brazilian',hi:'Hindi',pl:'Polish',ja:'Japanese',af:'Afrikaans (SA)',hu:'Hungarian'};
 
-let currentLang = localStorage.getItem('inspace_lang') || 'en';
-function t(key){ return (TRANSLATIONS[currentLang]||TRANSLATIONS.en)[key] || TRANSLATIONS.en[key] || key; }
-
+let currentLang=localStorage.getItem('inspace_lang')||'en';
+function t(key){return(TRANSLATIONS[currentLang]||TRANSLATIONS.en)[key]||TRANSLATIONS.en[key]||key;}
 function applyLang(){
   document.querySelectorAll('[data-i]').forEach(el=>{
-    const key=el.getAttribute('data-i');
-    const val=t(key);
-    if(el.children.length===0) el.textContent=val;
+    const key=el.getAttribute('data-i');const val=t(key);
+    if(el.children.length===0)el.textContent=val;
   });
-  const lb=document.getElementById('lang-btn-label');
-  if(lb) lb.textContent=LANG_NAMES[currentLang]||'EN';
-  const tzEl=document.querySelector('.header-clock-tz');
-  if(tzEl) tzEl.textContent=t('local');
+  const lb=document.getElementById('lang-btn-label');if(lb)lb.textContent=LANG_NAMES[currentLang]||'EN';
+  const tzEl=document.querySelector('.header-clock-tz');if(tzEl)tzEl.textContent=t('local');
 }
-
 function setLang(code){
-  currentLang=code;
-  localStorage.setItem('inspace_lang',code);
-  applyLang();
-  rebuildStats();
-  rebuildDaysSince();
-  rebuildNav();
-  rebuildHeroQuick();
-  rebuildScheduleTabs();
-  renderScheduleRows();
-  // Re-render vehicle cards only if overlay is open (so spec labels update)
-  if(document.getElementById('ov-vehicles').classList.contains('active')){
-    renderVehicleCards();
-  }
+  currentLang=code;localStorage.setItem('inspace_lang',code);applyLang();
+  rebuildStats();rebuildDaysSince();rebuildNav();rebuildHeroQuick();rebuildScheduleTabs();renderScheduleRows();
+  if(document.getElementById('ov-vehicles').classList.contains('active'))renderVehicleCards();
   playSound('lang');
 }
 
 /* ══════════════════════════════════════
-   SITE CONFIG
+   CONFIG
 ══════════════════════════════════════ */
 const showClock=true;
 const enableSounds=true;
-const sounds = {
-  nav:      { volume:0.13,freq:520,freq2:680,duration:0.07,type:'sine',envelope:'click' },
-  back:     { volume:0.11,freq:380,freq2:260,duration:0.07,type:'sine',envelope:'click' },
-  details:  { volume:0.13,freq:600,freq2:780,duration:0.09,type:'sine',envelope:'click' },
-  modal:    { volume:0.14,freq:480,freq2:380,duration:0.12,type:'triangle',envelope:'soft' },
-  news:     { volume:0.12,freq:560,freq2:720,duration:0.08,type:'sine',envelope:'click' },
-  final10:  { volume:0.22,freq:880,freq2:1100,duration:0.15,type:'sine',envelope:'ping' },
-  toast:    { volume:0.08,freq:660,freq2:880,duration:0.06,type:'sine',envelope:'click' },
-  tab:      { volume:0.10,freq:440,freq2:540,duration:0.06,type:'sine',envelope:'click' },
-  lang:     { volume:0.10,freq:580,freq2:740,duration:0.08,type:'sine',envelope:'soft' },
-  close:    { volume:0.10,freq:320,freq2:220,duration:0.08,type:'triangle',envelope:'soft' },
-  quick:    { volume:0.12,freq:500,freq2:660,duration:0.07,type:'sine',envelope:'click' },
+const sounds={
+  nav:     {volume:0.13,freq:520,freq2:680,duration:0.07,type:'sine',envelope:'click'},
+  back:    {volume:0.11,freq:380,freq2:260,duration:0.07,type:'sine',envelope:'click'},
+  details: {volume:0.13,freq:600,freq2:780,duration:0.09,type:'sine',envelope:'click'},
+  modal:   {volume:0.14,freq:480,freq2:380,duration:0.12,type:'triangle',envelope:'soft'},
+  news:    {volume:0.12,freq:560,freq2:720,duration:0.08,type:'sine',envelope:'click'},
+  final10: {volume:0.22,freq:880,freq2:1100,duration:0.15,type:'sine',envelope:'ping'},
+  toast:   {volume:0.08,freq:660,freq2:880,duration:0.06,type:'sine',envelope:'click'},
+  tab:     {volume:0.10,freq:440,freq2:540,duration:0.06,type:'sine',envelope:'click'},
+  lang:    {volume:0.10,freq:580,freq2:740,duration:0.08,type:'sine',envelope:'soft'},
+  close:   {volume:0.10,freq:320,freq2:220,duration:0.08,type:'triangle',envelope:'soft'},
+  quick:   {volume:0.12,freq:500,freq2:660,duration:0.07,type:'sine',envelope:'click'},
 };
-
-/* ── SOUND ENGINE — deduplication guard ── */
-let audioCtx=null;
-const _soundLast={};
-const _soundCooldown=80; // ms minimum between same sound
+let audioCtx=null;const _soundLast={};const _soundCooldown=80;
 function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
 function playSound(key){
-  if(!enableSounds)return;
-  const cfg=sounds[key];if(!cfg)return;
-  const now=performance.now();
-  if(_soundLast[key]&&now-_soundLast[key]<_soundCooldown)return;
+  if(!enableSounds)return;const cfg=sounds[key];if(!cfg)return;
+  const now=performance.now();if(_soundLast[key]&&now-_soundLast[key]<_soundCooldown)return;
   _soundLast[key]=now;
   try{
-    const ctx=getAudioCtx();
-    const o=ctx.createOscillator();const g=ctx.createGain();
-    o.type=cfg.type||'sine';
-    const t0=ctx.currentTime;
+    const ctx=getAudioCtx();const o=ctx.createOscillator();const g=ctx.createGain();
+    o.type=cfg.type||'sine';const t0=ctx.currentTime;
     o.frequency.setValueAtTime(cfg.freq,t0);
     if(cfg.envelope==='ping'){
-      o.frequency.setValueAtTime(cfg.freq,t0);
       o.frequency.exponentialRampToValueAtTime(cfg.freq2||cfg.freq,t0+cfg.duration*0.3);
-      g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(cfg.volume,t0+0.008);
-      g.gain.exponentialRampToValueAtTime(0.0001,t0+cfg.duration);
-    } else if(cfg.envelope==='soft'){
-      o.frequency.setValueAtTime(cfg.freq,t0);
+      g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(cfg.volume,t0+0.008);g.gain.exponentialRampToValueAtTime(0.0001,t0+cfg.duration);
+    }else if(cfg.envelope==='soft'){
       o.frequency.linearRampToValueAtTime(cfg.freq2||cfg.freq,t0+cfg.duration);
-      g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(cfg.volume,t0+0.015);
-      g.gain.exponentialRampToValueAtTime(0.0001,t0+cfg.duration+0.04);
-    } else {
-      o.frequency.setValueAtTime(cfg.freq,t0);
+      g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(cfg.volume,t0+0.015);g.gain.exponentialRampToValueAtTime(0.0001,t0+cfg.duration+0.04);
+    }else{
       o.frequency.exponentialRampToValueAtTime(cfg.freq2||cfg.freq*1.05,t0+cfg.duration*0.5);
-      g.gain.setValueAtTime(cfg.volume,t0);
-      g.gain.exponentialRampToValueAtTime(0.0001,t0+cfg.duration);
+      g.gain.setValueAtTime(cfg.volume,t0);g.gain.exponentialRampToValueAtTime(0.0001,t0+cfg.duration);
     }
-    o.connect(g);g.connect(ctx.destination);
-    o.start(t0);o.stop(t0+cfg.duration+0.06);
+    o.connect(g);g.connect(ctx.destination);o.start(t0);o.stop(t0+cfg.duration+0.06);
   }catch(e){}
 }
 
-const socialButtons = [
-  {
-    id:'twitter', visible:true, label:'X / Twitter',
-    url:'https://x.com/OXeallCorp',
-    svg:`<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.738l7.727-8.835L1.254 2.25H8.08l4.26 5.632 5.904-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`
-  },
-  {
-    id:'youtube', visible:true, label:'YouTube',
-    url:'https://www.youtube.com/@OXeall',
-    svg:`<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`
-  },
+const socialButtons=[
+  {id:'twitter',visible:true,label:'X / Twitter',url:'https://x.com/OXeallCorp',svg:`<svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.738l7.727-8.835L1.254 2.25H8.08l4.26 5.632 5.904-5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`},
+  {id:'youtube',visible:true,label:'YouTube',url:'https://www.youtube.com/@OXeall',svg:`<svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`},
 ];
 
-/* ══════════════════════════════════════
-   TOAST NOTIFICATION SYSTEM
-══════════════════════════════════════ */
-const TOAST_ICONS = {
+/* ── TOAST ── */
+const TOAST_ICONS={
   info:`<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zm2 12h-4v-1h1v-5h-1v-1h3v6h1v1z"/></svg>`,
   rocket:`<svg viewBox="0 0 24 24"><path d="M14.5 2c-2.5 0-5 1.5-7 4l-1.5 2H4l-2 4 3 1 1 1 1 3 4-2v-2l2-1.5c2.5-2 4-4.5 4-7V2h-2.5zM15 6.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3z"/></svg>`,
   lang:`<svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-2 17.5c-3-1-5-4-5-7.5h3c0 2.5 1 5 2 7.5zM5 10c0-3.5 2-6.5 5-7.5-1 2.5-2 5-2 7.5H5zm9 9.5c1-2.5 2-5 2-7.5h3c0 3.5-2 6.5-5 7.5zm2-9.5c0-2.5-1-5-2-7.5 3 1 5 4 5 7.5h-3z"/></svg>`,
   check:`<svg viewBox="0 0 24 24"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19l12-12-1.4-1.4z"/></svg>`,
   warn:`<svg viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 6l8 14H4L12 8zm-1 5h2v4h-2zm0 5h2v2h-2z"/></svg>`,
 };
-
 let toastCounter=0;
-function showToast({icon='info',color='#7eb6ff',title='',sub='',duration=3500}){
+function showToast({icon='info',color='#4f8eff',title='',sub='',duration=3500}){
   playSound('toast');
   const id='toast-'+(++toastCounter);
   const cont=document.getElementById('toast-container');
-  const el=document.createElement('div');
-  el.className='toast';el.id=id;
-  el.style.setProperty('--toast-c',color);
-  el.style.setProperty('--toast-dur',duration+'ms');
-  el.innerHTML=`
-    <div class="toast-icon">${TOAST_ICONS[icon]||TOAST_ICONS.info}</div>
-    <div class="toast-text">
-      <span class="toast-title">${title}</span>
-      ${sub?`<span class="toast-sub">${sub}</span>`:''}
-    </div>
-    <div class="toast-progress"></div>
-  `;
+  const el=document.createElement('div');el.className='toast';el.id=id;
+  el.style.setProperty('--toast-c',color);el.style.setProperty('--toast-dur',duration+'ms');
+  el.innerHTML=`<div class="toast-icon">${TOAST_ICONS[icon]||TOAST_ICONS.info}</div><div class="toast-text"><span class="toast-title">${title}</span>${sub?`<span class="toast-sub">${sub}</span>`:''}</div><div class="toast-progress"></div>`;
   el.addEventListener('click',()=>dismissToast(id));
   cont.appendChild(el);
   requestAnimationFrame(()=>{requestAnimationFrame(()=>el.classList.add('show'));});
@@ -1261,23 +1088,21 @@ function showToast({icon='info',color='#7eb6ff',title='',sub='',duration=3500}){
 function dismissToast(id){
   const el=document.getElementById(id);if(!el)return;
   el.classList.remove('show');el.classList.add('hide');
-  setTimeout(()=>{el.remove();},350);
+  setTimeout(()=>el.remove(),300);
 }
 
 /* ── STARFIELD ── */
 function createStars(container,count){
   for(let i=0;i<count;i++){
     const s=document.createElement('div');s.className='star';
-    const sz=Math.random()*1.8+0.3,layer=Math.floor(Math.random()*3);
-    s.dataset.layer=layer;
-    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--op:${Math.random()*0.45+0.1};--dur:${Math.random()*5+3}s;--delay:${Math.random()*6}s;`;
-    s.dataset.baseLeft=parseFloat(s.style.left);s.dataset.baseTop=parseFloat(s.style.top);
+    const sz=Math.random()*1.6+0.3;
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--op:${Math.random()*0.4+0.08};--dur:${Math.random()*5+3}s;--delay:${Math.random()*6}s;`;
     container.appendChild(s);
   }
 }
-createStars(document.getElementById('starfield'),120);
+createStars(document.getElementById('starfield'),100);
 const overlayStarsCreated={};
-function ensureOverlayStars(id,count=80){
+function ensureOverlayStars(id,count=70){
   if(overlayStarsCreated[id])return;
   const c=document.getElementById(id);if(!c)return;
   createStars(c,count);overlayStarsCreated[id]=true;
@@ -1291,8 +1116,8 @@ function ensureOverlayStars(id,count=80){
   function sch(){if(!rafId)rafId=requestAnimationFrame(upd);}
   function upd(){
     rafId=null;cMX+=(tMX-cMX)*0.06;cMY+=(tMY-cMY)*0.06;
-    document.getElementById('starfield').querySelectorAll('.star').forEach(s=>{
-      const layer=parseInt(s.dataset.layer)||0,f=factors[layer];
+    document.getElementById('starfield').querySelectorAll('.star').forEach((s,i)=>{
+      const layer=i%3,f=factors[layer];
       const dx=cMX*f*100,dy=cMY*f*100,sy=scrollY*[0.003,0.008,0.016][layer];
       s.style.transform=`translate(${dx}%,calc(${dy}% - ${sy}px))`;
     });
@@ -1302,7 +1127,7 @@ function ensureOverlayStars(id,count=80){
   window.addEventListener('scroll',sch,{passive:true});
 })();
 
-/* ── FLYBY (preserved) ── */
+/* ── FLYBY ── */
 (function(){
   const canvas=document.getElementById('flyby-canvas'),ctx=canvas.getContext('2d');
   let W,H;
@@ -1312,8 +1137,7 @@ function ensureOverlayStars(id,count=80){
   function sched(){setTimeout(spawn,(10+Math.random()*5)*1000);}
   function spawn(){
     const r=Math.random(),type=r<0.50?'meteor':r<0.85?'satellite':'starship';
-    const dir=Math.random();
-    let startX,startY,angle;
+    const dir=Math.random();let startX,startY,angle;
     if(dir<0.35){startX=-120;startY=H*(0.05+Math.random()*0.9);angle=(Math.random()*30-15)*Math.PI/180;}
     else if(dir<0.70){startX=W+120;startY=H*(0.05+Math.random()*0.9);angle=Math.PI+(Math.random()*30-15)*Math.PI/180;}
     else if(dir<0.85){startX=W*(0.05+Math.random()*0.9);startY=-80;angle=Math.PI/2+(Math.random()*20-10)*Math.PI/180;}
@@ -1332,8 +1156,7 @@ function ensureOverlayStars(id,count=80){
     ctx.clearRect(0,0,W,H);
     if(flyby){
       flyby.x+=Math.cos(flyby.angle)*flyby.speed;flyby.y+=Math.sin(flyby.angle)*flyby.speed;
-      const cx=W/2,cy=H/2;
-      const maxD=Math.sqrt(cx*cx+cy*cy)+150;
+      const cx=W/2,cy=H/2,maxD=Math.sqrt(cx*cx+cy*cy)+150;
       const d=Math.sqrt((flyby.x-cx)**2+(flyby.y-cy)**2);
       const prog=1-Math.max(0,Math.min(1,(d-maxD*0.1)/(maxD*0.7)));
       let alpha=Math.min(1,prog*2.5)*flyby.brightness;
@@ -1370,14 +1193,12 @@ function ensureOverlayStars(id,count=80){
   setTimeout(sched,4000+Math.random()*6000);
 })();
 
-/* ══════════════════════════════════════
-   STATUS COLOR
-══════════════════════════════════════ */
+/* ── STATUS COLORS ── */
 function statusColor(s){
   switch(s){
-    case 'Planned':return'#fff';case 'Delayed':return'#ffcc00';case 'Big Event Plans':return'#ffcc00';
-    case 'Completed':return'#5dd6a0';case 'Concept/Plan':return'#00ccff';case 'Canceled':return'#ff6b58';
-    case 'Coming Soon':return'#d9d9d9';case 'Recorded':return'#5dd6a0';default:return'#ccc';
+    case'Planned':return'#fff';case'Delayed':return'#ffcc00';case'Big Event Plans':return'#ffcc00';
+    case'Completed':return'#3de89a';case'Concept/Plan':return'#00ccff';case'Canceled':return'#ff4f4f';
+    case'Coming Soon':return'#d9d9d9';case'Recorded':return'#3de89a';default:return'#ccc';
   }
 }
 function statusLabel(s){
@@ -1387,31 +1208,25 @@ function statusLabel(s){
   return s;
 }
 
-/* ══════════════════════════════════════
-   HEADER NAV — overlay-based
-══════════════════════════════════════ */
+/* ── NAV ── */
 function rebuildNav(){
-  const navEl=document.getElementById('header-nav');
-  navEl.innerHTML='';
+  const navEl=document.getElementById('header-nav');navEl.innerHTML='';
   const items=[
-    {key:'navHome',action:()=>{playSound('close');closeAllOverlays();window.scrollTo({top:0,behavior:'smooth'});},dotColor:'#fff'},
-    {key:'navVehicles',action:()=>openOverlay('vehicles'),dotColor:'#7eb6ff'},
-    {key:'navNews',action:()=>openOverlay('news'),dotColor:'#5dd6a0'},
-    {key:'navSchedule',action:()=>openOverlay('schedule'),dotColor:'#ffb380'},
-    {key:'navGame',action:()=>openOverlay('game'),dotColor:'#cc88ff'},
+    {key:'navHome',action:()=>{playSound('close');closeAllOverlays();window.scrollTo({top:0,behavior:'smooth'});},dotColor:'rgba(255,255,255,0.4)'},
+    {key:'navVehicles',action:()=>openOverlay('vehicles'),dotColor:'#4f8eff'},
+    {key:'navNews',action:()=>openOverlay('news'),dotColor:'#3de89a'},
+    {key:'navSchedule',action:()=>openOverlay('schedule'),dotColor:'#ffac4f'},
+    {key:'navGame',action:()=>openOverlay('game'),dotColor:'#c46fff'},
   ];
   items.forEach(it=>{
     const b=document.createElement('button');b.className='nav-btn';
     b.innerHTML=`<span class="nav-dot" style="background:${it.dotColor}"></span><span>${t(it.key)}</span>`;
-    b.onclick=it.action;
-    navEl.appendChild(b);
+    b.onclick=it.action;navEl.appendChild(b);
   });
 }
 rebuildNav();
 
-/* ══════════════════════════════════════
-   CLOCK + LANG PICKER
-══════════════════════════════════════ */
+/* ── CLOCK + LANG ── */
 if(showClock){
   const ls=document.getElementById('header-left-slot');
   const lp=document.createElement('div');lp.className='lang-picker';lp.id='lang-picker';
@@ -1422,15 +1237,11 @@ if(showClock){
   Object.entries(LANG_LABELS).forEach(([code,name])=>{
     const opt=document.createElement('button');opt.className='lang-option'+(code===currentLang?' active':'');
     opt.innerHTML=`<span>${name}</span><span class="check">✓</span>`;
-    opt.onclick=()=>{
-      setLang(code);lp.classList.remove('open');
-      dd.querySelectorAll('.lang-option').forEach(o=>o.classList.remove('active'));opt.classList.add('active');
-    };
+    opt.onclick=()=>{setLang(code);lp.classList.remove('open');dd.querySelectorAll('.lang-option').forEach(o=>o.classList.remove('active'));opt.classList.add('active');};
     dd.appendChild(opt);
   });
   lp.appendChild(lb);lp.appendChild(dd);ls.appendChild(lp);
   document.addEventListener('click',()=>lp.classList.remove('open'));
-
   const cs=document.createElement('span');cs.className='header-clock';
   const tz=document.createElement('span');tz.className='header-clock-tz';tz.textContent=t('local');
   ls.appendChild(cs);ls.appendChild(tz);
@@ -1438,7 +1249,6 @@ if(showClock){
   updateClock();setInterval(updateClock,1000);
 }
 
-/* ── SOCIAL BUTTONS ── */
 const rs=document.getElementById('header-right-slot');
 socialButtons.forEach(btn=>{
   if(!btn.visible)return;
@@ -1447,23 +1257,23 @@ socialButtons.forEach(btn=>{
 });
 
 /* ══════════════════════════════════════
-   LAUNCHES DATA — preserved exactly
+   LAUNCHES DATA — unchanged
 ══════════════════════════════════════ */
 const launches=[
-  {rocket:'SunPower One SN5 (V2.2)', date:'2026-03-07 14:00',status:'Canceled', nameId:'sunpower',site:'Ali 28R',              type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunPower SN5 (V2.2)', desc:'New plans required mission cancellation. Booster landing test using precision Suicide Burn.',watchUrl:'',showWatchMin:30},
-  {rocket:'SunPower One SN3 (V2.2)', date:'2026-03-03 17:00',status:'Canceled', nameId:'sunpower',site:'Miami, FL (RSS)',       type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test (OLD)',vehicle:'SunPower SN3 (V2.2)', desc:'New plans required mission cancellation. Booster landing test using precision Suicide Burn.',watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN2 (V2.2)', date:'2026-03-02 23:00',status:'Canceled', nameId:'sunorbit',site:'Vandenberg SFB (RSS)', type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN2 (V2.2)', desc:'New plans required mission cancellation. Booster landing test using precision Suicide Burn.',watchUrl:'',showWatchMin:30},
-  {rocket:'SunPower One SN1 (V2.2)', date:'2026-03-01 14:00',status:'Canceled', nameId:'sunpower',site:'Vandenberg SFB (RSS)', type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunPower SN1 (V2.2)', desc:'First SN1 booster test. New plans required mission cancellation.',watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN51 (V2.4)',date:'2026-05-01 05:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',  type:'Regular Landing Tests',durationMin:4,target:'Suicide Burn Test',      vehicle:'SunOrbit One SN51 (V2.4)',desc:'10th Flight: Booster Separation & Landing Test.',watchUrl:'https://www.youtube.com/@OXeall',showWatchMin:60},
-  {rocket:'SunOrbit One SN49 (V2.2)',date:'2026-04-16 20:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',  type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN49 (V2.2)',desc:'9th Flight: Booster Separation & Landing Test.',watchUrl:'https://www.youtube.com/@OXeall',showWatchMin:60},
-  {rocket:'SunOrbit One SN48 (V2.2)',date:'2026-04-13 15:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',  type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN48 (V2.2)',desc:'8th Flight: Booster Separation & Landing Test.',watchUrl:'https://www.youtube.com/@OXeall',showWatchMin:60},
-  {rocket:'SunOrbit One SN10 (V2.2)',date:'2026-04-02 00:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',  type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN10 (V2.2)',desc:'7th Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN9 (V2.2)', date:'2026-03-29 07:30',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',  type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN9 (V2.2)', desc:'6th Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN8 (V2.2)', date:'2026-03-29 03:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',  type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN8 (V2.2)', desc:'5th Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN7 (V2.2)', date:'2026-03-21 16:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',  type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN7 (V2.2)', desc:'4th Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN7 (V2.2)', date:'2026-03-19 14:30',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',  type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN7 (V2.2)', desc:'3rd Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN6 (V2.2)', date:'2026-03-11 13:45',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',  type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN6 (V2.2)', desc:'2nd Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN4 (V2.2)', date:'2026-03-06 11:00',status:'Completed',nameId:'sunorbit',site:'Miami, FL (RSS)',        type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',      vehicle:'SunOrbit SN4 (V2.2)', desc:'1st Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30}
+  {rocket:'SunPower One SN5 (V2.2)',date:'2026-03-07 14:00',status:'Canceled',nameId:'sunpower',site:'Ali 28R',type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',vehicle:'SunPower SN5 (V2.2)',desc:'New plans required mission cancellation. Booster landing test using precision Suicide Burn.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunPower One SN3 (V2.2)',date:'2026-03-03 17:00',status:'Canceled',nameId:'sunpower',site:'Miami, FL (RSS)',type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test (OLD)',vehicle:'SunPower SN3 (V2.2)',desc:'New plans required mission cancellation.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN2 (V2.2)',date:'2026-03-02 23:00',status:'Canceled',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',vehicle:'SunOrbit SN2 (V2.2)',desc:'New plans required mission cancellation.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunPower One SN1 (V2.2)',date:'2026-03-01 14:00',status:'Canceled',nameId:'sunpower',site:'Vandenberg SFB (RSS)',type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',vehicle:'SunPower SN1 (V2.2)',desc:'First SN1 booster test. New plans required mission cancellation.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN51 (V2.4)',date:'2026-05-01 05:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',type:'Regular Landing Tests',durationMin:4,target:'Suicide Burn Test',vehicle:'SunOrbit One SN51 (V2.4)',desc:'10th Flight: Booster Separation & Landing Test.',watchUrl:'https://www.youtube.com/@OXeall',showWatchMin:60},
+  {rocket:'SunOrbit One SN49 (V2.2)',date:'2026-04-16 20:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',vehicle:'SunOrbit SN49 (V2.2)',desc:'9th Flight: Booster Separation & Landing Test.',watchUrl:'https://www.youtube.com/@OXeall',showWatchMin:60},
+  {rocket:'SunOrbit One SN48 (V2.2)',date:'2026-04-13 15:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',vehicle:'SunOrbit SN48 (V2.2)',desc:'8th Flight: Booster Separation & Landing Test.',watchUrl:'https://www.youtube.com/@OXeall',showWatchMin:60},
+  {rocket:'SunOrbit One SN10 (V2.2)',date:'2026-04-02 00:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',vehicle:'SunOrbit SN10 (V2.2)',desc:'7th Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN9 (V2.2)',date:'2026-03-29 07:30',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',vehicle:'SunOrbit SN9 (V2.2)',desc:'6th Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN8 (V2.2)',date:'2026-03-29 03:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',vehicle:'SunOrbit SN8 (V2.2)',desc:'5th Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN7 (V2.2)',date:'2026-03-21 16:00',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',vehicle:'SunOrbit SN7 (V2.2)',desc:'4th Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN7 (V2.2)',date:'2026-03-19 14:30',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',vehicle:'SunOrbit SN7 (V2.2)',desc:'3rd Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN6 (V2.2)',date:'2026-03-11 13:45',status:'Completed',nameId:'sunorbit',site:'Vandenberg SFB (RSS)',type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',vehicle:'SunOrbit SN6 (V2.2)',desc:'2nd Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
+  {rocket:'SunOrbit One SN4 (V2.2)',date:'2026-03-06 11:00',status:'Completed',nameId:'sunorbit',site:'Miami, FL (RSS)',type:'Regular Landing Tests',durationMin:3,target:'Suicide Burn Test',vehicle:'SunOrbit SN4 (V2.2)',desc:'1st Flight: Booster Separation & Landing Test.',watchUrl:'',showWatchMin:30},
 ];
 launches.forEach(l=>{
   const[d,t2]=l.date.split(' ');const[year,month,day]=d.split('-').map(Number);const[hour,minute]=t2.split(':').map(Number);
@@ -1478,54 +1288,38 @@ function rebuildDaysSince(){
   const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
   const launchLocal=new Date(latest.dateObj.toLocaleDateString('en-CA'));
   const diffDays=Math.max(0,Math.floor((today-launchLocal)/86400000));
-  const single=t('daysSince'), plural=t('daysSincePl');
+  const single=t('daysSince'),plural=t('daysSincePl');
   document.getElementById('days-since-text').textContent=diffDays<1?`<1 ${plural}`:`${diffDays} ${diffDays!==1?plural:single}`;
   document.getElementById('days-since-wrap').style.display='block';
 }
 
 /* ══════════════════════════════════════
-   VEHICLES — preserved exactly
+   VEHICLES — unchanged data, updated render
 ══════════════════════════════════════ */
 const vehicles=[
-  {id:'sunorbit',name:'SunOrbit',class:'Interplanetary Vehicle',color:'#00aaff',image:'991ef2dcfcd94c0f95050b657d1c6134.png',
+  {id:'sunorbit',name:'SunOrbit',class:'Interplanetary Vehicle',color:'#4f8eff',image:'991ef2dcfcd94c0f95050b657d1c6134.png',
    description:"SunOrbit is InSpace's primary interplanetary vehicle, built in modular stages.<br>It is equally capable of crewed and uncrewed missions to Low Earth Orbit and to other planets. For Earth orbit, the third stage can function as a crewed mini-station or as an uncrewed satellite that separates directly in orbit. For missions to other planets, the third stage can serve as the main crew habitat and command module with life support systems, or operate fully autonomously without pilots - including orbital insertion around other planets.<br>The first and second stages are reusable and designed for precise suicide burn landings on Earth and other planetary bodies. The vehicle features advanced docking capabilities and high-bandwidth communication relay systems.",
    specs:[{val:'205m',lbl:'Height'},{val:'3370 t',lbl:'Mass'},{val:'79.1 km/s',lbl:'Delta-V'},{val:'14.64×',lbl:'TWR'},{val:'Feb 2026',lbl:'First Flight'}],
    stages:[{title:'Stage 1 — Booster',rows:[{key:'Engines',val:'42'},{key:'Thrust (SL)',val:'484,000 kN'},{key:'Burn time',val:'33.8 min'},{key:'Propellant',val:'2,560 t'},{key:'Recovery',val:'Vertical landing'},{key:'Reusable',val:'Yes'}]},{title:'Stage 2 — Upper',rows:[{key:'Engines',val:'90'},{key:'Thrust (vac)',val:'120,000 kN'},{key:'Burn time',val:'1.6 min'},{key:'Propellant',val:'2,330 t'},{key:'Recovery',val:'Vertical landing'},{key:'Reusable',val:'Yes'}]}]},
-  {id:'sunpower',name:'SunPower',class:'Earth Orbit',color:'#ffaa00',image:null,
+  {id:'sunpower',name:'SunPower',class:'Earth Orbit',color:'#ffac4f',image:null,
    description:"SunPower is InSpace's heavy-lift workhorse, designed specifically for Low Earth Orbit missions.<br>It evolved from a rapid prototype through multiple generations into a reliable high-performance launcher, optimized for delivering large payloads, solar arrays, and orbital stations. The name SunPower was coined on the fly by Haisess during the very first test campaign.<br>Although public records show 0 launches, more than 20 SunPower vehicles have already been built and successfully flown in classified InSpace test and operational missions.",
    specs:[{val:'—',lbl:'Height'},{val:'—',lbl:'Mass'},{val:'—',lbl:'Delta-V'},{val:'—',lbl:'TWR'},{val:'Feb 2026',lbl:'First Flight'}],
    stages:[{title:'Stage 1 — Booster',rows:[{key:'Engines',val:'—'},{key:'Thrust (SL)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'Vertical landing'},{key:'Reusable',val:'Yes'}]},{title:'Stage 2 — Upper',rows:[{key:'Engines',val:'—'},{key:'Thrust (vac)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'—'},{key:'Reusable',val:'—'}]}]},
-  {id:'planetsrockets',name:'PlanetsRockets',class:'COMING SOON',color:'#cc66ff',image:null,
+  {id:'planetsrockets',name:'PlanetsRockets',class:'COMING SOON',color:'#c46fff',image:null,
    description:"PlanetsRockets is InSpace's next-generation interplanetary vehicle, currently in the early concept and planning phase.<br>All detailed information about its design, capabilities, and specific mission targets remains confidential at this stage.<br>It is being developed as part of InSpace's long-term ambitions for deep-space exploration.",
    specs:[{val:'—',lbl:'Height'},{val:'—',lbl:'Mass'},{val:'—',lbl:'Delta-V'},{val:'—',lbl:'TWR'},{val:'Apr 2026',lbl:'First Flight'}],
    stages:[{title:'Stage 1 — Booster',rows:[{key:'Engines',val:'—'},{key:'Thrust (SL)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'TBD'},{key:'Reusable',val:'TBD'}]},{title:'Stage 2 — Upper',rows:[{key:'Engines',val:'—'},{key:'Thrust (vac)',val:'—'},{key:'Burn time',val:'—'},{key:'Propellant',val:'—'},{key:'Recovery',val:'—'},{key:'Reusable',val:'—'}]}]}
 ];
 
 function renderVehicleCards(){
-  const container=document.getElementById('vehicle-cards');
-  container.innerHTML='';
+  const container=document.getElementById('vehicle-cards');container.innerHTML='';
   vehicles.forEach(v=>{
     const count=launchCountFor(v.id);
-    const hSpec=v.specs.find(s=>s.lbl==='Height');
-    const mSpec=v.specs.find(s=>s.lbl==='Mass');
-    const cells=[
-      {lbl:t('specHeight'),val:hSpec?.val??'—'},
-      {lbl:t('specMass'),  val:mSpec?.val??'—'},
-      {lbl:t('specLaunches'),val:count>0?count+'×':'—'},
-    ];
+    const hSpec=v.specs.find(s=>s.lbl==='Height');const mSpec=v.specs.find(s=>s.lbl==='Mass');
+    const cells=[{lbl:t('specHeight'),val:hSpec?.val??'—'},{lbl:t('specMass'),val:mSpec?.val??'—'},{lbl:t('specLaunches'),val:count>0?count+'×':'—'}];
     const specHTML=cells.map(c=>`<div class="vc-sc"><div class="vc-sl">${c.lbl}</div><div class="vc-sv">${c.val}</div></div>`).join('');
     const card=document.createElement('div');card.className='vehicle-card';card.style.setProperty('--vc',v.color);
-    card.innerHTML=`
-      <div class="vc-stripe"></div>
-      <div class="vc-top">
-        <span class="vc-class-tag">${v.class}</span>
-        <div class="vc-name">${v.name}</div>
-      </div>
-      <div class="vc-specs">${specHTML}</div>
-      <div class="vc-foot">
-        <span class="vc-foot-txt">${t('fullDetails')}</span>
-        <span class="vc-foot-arr">&#8599;</span>
-      </div>`;
+    card.innerHTML=`<div class="vc-stripe"></div><div class="vc-top"><span class="vc-class-tag">${v.class}</span><div class="vc-name">${v.name}</div></div><div class="vc-specs">${specHTML}</div><div class="vc-foot"><span class="vc-foot-txt">${t('fullDetails')}</span><span class="vc-foot-arr">&#8599;</span></div>`;
     card.addEventListener('click',()=>{playSound('details');showVehicleDetail(v.id);});
     container.appendChild(card);
   });
@@ -1533,25 +1327,18 @@ function renderVehicleCards(){
 }
 
 function showVehicleDetail(id){
-  const v=vehicles.find(x=>x.id===id);if(!v)return;
-  playSound('modal');
+  const v=vehicles.find(x=>x.id===id);if(!v)return;playSound('modal');
   const imgHTML=v.image?`<img src="${v.image}" alt="${v.name}">`:`<div class="vp-img-ph">${t('noImage')}</div>`;
   const specsHTML=v.specs.map(s=>`<div class="vp-spec"><div class="vp-spec-lbl">${s.lbl}</div><div class="vp-spec-val">${s.val}</div></div>`).join('');
   const stagesHTML=v.stages.map(st=>{
     const cells=st.rows.map(r=>`<div class="vp-stage-cell"><div class="vp-stage-key">${r.key}</div><div class="vp-stage-val">${r.val}</div></div>`).join('');
     return`<div class="vp-stage"><div class="vp-stage-title">${st.title}</div><div class="vp-stage-rows">${cells}</div></div>`;
   }).join('');
-  document.getElementById('vp-detail-body').innerHTML=`
-    <div class="op-hero-title" style="color:${v.color}">${v.name}</div>
-    <div class="op-hero-sub">${v.class}</div>
-    <div class="vp-img-wrap">${imgHTML}</div>
-    <div class="op-section-title">${t('specifications')}</div><div class="vp-specs-grid">${specsHTML}</div>
-    <div class="op-section-title">${t('stages')}</div><div class="vp-stages">${stagesHTML}</div>
-    <div class="op-section-title">${t('overview')}</div><div class="vp-desc">${v.description}</div>`;
+  document.getElementById('vp-detail-body').innerHTML=`<div class="op-hero-title" style="color:${v.color}">${v.name}</div><div class="op-hero-sub">${v.class}</div><div class="vp-img-wrap">${imgHTML}</div><div class="op-section-title">${t('specifications')}</div><div class="vp-specs-grid">${specsHTML}</div><div class="op-section-title">${t('stages')}</div><div class="vp-stages">${stagesHTML}</div><div class="op-section-title">${t('overview')}</div><div class="vp-desc">${v.description}</div>`;
   document.getElementById('vp-list').classList.remove('active');
   document.getElementById('vp-detail').classList.add('active');
   document.getElementById('ov-vehicles-title').textContent=v.name;
-  const ov=document.getElementById('ov-vehicles');ov.scrollTop=0;
+  document.getElementById('ov-vehicles').scrollTop=0;
 }
 function showVehicleList(){
   playSound('back');
@@ -1561,9 +1348,7 @@ function showVehicleList(){
   document.getElementById('ov-vehicles').scrollTop=0;
 }
 
-/* ══════════════════════════════════════
-   HERO STATS
-══════════════════════════════════════ */
+/* ── HERO STATS ── */
 function rebuildStats(){
   const totalFlights=launches.filter(l=>l.status==='Completed').length;
   const uniqueVehicles=[...new Set(launches.map(l=>l.nameId))].length;
@@ -1571,58 +1356,40 @@ function rebuildStats(){
   const last365=launches.filter(l=>l.status==='Completed'&&l.dateObj.getTime()>=cutoff).length;
   const earliest=launches.reduce((a,b)=>a.dateObj<b.dateObj?a:b);
   const daysActive=Math.floor((Date.now()-earliest.dateObj.getTime())/86400000);
-  const cells=[
-    {num:totalFlights,   label:t('statFlights')},
-    {num:last365,        label:t('stat365')},
-    {num:uniqueVehicles, label:t('statVehicles')},
-    {num:daysActive,     label:t('statDays')},
-  ];
-  const grid=document.getElementById('hero-stats-grid');
-  grid.innerHTML='';
+  const cells=[{num:totalFlights,label:t('statFlights')},{num:last365,label:t('stat365')},{num:uniqueVehicles,label:t('statVehicles')},{num:daysActive,label:t('statDays')}];
+  const grid=document.getElementById('hero-stats-grid');grid.innerHTML='';
   cells.forEach(c=>{
     const el=document.createElement('div');el.className='hero-stat-cell';
     el.innerHTML=`<div class="hero-stat-num">${c.num}</div><div class="hero-stat-lbl">${c.label}</div>`;
     grid.appendChild(el);
   });
 }
-rebuildStats();
-rebuildDaysSince();
+rebuildStats();rebuildDaysSince();
 
-/* ══════════════════════════════════════
-   HERO QUICK ACCESS GRID
-══════════════════════════════════════ */
+/* ── HERO QUICK ── */
 function rebuildHeroQuick(){
-  const grid=document.getElementById('hero-quick-grid');
-  grid.innerHTML='';
+  const grid=document.getElementById('hero-quick-grid');grid.innerHTML='';
   const items=[
-    {key:'navVehicles',sub:'quickVehiclesSub',color:'#7eb6ff',action:()=>openOverlay('vehicles'),
+    {key:'navVehicles',sub:'quickVehiclesSub',color:'#4f8eff',action:()=>openOverlay('vehicles'),
      icon:`<svg viewBox="0 0 24 24"><path d="M12 2L9 9H4l4 4-2 7 6-4 6 4-2-7 4-4h-5z"/></svg>`},
-    {key:'navNews',sub:'quickNewsSub',color:'#5dd6a0',action:()=>openOverlay('news'),
+    {key:'navNews',sub:'quickNewsSub',color:'#3de89a',action:()=>openOverlay('news'),
      icon:`<svg viewBox="0 0 24 24"><path d="M4 4h16v16H4zm2 4v2h12V8zm0 4v2h12v-2zm0 4v2h8v-2z"/></svg>`},
-    {key:'navSchedule',sub:'quickScheduleSub',color:'#ffb380',action:()=>openOverlay('schedule'),
+    {key:'navSchedule',sub:'quickScheduleSub',color:'#ffac4f',action:()=>openOverlay('schedule'),
      icon:`<svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2zm0 16H5V10h14zm0-12H5V6h14z"/></svg>`},
   ];
   items.forEach(it=>{
     const c=document.createElement('button');c.className='quick-card';c.style.setProperty('--qc',it.color);
-    c.innerHTML=`
-      <div class="quick-icon">${it.icon}</div>
-      <div class="quick-text">
-        <div class="quick-title">${t(it.key)}</div>
-        <div class="quick-sub">${t(it.sub)}</div>
-      </div>
-      <span class="quick-arr">&#8599;</span>`;
+    c.innerHTML=`<div class="quick-icon">${it.icon}</div><div class="quick-text"><div class="quick-title">${t(it.key)}</div><div class="quick-sub">${t(it.sub)}</div></div><span class="quick-arr">&#8599;</span>`;
     c.onclick=()=>{playSound('quick');it.action();};
     grid.appendChild(c);
   });
 }
 rebuildHeroQuick();
 
-/* ══════════════════════════════════════
-   NEWS — preserved
-══════════════════════════════════════ */
+/* ── NEWS ── */
 const allRockets=[
   {name:'SunPower One',description:'Where it all began. The name "SunPower" was coined on the fly by Haisess.',detail:'The very first SunPower prototype was assembled and launched within a single session, marking the birth of the InSpace vehicle programme. It flew a nominal trajectory and completed a controlled descent. The launch validated core propulsion, guidance systems, and ground support procedures that would be carried forward into every subsequent vehicle in the InSpace fleet.',date:'February 26, 2026'},
-  {name:'SunPower: The Return of a Legend',description:'InSpace is officially resuming work on its very first heavy-lift rocket.',detail:'After being put on hold due to shifting priorities, SunPower One is making a comeback. The rocket that started everything for InSpace was temporarily shelved as the team focused on more advanced programs.<br>Now development is restarting. The vehicle will undergo a major redesign and upgrade, including modern systems and the new AVSBL \u2014 Automatic Vertical Suicide Burn Landing.<br>Active work will begin in the coming days and weeks. SunPower One is getting a second life, this time in a much more mature form.',date:'April 12, 2026'},
+  {name:'SunPower: The Return of a Legend',description:'InSpace is officially resuming work on its very first heavy-lift rocket.',detail:'After being put on hold due to shifting priorities, SunPower One is making a comeback. The rocket that started everything for InSpace was temporarily shelved as the team focused on more advanced programs.<br>Now development is restarting. The vehicle will undergo a major redesign and upgrade, including modern systems and the new AVSBL — Automatic Vertical Suicide Burn Landing.<br>Active work will begin in the coming days and weeks. SunPower One is getting a second life, this time in a much more mature form.',date:'April 12, 2026'},
   {name:'Vertical Recovery: The Mark of Precision',description:'"Where others leave a crater, we leave our mark."',detail:'Booster SN8 executed a textbook suicide burn and touched down within 0.4 m of the target pad centre. Recovery teams confirmed zero structural damage. Turnaround inspection was completed in under 6 hours, and the booster is already being prepared for its next flight.',date:'March 6, 2026'},
   {name:'Trial Mission to the Moon',description:'The team is preparing for a trial run of the upcoming lunar mission.',detail:'Initial trajectory calculations and propellant budgets have been finalised. The trial will validate trans-lunar injection burn performance before a crewed attempt. Ground teams have completed two full dress rehearsals.',date:'February 27, 2026'},
   {name:'Cancelling Missions',description:'Resumption is coming soon. We are currently preparing for two targets: Mars and the Moon.',detail:'Several scheduled test flights were cancelled to consolidate resources around the dual Mars and Moon programme. A revised launch manifest is expected shortly.',date:'March 03, 2026'},
@@ -1633,24 +1400,18 @@ function renderNews(reset=false){
   if(reset){grid.innerHTML='';newsShown=0;}
   allRockets.slice(newsShown,newsShown+NEWS_PER_PAGE).forEach((r,li)=>{
     const gi=newsShown+li;
-    const card=document.createElement('div');card.className='rocket';card.style.animationDelay=(li*0.08)+'s';
+    const card=document.createElement('div');card.className='rocket';card.style.animationDelay=(li*0.07)+'s';
     card.innerHTML=`<div class="rocket-top-bar"></div><div class="rocket-body"><h3>${r.name}</h3><p class="rocket-desc">${r.description}</p></div><div class="rocket-footer"><span class="rocket-date">${r.date}</span><button class="rocket-details-btn">${t('details')} <span class="rd-arrow">&#8599;</span></button></div>`;
-    card.addEventListener('click',()=>showNewsDetail(gi));
-    grid.appendChild(card);
+    card.addEventListener('click',()=>showNewsDetail(gi));grid.appendChild(card);
   });
   newsShown+=Math.min(NEWS_PER_PAGE,allRockets.length-newsShown);
   btn.style.display=newsShown<allRockets.length?'inline-flex':'none';
   document.getElementById('ov-news-meta').textContent=`${allRockets.length} ${t('newsEntries')}`;
 }
 function loadMore(){renderNews();}
-
 function showNewsDetail(idx){
   const r=allRockets[idx];playSound('news');
-  document.getElementById('np-detail-body').innerHTML=`
-    <div class="np-date-tag">${r.date}</div>
-    <div class="op-hero-title">${r.name}</div>
-    <div class="np-divider"></div>
-    <div class="np-text">${r.detail}</div>`;
+  document.getElementById('np-detail-body').innerHTML=`<div class="np-date-tag">${r.date}</div><div class="op-hero-title">${r.name}</div><div class="np-divider"></div><div class="np-text">${r.detail}</div>`;
   document.getElementById('np-list').classList.remove('active');
   document.getElementById('np-detail').classList.add('active');
   document.getElementById('ov-news-title').textContent=r.name;
@@ -1664,9 +1425,7 @@ function showNewsList(){
   document.getElementById('ov-news').scrollTop=0;
 }
 
-/* ══════════════════════════════════════
-   COUNTDOWN — preserved logic
-══════════════════════════════════════ */
+/* ── COUNTDOWN ── */
 (function(){
   const timerEl=document.getElementById('countdown-timer');
   const dU=document.createElement('div');dU.className='cd-unit';dU.id='cd-days-unit';
@@ -1705,11 +1464,8 @@ function showNewsList(){
     showDays(Math.floor(ts/86400)>0);
     dEl.textContent=pad(Math.floor(ts/86400));hEl.textContent=pad(Math.floor((ts%86400)/3600));
     mEl2.textContent=pad(Math.floor((ts%3600)/60));sEl.textContent=pad(ts%60);
-    if(ts<=10&&ts>=0){
-      playSound('final10');
-      if(!last10Toast){last10Toast=true;showToast({icon:'rocket',color:'#ffb380',title:t('notifT10'),sub:t('notifT10Sub'),duration:5000});}
-    }
-    if(ts>10) last10Toast=false;
+    if(ts<=10&&ts>=0){playSound('final10');if(!last10Toast){last10Toast=true;showToast({icon:'rocket',color:'#ffac4f',title:t('notifT10'),sub:t('notifT10Sub'),duration:5000});}}
+    if(ts>10)last10Toast=false;
     if(cur.watchUrl&&ts<=cur.showWatchMin*60){showRW(cur);}else{hideRW(cur);}
   }
   window.registerRowWatch=function(idx,el){rwl[idx]=el;};
@@ -1719,15 +1475,13 @@ function showNewsList(){
   tick();setInterval(tick,1000);
 })();
 
-/* ══════════════════════════════════════
-   SCHEDULE — tabbed layout
-══════════════════════════════════════ */
+/* ── SCHEDULE ── */
 let currentSchedTab='all';
 const SCHED_TABS=[
-  {id:'all',     key:'schedAll',     status:null,         color:'#fff'},
-  {id:'planned', key:'schedPlanned', status:'Planned',    color:'#fff'},
-  {id:'completed',key:'schedCompleted',status:'Completed',color:'#5dd6a0'},
-  {id:'canceled',key:'schedCanceled',status:'Canceled',   color:'#ff6b58'},
+  {id:'all',key:'schedAll',status:null,color:'rgba(255,255,255,0.5)'},
+  {id:'planned',key:'schedPlanned',status:'Planned',color:'#fff'},
+  {id:'completed',key:'schedCompleted',status:'Completed',color:'#3de89a'},
+  {id:'canceled',key:'schedCanceled',status:'Canceled',color:'#ff4f4f'},
 ];
 function rebuildScheduleTabs(){
   const tabsEl=document.getElementById('schedule-tabs');tabsEl.innerHTML='';
@@ -1738,12 +1492,9 @@ function rebuildScheduleTabs(){
     b.style.setProperty('--td',tab.color);
     b.innerHTML=`<span class="sch-tab-dot"></span><span>${t(tab.key)}</span><span class="sch-tab-count">${count}</span>`;
     b.onclick=()=>{
-      playSound('tab');
-      currentSchedTab=tab.id;
-      rebuildScheduleTabs();
-      const list=document.getElementById('launch-list');
-      list.classList.add('fading');
-      setTimeout(()=>{renderScheduleRows();list.classList.remove('fading');},160);
+      playSound('tab');currentSchedTab=tab.id;rebuildScheduleTabs();
+      const list=document.getElementById('launch-list');list.classList.add('fading');
+      setTimeout(()=>{renderScheduleRows();list.classList.remove('fading');},150);
     };
     tabsEl.appendChild(b);
   });
@@ -1761,39 +1512,32 @@ function renderScheduleRows(reset=true){
   }
   if(schedItems.length===0){document.getElementById('sch-empty').style.display='block';return;}
   document.getElementById('sch-empty').style.display='none';
-  // Remove existing load-more row if present
   const oldLM=list.querySelector('.launch-load-more');if(oldLM)oldLM.remove();
   const slice=schedItems.slice(schedShown,schedShown+SCHED_PAGE_SIZE);
   slice.forEach((l,i)=>{
-    const globalI=schedShown+i;
     const ds=l.dateObj.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
     const ts=l.dateObj.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:false})+' (local)';
-    const row=document.createElement('div');row.className='launch-row';row.title='Click for details';
-    row.style.animationDelay=(Math.min(i,8)*0.025)+'s';
+    const row=document.createElement('div');row.className='launch-row';row.style.animationDelay=(Math.min(i,8)*0.022)+'s';
     const wlHTML=l.watchUrl?`<a class="row-watch-link" id="row-watch-${l._idx}" href="${l.watchUrl}" target="_blank" onclick="event.stopPropagation()">${t('watchLive')} &#8599;</a>`:'';
-    row.innerHTML=`<div><strong>${l.rocket}</strong></div><div style="color:#aaa;font-family:var(--mono);font-size:0.86em;">${ds}</div><div style="color:#666;font-size:0.82em;font-family:var(--mono);">${ts}</div><div style="display:flex;align-items:center;gap:14px;justify-content:flex-end;">${wlHTML}<div class="status-badge" style="color:${statusColor(l.status)};">${statusLabel(l.status)}</div></div>`;
+    row.innerHTML=`<div><strong>${l.rocket}</strong></div><div style="color:var(--muted);font-family:var(--mono);font-size:0.84em;">${ds}</div><div style="color:var(--muted2);font-size:0.8em;font-family:var(--mono);">${ts}</div><div style="display:flex;align-items:center;gap:12px;justify-content:flex-end;">${wlHTML}<div class="status-badge" style="color:${statusColor(l.status)};">${statusLabel(l.status)}</div></div>`;
     row.addEventListener('click',()=>openLaunchModal(l._idx));
     if(l.watchUrl){setTimeout(()=>{const el=document.getElementById(`row-watch-${l._idx}`);if(el)window.registerRowWatch(l._idx,el);},0);}
     list.appendChild(row);
   });
   schedShown+=slice.length;
-  // Show Load More row if more items remain AND total > 10
   if(schedItems.length>SCHED_PAGE_SIZE&&schedShown<schedItems.length){
     const lm=document.createElement('div');lm.className='launch-load-more';
     lm.innerHTML=`<span>${t('loadMore')} (${schedItems.length})</span>`;
-    lm.onclick=()=>{renderScheduleRows(false);};
-    list.appendChild(lm);
+    lm.onclick=()=>renderScheduleRows(false);list.appendChild(lm);
   }
   document.getElementById('ov-schedule-meta').textContent=`${schedItems.length} ${t('launchesCount')}`;
 }
 
-/* ══════════════════════════════════════
-   LAUNCH MODAL
-══════════════════════════════════════ */
+/* ── LAUNCH MODAL ── */
 function openLaunchModal(idx){
   const l=launches[idx],color=statusColor(l.status);playSound('modal');
   document.getElementById('lm-color-bar').style.background=color;
-  document.getElementById('lm-dot').style.cssText=`width:8px;height:8px;border-radius:50%;background:${color};opacity:0.85;box-shadow:0 0 8px ${color}`;
+  document.getElementById('lm-dot').style.cssText=`width:7px;height:7px;border-radius:50%;background:${color};opacity:0.9;box-shadow:0 0 6px ${color}`;
   document.getElementById('lm-status-text').style.color=color;document.getElementById('lm-status-text').textContent=statusLabel(l.status);
   document.getElementById('lm-name').textContent=l.rocket;document.getElementById('lm-type').textContent=l.type;
   const ds=l.dateObj.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
@@ -1809,23 +1553,16 @@ function openLaunchModal(idx){
 function closeLaunchModal(e,force){
   if(!force&&e&&e.target!==document.getElementById('launch-modal-backdrop'))return;
   const bd=document.getElementById('launch-modal-backdrop');bd.classList.remove('visible');
-  setTimeout(()=>{bd.classList.remove('active');if(!anyOverlayOpen())document.body.style.overflow='';},320);
+  setTimeout(()=>{bd.classList.remove('active');if(!anyOverlayOpen())document.body.style.overflow='';},280);
 }
 
-/* ══════════════════════════════════════
-   UNIVERSAL OVERLAY OPEN/CLOSE
-══════════════════════════════════════ */
-const OVERLAY_TITLES={
-  vehicles:'ourVehicles',news:'latestNews',schedule:'launchSchedule',game:'flyTitle'
-};
-const OVERLAY_STARFIELDS={
-  vehicles:'vehicles-starfield',news:'news-starfield',schedule:'schedule-starfield',game:'game-starfield'
-};
+/* ── OVERLAYS ── */
 function anyOverlayOpen(){return document.querySelectorAll('.overlay-page.active').length>0;}
 function openOverlay(name){
   closeAllOverlays(true);
   const ov=document.getElementById('ov-'+name);if(!ov)return;
-  if(OVERLAY_STARFIELDS[name])ensureOverlayStars(OVERLAY_STARFIELDS[name],75);
+  const sfMap={vehicles:'vehicles-starfield',news:'news-starfield',schedule:'schedule-starfield',game:'game-starfield'};
+  if(sfMap[name])ensureOverlayStars(sfMap[name],70);
   playSound('nav');
   if(name==='vehicles'){renderVehicleCards();showVehicleList();}
   else if(name==='news'){renderNews(true);showNewsList();}
@@ -1833,43 +1570,35 @@ function openOverlay(name){
   else if(name==='game'){setTimeout(()=>setupGameCanvas(),80);}
   ov.classList.add('active');
   requestAnimationFrame(()=>{requestAnimationFrame(()=>ov.classList.add('visible'));});
-  ov.scrollTop=0;
-  document.body.style.overflow='hidden';
+  ov.scrollTop=0;document.body.style.overflow='hidden';
 }
 function closeOverlay(name){
   const ov=document.getElementById('ov-'+name);if(!ov)return;
   if(name==='game')stopGame();
-  playSound('close');
-  ov.classList.remove('visible');
-  setTimeout(()=>{ov.classList.remove('active');if(!anyOverlayOpen())document.body.style.overflow='';},400);
+  playSound('close');ov.classList.remove('visible');
+  setTimeout(()=>{ov.classList.remove('active');if(!anyOverlayOpen())document.body.style.overflow='';},360);
 }
 function closeAllOverlays(silent=false){
   document.querySelectorAll('.overlay-page.active').forEach(ov=>{
     const id=ov.id.replace('ov-','');
     if(id==='game')stopGame();
     ov.classList.remove('visible');
-    setTimeout(()=>ov.classList.remove('active'),silent?0:400);
+    setTimeout(()=>ov.classList.remove('active'),silent?0:360);
   });
-  if(!silent)setTimeout(()=>{if(!anyOverlayOpen())document.body.style.overflow='';},400);
+  if(!silent)setTimeout(()=>{if(!anyOverlayOpen())document.body.style.overflow='';},360);
 }
-
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     closeLaunchModal(null,true);
     if(anyOverlayOpen()){
-      // If in vehicle/news detail view, go back to list first
       if(document.getElementById('vp-detail').classList.contains('active')){showVehicleList();return;}
       if(document.getElementById('np-detail').classList.contains('active')){showNewsList();return;}
-      document.querySelectorAll('.overlay-page.active').forEach(ov=>{
-        const id=ov.id.replace('ov-','');closeOverlay(id);
-      });
+      document.querySelectorAll('.overlay-page.active').forEach(ov=>{closeOverlay(ov.id.replace('ov-',''));});
     }
   }
 });
 
-/* ══════════════════════════════════════
-   GAME — preserved
-══════════════════════════════════════ */
+/* ── GAME — unchanged ── */
 (function(){
   const canvas=document.getElementById('game-canvas');
   let ctx=null,W=0,H=0,dpr=1;
@@ -1880,14 +1609,10 @@ document.addEventListener('keydown',e=>{
 
   window.setupGameCanvas=function(){
     dpr=window.devicePixelRatio||1;
-    const wrap=canvas.parentElement;
-    W=wrap.clientWidth||700;
-    H=canvas.offsetHeight||420;
-    canvas.width=W*dpr;canvas.height=H*dpr;
-    canvas.style.width=W+'px';canvas.style.height=H+'px';
+    const wrap=canvas.parentElement;W=wrap.clientWidth||700;H=canvas.offsetHeight||420;
+    canvas.width=W*dpr;canvas.height=H*dpr;canvas.style.width=W+'px';canvas.style.height=H+'px';
     ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);
   };
-
   function reset(){
     score=0;diffLvl=0;spawnT=0;diffT=0;invTimer=1.2;
     asteroids=[];particles=[];fuelCells=[];
@@ -1896,12 +1621,10 @@ document.addEventListener('keydown',e=>{
     for(let i=0;i<65;i++)bgStars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.1+0.2,sp:Math.random()*0.4+0.08,op:Math.random()*0.35+0.08});
     document.getElementById('gm-score').textContent='0';
   }
-
   function addInput(){canvas.addEventListener('mousemove',onMM);canvas.addEventListener('touchmove',onTM,{passive:false});}
   function removeInput(){canvas.removeEventListener('mousemove',onMM);canvas.removeEventListener('touchmove',onTM);}
   function onMM(e){if(!running)return;const r=canvas.getBoundingClientRect();ship.tx=(e.clientX-r.left)*(W/r.width);ship.ty=(e.clientY-r.top)*(H/r.height);}
   function onTM(e){if(!running)return;e.preventDefault();const r=canvas.getBoundingClientRect();ship.tx=(e.touches[0].clientX-r.left)*(W/r.width);ship.ty=(e.touches[0].clientY-r.top)*(H/r.height);}
-
   function spawnAst(){
     const side=Math.floor(Math.random()*2);let x,y,vx,vy;
     if(side===0){x=W+30;y=Math.random()*H;const a=Math.PI+(Math.random()-0.5)*0.9;const sp=80+diffLvl*18+Math.random()*40;vx=Math.cos(a)*sp;vy=Math.sin(a)*sp;}
@@ -1914,35 +1637,32 @@ document.addEventListener('keydown',e=>{
   function spawnFuel(){fuelCells.push({x:W+14,y:H*0.1+Math.random()*H*0.8,vx:-(55+diffLvl*8),vy:(Math.random()-0.5)*30,r:7,pulse:Math.random()*Math.PI*2});}
   function spawnParts(x,y,color,count){for(let i=0;i<count;i++){const a=Math.random()*Math.PI*2,sp=30+Math.random()*80;particles.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,decay:0.8+Math.random()*0.8,r:1.5+Math.random()*2.5,color});}}
   function chit(ax,ay,ar,bx,by,br){const dx=ax-bx,dy=ay-by;return dx*dx+dy*dy<(ar+br)*(ar+br);}
-
   function drawShip(x,y,alpha){
     ctx.save();ctx.globalAlpha=alpha;ctx.translate(x,y);
-    const g=ctx.createRadialGradient(-14,0,0,-14,0,12);g.addColorStop(0,'rgba(100,180,255,0.7)');g.addColorStop(1,'rgba(100,180,255,0)');
+    const g=ctx.createRadialGradient(-14,0,0,-14,0,12);g.addColorStop(0,'rgba(79,142,255,0.7)');g.addColorStop(1,'rgba(79,142,255,0)');
     ctx.beginPath();ctx.arc(-14,0,12,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
     ctx.fillStyle='rgba(220,235,255,1)';ctx.beginPath();ctx.moveTo(14,0);ctx.lineTo(-8,-7);ctx.lineTo(-10,0);ctx.lineTo(-8,7);ctx.closePath();ctx.fill();
-    ctx.fillStyle='rgba(100,180,255,0.7)';ctx.beginPath();ctx.ellipse(4,0,5,3.5,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(79,142,255,0.7)';ctx.beginPath();ctx.ellipse(4,0,5,3.5,0,0,Math.PI*2);ctx.fill();
     ctx.restore();
   }
-
   function loop(ts){
     if(!running)return;
     const dt=Math.min((ts-lastTs)/1000,0.05);lastTs=ts;
     score+=dt*12;document.getElementById('gm-score').textContent=Math.floor(score);
     invTimer=Math.max(0,invTimer-dt);diffT+=dt;
     if(diffT>8){diffT=0;diffLvl=Math.min(diffLvl+1,12);}
-    spawnT+=dt;
-    const sr=Math.max(0.4,1.5-diffLvl*0.09);
+    spawnT+=dt;const sr=Math.max(0.4,1.5-diffLvl*0.09);
     if(spawnT>sr){spawnT=0;spawnAst();if(Math.random()<0.18)spawnFuel();}
     ctx.clearRect(0,0,W,H);
     bgStars.forEach(s=>{s.x-=s.sp*(1+diffLvl*0.05);if(s.x<0)s.x=W;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${s.op})`;ctx.fill();});
     ship.x+=(ship.tx-ship.x)*Math.min(1,7*dt);ship.y+=(ship.ty-ship.y)*Math.min(1,7*dt);
     ship.x=Math.max(12,Math.min(W-12,ship.x));ship.y=Math.max(12,Math.min(H-12,ship.y));
     ship.trail.unshift({x:ship.x,y:ship.y});if(ship.trail.length>18)ship.trail.pop();
-    for(let i=1;i<ship.trail.length;i++){const a=(1-i/ship.trail.length)*0.35;ctx.beginPath();ctx.arc(ship.trail[i].x,ship.trail[i].y,(1-i/ship.trail.length)*3.5,0,Math.PI*2);ctx.fillStyle=`rgba(100,180,255,${a})`;ctx.fill();}
+    for(let i=1;i<ship.trail.length;i++){const a=(1-i/ship.trail.length)*0.35;ctx.beginPath();ctx.arc(ship.trail[i].x,ship.trail[i].y,(1-i/ship.trail.length)*3.5,0,Math.PI*2);ctx.fillStyle=`rgba(79,142,255,${a})`;ctx.fill();}
     particles=particles.filter(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=0.92;p.vy*=0.92;p.life-=p.decay*dt;if(p.life<=0)return false;ctx.beginPath();ctx.arc(p.x,p.y,p.r*p.life,0,Math.PI*2);ctx.fillStyle=p.color.replace(')',`,${p.life})`).replace('rgb','rgba');ctx.fill();return true;});
-    fuelCells=fuelCells.filter(f=>{f.x+=f.vx*dt;f.y+=f.vy*dt;if(f.x<-20)return false;f.pulse+=dt*3;const gw=0.5+0.5*Math.sin(f.pulse);ctx.save();ctx.translate(f.x,f.y);const gd=ctx.createRadialGradient(0,0,0,0,0,f.r*(1.8+gw*0.5));gd.addColorStop(0,'rgba(0,210,120,0.9)');gd.addColorStop(0.5,'rgba(0,180,100,0.4)');gd.addColorStop(1,'rgba(0,180,100,0)');ctx.beginPath();ctx.arc(0,0,f.r*(1.8+gw*0.5),0,Math.PI*2);ctx.fillStyle=gd;ctx.fill();ctx.beginPath();ctx.arc(0,0,f.r,0,Math.PI*2);ctx.fillStyle='rgba(0,220,130,0.95)';ctx.fill();ctx.restore();if(chit(ship.x,ship.y,ship.size,f.x,f.y,f.r+4)){score+=50;document.getElementById('gm-score').textContent=Math.floor(score);spawnParts(f.x,f.y,'rgb(0,220,130)',12);return false;}return true;});
+    fuelCells=fuelCells.filter(f=>{f.x+=f.vx*dt;f.y+=f.vy*dt;if(f.x<-20)return false;f.pulse+=dt*3;const gw=0.5+0.5*Math.sin(f.pulse);ctx.save();ctx.translate(f.x,f.y);const gd=ctx.createRadialGradient(0,0,0,0,0,f.r*(1.8+gw*0.5));gd.addColorStop(0,'rgba(61,232,154,0.9)');gd.addColorStop(0.5,'rgba(61,232,154,0.4)');gd.addColorStop(1,'rgba(61,232,154,0)');ctx.beginPath();ctx.arc(0,0,f.r*(1.8+gw*0.5),0,Math.PI*2);ctx.fillStyle=gd;ctx.fill();ctx.beginPath();ctx.arc(0,0,f.r,0,Math.PI*2);ctx.fillStyle='rgba(61,232,154,0.95)';ctx.fill();ctx.restore();if(chit(ship.x,ship.y,ship.size,f.x,f.y,f.r+4)){score+=50;document.getElementById('gm-score').textContent=Math.floor(score);spawnParts(f.x,f.y,'rgb(61,232,154)',12);return false;}return true;});
     let isHit=false;
-    asteroids=asteroids.filter(a=>{a.x+=a.vx*dt;a.y+=a.vy*dt;a.rot+=a.rotSpeed*dt;if(a.x<-60||a.y<-60||a.y>H+60)return false;ctx.save();ctx.translate(a.x,a.y);ctx.rotate(a.rot);ctx.beginPath();a.verts.forEach((v,i)=>{const px=Math.cos(v.a)*v.d,py=Math.sin(v.a)*v.d;i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);});ctx.closePath();ctx.strokeStyle='rgba(180,190,200,0.8)';ctx.lineWidth=1.4;ctx.fillStyle='rgba(40,42,48,0.9)';ctx.fill();ctx.stroke();ctx.restore();if(invTimer<=0&&chit(ship.x,ship.y,ship.size-3,a.x,a.y,a.r*0.72)){isHit=true;spawnParts(ship.x,ship.y,'rgb(255,120,80)',20);spawnParts(a.x,a.y,'rgb(180,190,200)',10);}return!isHit;});
+    asteroids=asteroids.filter(a=>{a.x+=a.vx*dt;a.y+=a.vy*dt;a.rot+=a.rotSpeed*dt;if(a.x<-60||a.y<-60||a.y>H+60)return false;ctx.save();ctx.translate(a.x,a.y);ctx.rotate(a.rot);ctx.beginPath();a.verts.forEach((v,i)=>{const px=Math.cos(v.a)*v.d,py=Math.sin(v.a)*v.d;i===0?ctx.moveTo(px,py):ctx.lineTo(px,py);});ctx.closePath();ctx.strokeStyle='rgba(160,170,180,0.7)';ctx.lineWidth=1.2;ctx.fillStyle='rgba(20,20,28,0.95)';ctx.fill();ctx.stroke();ctx.restore();if(invTimer<=0&&chit(ship.x,ship.y,ship.size-3,a.x,a.y,a.r*0.72)){isHit=true;spawnParts(ship.x,ship.y,'rgb(255,79,79)',20);spawnParts(a.x,a.y,'rgb(160,170,180)',10);}return!isHit;});
     const sa=invTimer>0?(0.4+0.6*Math.abs(Math.sin(invTimer*12))):1;
     drawShip(ship.x,ship.y,sa);
     if(isHit){
@@ -1952,26 +1672,21 @@ document.addEventListener('keydown',e=>{
       document.querySelector('.gop-start-btn').textContent=t('launch');
       document.getElementById('gop-game-overlay').classList.remove('hidden');
       removeInput();
-      showToast({icon:'warn',color:'#ff6b58',title:t('missionFailed'),sub:`${t('scoreLabel')} ${Math.floor(score)}`,duration:3500});
+      showToast({icon:'warn',color:'#ff4f4f',title:t('missionFailed'),sub:`${t('scoreLabel')} ${Math.floor(score)}`,duration:3500});
       return;
     }
     raf=requestAnimationFrame(loop);
   }
-
   function stopGame(){running=false;if(raf){cancelAnimationFrame(raf);raf=null;}removeInput();}
   window.startGame=function(){
-    if(!ctx)setupGameCanvas();
-    reset();running=true;addInput();
+    if(!ctx)setupGameCanvas();reset();running=true;addInput();
     document.getElementById('gop-game-overlay').classList.add('hidden');
-    lastTs=performance.now();raf=requestAnimationFrame(loop);
-    playSound('nav');
+    lastTs=performance.now();raf=requestAnimationFrame(loop);playSound('nav');
   };
   window.stopGame=stopGame;
 })();
 
-/* ══════════════════════════════════════
-   INIT
-══════════════════════════════════════ */
+/* ── INIT ── */
 applyLang();
 </script>
 </body>
