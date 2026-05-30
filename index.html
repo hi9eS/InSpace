@@ -515,10 +515,21 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
   background:transparent;border:none;cursor:pointer;padding:5px 12px;border-radius:5px;transition:color .2s,background .2s;}
 .cad-btn:hover{color:var(--tx-2);}
 .cad-btn.on{background:var(--bg-4);color:var(--tx);}
+.cad-ctrl{display:inline-flex;align-items:center;gap:12px;}
+.cad-nav{display:inline-flex;align-items:center;gap:9px;}
+.cad-arrow{width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;
+  font-family:var(--f-mono);font-size:1.05em;line-height:1;color:var(--tx-2);background:var(--bg-3);border:1px solid var(--line);
+  border-radius:6px;transition:color .2s,background .2s,border-color .2s;}
+.cad-arrow:hover:not(:disabled){color:var(--tx);background:var(--bg-4);border-color:var(--line-2);}
+.cad-arrow:disabled{opacity:.32;cursor:not-allowed;}
+.cad-range{font-family:var(--f-mono);font-size:0.56em;letter-spacing:0.1em;text-transform:uppercase;color:var(--tx-3);min-width:120px;text-align:center;}
 .giscus-wrap{margin-top:40px;padding-top:28px;border-top:1px solid var(--line);}
-.giscus-head{margin-bottom:18px;}
-.giscus-sub{display:block;font-family:var(--f-mono);font-size:0.58em;letter-spacing:0.08em;text-transform:uppercase;color:var(--tx-3);margin-top:7px;}
-.giscus-mount{min-height:110px;}
+/* per-news reactions: crop to the reaction bar only (comments hidden). Tune height via --giscus-react-h */
+.news-item{display:flex;flex-direction:column;}
+.news-react{--giscus-react-h:46px;overflow:hidden;max-height:var(--giscus-react-h);margin:0 0 11px;}
+.news-react.detail{margin:28px 0 0;}
+.news-react .giscus,.news-react .giscus-frame{height:var(--giscus-react-h)!important;min-height:var(--giscus-react-h)!important;}
+.giscus-comments{display:none!important;}
 .chart-bartrack{fill:rgba(190,195,205,0.05);}
 .chart-axis{stroke:var(--line);stroke-width:1;}
 .chart-axis-lbl{font-family:var(--f-mono);font-size:9px;letter-spacing:0.5px;fill:var(--tx-4);text-transform:uppercase;}
@@ -763,26 +774,6 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
       </div>
       <div class="log-list" id="log-cards"></div>
       <div style="display:flex;justify-content:center;"><button id="log-more" onclick="loadMore()" style="display:none"><span data-i="loadMore">Load more</span> <span>&#8595;</span></button></div>
-      <div class="giscus-wrap">
-        <div class="giscus-head">
-          <span class="op-section" data-i="reactionsTitle">Reactions &amp; Comments</span>
-          <span class="giscus-sub" data-i="reactionsSub">Sign in with GitHub to react and comment</span>
-        </div>
-        <div class="giscus-mount">
-          <script src="https://giscus.app/client.js"
-            data-repo="hi9eS/InSpace"
-            data-repo-id="R_kgDOMNq-gQ"
-            data-category="Announcements"
-            data-category-id="DIC_kwDOMNq-gc4Ch9P4"
-            data-mapping="pathname"
-            data-reactions-enabled="1"
-            data-emit-metadata="0"
-            data-theme="transparent_dark"
-            crossorigin="anonymous"
-            async>
-          </script>
-        </div>
-      </div>
     </div>
     <div class="sub-page" id="log-detail">
       <button class="op-back" style="margin-bottom:26px" onclick="showNewsList()"><svg viewBox="0 0 12 12"><path d="M7.5 1L3 6l4.5 5"/></svg><span data-i="backToList">Back to list</span></button>
@@ -1472,6 +1463,10 @@ function buildTrajectory(){
   let shipG='';
   if(TRAJECTORY_MODE==='orbit'){shipG=vehAnim({path:shipDashed,mKeyPoints:'0;0;1;1',mKeyTimes:'0;0.5;0.82;1',mSplines:'0 0 1 1;0.3 0 0.2 1;0 0 1 1',rVals:'35;35;35;35;-90;-90',rKeyTimes:'0;0.5;0.66;0.72;0.8;1',opVals:'0;0;1;1;0;0',opKeyTimes:'0;0.5;0.54;0.8;0.84;1',flameKeyTimes:'0;0.72;0.76;0.82;0.86;1'});}
   else if(TRAJECTORY_MODE==='suborbital'){shipG=vehAnim({path:shipDashed,mKeyPoints:'0;0;1;1',mKeyTimes:'0;0.5;0.84;1',mSplines:'0 0 1 1;0.22 0 0.15 1;0 0 1 1',rVals:'12;12;12;12;-90;-90',rKeyTimes:'0;0.5;0.68;0.76;0.84;1',opVals:'0;0;1;1;0;0',opKeyTimes:'0;0.5;0.54;0.82;0.86;1',flameKeyTimes:'0;0.76;0.8;0.85;0.88;1'});}
+  /* detail FX (timed to the 7s loop): liftoff plume, staging flash, booster landing burn */
+  const liftoffFx=`<g><circle cx="60" cy="206" fill="rgba(255,176,90,0.5)" r="0"><animate attributeName="r" dur="7s" repeatCount="indefinite" values="0;0;10;3;0;0" keyTimes="0;0.03;0.075;0.13;0.18;1"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0.9;0.35;0;0" keyTimes="0;0.03;0.075;0.13;0.18;1"/></circle></g>`;
+  const stagingFx=`<circle cx="200" cy="116" fill="rgba(132,179,255,0.95)" r="0"><animate attributeName="r" dur="7s" repeatCount="indefinite" values="0;0;7.5;0;0" keyTimes="0;0.47;0.51;0.56;1"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0.95;0;0" keyTimes="0;0.47;0.51;0.56;1"/></circle>`;
+  const landingFx=`<g><circle cx="112" cy="206" fill="rgba(255,176,90,0.5)" r="0"><animate attributeName="r" dur="7s" repeatCount="indefinite" values="0;0;9;4;0;0" keyTimes="0;0.50;0.545;0.575;0.61;1"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0.85;0.4;0;0" keyTimes="0;0.50;0.545;0.575;0.61;1"/></circle><circle cx="112" cy="206" fill="none" stroke="rgba(255,176,90,0.8)" stroke-width="1" r="0"><animate attributeName="r" dur="7s" repeatCount="indefinite" values="0;0;3;13;0;0" keyTimes="0;0.50;0.545;0.6;0.62;1"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0.8;0;0;0" keyTimes="0;0.50;0.545;0.6;0.62;1"/></circle></g>`;
   const svg=`
   <svg class="chart-svg" viewBox="0 0 480 250" preserveAspectRatio="xMidYMid meet">
     <defs>
@@ -1493,6 +1488,7 @@ function buildTrajectory(){
     <path d="${shipSolid}" fill="none" stroke="url(#shipGrad)" stroke-width="2" stroke-linecap="round"/>
     <path d="${ascent}" fill="none" stroke="url(#ascGrad)" stroke-width="2.4" stroke-linecap="round"/>
     ${nodes}
+    ${liftoffFx}${stagingFx}${landingFx}
     ${stackG}${boosterG}${shipG}
   </svg>`;
   document.getElementById('traj-svg-wrap').innerHTML=svg;
@@ -1551,6 +1547,22 @@ function newsFiltered(){
   if(newsQuery)list=list.filter(n=>((n.name||'')+' '+(n.description||'')+' '+(n.detail||'')).toLowerCase().includes(newsQuery));
   return list;
 }
+/* ── per-news Giscus reactions (reactions-only via height crop; same term ⇒ same thread in list + detail) ── */
+function escAttr(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function giscusTerm(n){return 'InSpace News — '+((n&&n.name)||'Untitled');}
+function mountGiscus(el){
+  if(!el||el.dataset.mounted)return;el.dataset.mounted='1';
+  const s=document.createElement('script');s.src='https://giscus.app/client.js';s.async=true;s.crossOrigin='anonymous';
+  const A={'data-repo':'hi9eS/InSpace','data-repo-id':'R_kgDOMNq-gQ','data-category':'Announcements','data-category-id':'DIC_kwDOMNq-gc4Ch9P4','data-mapping':'specific','data-term':el.dataset.term||'InSpace','data-strict':'1','data-reactions-enabled':'1','data-emit-metadata':'0','data-input-position':'top','data-theme':'transparent_dark','data-lang':currentLang||'en'};
+  Object.keys(A).forEach(k=>s.setAttribute(k,A[k]));el.appendChild(s);
+}
+let giscusObserver=null;
+function observeGiscus(){
+  const els=document.querySelectorAll('.news-react:not([data-mounted])');
+  if(!('IntersectionObserver'in window)){els.forEach(mountGiscus);return;}
+  if(!giscusObserver)giscusObserver=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){mountGiscus(e.target);giscusObserver.unobserve(e.target);}}),{rootMargin:'250px'});
+  els.forEach(el=>giscusObserver.observe(el));
+}
 function renderNews(reset){
   const cont=document.getElementById('log-cards');const more=document.getElementById('log-more');
   const list=newsFiltered();
@@ -1560,15 +1572,18 @@ function renderNews(reset){
     cont.innerHTML=`<div style="text-align:center;color:var(--tx-3);padding:46px 0;font-family:var(--f-mono);font-size:0.8em;letter-spacing:0.06em">${allRockets.length===0?t('contentPending'):t('noLaunches')}</div>`;
     more.style.display='none';document.getElementById('ov-news-meta').textContent=allRockets.length+' '+t('newsEntries');return;
   }
-  cont.innerHTML=list.slice(0,newsShown).map(n=>{const i=allRockets.indexOf(n);return `<div class="log-row" onclick="playSound('news');showNewsDetail(${i})"><div class="log-row-main"><div class="log-row-title">${n.name}</div><div class="log-row-prev">${n.description||''}</div></div><div class="log-row-side"><span class="log-row-date">${n.date||''}</span><span class="log-row-read">${t('details')} <span>&#8599;</span></span></div></div>`;}).join('');
+  cont.innerHTML=list.slice(0,newsShown).map(n=>{const i=allRockets.indexOf(n);const term=escAttr(giscusTerm(n));return `<div class="news-item"><div class="news-react" data-term="${term}"></div><div class="log-row" onclick="playSound('news');showNewsDetail(${i})"><div class="log-row-main"><div class="log-row-title">${n.name}</div><div class="log-row-prev">${n.description||''}</div></div><div class="log-row-side"><span class="log-row-date">${n.date||''}</span><span class="log-row-read">${t('details')} <span>&#8599;</span></span></div></div></div>`;}).join('');
   more.style.display=newsShown<list.length?'flex':'none';
   document.getElementById('ov-news-meta').textContent=allRockets.length+' '+t('newsEntries');
+  observeGiscus();
 }
 function onNewsSearch(){newsQuery=(document.getElementById('news-search').value||'').trim().toLowerCase();renderNews(true);}
 function loadMore(){playSound('details');renderNews(false);}
 function showNewsDetail(i){
   const n=allRockets[i];if(!n)return;playSound('details');
-  document.getElementById('log-detail-body').innerHTML=`<div class="op-hero-title">${n.name}</div><div class="log-detail-date">${n.date||''}</div><div class="log-detail-div"></div><div class="log-detail-text">${n.detail||n.description||''}</div>`;
+  const term=escAttr(giscusTerm(n));
+  document.getElementById('log-detail-body').innerHTML=`<div class="op-hero-title">${n.name}</div><div class="log-detail-date">${n.date||''}</div><div class="log-detail-div"></div><div class="log-detail-text">${n.detail||n.description||''}</div><div class="news-react detail" data-term="${term}"></div>`;
+  const r=document.querySelector('#log-detail-body .news-react');if(r)mountGiscus(r);
   document.getElementById('log-list').classList.remove('active');
   document.getElementById('log-detail').classList.add('active');
   document.getElementById('ov-news-title').textContent=t('latestNews');
@@ -1648,16 +1663,18 @@ function showNewsList(){
    SCHEDULE / MANIFEST
 ════════════════════════════════════════════════════════════ */
 const SCHED_TABS=[
-  {id:'all',key:'schedAll',status:null,color:'rgba(190,195,205,0.55)'},
-  {id:'planned',key:'schedPlanned',status:'Planned',color:'#eaf0fa'},
-  {id:'completed',key:'schedCompleted',status:'Success',color:'#37e0a0'},
-  {id:'canceled',key:'schedCanceled',status:'Cancelled',color:'#ff5d5d'},
-];
+  {id:'all',status:null,color:'rgba(190,195,205,0.55)',label:()=>t('schedAll')},
+  {id:'planned',status:'Planned',color:'#cfd3da',label:()=>t('schedPlanned')},
+].concat(OUTCOMES.map(o=>({
+  id:o.key.toLowerCase().replace(/[^a-z0-9]+/g,'-'),
+  status:o.key,color:o.color,
+  label:()=> o.key==='Success'?t('schedCompleted'):(o.key==='Cancelled'?t('schedCanceled'):o.key)
+})));
 let currentSchedTab='all',schedQuery='',schedShown=0;const SCHED_PAGE_SIZE=10;
 function tabCount(status){return status?launches.filter(l=>l.status===status).length:launches.length;}
 function rebuildScheduleTabs(){
   document.getElementById('sch-tabs').innerHTML=SCHED_TABS.map(tb=>
-    `<button class="sch-tab${tb.id===currentSchedTab?' active':''}" style="--td:${tb.color}" onclick="setSchedTab('${tb.id}')"><span class="td"></span>${t(tb.key)} <span class="cnt">${tabCount(tb.status)}</span></button>`).join('');
+    `<button class="sch-tab${tb.id===currentSchedTab?' active':''}" style="--td:${tb.color}" onclick="setSchedTab('${tb.id}')"><span class="td"></span>${tb.label()} <span class="cnt">${tabCount(tb.status)}</span></button>`).join('');
 }
 function setSchedTab(id){if(id===currentSchedTab)return;currentSchedTab=id;playSound('tab');rebuildScheduleTabs();renderScheduleRows(true);}
 function schedFiltered(){
@@ -1690,17 +1707,47 @@ function renderScheduleRows(reset){
 function onSearch(){schedQuery=(document.getElementById('sch-search').value||'').trim().toLowerCase();renderScheduleRows(true);}
 
 /* ─────────── LAUNCH MODAL ─────────── */
-/* ── CONFIG · mission-profile phases (edit this list to change the stages shown) ── */
+/* ── CONFIG · mission-profile phases ──────────────────────────────────────────
+   Per flight you can add a `phases` object to a launch in the launches[] list:
+     phases:{ meco:1.2, sep:3.5, landing:8 }   // minutes after T-0 (decimals OK) → turns green automatically in real time
+     phases:{ meco:true, sep:true, landing:true } // mark done manually right now (no timer)
+     mix freely, e.g. phases:{ meco:1.2, sep:true }
+   T-0 turns green automatically the moment the countdown reaches 0 (launch time).
+   With no `phases` set, a Success mission shows all stages green after it has flown. */
 const MISSION_PHASES=['T-0','MECO','SEP','LANDING'];
-function missionProfileInner(l){
-  const phases=MISSION_PHASES;
-  const done=l.status==='Success'?phases.length:0;const col=statusColor(l.status);
-  const fillPct=done<=1?0:((done-1)/(phases.length-1))*100;
-  const nodes=phases.map((p,i)=>{const pct=(i/(phases.length-1))*100;const dn=i<done;return `<div class="m-phase${dn?' done':''}" style="left:${pct}%;--pc:${col}"><span class="pn"></span><span class="pl">${p}</span></div>`;}).join('');
-  return `<div class="m-profile-lbl">${t('profileLabel')}</div><div class="m-track"><div class="m-track-line"></div><div class="m-track-fill" style="width:${fillPct}%;background:linear-gradient(90deg,${col},${col});box-shadow:0 0 10px ${col}"></div>${nodes}</div>`;
+const PHASE_KEY={'T-0':'t0','MECO':'meco','SEP':'sep','LANDING':'landing'};
+function phaseState(l,phaseName,now){
+  const k=PHASE_KEY[phaseName];
+  if(k==='t0')return now>=l.dateObj.getTime();                 /* T-0 done at launch time */
+  const cfg=l.phases?l.phases[k]:undefined;
+  if(cfg===true)return true;                                    /* manual override */
+  if(typeof cfg==='number')return now>=l.dateObj.getTime()+cfg*60000; /* auto: minutes after T-0 */
+  if(l.status==='Success'&&now>=l.endObj.getTime())return true; /* default: completed successful mission */
+  return false;
 }
+function missionProfileInner(l){
+  const phases=MISSION_PHASES,now=Date.now(),done='#37e0a0';
+  const states=phases.map(p=>phaseState(l,p,now));
+  let lastDone=-1;for(let i=0;i<states.length;i++){if(states[i])lastDone=i;else break;}
+  const fillPct=lastDone<=0?0:(lastDone/(phases.length-1))*100;
+  const nodes=phases.map((p,i)=>{const pct=(i/(phases.length-1))*100;return `<div class="m-phase${states[i]?' done':''}" style="left:${pct}%;--pc:${done}"><span class="pn"></span><span class="pl">${p}</span></div>`;}).join('');
+  return `<div class="m-profile-lbl">${t('profileLabel')}</div><div class="m-track"><div class="m-track-line"></div><div class="m-track-fill" style="width:${fillPct}%;background:linear-gradient(90deg,${done},${done});box-shadow:0 0 10px ${done}"></div>${nodes}</div>`;
+}
+function updateModalProfile(){
+  const bd=document.getElementById('modal-bd');
+  if(!bd||!bd.classList.contains('active'))return;
+  const idx=window.__openModalLaunch;if(idx==null)return;const l=launches[idx];if(!l)return;
+  const phases=MISSION_PHASES,now=Date.now();
+  const states=phases.map(p=>phaseState(l,p,now));
+  let lastDone=-1;for(let i=0;i<states.length;i++){if(states[i])lastDone=i;else break;}
+  const track=document.querySelector('#m-profile .m-track');if(!track)return;
+  const fill=track.querySelector('.m-track-fill');if(fill)fill.style.width=(lastDone<=0?0:(lastDone/(phases.length-1))*100)+'%';
+  track.querySelectorAll('.m-phase').forEach((el,i)=>el.classList.toggle('done',!!states[i]));
+}
+setInterval(updateModalProfile,1000);
 function openLaunchModal(idx){
   const l=launches[idx];if(!l)return;playSound('modal');
+  window.__openModalLaunch=idx;
   const col=statusColor(l.status);
   document.getElementById('m-colorbar').style.background=col;
   const dotE=document.getElementById('m-dot');dotE.style.background=col;dotE.style.boxShadow='0 0 8px '+col;
@@ -1726,6 +1773,7 @@ function openLaunchModal(idx){
 }
 function closeLaunchModal(e,force){
   if(e&&!force&&e.target&&e.target.id!=='modal-bd')return;
+  window.__openModalLaunch=null;
   playSound('close');const bd=document.getElementById('modal-bd');bd.classList.remove('visible');
   setTimeout(()=>bd.classList.remove('active'),400);
 }
@@ -1733,8 +1781,10 @@ function closeLaunchModal(e,force){
 /* ════════════════════════════════════════════════════════════
    ANALYTICS  (hand-built SVG, derived from flight log)
 ════════════════════════════════════════════════════════════ */
-let cadenceGran='month';
-function setCadence(g){cadenceGran=g;renderAnalytics();}
+let cadenceGran='month',cadencePage=0;
+const CAD_WINDOW={month:12,year:10};
+function setCadence(g){cadenceGran=g;cadencePage=0;renderAnalytics();}
+function setCadencePage(delta){cadencePage+=delta;renderAnalytics();}
 function computeStats(){
   const comp=launches.filter(l=>l.status==='Success'),canc=launches.filter(l=>l.status==='Cancelled'),plan=launches.filter(l=>l.status==='Planned');
   const isLaunched=l=>OUTCOME_LAUNCHED[l.status]===true;            /* actually flew */
@@ -1747,16 +1797,14 @@ function computeStats(){
   const byVehOutcome=vehicles.map(v=>({name:v.name,segs:OUTCOMES.map(o=>({key:o.key,color:o.color,count:launches.filter(l=>l.nameId===v.id&&l.status===o.key).length})).filter(s=>s.count>0)})).filter(v=>v.segs.length>0);
   const monLabel=(y,m)=>new Date(y,m,1).toLocaleDateString('en-US',{month:'short'})+" '"+String(y).slice(2);
   const now=new Date();
-  /* cadence: per-period stacked by outcome (month or year, auto-extends to current) */
+  /* cadence: per-period stacked by outcome (month or year). Full list; renderAnalytics windows + paginates it */
   let cadence=[];
   if(cadenceGran==='year'){
     const ys=launches.map(l=>l.dateObj.getFullYear());
-    let yrs=[];for(let y=Math.min(...ys);y<=Math.max(now.getFullYear(),...ys);y++)yrs.push(y);if(yrs.length>10)yrs=yrs.slice(-10);
-    cadence=yrs.map(y=>({label:String(y),segs:OUTCOMES.map(o=>({key:o.key,color:o.color,count:launches.filter(l=>l.dateObj.getFullYear()===y&&l.status===o.key).length}))}));
+    for(let y=Math.min(...ys);y<=Math.max(now.getFullYear(),...ys);y++)cadence.push({label:String(y),segs:OUTCOMES.map(o=>({key:o.key,color:o.color,count:launches.filter(l=>l.dateObj.getFullYear()===y&&l.status===o.key).length}))});
   }else{
     const idxOf=d=>d.getFullYear()*12+d.getMonth();
-    let mIdx=[];for(let i=Math.min(...launches.map(l=>idxOf(l.dateObj)));i<=Math.max(idxOf(now),...launches.map(l=>idxOf(l.dateObj)));i++)mIdx.push(i);if(mIdx.length>12)mIdx=mIdx.slice(-12);
-    cadence=mIdx.map(idx=>{const y=Math.floor(idx/12),m=idx%12;return{label:monLabel(y,m),segs:OUTCOMES.map(o=>({key:o.key,color:o.color,count:launches.filter(l=>idxOf(l.dateObj)===idx&&l.status===o.key).length}))};});
+    for(let i=Math.min(...launches.map(l=>idxOf(l.dateObj)));i<=Math.max(idxOf(now),...launches.map(l=>idxOf(l.dateObj)));i++){const y=Math.floor(i/12),m=i%12;cadence.push({label:monLabel(y,m),segs:OUTCOMES.map(o=>({key:o.key,color:o.color,count:launches.filter(l=>idxOf(l.dateObj)===i&&l.status===o.key).length}))});}
   }
   const cbm={};comp.forEach(l=>{const k=l.dateObj.getFullYear()*12+l.dateObj.getMonth();cbm[k]=(cbm[k]||0)+1;});
   let busiest=null;Object.keys(cbm).forEach(k=>{const idx=+k;if(!busiest||cbm[k]>busiest.completed)busiest={label:monLabel(Math.floor(idx/12),idx%12),completed:cbm[k]};});
@@ -1841,10 +1889,19 @@ function renderAnalytics(){
   ];
   const kpiHTML=kpis.map(k=>`<div class="kpi" style="--kc:${k.c}"><div class="kpi-l">${k.l}</div><div class="kpi-v">${k.v}</div>${k.sub?`<div class="kpi-sub">${k.sub}</div>`:''}</div>`).join('');
   const outcomeLegend=OUTCOMES.map(o=>`<span class="cl-item"><span class="cl-swatch" style="background:${o.color}"></span>${o.key}</span>`).join('');
+  /* cadence windowing + page arrows (← older / newer →) */
+  const cadAll=s.cadence,win=CAD_WINDOW[cadenceGran]||12,maxPage=Math.max(0,Math.ceil(cadAll.length/win)-1);
+  cadencePage=Math.min(Math.max(0,cadencePage),maxPage);
+  const cadEnd=cadAll.length-cadencePage*win,cadStart=Math.max(0,cadEnd-win);
+  const cadView=cadAll.slice(cadStart,cadEnd);
+  const canOlder=cadStart>0,canNewer=cadencePage>0,paged=cadAll.length>win;
+  const cadRange=cadView.length?`${cadView[0].label} – ${cadView[cadView.length-1].label}`:'';
+  const cadNav=paged?`<div class="cad-nav"><button class="cad-arrow" onclick="setCadencePage(1)" ${canOlder?'':'disabled'} aria-label="Older">‹</button><span class="cad-range">${cadRange}</span><button class="cad-arrow" onclick="setCadencePage(-1)" ${canNewer?'':'disabled'} aria-label="Newer">›</button></div>`:'';
+  const cadToggle=`<div class="cad-toggle"><button class="cad-btn${cadenceGran==='month'?' on':''}" onclick="setCadence('month')">${t('periodMonth')}</button><button class="cad-btn${cadenceGran==='year'?' on':''}" onclick="setCadence('year')">${t('periodYear')}</button></div>`;
   document.getElementById('analytics-body').innerHTML=
     `<div class="kpi-grid">${kpiHTML}</div><div class="chart-grid">`+
     `<div class="chart-card wide"><div class="chart-head"><span class="chart-title">${t('chartCumulative')}</span><span class="chart-note">${t('statusCompleted')}</span></div>${cumulativeChartSVG(s.cum)}</div>`+
-    `<div class="chart-card wide"><div class="chart-head"><span class="chart-title">${t('chartCadence')}</span><div class="cad-toggle"><button class="cad-btn${cadenceGran==='month'?' on':''}" onclick="setCadence('month')">${t('periodMonth')}</button><button class="cad-btn${cadenceGran==='year'?' on':''}" onclick="setCadence('year')">${t('periodYear')}</button></div></div>${cadenceChartSVG(s.cadence)}<div class="chart-legend">${outcomeLegend}</div></div>`+
+    `<div class="chart-card wide"><div class="chart-head"><span class="chart-title">${t('chartCadence')}</span><div class="cad-ctrl">${cadNav}${cadToggle}</div></div>${cadenceChartSVG(cadView)}<div class="chart-legend">${outcomeLegend}</div></div>`+
     `<div class="chart-card"><div class="chart-head"><span class="chart-title">${t('chartOutcome')}</span></div>${donutSVG(s.byVehLaunched,t('launchesCount'))}</div>`+
     `<div class="chart-card"><div class="chart-head"><span class="chart-title">${t('chartOutcomes')}</span></div>${donutSVG(s.outcomeCounts,t('missionsCount'))}</div>`+
     `<div class="chart-card wide"><div class="chart-head"><span class="chart-title">${t('chartByVehicle')}</span><span class="chart-note">${t('statusCompleted')}</span></div>${hBarChartSVG(s.byVehSuccess)}</div>`+
