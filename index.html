@@ -215,21 +215,21 @@ h1.hero-title{font-family:var(--f-disp);font-weight:600;font-size:clamp(2.7em,7v
   animation:fadeUp .75s .26s var(--out) both;}
 .ignition-btn{position:relative;display:inline-flex;align-items:center;gap:11px;cursor:pointer;
   font-family:var(--f-disp);font-weight:600;font-size:0.96em;letter-spacing:0.06em;text-transform:uppercase;
-  padding:0 30px;min-height:54px;border-radius:7px;color:#1a0f00;border:1px solid var(--amber);overflow:hidden;
+  padding:0 30px;min-width:230px;min-height:54px;justify-content:center;border-radius:7px;color:#1a0f00;border:1px solid var(--amber);overflow:hidden;
   background:linear-gradient(180deg,#ffb155,#ef8d2c);
-  box-shadow:0 6px 22px rgba(255,158,61,.22),inset 0 1px 0 rgba(255,255,255,.4);
+  box-shadow:0 5px 16px rgba(255,158,61,.18),inset 0 1px 0 rgba(255,255,255,.4);
   transition:box-shadow .3s,transform .2s var(--spring);}
 .ignition-btn::before{content:'';position:absolute;inset:0;z-index:0;border-radius:inherit;pointer-events:none;
-  background:linear-gradient(180deg,#ffdbab,#ffb35e);transform:scaleX(0);transform-origin:left center;transition:transform .45s var(--out);}
+  background:linear-gradient(180deg,#ffca8f,#ef9b3e);transform:scaleX(0);transform-origin:left center;transition:transform .45s var(--out);}
 .ignition-btn:hover::before{transform:scaleX(1);}
 .ignition-btn::after{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(120deg,rgba(255,255,255,.42),transparent 42%);pointer-events:none;}
-.ignition-btn:hover{box-shadow:0 12px 34px rgba(255,158,61,.45),inset 0 1px 0 rgba(255,255,255,.55);}
+.ignition-btn:hover{box-shadow:0 8px 22px rgba(255,158,61,.28),inset 0 1px 0 rgba(255,255,255,.5);}
 .ignition-btn:active{transform:scale(0.99);}
 .ignition-btn svg{width:15px;height:15px;fill:#1a0f00;position:relative;z-index:2;transition:transform .25s var(--spring);}
-.ignition-btn:hover svg{transform:scale(1.14);}
+.ignition-btn:hover svg{transform:scale(1.06);}
 .ignition-btn span{position:relative;z-index:2;}
 .ghost-btn{display:inline-flex;align-items:center;gap:9px;cursor:pointer;font-family:var(--f-ui);font-weight:500;
-  font-size:0.9em;letter-spacing:0.04em;padding:0 30px;min-height:54px;border-radius:7px;color:var(--tx);
+  font-size:0.9em;letter-spacing:0.04em;padding:0 30px;min-width:230px;min-height:54px;justify-content:center;border-radius:7px;color:var(--tx);
   background:rgba(190,195,205,0.04);border:1px solid var(--line-2);
   transition:background .2s,border-color .2s,transform .2s var(--spring);}
 .ghost-btn:hover{background:rgba(190,195,205,0.09);border-color:var(--line-3);transform:scale(1.02);}
@@ -523,6 +523,14 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .cad-arrow:hover:not(:disabled){color:var(--tx);background:var(--bg-4);border-color:var(--line-2);}
 .cad-arrow:disabled{opacity:.32;cursor:not-allowed;}
 .cad-range{font-family:var(--f-mono);font-size:0.56em;letter-spacing:0.1em;text-transform:uppercase;color:var(--tx-3);min-width:120px;text-align:center;}
+.range-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px;
+  background:linear-gradient(180deg,var(--bg-2),var(--bg-1));border:1px solid var(--line);border-radius:11px;padding:11px 15px;}
+.range-lbl{font-family:var(--f-mono);font-size:0.58em;letter-spacing:0.18em;text-transform:uppercase;color:var(--tx-3);}
+.range-pills{display:inline-flex;gap:2px;background:var(--bg-3);border:1px solid var(--line);border-radius:8px;padding:3px;}
+.range-pill{font-family:var(--f-mono);font-size:0.6em;letter-spacing:0.12em;text-transform:uppercase;color:var(--tx-3);
+  background:transparent;border:none;cursor:pointer;padding:6px 13px;border-radius:6px;transition:color .2s,background .2s;}
+.range-pill:hover{color:var(--tx-2);}
+.range-pill.on{background:var(--bg-4);color:var(--tx);}
 .giscus-wrap{margin-top:40px;padding-top:28px;border-top:1px solid var(--line);}
 /* per-news reactions: crop to the reaction bar only (comments hidden). Tune height via --giscus-react-h */
 .news-item{display:flex;flex-direction:column;}
@@ -1054,8 +1062,22 @@ Object.keys(SYS_STATUS).forEach(l=>{ if(TRANSLATIONS[l])TRANSLATIONS[l].systemOn
 const CHART_OUTCOME={en:'Launches by Vehicle',ru:'Запуски по аппаратам',de:'Starts nach Fahrzeug',es:'Lanzamientos por Vehículo',fr:'Lancements par Véhicule',zh:'按飞行器发射',pt:'Lançamentos por Veículo',hi:'वाहन अनुसार प्रक्षेपण',pl:'Starty wg pojazdu',ja:'機体別打ち上げ',af:'Lanserings per voertuig',hu:'Indítások jármű szerint'};
 Object.keys(CHART_OUTCOME).forEach(l=>{ if(TRANSLATIONS[l])TRANSLATIONS[l].chartOutcome=CHART_OUTCOME[l]; });
 Object.keys(TRANSLATIONS).forEach(l=>{ TRANSLATIONS[l].statusCompleted='Success'; TRANSLATIONS[l].schedCompleted='Success'; });
-Object.assign(TRANSLATIONS.en,{chartCumulative:'Cumulative Successful Flights',chartByVehicle:'Success by Vehicle',kpiCompletion:'Success Rate',chartCadence:'Launch Cadence',chartOutcomes:'Outcomes',chartOutByVeh:'Outcomes by Vehicle',periodMonth:'Month',periodYear:'Year',missionsCount:'missions',reactionsTitle:'Reactions & Comments',reactionsSub:'Sign in with GitHub to react and comment',missionStatus:'Mission Status'});
-Object.assign(TRANSLATIONS.ru,{chartCadence:'Темп запусков',chartOutcomes:'Исходы',chartOutByVeh:'Исходы по аппаратам',periodMonth:'Месяц',periodYear:'Год',missionsCount:'миссий',reactionsTitle:'Реакции и комментарии',reactionsSub:'Войдите через GitHub, чтобы реагировать и комментировать',missionStatus:'Статус миссии'});
+Object.assign(TRANSLATIONS.en,{chartCumulative:'Cumulative Successful Flights',chartByVehicle:'Success by Vehicle',kpiCompletion:'Success Rate',chartCadence:'Launch Cadence',chartOutcomes:'Outcomes',chartOutByVeh:'Outcomes by Vehicle',periodMonth:'Month',periodYear:'Year',missionsCount:'missions',reactionsTitle:'Reactions & Comments',reactionsSub:'Sign in with GitHub to react and comment',missionStatus:'Mission Status',rangeLabel:'Range',rangeAll:'ALL',chartMomentum:'Launch Momentum',momentumNote:'Successes boost · idle days decay'});
+Object.assign(TRANSLATIONS.ru,{chartCadence:'Темп запусков',chartOutcomes:'Исходы',chartOutByVeh:'Исходы по аппаратам',periodMonth:'Месяц',periodYear:'Год',missionsCount:'миссий',reactionsTitle:'Реакции и комментарии',reactionsSub:'Войдите через GitHub, чтобы реагировать и комментировать',missionStatus:'Статус миссии',rangeLabel:'Период',rangeAll:'ВСЁ',chartMomentum:'Импульс запусков',momentumNote:'Успехи поднимают · простои снижают'});
+/* keep other languages up to date with the expanded analytics UI */
+const I18N_EXT={
+  de:{chartMomentum:'Startdynamik',momentumNote:'Erfolge heben · Pausen senken',chartByVehicle:'Erfolge nach Fahrzeug',chartCadence:'Startfrequenz',chartOutcomes:'Ergebnisse',chartOutByVeh:'Ergebnisse nach Fahrzeug',periodMonth:'Monat',periodYear:'Jahr',missionsCount:'Missionen',rangeLabel:'Zeitraum',rangeAll:'ALLE',missionStatus:'Missionsstatus'},
+  es:{chartMomentum:'Dinámica de Lanzamientos',momentumNote:'Éxitos suben · inactividad baja',chartByVehicle:'Éxitos por Vehículo',chartCadence:'Frecuencia de Lanzamiento',chartOutcomes:'Resultados',chartOutByVeh:'Resultados por Vehículo',periodMonth:'Mes',periodYear:'Año',missionsCount:'misiones',rangeLabel:'Periodo',rangeAll:'TODO',missionStatus:'Estado de Misión'},
+  fr:{chartMomentum:'Dynamique des Lancements',momentumNote:'Succès montent · inactivité baisse',chartByVehicle:'Succès par Véhicule',chartCadence:'Fréquence de Lancement',chartOutcomes:'Résultats',chartOutByVeh:'Résultats par Véhicule',periodMonth:'Mois',periodYear:'Année',missionsCount:'missions',rangeLabel:'Période',rangeAll:'TOUT',missionStatus:'Statut de Mission'},
+  zh:{chartMomentum:'发射动态',momentumNote:'成功上升 · 空档下降',chartByVehicle:'按飞行器成功',chartCadence:'发射频率',chartOutcomes:'结果',chartOutByVeh:'按飞行器结果',periodMonth:'月',periodYear:'年',missionsCount:'任务',rangeLabel:'时间范围',rangeAll:'全部',missionStatus:'任务状态'},
+  pt:{chartMomentum:'Dinâmica de Lançamentos',momentumNote:'Sucessos sobem · ociosidade cai',chartByVehicle:'Sucessos por Veículo',chartCadence:'Frequência de Lançamento',chartOutcomes:'Resultados',chartOutByVeh:'Resultados por Veículo',periodMonth:'Mês',periodYear:'Ano',missionsCount:'missões',rangeLabel:'Período',rangeAll:'TUDO',missionStatus:'Estado da Missão'},
+  hi:{chartMomentum:'प्रक्षेपण गति',momentumNote:'सफलता बढ़ाती · निष्क्रियता घटाती',chartByVehicle:'वाहन अनुसार सफल',chartCadence:'प्रक्षेपण आवृत्ति',chartOutcomes:'परिणाम',chartOutByVeh:'वाहन अनुसार परिणाम',periodMonth:'माह',periodYear:'वर्ष',missionsCount:'मिशन',rangeLabel:'अवधि',rangeAll:'सभी',missionStatus:'मिशन स्थिति'},
+  pl:{chartMomentum:'Dynamika startów',momentumNote:'Sukcesy podnoszą · przestoje obniżają',chartByVehicle:'Sukcesy wg pojazdu',chartCadence:'Częstotliwość startów',chartOutcomes:'Wyniki',chartOutByVeh:'Wyniki wg pojazdu',periodMonth:'Miesiąc',periodYear:'Rok',missionsCount:'misje',rangeLabel:'Okres',rangeAll:'WSZYSTKO',missionStatus:'Status misji'},
+  ja:{chartMomentum:'打ち上げ勢い',momentumNote:'成功で上昇・休止で下降',chartByVehicle:'機体別成功',chartCadence:'打ち上げ頻度',chartOutcomes:'結果',chartOutByVeh:'機体別結果',periodMonth:'月',periodYear:'年',missionsCount:'ミッション',rangeLabel:'期間',rangeAll:'全て',missionStatus:'ミッション状態'},
+  af:{chartMomentum:'Lanseringsmomentum',momentumNote:'Sukses lig · ledige dae daal',chartByVehicle:'Sukses per voertuig',chartCadence:'Lanseringsfrekwensie',chartOutcomes:'Uitkomste',chartOutByVeh:'Uitkomste per voertuig',periodMonth:'Maand',periodYear:'Jaar',missionsCount:'missies',rangeLabel:'Tydperk',rangeAll:'ALLES',missionStatus:'Missiestatus'},
+  hu:{chartMomentum:'Indítási lendület',momentumNote:'Sikerek emelik · állásidő csökkenti',chartByVehicle:'Sikerek jármű szerint',chartCadence:'Indítási gyakoriság',chartOutcomes:'Eredmények',chartOutByVeh:'Eredmények jármű szerint',periodMonth:'Hónap',periodYear:'Év',missionsCount:'misszió',rangeLabel:'Időszak',rangeAll:'MIND',missionStatus:'Misszió állapota'},
+};
+Object.keys(I18N_EXT).forEach(l=>{ if(TRANSLATIONS[l])Object.assign(TRANSLATIONS[l],I18N_EXT[l]); });
 
 const LANG_NAMES={en:'EN',es:'ES',de:'DE',fr:'FR',ru:'RU',zh:'中文',pt:'PT',hi:'HI',pl:'PL',ja:'JA',af:'AF',hu:'HU'};
 const LANG_LABELS={en:'English (US)',es:'Spanish',de:'German',fr:'French',ru:'Russian',zh:'Chinese',pt:'Brazilian',hi:'Hindi',pl:'Polish',ja:'Japanese',af:'Afrikaans (SA)',hu:'Hungarian'};
@@ -1422,7 +1444,7 @@ function rebuildStats(){
 
 /* ─────────── HERO FLIGHT-PROFILE TRAJECTORY ─────────── */
 /* ── CONFIG · flight-profile visual mode. Options: 'horizon' | 'orbit' | 'suborbital' ── */
-const TRAJECTORY_MODE='horizon';
+const TRAJECTORY_MODE='orbit';
 function buildTrajectory(){
   const ascent='M60 206 C 112 204 152 170 200 116';
   const boosterRet='M200 116 C 184 94 168 80 158 88 C 142 100 130 150 112 206';
@@ -1430,13 +1452,15 @@ function buildTrajectory(){
   const pad=(x)=>`<line x1="${x-7}" y1="206" x2="${x+7}" y2="206" stroke="rgba(190,195,205,0.45)" stroke-width="1.4"/><line x1="${x-4}" y1="206" x2="${x-6}" y2="210" stroke="rgba(190,195,205,0.3)" stroke-width="1"/><line x1="${x+4}" y1="206" x2="${x+6}" y2="210" stroke="rgba(190,195,205,0.3)" stroke-width="1"/>`;
   /* shared launch / staging / booster-return nodes */
   let nodes=node(60,206,'#ff9e3d','LAUNCH',60,228,'middle')+node(200,116,'#4d8dff','STAGING',206,110,'start')+node(160,84,'#4d8dff','BOOSTBACK',160,74,'middle')+node(112,206,'#37e0a0','BOOSTER',112,228,'middle');
-  let pads=pad(60)+pad(112), shipSolid='', shipDashed='', stackFull='', footer='';
+  let pads=pad(60)+pad(112), shipSolid='', shipDashed='', stackFull='', shipFull='', footer='';
   if(TRAJECTORY_MODE==='orbit'){
-    shipSolid='M200 116 C 252 94 302 74 352 62';
-    shipDashed='M352 62 C 384 58 408 76 422 118 C 434 152 442 186 444 206';
-    stackFull=ascent+' C 252 94 302 74 352 62';
-    nodes+=node(352,62,'#3fcde2','ORBIT',352,52,'middle')+node(422,118,'#84b3ff','ENTRY',438,114,'end')+node(444,206,'#37e0a0','SHIP',444,228,'middle');
-    pads+=pad(444);footer='ASCENT · STAGING · ORBIT · LANDING';
+    /* ascent rises into the orbital flyby, then a near-vertical descent where the ship belly-flops and flips to land */
+    shipSolid='M200 116 C 246 88 286 66 330 60 C 374 54 416 58 446 76';       /* ascent + orbital flyby (continuous) */
+    shipDashed='M446 76 C 451 110 455 150 456 182 C 456 192 456 200 456 206'; /* belly-flop descent (near-vertical) */
+    shipFull='';
+    stackFull='M60 206 C 112 204 152 170 200 116 C 246 88 286 66 330 60';
+    nodes+=node(370,54,'#3fcde2','ORBIT',370,44,'middle')+node(456,206,'#37e0a0','SHIP',456,228,'middle');
+    pads+=pad(456);footer='ASCENT · ORBIT · FLYBY · LANDING';
   }else if(TRAJECTORY_MODE==='suborbital'){
     shipSolid='M200 116 C 256 92 312 80 356 90';
     shipDashed='M356 90 C 398 102 428 152 444 206';
@@ -1452,17 +1476,25 @@ function buildTrajectory(){
   }
   /* animated vehicle: smooth motion (spline) + keyframed flip rotation + landing-burn flame */
   function vehAnim(o){
-    const flame=o.flameKeyTimes?`<path d="M-11,0 L-19,-2.6 -15,0 -19,2.6 Z" fill="rgba(255,176,90,0.95)"><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0.95;0.95;0;0" keyTimes="${o.flameKeyTimes}"/></path>`:'';
+    const flame=o.flameKeyTimes?`<g><path d="M-10,0 L-23,-3.6 -16,0 -23,3.6 Z" fill="rgba(255,150,60,0.9)"><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0.9;0.85;0;0" keyTimes="${o.flameKeyTimes}"/></path><path d="M-10,0 L-17.5,-1.9 -14,0 -17.5,1.9 Z" fill="rgba(255,224,150,0.97)"><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0.97;0.92;0;0" keyTimes="${o.flameKeyTimes}"/></path></g>`:'';
     return `<g opacity="0"><g><g><use href="#rkt"/>${flame}<animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" calcMode="linear" values="${o.rVals}" keyTimes="${o.rKeyTimes}"/></g><animateMotion dur="7s" repeatCount="indefinite" rotate="0" calcMode="spline" keyPoints="${o.mKeyPoints}" keyTimes="${o.mKeyTimes}" keySplines="${o.mSplines}" path="${o.path}"/></g><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="${o.opVals}" keyTimes="${o.opKeyTimes}"/></g>`;
   }
   /* stack: accelerating liftoff (ease-in), nose follows path, fades at separation */
   const stackG=`<g opacity="0"><use href="#rkt"/><animateMotion dur="7s" repeatCount="indefinite" rotate="auto" calcMode="spline" keyPoints="0;1;1" keyTimes="0;0.5;1" keySplines="0.42 0 0.62 1;0 0 1 1" path="${stackFull}"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;1;1;0;0" keyTimes="0;0.05;0.46;0.52;1"/></g>`;
   /* booster: boostback -> flip maneuver -> engine-down descent -> landing burn (decelerates) -> touchdown */
-  const boosterG=vehAnim({path:boosterRet,mKeyPoints:'0;0;1;1',mKeyTimes:'0;0.22;0.56;1',mSplines:'0 0 1 1;0.3 0 0.18 1;0 0 1 1',rVals:'-90;-90;-120;40;-90;-90;-90',rKeyTimes:'0;0.22;0.30;0.40;0.48;0.56;1',opVals:'0;0;1;1;0;0',opKeyTimes:'0;0.22;0.27;0.55;0.59;1',flameKeyTimes:'0;0.46;0.50;0.55;0.58;1'});
+  const boosterG=vehAnim({path:boosterRet,mKeyPoints:'0;0;1;1',mKeyTimes:'0;0.22;0.58;1',mSplines:'0 0 1 1;0.28 0 0.08 1;0 0 1 1',rVals:'-100;-100;-128;-70;-90;-90;-90',rKeyTimes:'0;0.22;0.31;0.43;0.50;0.58;1',opVals:'0;0;1;1;0;0',opKeyTimes:'0;0.22;0.27;0.58;0.62;1',flameKeyTimes:'0;0.44;0.49;0.58;0.61;1'});
   /* ship descent (mode dependent) */
   let shipG='';
-  if(TRAJECTORY_MODE==='orbit'){shipG=vehAnim({path:shipDashed,mKeyPoints:'0;0;1;1',mKeyTimes:'0;0.5;0.82;1',mSplines:'0 0 1 1;0.3 0 0.2 1;0 0 1 1',rVals:'35;35;35;35;-90;-90',rKeyTimes:'0;0.5;0.66;0.72;0.8;1',opVals:'0;0;1;1;0;0',opKeyTimes:'0;0.5;0.54;0.8;0.84;1',flameKeyTimes:'0;0.72;0.76;0.82;0.86;1'});}
-  else if(TRAJECTORY_MODE==='suborbital'){shipG=vehAnim({path:shipDashed,mKeyPoints:'0;0;1;1',mKeyTimes:'0;0.5;0.84;1',mSplines:'0 0 1 1;0.22 0 0.15 1;0 0 1 1',rVals:'12;12;12;12;-90;-90',rKeyTimes:'0;0.5;0.68;0.76;0.84;1',opVals:'0;0;1;1;0;0',opKeyTimes:'0;0.5;0.54;0.82;0.86;1',flameKeyTimes:'0;0.76;0.8;0.85;0.88;1'});}
+  if(TRAJECTORY_MODE==='orbit'){
+    /* Ship A: prograde ascent + orbital flyby (auto-orients to the arc), hands off at entry */
+    const shipAsc=`<g opacity="0"><use href="#rkt"/><animateMotion dur="7s" repeatCount="indefinite" rotate="auto" calcMode="spline" keyPoints="0;0;1;1" keyTimes="0;0.48;0.70;1" keySplines="0 0 1 1;0.4 0 0.4 1;0 0 1 1" path="${shipSolid}"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.47;0.51;0.68;0.72;1"/></g>`;
+    /* Ship B: BELLY-FLOP — held horizontal (belly-down, angle 0 = nose-right for this symbol) through the whole descent,
+       then a smooth flip to vertical (nose-up = -90) only in the last ~10% of the path; rotation pivots about the ship's centre, landing burn lights on the flip */
+    const flopFlame=`<g opacity="0"><path d="M-10,0 L-22,-3.2 -16,0 -22,3.2 Z" fill="rgba(255,150,60,0.92)"/><path d="M-10,0 L-16.5,-1.7 -13.5,0 -16.5,1.7 Z" fill="rgba(255,224,150,0.97)"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0;0.95;0.9;0;0" keyTimes="0;0.925;0.935;0.95;0.96;0.97;1"/></g>`;
+    const shipFlop=`<g opacity="0"><g><use href="#rkt"/>${flopFlame}<animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" calcMode="spline" values="0;0;0;-90;-90" keyTimes="0;0.70;0.925;0.95;1" keySplines="0 0 1 1;0 0 1 1;0.45 0 0.2 1;0 0 1 1"/></g><animateMotion dur="7s" repeatCount="indefinite" rotate="0" calcMode="spline" keyPoints="0;0;1;1" keyTimes="0;0.70;0.95;1" keySplines="0 0 1 1;0.3 0 0.35 1;0 0 1 1" path="${shipDashed}"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.69;0.72;0.95;0.975;1"/></g>`;
+    shipG=shipAsc+shipFlop;
+  }
+  else if(TRAJECTORY_MODE==='suborbital'){shipG=vehAnim({path:shipDashed,mKeyPoints:'0;0;1;1',mKeyTimes:'0;0.5;0.86;1',mSplines:'0 0 1 1;0.2 0 0.1 1;0 0 1 1',rVals:'2;2;6;6;-90;-90;-90',rKeyTimes:'0;0.5;0.62;0.74;0.83;0.87;1',opVals:'0;0;1;1;0;0',opKeyTimes:'0;0.5;0.54;0.85;0.89;1',flameKeyTimes:'0;0.81;0.84;0.87;0.9;1'});}
   /* detail FX (timed to the 7s loop): liftoff plume, staging flash, booster landing burn */
   const liftoffFx=`<g><circle cx="60" cy="206" fill="rgba(255,176,90,0.5)" r="0"><animate attributeName="r" dur="7s" repeatCount="indefinite" values="0;0;10;3;0;0" keyTimes="0;0.03;0.075;0.13;0.18;1"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0.9;0.35;0;0" keyTimes="0;0.03;0.075;0.13;0.18;1"/></circle></g>`;
   const stagingFx=`<circle cx="200" cy="116" fill="rgba(132,179,255,0.95)" r="0"><animate attributeName="r" dur="7s" repeatCount="indefinite" values="0;0;7.5;0;0" keyTimes="0;0.47;0.51;0.56;1"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0.95;0;0" keyTimes="0;0.47;0.51;0.56;1"/></circle>`;
@@ -1572,10 +1604,9 @@ function renderNews(reset){
     cont.innerHTML=`<div style="text-align:center;color:var(--tx-3);padding:46px 0;font-family:var(--f-mono);font-size:0.8em;letter-spacing:0.06em">${allRockets.length===0?t('contentPending'):t('noLaunches')}</div>`;
     more.style.display='none';document.getElementById('ov-news-meta').textContent=allRockets.length+' '+t('newsEntries');return;
   }
-  cont.innerHTML=list.slice(0,newsShown).map(n=>{const i=allRockets.indexOf(n);const term=escAttr(giscusTerm(n));return `<div class="news-item"><div class="news-react" data-term="${term}"></div><div class="log-row" onclick="playSound('news');showNewsDetail(${i})"><div class="log-row-main"><div class="log-row-title">${n.name}</div><div class="log-row-prev">${n.description||''}</div></div><div class="log-row-side"><span class="log-row-date">${n.date||''}</span><span class="log-row-read">${t('details')} <span>&#8599;</span></span></div></div></div>`;}).join('');
+  cont.innerHTML=list.slice(0,newsShown).map(n=>{const i=allRockets.indexOf(n);return `<div class="log-row" onclick="playSound('news');showNewsDetail(${i})"><div class="log-row-main"><div class="log-row-title">${n.name}</div><div class="log-row-prev">${n.description||''}</div></div><div class="log-row-side"><span class="log-row-date">${n.date||''}</span><span class="log-row-read">${t('details')} <span>&#8599;</span></span></div></div>`;}).join('');
   more.style.display=newsShown<list.length?'flex':'none';
   document.getElementById('ov-news-meta').textContent=allRockets.length+' '+t('newsEntries');
-  observeGiscus();
 }
 function onNewsSearch(){newsQuery=(document.getElementById('news-search').value||'').trim().toLowerCase();renderNews(true);}
 function loadMore(){playSound('details');renderNews(false);}
@@ -1785,52 +1816,81 @@ let cadenceGran='month',cadencePage=0;
 const CAD_WINDOW={month:12,year:10};
 function setCadence(g){cadenceGran=g;cadencePage=0;renderAnalytics();}
 function setCadencePage(delta){cadencePage+=delta;renderAnalytics();}
+let analyticsRange='all';
+const RANGE_MS={'24h':864e5,'7d':7*864e5,'30d':30*864e5,'1y':365*864e5};
+function rangeFilteredLaunches(){
+  if(analyticsRange==='all'||!RANGE_MS[analyticsRange])return launches;
+  /* keep every launch whose timestamp is within the window from now: timestamp >= (currentDate - range) */
+  const cutoff=Date.now()-RANGE_MS[analyticsRange];
+  return launches.filter(l=>l.dateObj.getTime()>=cutoff);
+}
+function setAnalyticsRange(r){analyticsRange=r;cadencePage=0;renderAnalytics();}
 function computeStats(){
-  const comp=launches.filter(l=>l.status==='Success'),canc=launches.filter(l=>l.status==='Cancelled'),plan=launches.filter(l=>l.status==='Planned');
+  const L=rangeFilteredLaunches();
+  const comp=L.filter(l=>l.status==='Success'),canc=L.filter(l=>l.status==='Cancelled'),plan=L.filter(l=>l.status==='Planned');
   const isLaunched=l=>OUTCOME_LAUNCHED[l.status]===true;            /* actually flew */
-  const launched=launches.filter(isLaunched);
-  const total=launches.length;
-  const successRate=launched.length?Math.round(comp.length/launched.length*100):0;
+  const launched=L.filter(isLaunched);
+  const total=L.length;
+  const successRate=total?Math.round(comp.length/total*1000)/10:0;  /* (Success / Total) ×100, one decimal. RUD/Mishap/Off-nominal/Cancelled = NOT success. 24/65 -> 36.9 */
   const byVehLaunched=vehicles.map(v=>({name:v.name,color:v.color,count:launched.filter(l=>l.nameId===v.id).length}));
   const byVehSuccess=vehicles.map(v=>({name:v.name,color:v.color,count:comp.filter(l=>l.nameId===v.id).length}));
-  const outcomeCounts=OUTCOMES.map(o=>({key:o.key,color:o.color,count:launches.filter(l=>l.status===o.key).length}));
-  const byVehOutcome=vehicles.map(v=>({name:v.name,segs:OUTCOMES.map(o=>({key:o.key,color:o.color,count:launches.filter(l=>l.nameId===v.id&&l.status===o.key).length})).filter(s=>s.count>0)})).filter(v=>v.segs.length>0);
+  const outcomeCounts=OUTCOMES.map(o=>({key:o.key,color:o.color,count:L.filter(l=>l.status===o.key).length}));
+  const byVehOutcome=vehicles.map(v=>({name:v.name,segs:OUTCOMES.map(o=>({key:o.key,color:o.color,count:L.filter(l=>l.nameId===v.id&&l.status===o.key).length})).filter(s=>s.count>0)})).filter(v=>v.segs.length>0);
   const monLabel=(y,m)=>new Date(y,m,1).toLocaleDateString('en-US',{month:'short'})+" '"+String(y).slice(2);
-  const now=new Date();
   /* cadence: per-period stacked by outcome (month or year). Full list; renderAnalytics windows + paginates it */
   let cadence=[];
-  if(cadenceGran==='year'){
-    const ys=launches.map(l=>l.dateObj.getFullYear());
-    for(let y=Math.min(...ys);y<=Math.max(now.getFullYear(),...ys);y++)cadence.push({label:String(y),segs:OUTCOMES.map(o=>({key:o.key,color:o.color,count:launches.filter(l=>l.dateObj.getFullYear()===y&&l.status===o.key).length}))});
-  }else{
-    const idxOf=d=>d.getFullYear()*12+d.getMonth();
-    for(let i=Math.min(...launches.map(l=>idxOf(l.dateObj)));i<=Math.max(idxOf(now),...launches.map(l=>idxOf(l.dateObj)));i++){const y=Math.floor(i/12),m=i%12;cadence.push({label:monLabel(y,m),segs:OUTCOMES.map(o=>({key:o.key,color:o.color,count:launches.filter(l=>idxOf(l.dateObj)===i&&l.status===o.key).length}))});}
+  if(L.length){
+    if(cadenceGran==='year'){
+      const ys=L.map(l=>l.dateObj.getFullYear());
+      for(let y=Math.min(...ys);y<=Math.max(...ys);y++)cadence.push({label:String(y),segs:OUTCOMES.map(o=>({key:o.key,color:o.color,count:L.filter(l=>l.dateObj.getFullYear()===y&&l.status===o.key).length}))});
+    }else{
+      const idxOf=d=>d.getFullYear()*12+d.getMonth();
+      for(let i=Math.min(...L.map(l=>idxOf(l.dateObj)));i<=Math.max(...L.map(l=>idxOf(l.dateObj)));i++){const y=Math.floor(i/12),m=i%12;cadence.push({label:monLabel(y,m),segs:OUTCOMES.map(o=>({key:o.key,color:o.color,count:L.filter(l=>idxOf(l.dateObj)===i&&l.status===o.key).length}))});}
+    }
   }
   const cbm={};comp.forEach(l=>{const k=l.dateObj.getFullYear()*12+l.dateObj.getMonth();cbm[k]=(cbm[k]||0)+1;});
   let busiest=null;Object.keys(cbm).forEach(k=>{const idx=+k;if(!busiest||cbm[k]>busiest.completed)busiest={label:monLabel(Math.floor(idx/12),idx%12),completed:cbm[k]};});
-  const compSorted=comp.slice().sort((a,b)=>a.dateObj-b.dateObj);
-  const dayMap=new Map();compSorted.forEach(l=>{const d=l.dateObj;const k=new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime();dayMap.set(k,(dayMap.get(k)||0)+1);});
-  let run=0;const cum=[...dayMap.keys()].sort((a,b)=>a-b).map(k=>{run+=dayMap.get(k);return{y:run,t:k,label:new Date(k).toLocaleDateString('en-US',{month:'short',day:'numeric'})};});
+  /* Launch momentum: each successful launch boosts the line; every idle day decays it, so the curve
+     rises AND falls with the real history of activity (gaps in the chronology show as a decline). Tune ↓ */
+  const MOM_RETAIN=0.86, MOM_BOOST=2;
+  const dayKey=d=>Date.UTC(d.getFullYear(),d.getMonth(),d.getDate());
+  const succByDay=new Map();comp.forEach(l=>{const k=dayKey(l.dateObj);succByDay.set(k,(succByDay.get(k)||0)+1);});
+  let cum=[];
+  if(succByDay.size){
+    const ks=[...succByDay.keys()].sort((a,b)=>a-b);
+    const now=new Date(),todayK=Date.UTC(now.getFullYear(),now.getMonth(),now.getDate());
+    const startK=ks[0];let endK=Math.min(Math.max(ks[ks.length-1],todayK),ks[ks.length-1]+90*864e5);
+    let m=0,iter=0;
+    for(let k=startK;k<=endK&&iter<400;k+=864e5,iter++){
+      m=m*MOM_RETAIN+(succByDay.get(k)||0)*MOM_BOOST;     /* decay, then add the day's successes */
+      cum.push({t:k,y:+m.toFixed(3),label:new Date(k).toLocaleDateString('en-US',{month:'short',day:'numeric'})});
+    }
+  }
   const mostFlown=byVehLaunched.slice().sort((a,b)=>b.count-a.count)[0]||null;
   return{comp,canc,plan,launched,total,successRate,byVehLaunched,byVehSuccess,outcomeCounts,byVehOutcome,cadence,busiest,cum,mostFlown};
 }
 function cumulativeChartSVG(cum){
   const W=680,H=240,x0=42,x1=660,y0=18,y1=198;
   if(cum.length===0)return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}"><text x="${W/2}" y="${H/2}" text-anchor="middle" class="chart-axis-lbl">No data</text></svg>`;
-  const maxY=Math.max(1,cum[cum.length-1].y);
+  const maxY=Math.max(1,...cum.map(p=>p.y));
   const tmin=cum[0].t,tmax=cum[cum.length-1].t,span=tmax-tmin;
   const X=t=>span<=0?(x0+x1)/2:x0+((t-tmin)/span)*(x1-x0);
   const Y=v=>y1-(v/maxY)*(y1-y0);
-  const pts=cum.map(p=>`${X(p.t).toFixed(1)},${Y(p.y).toFixed(1)}`);
-  const line=`M${pts.join(' L')}`;const area=`M${X(cum[0].t).toFixed(1)},${y1} L${pts.join(' L')} L${X(cum[cum.length-1].t).toFixed(1)},${y1} Z`;
-  const ticks=[0,Math.round(maxY/2),maxY].filter((v,i,a)=>a.indexOf(v)===i);
-  const grid=ticks.map(v=>`<line class="chart-axis" x1="${x0}" y1="${Y(v).toFixed(1)}" x2="${x1}" y2="${Y(v).toFixed(1)}"/><text class="chart-axis-lbl" x="${x0-8}" y="${(Y(v)+3).toFixed(1)}" text-anchor="end">${v}</text>`).join('');
-  const dots=cum.map(p=>`<circle cx="${X(p.t).toFixed(1)}" cy="${Y(p.y).toFixed(1)}" r="3" fill="#0f1011" stroke="#37e0a0" stroke-width="1.6"/>`).join('');
+  const P=cum.map(p=>[+X(p.t).toFixed(1),+Y(p.y).toFixed(1)]);
+  /* STEPPED area chart — hard right angles, no smoothing: hold horizontal across the day, then jump vertically to the new value */
+  let line='M'+P[0][0]+','+P[0][1];
+  for(let i=1;i<P.length;i++)line+=` L${P[i][0]},${P[i-1][1]} L${P[i][0]},${P[i][1]}`;
+  const area=line+` L${P[P.length-1][0]},${y1} L${P[0][0]},${y1} Z`;
+  const tk=v=>Number.isInteger(v)?v:v.toFixed(1);
+  const ticks=[0,maxY/2,maxY].filter((v,i,a)=>a.indexOf(v)===i);
+  const grid=ticks.map(v=>`<line class="chart-axis" x1="${x0}" y1="${Y(v).toFixed(1)}" x2="${x1}" y2="${Y(v).toFixed(1)}"/><text class="chart-axis-lbl" x="${x0-8}" y="${(Y(v)+3).toFixed(1)}" text-anchor="end">${tk(v)}</text>`).join('');
+  /* mark only the local peaks (days a successful launch landed on the curve) */
+  const dots=cum.map((p,i)=>(i>0&&i<cum.length-1&&p.y>cum[i-1].y&&p.y>=cum[i+1].y)||(i===cum.length-1&&p.y>(cum[i-1]||p).y)?`<circle cx="${X(p.t).toFixed(1)}" cy="${Y(p.y).toFixed(1)}" r="3" fill="#0f1011" stroke="#37e0a0" stroke-width="1.6"/>`:'').join('');
   let li=[0,cum.length-1];
   if(cum.length>2){const midT=tmin+span/2;let mi=0,md=Infinity;cum.forEach((p,i)=>{const d=Math.abs(p.t-midT);if(d<md){md=d;mi=i;}});li=[0,mi,cum.length-1];}
   li=[...new Set(li)];
   const xl=li.map((i,k)=>{const anc=k===0?'start':(k===li.length-1?'end':'middle');return `<text class="chart-axis-lbl" x="${X(cum[i].t).toFixed(1)}" y="${y1+18}" text-anchor="${anc}">${cum[i].label}</text>`;}).join('');
-  return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="cumg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(55,224,160,0.26)"/><stop offset="1" stop-color="rgba(55,224,160,0)"/></linearGradient></defs>${grid}<path d="${area}" fill="url(#cumg)"/><path d="${line}" fill="none" stroke="#37e0a0" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>${dots}${xl}</svg>`;
+  return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}"><defs><linearGradient id="cumg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(55,224,160,0.26)"/><stop offset="1" stop-color="rgba(55,224,160,0)"/></linearGradient></defs>${grid}<path d="${area}" fill="url(#cumg)"/><path d="${line}" fill="none" stroke="#37e0a0" stroke-width="2.2" stroke-linejoin="miter" stroke-linecap="butt"/>${dots}${xl}</svg>`;
 }
 function cadenceChartSVG(periods){
   const W=680,H=250,x0=42,x1=660,y0=18,y1=202;
@@ -1848,13 +1908,14 @@ function cadenceChartSVG(periods){
   });
   return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}"><line class="chart-axis" x1="${x0}" y1="${y1}" x2="${x1}" y2="${y1}"/>${bars}</svg>`;
 }
+function clampLabel(s){s=String(s);return s.length>10?s.substring(0,10)+'...':s;}
 function donutSVG(items,centerLabel){
   const W=320,H=240,cx=120,cy=120,r=72,sw=24,C=2*Math.PI*r;
   const segs=items.filter(v=>v.count>0);
   const total=segs.reduce((a,b)=>a+b.count,0)||1;let acc=0,arcs='';
   segs.forEach(seg=>{const frac=seg.count/total,dash=frac*C;arcs+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${seg.color}" stroke-width="${sw}" stroke-dasharray="${dash.toFixed(2)} ${(C-dash).toFixed(2)}" stroke-dashoffset="${(-acc*C).toFixed(2)}" transform="rotate(-90 ${cx} ${cy})" stroke-linecap="butt"/>`;acc+=frac;});
   if(segs.length===0)arcs=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--line-2)" stroke-width="${sw}"/>`;
-  const lg=segs.map((it,i)=>`<g transform="translate(232,${74+i*28})"><rect x="0" y="-9" width="11" height="11" rx="2" fill="${it.color}"/><text x="18" y="0" class="chart-val-lbl" style="font-size:10.5px;fill:var(--tx)">${it.label||it.name||it.key}</text><text x="18" y="14" class="chart-axis-lbl">${it.count}</text></g>`).join('');
+  const lg=segs.map((it,i)=>`<g transform="translate(232,${74+i*28})"><rect x="0" y="-9" width="11" height="11" rx="2" fill="${it.color}"/><text x="18" y="0" class="chart-val-lbl" style="font-size:10.5px;fill:var(--tx)">${clampLabel(it.label||it.name||it.key)}</text><text x="18" y="14" class="chart-axis-lbl">${it.count}</text></g>`).join('');
   return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}"><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(190,195,205,0.06)" stroke-width="${sw}"/>${arcs}<text x="${cx}" y="${cy-4}" text-anchor="middle" class="donut-center-v" style="font-size:30px">${total}</text><text x="${cx}" y="${cy+16}" text-anchor="middle" class="donut-center-l" style="font-size:9px">${centerLabel}</text>${lg}</svg>`;
 }
 function hBarChartSVG(bv){
@@ -1882,7 +1943,7 @@ function outcomesByVehicleSVG(data){
 function renderAnalytics(){
   const s=computeStats();
   const kpis=[
-    {l:t('kpiCompletion'),v:s.successRate+'<small>%</small>',sub:`${s.comp.length}/${s.launched.length}`,c:'var(--go)'},
+    {l:t('kpiCompletion'),v:s.successRate+'<small>%</small>',sub:`${s.comp.length}/${s.total}`,c:'var(--go)'},
     {l:t('kpiTopVehicle'),v:s.mostFlown&&s.mostFlown.count>0?s.mostFlown.name:'—',sub:s.mostFlown&&s.mostFlown.count>0?`${s.mostFlown.count}× ${t('flights')}`:'',c:'var(--blue)'},
     {l:t('kpiBusiest'),v:s.busiest?s.busiest.label:'—',sub:s.busiest?`${s.busiest.completed} ${t('flights')}`:'',c:'var(--amber)'},
     {l:t('kpiCancelled'),v:String(s.canc.length),sub:t('launchesCount'),c:'var(--neutral)'},
@@ -1898,9 +1959,11 @@ function renderAnalytics(){
   const cadRange=cadView.length?`${cadView[0].label} – ${cadView[cadView.length-1].label}`:'';
   const cadNav=paged?`<div class="cad-nav"><button class="cad-arrow" onclick="setCadencePage(1)" ${canOlder?'':'disabled'} aria-label="Older">‹</button><span class="cad-range">${cadRange}</span><button class="cad-arrow" onclick="setCadencePage(-1)" ${canNewer?'':'disabled'} aria-label="Newer">›</button></div>`:'';
   const cadToggle=`<div class="cad-toggle"><button class="cad-btn${cadenceGran==='month'?' on':''}" onclick="setCadence('month')">${t('periodMonth')}</button><button class="cad-btn${cadenceGran==='year'?' on':''}" onclick="setCadence('year')">${t('periodYear')}</button></div>`;
+  const RANGES=[['24h','24H'],['7d','7D'],['30d','30D'],['1y','1Y'],['all',t('rangeAll')]];
+  const rangeBar=`<div class="range-bar"><span class="range-lbl">${t('rangeLabel')}</span><div class="range-pills">${RANGES.map(([k,lab])=>`<button class="range-pill${analyticsRange===k?' on':''}" onclick="setAnalyticsRange('${k}')">${lab}</button>`).join('')}</div></div>`;
   document.getElementById('analytics-body').innerHTML=
-    `<div class="kpi-grid">${kpiHTML}</div><div class="chart-grid">`+
-    `<div class="chart-card wide"><div class="chart-head"><span class="chart-title">${t('chartCumulative')}</span><span class="chart-note">${t('statusCompleted')}</span></div>${cumulativeChartSVG(s.cum)}</div>`+
+    rangeBar+`<div class="kpi-grid">${kpiHTML}</div><div class="chart-grid">`+
+    `<div class="chart-card wide"><div class="chart-head"><span class="chart-title">${t('chartMomentum')}</span><span class="chart-note">${t('momentumNote')}</span></div>${cumulativeChartSVG(s.cum)}</div>`+
     `<div class="chart-card wide"><div class="chart-head"><span class="chart-title">${t('chartCadence')}</span><div class="cad-ctrl">${cadNav}${cadToggle}</div></div>${cadenceChartSVG(cadView)}<div class="chart-legend">${outcomeLegend}</div></div>`+
     `<div class="chart-card"><div class="chart-head"><span class="chart-title">${t('chartOutcome')}</span></div>${donutSVG(s.byVehLaunched,t('launchesCount'))}</div>`+
     `<div class="chart-card"><div class="chart-head"><span class="chart-title">${t('chartOutcomes')}</span></div>${donutSVG(s.outcomeCounts,t('missionsCount'))}</div>`+
@@ -1967,7 +2030,7 @@ document.addEventListener('keydown',e=>{
   function drawIdle(){ctx.clearRect(0,0,W,H);drawStars(initStars());}
   function initStars(){const s=[];for(let i=0;i<70;i++)s.push({x:Math.random()*W,y:Math.random()*H,z:Math.random()*0.8+0.2});return s;}
   function reset(){
-    ship={x:W/2,y:H*0.78,r:13,tx:W/2,ty:H*0.78};
+    ship={x:W/2,y:H*0.78,r:13,tx:W/2,ty:H*0.78,vx:0,vy:0,angle:0};
     asteroids=[];fuels=[];stars=initStars();score=0;elapsed=0;spawnT=0;fuelT=0;
     pointer={x:W/2,y:H*0.78,active:false};
   }
@@ -1975,12 +2038,13 @@ document.addEventListener('keydown',e=>{
   function spawnFuel(){fuels.push({x:Math.random()*(W-40)+20,y:-12,r:8,vy:Math.random()*1.1+1.3,p:Math.random()*6.28});}
   function drawStars(arr){for(const s of arr){ctx.globalAlpha=s.z*0.7;ctx.fillStyle='#9fb6e8';ctx.fillRect(s.x,s.y,s.z*1.8,s.z*1.8);}ctx.globalAlpha=1;}
   function drawShip(){
-    ctx.save();ctx.translate(ship.x,ship.y);
-    const flick=0.6+Math.random()*0.4;
+    ctx.save();ctx.translate(ship.x,ship.y);ctx.rotate(ship.angle||0);
+    const sp=Math.hypot(ship.vx||0,ship.vy||0);
+    const flick=(0.6+Math.random()*0.4)*(0.7+Math.min(1,sp/8)*0.7);
+    ctx.beginPath();ctx.moveTo(-5,ship.r*0.7);ctx.lineTo(0,ship.r*0.7+(10+sp*1.7)*flick);ctx.lineTo(5,ship.r*0.7);ctx.closePath();
+    ctx.fillStyle='rgba(255,158,61,'+Math.min(1,flick)+')';ctx.fill();
     ctx.beginPath();ctx.moveTo(0,-ship.r);ctx.lineTo(ship.r*0.78,ship.r*0.9);ctx.lineTo(0,ship.r*0.5);ctx.lineTo(-ship.r*0.78,ship.r*0.9);ctx.closePath();
     ctx.fillStyle='#eaf0fa';ctx.fill();ctx.strokeStyle='#84b3ff';ctx.lineWidth=1.4;ctx.stroke();
-    ctx.beginPath();ctx.moveTo(-5,ship.r*0.7);ctx.lineTo(0,ship.r*0.7+12*flick);ctx.lineTo(5,ship.r*0.7);ctx.closePath();
-    ctx.fillStyle='rgba(255,158,61,'+flick+')';ctx.fill();
     ctx.restore();
   }
   function loop(dt){
@@ -1988,9 +2052,18 @@ document.addEventListener('keydown',e=>{
     ctx.clearRect(0,0,W,H);
     for(const s of stars){s.y+=s.z*1.4;if(s.y>H){s.y=0;s.x=Math.random()*W;}}
     drawStars(stars);
-    /* ship follows pointer smoothly */
-    ship.x+=(ship.tx-ship.x)*0.18;ship.y+=(ship.ty-ship.y)*0.18;
-    ship.x=Math.max(ship.r,Math.min(W-ship.r,ship.x));ship.y=Math.max(ship.r,Math.min(H-ship.r,ship.y));
+    /* smooth inertial control via LERP: desired velocity is proportional to distance (eases to 0 at target = no overshoot);
+       the actual velocity is linearly interpolated toward it each frame, so motion carries momentum with no instant jerks */
+    const f=Math.min(2.5,dt/16.67);
+    const dvx=(ship.tx-ship.x)*0.12,dvy=(ship.ty-ship.y)*0.12;   /* target velocity (shrinks near pointer) */
+    ship.vx+=(dvx-ship.vx)*Math.min(1,0.18*f);                   /* lerp velocity -> target velocity */
+    ship.vy+=(dvy-ship.vy)*Math.min(1,0.18*f);
+    const sp=Math.hypot(ship.vx,ship.vy),maxS=12;if(sp>maxS){ship.vx*=maxS/sp;ship.vy*=maxS/sp;}
+    ship.x+=ship.vx*f;ship.y+=ship.vy*f;
+    /* soft walls: clamp + bleed inward velocity to 0 (no hard bounce = no jerk) */
+    if(ship.x<ship.r){ship.x=ship.r;if(ship.vx<0)ship.vx=0;}else if(ship.x>W-ship.r){ship.x=W-ship.r;if(ship.vx>0)ship.vx=0;}
+    if(ship.y<ship.r){ship.y=ship.r;if(ship.vy<0)ship.vy=0;}else if(ship.y>H-ship.r){ship.y=H-ship.r;if(ship.vy>0)ship.vy=0;}
+    const tA=Math.max(-0.5,Math.min(0.5,ship.vx*0.05));ship.angle+=(tA-ship.angle)*Math.min(1,0.18*f);
     spawnT-=dt;if(spawnT<=0){spawnAsteroid();spawnT=Math.max(280,720-elapsed*0.04);}
     fuelT-=dt;if(fuelT<=0){spawnFuel();fuelT=2200+Math.random()*1800;}
     for(let i=asteroids.length-1;i>=0;i--){
