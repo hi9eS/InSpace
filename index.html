@@ -1564,12 +1564,12 @@ Object.assign(TRANSLATIONS.fr,{lblDate:'Date',lblVehicle:'Véhicule',lblStatus:'
 /* ════════════════════════════════════════════════════════════
    NEWS / LOG  (no fabricated content — honest empty-state)
 ════════════════════════════════════════════════════════════ */
-const allRockets = [
-  {name:'SunPower One',description:'Where it all began. The name "SunPower" was coined on the fly by Haisess.',detail:'The very first SunPower prototype was assembled and launched within a single session, marking the birth of the InSpace vehicle programme. It flew a nominal trajectory and completed a controlled descent. The launch validated core propulsion, guidance systems, and ground support procedures that would be carried forward into every subsequent vehicle in the InSpace fleet.',date:'February 26, 2026', reactions:{'🚀':0,'🔥':0,'❤️':0}},
-  {name:'SunPower: The Return of a Legend',description:'InSpace is officially resuming work on its very first heavy-lift rocket.',detail:'After being put on hold due to shifting priorities, SunPower One is making a comeback. The rocket that started everything for InSpace was temporarily shelved as the team focused on more advanced programs.<br>Now development is restarting. The vehicle will undergo a major redesign and upgrade, including modern systems and the new AVSBL — Automatic Vertical Suicide Burn Landing.<br>Active work will begin in the coming days and weeks. SunPower One is getting a second life, this time in a much more mature form.',date:'April 12, 2026', reactions:{'🚀':0,'🔥':0,'❤️':0}},
-  {name:'Vertical Recovery: The Mark of Precision',description:'"Where others leave a crater, we leave our mark."',detail:'Booster SN8 executed a textbook suicide burn and touched down within 0.4 m of the target pad centre. Recovery teams confirmed zero structural damage. Turnaround inspection was completed in under 6 hours, and the booster is already being prepared for its next flight.',date:'March 6, 2026', reactions:{'🚀':0,'🔥':0,'❤️':0}},
-  {name:'Trial Mission to the Moon',description:'The team is preparing for a trial run of the upcoming lunar mission.',detail:'Initial trajectory calculations and propellant budgets have been finalised. The trial will validate trans-lunar injection burn performance before a crewed attempt. Ground teams have completed two full dress rehearsals.',date:'February 27, 2026', reactions:{'🚀':0,'🔥':0,'❤️':0}},
-  {name:'Cancelling Missions',description:'Resumption is coming soon. We are currently preparing for two targets: Mars and the Moon.',detail:'Several scheduled test flights were cancelled to consolidate resources around the dual Mars and Moon programme. A revised launch manifest is expected shortly.',date:'March 03, 2026', reactions:{'🚀':0,'🔥':0,'❤️':0}},
+const allRockets=[
+  {name:'SunPower One',description:'Where it all began. The name "SunPower" was coined on the fly by Haisess.',detail:'The very first SunPower prototype was assembled and launched within a single session, marking the birth of the InSpace vehicle programme. It flew a nominal trajectory and completed a controlled descent. The launch validated core propulsion, guidance systems, and ground support procedures that would be carried forward into every subsequent vehicle in the InSpace fleet.',date:'February 26, 2026'},
+  {name:'SunPower: The Return of a Legend',description:'InSpace is officially resuming work on its very first heavy-lift rocket.',detail:'After being put on hold due to shifting priorities, SunPower One is making a comeback. The rocket that started everything for InSpace was temporarily shelved as the team focused on more advanced programs.<br>Now development is restarting. The vehicle will undergo a major redesign and upgrade, including modern systems and the new AVSBL — Automatic Vertical Suicide Burn Landing.<br>Active work will begin in the coming days and weeks. SunPower One is getting a second life, this time in a much more mature form.',date:'April 12, 2026'},
+  {name:'Vertical Recovery: The Mark of Precision',description:'"Where others leave a crater, we leave our mark."',detail:'Booster SN8 executed a textbook suicide burn and touched down within 0.4 m of the target pad centre. Recovery teams confirmed zero structural damage. Turnaround inspection was completed in under 6 hours, and the booster is already being prepared for its next flight.',date:'March 6, 2026'},
+  {name:'Trial Mission to the Moon',description:'The team is preparing for a trial run of the upcoming lunar mission.',detail:'Initial trajectory calculations and propellant budgets have been finalised. The trial will validate trans-lunar injection burn performance before a crewed attempt. Ground teams have completed two full dress rehearsals.',date:'February 27, 2026'},
+  {name:'Cancelling Missions',description:'Resumption is coming soon. We are currently preparing for two targets: Mars and the Moon.',detail:'Several scheduled test flights were cancelled to consolidate resources around the dual Mars and Moon programme. A revised launch manifest is expected shortly.',date:'March 03, 2026'},
 ];
 allRockets.forEach(n=>{n._d=new Date(n.date);});
 allRockets.sort((a,b)=>b._d-a._d);
@@ -2120,36 +2120,6 @@ document.addEventListener('keydown',e=>{
 /* ════════════════════════════════════════════════════════════
    INIT
 ════════════════════════════════════════════════════════════ */
-/* ══════════ REACTION SYSTEM ══════════ */
-function addReaction(name, emoji) {
-    const news = allRockets.find(n => n.name === name);
-    if (news) {
-        news.reactions[emoji]++;
-        renderNews(); // Перерисовываем карточки новостей при клике
-    }
-}
-
-function renderNews() {
-    const container = document.getElementById('news-list'); // Убедитесь, что ID контейнера новостей совпадает
-    if (!container) return;
-    
-    container.innerHTML = newsFiltered().map(n => `
-        <div class="news-card">
-            <h3>${n.name}</h3>
-            <p>${n.description}</p>
-            <div class="reactions-box" style="margin-top:10px;">
-                ${Object.entries(n.reactions).map(([e, c]) => `
-                    <button onclick="addReaction('${n.name}', '${e}')" 
-                            style="background:var(--bg-3); border:1px solid var(--line); color:var(--tx-2); cursor:pointer; padding:2px 8px; border-radius:4px; font-size:0.8em; margin-right:5px;">
-                        ${e} ${c}
-                    </button>
-                `).join('')}
-            </div>
-        </div>
-    `).join('');
-}
-
-/* ══════════ INIT ══════════ */
 buildHeaderRight();
 rebuildNav();
 applyLang();
@@ -2157,8 +2127,6 @@ rebuildStats();
 rebuildHeroQuick();
 buildTrajectory();
 rebuildScheduleTabs();
-renderNews(); // Вызов отрисовки при загрузке
-
 window.addEventListener('load',()=>{
   setTimeout(()=>showToast({icon:'rocket',color:'#4d8dff',title:t('toastWelcome'),sub:t('toastWelcomeSub'),duration:4200}),900);
 });
