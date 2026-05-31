@@ -2120,6 +2120,36 @@ document.addEventListener('keydown',e=>{
 /* ════════════════════════════════════════════════════════════
    INIT
 ════════════════════════════════════════════════════════════ */
+/* ══════════ REACTION SYSTEM ══════════ */
+function addReaction(name, emoji) {
+    const news = allRockets.find(n => n.name === name);
+    if (news) {
+        news.reactions[emoji]++;
+        renderNews(); // Перерисовываем карточки новостей при клике
+    }
+}
+
+function renderNews() {
+    const container = document.getElementById('news-list'); // Убедитесь, что ID контейнера новостей совпадает
+    if (!container) return;
+    
+    container.innerHTML = newsFiltered().map(n => `
+        <div class="news-card">
+            <h3>${n.name}</h3>
+            <p>${n.description}</p>
+            <div class="reactions-box" style="margin-top:10px;">
+                ${Object.entries(n.reactions).map(([e, c]) => `
+                    <button onclick="addReaction('${n.name}', '${e}')" 
+                            style="background:var(--bg-3); border:1px solid var(--line); color:var(--tx-2); cursor:pointer; padding:2px 8px; border-radius:4px; font-size:0.8em; margin-right:5px;">
+                        ${e} ${c}
+                    </button>
+                `).join('')}
+            </div>
+        </div>
+    `).join('');
+}
+
+/* ══════════ INIT ══════════ */
 buildHeaderRight();
 rebuildNav();
 applyLang();
@@ -2127,6 +2157,8 @@ rebuildStats();
 rebuildHeroQuick();
 buildTrajectory();
 rebuildScheduleTabs();
+renderNews(); // Вызов отрисовки при загрузке
+
 window.addEventListener('load',()=>{
   setTimeout(()=>showToast({icon:'rocket',color:'#4d8dff',title:t('toastWelcome'),sub:t('toastWelcomeSub'),duration:4200}),900);
 });
