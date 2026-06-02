@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>InSpace · Flight Operations</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Saira:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
@@ -203,8 +204,9 @@ h1.hero-title{font-family:var(--f-disp);font-weight:600;font-size:clamp(2.7em,7v
 .sr-big{font-family:var(--f-disp);font-weight:600;font-size:clamp(1.9em,4.6vw,2.7em);letter-spacing:0.1em;color:var(--tx);line-height:1;}
 .sr-line{font-family:var(--f-mono);font-size:0.64em;letter-spacing:0.16em;text-transform:uppercase;color:var(--tx-3);}
 
-.mp-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);
-  border-radius:8px;overflow:hidden;margin-top:22px;}
+.mp-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:22px;cursor:pointer;transition:border-color .2s;}
+.mp-meta:hover{border-color:var(--line-2);}
+.mp-meta:hover .mp-mc{background:var(--bg-3);}
 @media(max-width:560px){.mp-meta{grid-template-columns:1fr 1fr;}}
 .mp-mc{background:var(--bg-2);padding:12px 15px;}
 .mp-mc-l{font-family:var(--f-mono);font-size:0.52em;letter-spacing:0.14em;text-transform:uppercase;color:var(--tx-3);margin-bottom:5px;}
@@ -274,10 +276,10 @@ h1.hero-title{font-family:var(--f-disp);font-weight:600;font-size:clamp(2.7em,7v
   transition:background .25s var(--ease),border-color .25s var(--ease),box-shadow .25s var(--ease);}
 .quick-tile::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--qc,var(--blue));opacity:0;transition:opacity .22s;}
 .quick-tile:hover{background:var(--bg-3);border-color:var(--line-2);box-shadow:0 14px 34px -12px rgba(0,0,0,.6);}
-.quick-tile:hover::before{opacity:.5;}
+.quick-tile:hover::before{opacity:.32;}
 .q-ico{width:38px;height:38px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
   background:rgba(190,195,205,0.05);border:1px solid var(--line);transition:background .22s,border-color .22s,box-shadow .22s;}
-.quick-tile:hover .q-ico{background:rgba(190,195,205,0.08);border-color:var(--line-2);box-shadow:0 0 20px -6px var(--qc);}
+.quick-tile:hover .q-ico{background:rgba(190,195,205,0.08);border-color:var(--line-2);}
 .q-ico svg{width:18px;height:18px;fill:var(--qc,var(--blue));opacity:.85;transition:opacity .25s,fill .25s;}
 .quick-tile:hover .q-ico svg{opacity:1;}
 .q-txt{flex:1;min-width:0;}
@@ -291,6 +293,9 @@ footer{position:relative;z-index:3;text-align:center;padding:30px 22px;border-to
   font-family:var(--f-mono);font-size:0.7em;letter-spacing:0.04em;color:var(--tx-3);}
 footer .foot-mark{color:var(--tx-2);font-weight:500;}
 footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
+.foot-issues{position:absolute;right:22px;bottom:18px;}
+.foot-issues:hover svg{fill:var(--amber);}
+@media(max-width:640px){.foot-issues{position:static;margin:14px auto 0;}}
 
 /* ══════════════════════════════════════ OVERLAY SYSTEM ══════════════════════════════════════ */
 .overlay{display:none;position:fixed;inset:0;background:var(--bg-0);z-index:300;overflow-y:auto;
@@ -358,6 +363,29 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .veh-card:hover .vc-foot-t{color:var(--vc,var(--blue));}
 .vc-foot-a{font-size:0.82em;color:var(--tx-4);transition:transform .24s var(--spring),color .24s;}
 .veh-card:hover .vc-foot-a{color:var(--vc,var(--blue));}
+/* ── fleet GRID view, redesigned as horizontal rows (Latest-News style); Compare view unchanged ── */
+.fleet-rows{display:flex;flex-direction:column;gap:12px;}
+.veh-row{position:relative;display:flex;align-items:center;gap:28px;cursor:pointer;overflow:hidden;
+  background:linear-gradient(180deg,var(--bg-2),var(--bg-1));border:1px solid var(--line);border-radius:14px;
+  padding:20px 26px 20px 30px;animation:fadeUp .5s var(--out) both;
+  transition:border-color .26s,transform .26s var(--spring),box-shadow .26s;}
+.veh-row:hover{border-color:var(--line-2);transform:scale(1.006);box-shadow:0 14px 40px rgba(0,0,0,.4);}
+.vr-stripe{position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--vc,var(--blue));opacity:.5;transition:opacity .26s,width .26s,box-shadow .26s;}
+.veh-row:hover .vr-stripe{opacity:1;width:4px;box-shadow:0 0 16px var(--vc);}
+.vr-id{min-width:184px;display:flex;flex-direction:column;gap:7px;flex-shrink:0;}
+.vr-class{font-family:var(--f-mono);font-size:0.56em;letter-spacing:0.18em;text-transform:uppercase;color:var(--vc,var(--blue));opacity:.85;}
+.vr-name{font-family:var(--f-disp);font-weight:600;font-size:1.62em;letter-spacing:-0.01em;line-height:1.02;color:var(--tx);transition:color .22s;}
+.veh-row:hover .vr-name{color:#fff;}
+.vr-specs{display:flex;align-items:center;gap:32px;flex:1;flex-wrap:wrap;}
+.vr-spec{display:flex;flex-direction:column;gap:4px;}
+.vr-spec-l{font-family:var(--f-mono);font-size:0.5em;letter-spacing:0.13em;text-transform:uppercase;color:var(--tx-4);}
+.vr-spec-v{font-family:var(--f-mono);font-size:0.92em;color:var(--tx);font-weight:500;}
+.vr-right{display:flex;flex-direction:column;align-items:flex-end;gap:11px;flex-shrink:0;text-align:right;}
+.vr-dossier{font-family:var(--f-mono);font-size:0.6em;letter-spacing:0.14em;text-transform:uppercase;color:var(--tx-3);transition:color .2s;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
+.veh-row:hover .vr-dossier{color:var(--vc,var(--blue));}
+.vr-arrow{font-size:1.05em;transition:transform .24s var(--spring);display:inline-block;}
+.veh-row:hover .vr-arrow{transform:scale(1.18);}
+@media(max-width:700px){.veh-row{flex-direction:column;align-items:flex-start;gap:16px;padding:18px 20px;}.vr-id{min-width:0;}.vr-specs{gap:22px;}.vr-right{align-items:flex-start;text-align:left;flex-direction:row;gap:18px;}}
 
 /* fleet compare table */
 .compare-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:11px;background:var(--bg-1);}
@@ -523,6 +551,9 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .cad-arrow:hover:not(:disabled){color:var(--tx);background:var(--bg-4);border-color:var(--line-2);}
 .cad-arrow:disabled{opacity:.32;cursor:not-allowed;}
 .cad-range{font-family:var(--f-mono);font-size:0.56em;letter-spacing:0.1em;text-transform:uppercase;color:var(--tx-3);min-width:120px;text-align:center;}
+/* Launch-Momentum controls: granularity toggle (reuses .cad-toggle/.cad-btn) + flexible from→to range + pager (.cad-nav/.cad-arrow) */
+.mom-ctrl{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:2px 0 16px;}
+.mom-side{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .range-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px;
   background:linear-gradient(180deg,var(--bg-2),var(--bg-1));border:1px solid var(--line);border-radius:11px;padding:11px 15px;}
 .range-lbl{font-family:var(--f-mono);font-size:0.58em;letter-spacing:0.18em;text-transform:uppercase;color:var(--tx-3);}
@@ -544,6 +575,26 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .donut-center-l{font-family:var(--f-mono);fill:var(--tx-3);letter-spacing:1px;text-transform:uppercase;}
 
 /* ══════ LAUNCH MODAL ══════ */
+#spec-bd{display:none;position:fixed;inset:0;z-index:520;background:rgba(2,3,8,0.66);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:20px;
+  opacity:0;transition:opacity .4s var(--ease);}
+#spec-bd.active{display:flex;}
+#spec-bd.visible{opacity:1;}
+#spec-panel{position:relative;width:min(560px,100%);max-height:88vh;overflow-y:auto;background:linear-gradient(180deg,var(--bg-2),var(--bg-1));
+  border:1px solid var(--line-2);border-radius:13px;overflow-x:hidden;
+  transform:translateY(28px) scale(.96);opacity:0;transition:transform .45s var(--spring),opacity .4s var(--ease);}
+#spec-bd.visible #spec-panel{transform:translateY(0) scale(1);opacity:1;}
+.spec-bar{height:3px;}
+.spec-inner{padding:24px 26px 22px;}
+.spec-eyebrow{font-family:var(--f-mono);font-size:0.56em;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:9px;}
+.spec-name{font-family:var(--f-disp);font-weight:600;font-size:1.5em;letter-spacing:-0.01em;color:var(--tx);line-height:1.15;}
+.spec-class{font-family:var(--f-mono);font-size:0.6em;letter-spacing:0.14em;text-transform:uppercase;color:var(--tx-3);margin-top:6px;}
+.spec-sec{font-family:var(--f-mono);font-size:0.54em;letter-spacing:0.16em;text-transform:uppercase;color:var(--tx-3);margin:22px 0 11px;}
+.spec-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.spec-empty{grid-column:1/-1;font-family:var(--f-mono);font-size:0.7em;color:var(--tx-4);}
+.spec-nav{display:flex;gap:10px;margin-top:24px;padding-top:18px;border-top:1px solid var(--line);}
+.spec-go{min-width:auto;min-height:46px;font-size:0.8em;padding:0 18px;flex:1 1 auto;}
+.spec-alt{flex:0 0 auto;color:var(--tx-3);}
 #modal-bd{display:none;position:fixed;inset:0;z-index:500;background:rgba(2,3,8,0.66);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);align-items:center;justify-content:center;padding:20px;
   opacity:0;transition:opacity .4s var(--ease);}
@@ -577,10 +628,26 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .m-cell-l{font-family:var(--f-mono);font-size:0.54em;letter-spacing:0.12em;text-transform:uppercase;color:var(--tx-3);margin-bottom:5px;}
 .m-cell-v{font-family:var(--f-mono);font-size:0.86em;color:var(--tx);font-weight:500;}
 .m-desc{font-size:0.9em;color:var(--tx-2);line-height:1.8;}
-.m-watch{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);}
-.m-watch a{display:inline-flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:0.72em;letter-spacing:0.1em;text-transform:uppercase;
-  color:var(--tx-2);border-bottom:1px solid var(--line-2);cursor:pointer;transition:color .18s,border-color .18s;}
-.m-watch a:hover{color:var(--tx);border-color:var(--line-3);}
+.m-watch{margin-top:20px;padding-top:18px;border-top:1px solid var(--line);text-align:center;}
+.m-watch a.ignition-btn{text-decoration:none;}
+/* ── Launch media player (centre) + side specs (Our Vehicles + mission) ── */
+#modal.has-stage{width:min(860px,100%);}
+.m-stage{display:flex;gap:16px;align-items:stretch;margin:10px 0 6px;}
+.m-side{flex:0 0 148px;display:flex;flex-direction:column;gap:9px;justify-content:center;min-width:0;}
+.m-player{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;align-items:center;gap:14px;}
+.m-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:11px;overflow:hidden;border:1px solid var(--line-2);background:#000;box-shadow:0 14px 40px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.02);}
+.m-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;}
+.m-stat{background:var(--bg-2);border:1px solid var(--line);border-radius:8px;padding:9px 12px;}
+.m-stat-l{font-family:var(--f-mono);font-size:0.5em;letter-spacing:0.13em;text-transform:uppercase;color:var(--tx-3);margin-bottom:4px;}
+.m-stat-v{font-family:var(--f-mono);font-size:0.8em;color:var(--tx);font-weight:500;line-height:1.25;}
+.m-watch-btn{min-width:auto;min-height:44px;font-size:0.82em;padding:0 22px;}
+.m-watch-btn svg{width:13px;height:13px;}
+@media(max-width:680px){
+  #modal.has-stage{width:min(620px,100%);}
+  .m-stage{flex-direction:column;gap:12px;}
+  .m-side{flex:none;flex-direction:row;flex-wrap:wrap;justify-content:stretch;}
+  .m-side .m-stat{flex:1 1 calc(50% - 5px);}
+}
 .m-close{position:absolute;top:14px;right:15px;width:30px;height:30px;border-radius:6px;background:transparent;border:1px solid var(--line);
   color:var(--tx-3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .22s var(--spring);z-index:2;}
 .m-close:hover{background:rgba(190,195,205,0.07);color:var(--tx);border-color:var(--line-2);transform:scale(1.1);}
@@ -597,10 +664,21 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .gop-overlay.hidden{opacity:0;pointer-events:none;}
 .gop-title{font-family:var(--f-disp);font-weight:600;font-size:1.7em;letter-spacing:-0.01em;color:var(--tx);}
 .gop-sub{font-family:var(--f-mono);font-size:0.66em;letter-spacing:0.1em;text-transform:uppercase;color:var(--tx-2);}
-.gop-start{font-family:var(--f-disp);font-weight:600;font-size:0.92em;letter-spacing:0.06em;text-transform:uppercase;
-  padding:12px 30px;border-radius:7px;background:linear-gradient(180deg,#b18bff,var(--violet));color:#10081f;border:1px solid var(--violet);cursor:pointer;
-  box-shadow:0 6px 22px rgba(154,123,255,.28),inset 0 1px 0 rgba(255,255,255,.3);transition:transform .2s var(--spring),box-shadow .3s;}
-.gop-start:hover{transform:scale(1.03);box-shadow:0 12px 32px rgba(154,123,255,.42),inset 0 1px 0 rgba(255,255,255,.4);}
+.gop-start{position:relative;display:inline-flex;align-items:center;gap:11px;cursor:pointer;
+  font-family:var(--f-disp);font-weight:600;font-size:0.96em;letter-spacing:0.06em;text-transform:uppercase;
+  padding:0 30px;min-width:230px;min-height:54px;justify-content:center;border-radius:7px;color:#10081f;border:1px solid var(--violet);overflow:hidden;
+  background:linear-gradient(180deg,#b88dff,#9a7bff);
+  box-shadow:0 5px 16px rgba(154,123,255,.20),inset 0 1px 0 rgba(255,255,255,.4);
+  transition:box-shadow .3s,transform .2s var(--spring);}
+.gop-start::before{content:'';position:absolute;inset:0;z-index:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(180deg,#cbb0ff,#a888ff);transform:scaleX(0);transform-origin:left center;transition:transform .45s var(--out);}
+.gop-start:hover::before{transform:scaleX(1);}
+.gop-start::after{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(120deg,rgba(255,255,255,.42),transparent 42%);pointer-events:none;}
+.gop-start:hover{box-shadow:0 8px 22px rgba(154,123,255,.34),inset 0 1px 0 rgba(255,255,255,.5);}
+.gop-start:active{transform:scale(0.99);}
+.gop-start svg{width:15px;height:15px;fill:#10081f;position:relative;z-index:2;transition:transform .25s var(--spring);}
+.gop-start:hover svg{transform:scale(1.06);}
+.gop-start span{position:relative;z-index:2;}
 .gop-hint{font-family:var(--f-mono);font-size:0.58em;letter-spacing:0.1em;text-transform:uppercase;color:var(--tx-4);}
 
 /* ══════ TOAST ══════ */
@@ -668,7 +746,7 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
     <div class="mp-body">
       <div class="mp-clabel" id="mp-clabel" data-i="nextLaunch">Next launch in</div>
       <div id="mp-readout"></div>
-      <div class="mp-meta" id="mp-meta"></div>
+      <div class="mp-meta" id="mp-meta" onclick="openSpecFromHero()" title="View vehicle & mission specs"></div>
       <div class="ignition-row">
         <div class="ignition-btn" onclick="watchPrimary()">
           <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
@@ -685,7 +763,7 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
   <div class="hero-band">
     <div class="telemetry">
       <div class="tele-head">
-        <span class="sec-eyebrow"><span class="bar"></span><span data-i="telemetry">Telemetry</span></span>
+        <span class="sec-eyebrow"><span class="bar"></span><span data-i="secStats">Statistics</span></span>
         <span class="mono" style="font-size:0.58em;letter-spacing:0.14em;color:var(--tx-4);text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;"><span class="glow-dot" style="width:5px;height:5px;animation:pulse 2s infinite;"></span>LIVE</span>
       </div>
       <div class="tele-grid" id="tele-grid"></div>
@@ -713,6 +791,7 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 <footer>
   <span class="foot-mark">2026–2331 InSpace</span>
   <div class="foot-line" data-i="footerNote">This website is for informational purposes only and does not engage in any commercial activity.</div>
+  <a class="foot-issues social-btn" href="https://github.com/hi9es/InSpace/issues/new?title=&body=%23%23%23+Name%3A%0A%0A%23%23%23+Issue%3A" target="_blank" rel="noopener" aria-label="GitHub Issues" title="GitHub Issues"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"></path></svg></a>
 </footer>
 
 <!-- ═══════ OVERLAY · FLEET ═══════ -->
@@ -822,7 +901,7 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
       <div class="gop-overlay" id="gop-game-overlay">
         <div class="gop-title" id="gop-over-title" data-i="flyTitle">Fly in Space</div>
         <div class="gop-sub" id="gop-over-sub" data-i="flyDesc">Dodge asteroids · Collect fuel cells · Survive</div>
-        <button class="gop-start gop-start-btn" onclick="startGame()" data-i="launch">Launch</button>
+        <button class="gop-start gop-start-btn" onclick="startGame()"><svg viewBox="0 0 24 24"><path d="M6 5v14l12-7z"/></svg><span data-i="launch">Launch</span></button>
         <div class="gop-hint" data-i="steerHint">Mouse / Touch to steer</div>
       </div>
     </div>
@@ -838,10 +917,29 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
       <div class="m-status"><div class="m-dot" id="m-dot"></div><span class="m-status-t" id="m-status-t"></span></div>
       <div class="m-name" id="m-name"></div>
       <div class="m-type" id="m-type"></div>
+      <div class="m-stage" id="m-stage" style="display:none"></div>
       <div class="m-profile" id="m-profile"></div>
       <div class="m-grid" id="m-grid"></div>
       <div class="m-desc" id="m-desc"></div>
-      <div class="m-watch" id="m-watch" style="display:none"><a id="m-watch-link" target="_blank" data-i="watchLaunch">Watch Launch</a></div>
+      <div class="m-watch" id="m-watch" style="display:none"><a class="ignition-btn" id="m-watch-link" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span data-i="watchLaunch">Watch Launch</span></a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ LAUNCH SPEC PREVIEW ═══════ -->
+<div id="spec-bd" onclick="closeSpec(event)">
+  <div id="spec-panel">
+    <button class="m-close" onclick="closeSpec(null,true)"><svg viewBox="0 0 12 12"><path d="M2 2l8 8M10 2l-8 8"/></svg></button>
+    <div class="spec-bar" id="spec-bar"></div>
+    <div class="spec-inner">
+      <div class="spec-eyebrow" id="spec-eyebrow"></div>
+      <div class="spec-name" id="spec-name"></div>
+      <div class="spec-class" id="spec-class"></div>
+      <div class="spec-sec" id="spec-vsec"></div>
+      <div class="spec-grid" id="spec-grid"></div>
+      <div class="spec-sec" id="spec-msec"></div>
+      <div class="spec-grid" id="spec-mgrid"></div>
+      <div class="spec-nav" id="spec-nav"></div>
     </div>
   </div>
 </div>
@@ -861,7 +959,7 @@ const TRANSLATIONS = {
     watchLaunch:'Watch Launch', ourVehicles:'Our Vehicles',
     ourVehiclesSub:'Active fleet · Mission ready',
     latestNews:'Latest News', latestNewsSub:'Mission updates · Programme announcements',
-    launchSchedule:'Launch Schedule', launchScheduleSub:'Upcoming · Completed · Cancelled',
+    launchSchedule:'Launch Schedule', launchScheduleSub:'Plans · Victories · Defeats',
     loadMore:'Load more', details:'Details', back:'Back', backToList:'Back to list',
     fullDetails:'Full Details', noSave:'Score & best are not saved between sessions.',
     flyTitle:'Fly in Space', flySubtitle:'Mini Game',
@@ -1060,22 +1158,40 @@ Object.keys(SYS_STATUS).forEach(l=>{ if(TRANSLATIONS[l])TRANSLATIONS[l].systemOn
 const CHART_OUTCOME={en:'Launches by Vehicle',ru:'Запуски по аппаратам',de:'Starts nach Fahrzeug',es:'Lanzamientos por Vehículo',fr:'Lancements par Véhicule',zh:'按飞行器发射',pt:'Lançamentos por Veículo',hi:'वाहन अनुसार प्रक्षेपण',pl:'Starty wg pojazdu',ja:'機体別打ち上げ',af:'Lanserings per voertuig',hu:'Indítások jármű szerint'};
 Object.keys(CHART_OUTCOME).forEach(l=>{ if(TRANSLATIONS[l])TRANSLATIONS[l].chartOutcome=CHART_OUTCOME[l]; });
 Object.keys(TRANSLATIONS).forEach(l=>{ TRANSLATIONS[l].statusCompleted='Success'; TRANSLATIONS[l].schedCompleted='Success'; });
-Object.assign(TRANSLATIONS.en,{chartCumulative:'Cumulative Successful Flights',chartByVehicle:'Success by Vehicle',kpiCompletion:'Success Rate',chartCadence:'Launch Cadence',chartOutcomes:'Outcomes',chartOutByVeh:'Outcomes by Vehicle',periodMonth:'Month',periodYear:'Year',missionsCount:'missions',reactionsTitle:'Reactions & Comments',reactionsSub:'Sign in with GitHub to react and comment',missionStatus:'Mission Status',rangeLabel:'Range',rangeAll:'ALL',chartMomentum:'Launch Momentum',momentumNote:'Successes boost · idle days decay'});
-Object.assign(TRANSLATIONS.ru,{chartCadence:'Темп запусков',chartOutcomes:'Исходы',chartOutByVeh:'Исходы по аппаратам',periodMonth:'Месяц',periodYear:'Год',missionsCount:'миссий',reactionsTitle:'Реакции и комментарии',reactionsSub:'Войдите через GitHub, чтобы реагировать и комментировать',missionStatus:'Статус миссии',rangeLabel:'Период',rangeAll:'ВСЁ',chartMomentum:'Импульс запусков',momentumNote:'Успехи поднимают · простои снижают'});
+Object.assign(TRANSLATIONS.en,{chartCumulative:'Cumulative Successful Flights',chartByVehicle:'Success by Vehicle',kpiCompletion:'Success Rate',chartCadence:'Launch Cadence',chartOutcomes:'Outcomes',chartOutByVeh:'Outcomes by Vehicle',periodMonth:'Month',periodYear:'Year',missionsCount:'missions',reactionsTitle:'Reactions & Comments',reactionsSub:'Sign in with GitHub to react and comment',missionStatus:'Mission Status',rangeLabel:'Range',rangeAll:'ALL',chartMomentum:'Launch Momentum',momentumNote:'Successes build · failures pull down'});
+Object.assign(TRANSLATIONS.ru,{chartCadence:'Темп запусков',chartOutcomes:'Исходы',chartOutByVeh:'Исходы по аппаратам',periodMonth:'Месяц',periodYear:'Год',missionsCount:'миссий',reactionsTitle:'Реакции и комментарии',reactionsSub:'Войдите через GitHub, чтобы реагировать и комментировать',missionStatus:'Статус миссии',rangeLabel:'Период',rangeAll:'ВСЁ',chartMomentum:'Импульс запусков',momentumNote:'Успехи поднимают · неудачи снижают'});
+/* landing / mission split charts + landings stat + spec-panel landing + section rename (referenced in code; en is the fallback for all other langs) */
+Object.assign(TRANSLATIONS.en,{chartLandings:'Landing Outcomes',chartLandingsNote:'Touchdown · suicide burn',chartMissions:'Mission Success',chartMissionsNote:'Success vs RUD',landSuccess:'Landed',landFail:'Failed',landingsCount:'landings',statLandings:'Successful Landings',landingsSub:'Suicide burn',lblLanding:'Landing',secStats:'Statistics'});
+Object.assign(TRANSLATIONS.ru,{chartLandings:'Исходы посадок',chartLandingsNote:'Касание · suicide burn',chartMissions:'Успех миссий',chartMissionsNote:'Success vs RUD',landSuccess:'Успешные',landFail:'Неуспешные',landingsCount:'посадок',statLandings:'Успешных посадок',landingsSub:'Suicide burn',lblLanding:'Посадка',secStats:'Статистика'});
 /* keep other languages up to date with the expanded analytics UI */
 const I18N_EXT={
-  de:{chartMomentum:'Startdynamik',momentumNote:'Erfolge heben · Pausen senken',chartByVehicle:'Erfolge nach Fahrzeug',chartCadence:'Startfrequenz',chartOutcomes:'Ergebnisse',chartOutByVeh:'Ergebnisse nach Fahrzeug',periodMonth:'Monat',periodYear:'Jahr',missionsCount:'Missionen',rangeLabel:'Zeitraum',rangeAll:'ALLE',missionStatus:'Missionsstatus'},
-  es:{chartMomentum:'Dinámica de Lanzamientos',momentumNote:'Éxitos suben · inactividad baja',chartByVehicle:'Éxitos por Vehículo',chartCadence:'Frecuencia de Lanzamiento',chartOutcomes:'Resultados',chartOutByVeh:'Resultados por Vehículo',periodMonth:'Mes',periodYear:'Año',missionsCount:'misiones',rangeLabel:'Periodo',rangeAll:'TODO',missionStatus:'Estado de Misión'},
-  fr:{chartMomentum:'Dynamique des Lancements',momentumNote:'Succès montent · inactivité baisse',chartByVehicle:'Succès par Véhicule',chartCadence:'Fréquence de Lancement',chartOutcomes:'Résultats',chartOutByVeh:'Résultats par Véhicule',periodMonth:'Mois',periodYear:'Année',missionsCount:'missions',rangeLabel:'Période',rangeAll:'TOUT',missionStatus:'Statut de Mission'},
-  zh:{chartMomentum:'发射动态',momentumNote:'成功上升 · 空档下降',chartByVehicle:'按飞行器成功',chartCadence:'发射频率',chartOutcomes:'结果',chartOutByVeh:'按飞行器结果',periodMonth:'月',periodYear:'年',missionsCount:'任务',rangeLabel:'时间范围',rangeAll:'全部',missionStatus:'任务状态'},
-  pt:{chartMomentum:'Dinâmica de Lançamentos',momentumNote:'Sucessos sobem · ociosidade cai',chartByVehicle:'Sucessos por Veículo',chartCadence:'Frequência de Lançamento',chartOutcomes:'Resultados',chartOutByVeh:'Resultados por Veículo',periodMonth:'Mês',periodYear:'Ano',missionsCount:'missões',rangeLabel:'Período',rangeAll:'TUDO',missionStatus:'Estado da Missão'},
-  hi:{chartMomentum:'प्रक्षेपण गति',momentumNote:'सफलता बढ़ाती · निष्क्रियता घटाती',chartByVehicle:'वाहन अनुसार सफल',chartCadence:'प्रक्षेपण आवृत्ति',chartOutcomes:'परिणाम',chartOutByVeh:'वाहन अनुसार परिणाम',periodMonth:'माह',periodYear:'वर्ष',missionsCount:'मिशन',rangeLabel:'अवधि',rangeAll:'सभी',missionStatus:'मिशन स्थिति'},
-  pl:{chartMomentum:'Dynamika startów',momentumNote:'Sukcesy podnoszą · przestoje obniżają',chartByVehicle:'Sukcesy wg pojazdu',chartCadence:'Częstotliwość startów',chartOutcomes:'Wyniki',chartOutByVeh:'Wyniki wg pojazdu',periodMonth:'Miesiąc',periodYear:'Rok',missionsCount:'misje',rangeLabel:'Okres',rangeAll:'WSZYSTKO',missionStatus:'Status misji'},
-  ja:{chartMomentum:'打ち上げ勢い',momentumNote:'成功で上昇・休止で下降',chartByVehicle:'機体別成功',chartCadence:'打ち上げ頻度',chartOutcomes:'結果',chartOutByVeh:'機体別結果',periodMonth:'月',periodYear:'年',missionsCount:'ミッション',rangeLabel:'期間',rangeAll:'全て',missionStatus:'ミッション状態'},
-  af:{chartMomentum:'Lanseringsmomentum',momentumNote:'Sukses lig · ledige dae daal',chartByVehicle:'Sukses per voertuig',chartCadence:'Lanseringsfrekwensie',chartOutcomes:'Uitkomste',chartOutByVeh:'Uitkomste per voertuig',periodMonth:'Maand',periodYear:'Jaar',missionsCount:'missies',rangeLabel:'Tydperk',rangeAll:'ALLES',missionStatus:'Missiestatus'},
-  hu:{chartMomentum:'Indítási lendület',momentumNote:'Sikerek emelik · állásidő csökkenti',chartByVehicle:'Sikerek jármű szerint',chartCadence:'Indítási gyakoriság',chartOutcomes:'Eredmények',chartOutByVeh:'Eredmények jármű szerint',periodMonth:'Hónap',periodYear:'Év',missionsCount:'misszió',rangeLabel:'Időszak',rangeAll:'MIND',missionStatus:'Misszió állapota'},
+  de:{chartMomentum:'Startdynamik',momentumNote:'Erfolge heben · Fehlschläge senken',chartByVehicle:'Erfolge nach Fahrzeug',chartCadence:'Startfrequenz',chartOutcomes:'Ergebnisse',chartOutByVeh:'Ergebnisse nach Fahrzeug',periodMonth:'Monat',periodYear:'Jahr',missionsCount:'Missionen',rangeLabel:'Zeitraum',rangeAll:'ALLE',missionStatus:'Missionsstatus'},
+  es:{chartMomentum:'Dinámica de Lanzamientos',momentumNote:'Éxitos suben · fallos bajan',chartByVehicle:'Éxitos por Vehículo',chartCadence:'Frecuencia de Lanzamiento',chartOutcomes:'Resultados',chartOutByVeh:'Resultados por Vehículo',periodMonth:'Mes',periodYear:'Año',missionsCount:'misiones',rangeLabel:'Periodo',rangeAll:'TODO',missionStatus:'Estado de Misión'},
+  fr:{chartMomentum:'Dynamique des Lancements',momentumNote:'Succès montent · échecs baissent',chartByVehicle:'Succès par Véhicule',chartCadence:'Fréquence de Lancement',chartOutcomes:'Résultats',chartOutByVeh:'Résultats par Véhicule',periodMonth:'Mois',periodYear:'Année',missionsCount:'missions',rangeLabel:'Période',rangeAll:'TOUT',missionStatus:'Statut de Mission'},
+  zh:{chartMomentum:'发射动态',momentumNote:'成功上升 · 失败下降',chartByVehicle:'按飞行器成功',chartCadence:'发射频率',chartOutcomes:'结果',chartOutByVeh:'按飞行器结果',periodMonth:'月',periodYear:'年',missionsCount:'任务',rangeLabel:'时间范围',rangeAll:'全部',missionStatus:'任务状态'},
+  pt:{chartMomentum:'Dinâmica de Lançamentos',momentumNote:'Sucessos sobem · falhas caem',chartByVehicle:'Sucessos por Veículo',chartCadence:'Frequência de Lançamento',chartOutcomes:'Resultados',chartOutByVeh:'Resultados por Veículo',periodMonth:'Mês',periodYear:'Ano',missionsCount:'missões',rangeLabel:'Período',rangeAll:'TUDO',missionStatus:'Estado da Missão'},
+  hi:{chartMomentum:'प्रक्षेपण गति',momentumNote:'सफलता बढ़ाती · विफलता घटाती',chartByVehicle:'वाहन अनुसार सफल',chartCadence:'प्रक्षेपण आवृत्ति',chartOutcomes:'परिणाम',chartOutByVeh:'वाहन अनुसार परिणाम',periodMonth:'माह',periodYear:'वर्ष',missionsCount:'मिशन',rangeLabel:'अवधि',rangeAll:'सभी',missionStatus:'मिशन स्थिति'},
+  pl:{chartMomentum:'Dynamika startów',momentumNote:'Sukcesy podnoszą · porażki obniżają',chartByVehicle:'Sukcesy wg pojazdu',chartCadence:'Częstotliwość startów',chartOutcomes:'Wyniki',chartOutByVeh:'Wyniki wg pojazdu',periodMonth:'Miesiąc',periodYear:'Rok',missionsCount:'misje',rangeLabel:'Okres',rangeAll:'WSZYSTKO',missionStatus:'Status misji'},
+  ja:{chartMomentum:'打ち上げ勢い',momentumNote:'成功で上昇・失敗で下降',chartByVehicle:'機体別成功',chartCadence:'打ち上げ頻度',chartOutcomes:'結果',chartOutByVeh:'機体別結果',periodMonth:'月',periodYear:'年',missionsCount:'ミッション',rangeLabel:'期間',rangeAll:'全て',missionStatus:'ミッション状態'},
+  af:{chartMomentum:'Lanseringsmomentum',momentumNote:'Sukses lig · mislukkings daal',chartByVehicle:'Sukses per voertuig',chartCadence:'Lanseringsfrekwensie',chartOutcomes:'Uitkomste',chartOutByVeh:'Uitkomste per voertuig',periodMonth:'Maand',periodYear:'Jaar',missionsCount:'missies',rangeLabel:'Tydperk',rangeAll:'ALLES',missionStatus:'Missiestatus'},
+  hu:{chartMomentum:'Indítási lendület',momentumNote:'Sikerek emelik · kudarcok csökkentik',chartByVehicle:'Sikerek jármű szerint',chartCadence:'Indítási gyakoriság',chartOutcomes:'Eredmények',chartOutByVeh:'Eredmények jármű szerint',periodMonth:'Hónap',periodYear:'Év',missionsCount:'misszió',rangeLabel:'Időszak',rangeAll:'MIND',missionStatus:'Misszió állapota'},
 };
 Object.keys(I18N_EXT).forEach(l=>{ if(TRANSLATIONS[l])Object.assign(TRANSLATIONS[l],I18N_EXT[l]); });
+
+/* localize the newer landing / mission / attempt / stats UI into every remaining language */
+const I18N_EXT2={
+  de:{secStats:'Statistik',statLandings:'Erfolgreiche Landungen',landingsSub:'Suicide Burn',chartLandings:'Landeergebnisse',chartLandingsNote:'Aufsetzen · Suicide Burn',chartMissions:'Missionserfolg',chartMissionsNote:'Erfolg vs. RUD',landSuccess:'Gelandet',landFail:'Gescheitert',landingsCount:'Landungen',lblLanding:'Landung',lblAttempt:'Versuch',attemptFirst:'1. Flug · keine Holds',attemptN:'Versuch #{n}',kpiLastLaunch:'Letzter Start',lblTarget:'Ziel',lblDate:'Datum',lblSite:'Startplatz',lblVehicle:'Fahrzeug',lblStatus:'Status',watchRecord:'Aufzeichnung auf YouTube ansehen',today:'Heute',granAll:'Alle'},
+  es:{secStats:'Estadísticas',statLandings:'Aterrizajes Exitosos',landingsSub:'Suicide burn',chartLandings:'Resultados de Aterrizaje',chartLandingsNote:'Toma de contacto · suicide burn',chartMissions:'Éxito de Misión',chartMissionsNote:'Éxito vs RUD',landSuccess:'Aterrizado',landFail:'Fallido',landingsCount:'aterrizajes',lblLanding:'Aterrizaje',lblAttempt:'Intento',attemptFirst:'1.er vuelo · sin pausas',attemptN:'Intento #{n}',kpiLastLaunch:'Último Lanzamiento',lblTarget:'Objetivo',lblDate:'Fecha',lblSite:'Sitio',lblVehicle:'Vehículo',lblStatus:'Estado',watchRecord:'Ver grabación en YouTube',today:'Hoy',granAll:'Todo'},
+  fr:{secStats:'Statistiques',statLandings:'Atterrissages Réussis',landingsSub:'Suicide burn',chartLandings:'Résultats d’atterrissage',chartLandingsNote:'Toucher · suicide burn',chartMissions:'Réussite de Mission',chartMissionsNote:'Réussite vs RUD',landSuccess:'Atterri',landFail:'Échoué',landingsCount:'atterrissages',lblLanding:'Atterrissage',lblAttempt:'Tentative',attemptFirst:'1er vol · sans interruption',attemptN:'Tentative #{n}',kpiLastLaunch:'Dernier Lancement',lblTarget:'Cible',lblDate:'Date',lblSite:'Site',lblVehicle:'Véhicule',lblStatus:'Statut',watchRecord:'Voir l’enregistrement sur YouTube',today:'Aujourd’hui',granAll:'Tout'},
+  zh:{secStats:'统计',statLandings:'成功着陆',landingsSub:'Suicide burn',chartLandings:'着陆结果',chartLandingsNote:'触地 · suicide burn',chartMissions:'任务成功率',chartMissionsNote:'成功 vs RUD',landSuccess:'已着陆',landFail:'失败',landingsCount:'次着陆',lblLanding:'着陆',lblAttempt:'尝试',attemptFirst:'首飞 · 无暂停',attemptN:'第 {n} 次尝试',kpiLastLaunch:'上次发射',lblTarget:'目标',lblDate:'日期',lblSite:'发射场',lblVehicle:'飞行器',lblStatus:'状态',watchRecord:'在 YouTube 观看录像',today:'今天',granAll:'全部'},
+  pt:{secStats:'Estatísticas',statLandings:'Pousos Bem-Sucedidos',landingsSub:'Suicide burn',chartLandings:'Resultados de Pouso',chartLandingsNote:'Toque no solo · suicide burn',chartMissions:'Sucesso da Missão',chartMissionsNote:'Sucesso vs RUD',landSuccess:'Pousou',landFail:'Falhou',landingsCount:'pousos',lblLanding:'Pouso',lblAttempt:'Tentativa',attemptFirst:'1º voo · sem pausas',attemptN:'Tentativa #{n}',kpiLastLaunch:'Último Lançamento',lblTarget:'Alvo',lblDate:'Data',lblSite:'Local',lblVehicle:'Veículo',lblStatus:'Estado',watchRecord:'Ver gravação no YouTube',today:'Hoje',granAll:'Tudo'},
+  hi:{secStats:'आँकड़े',statLandings:'सफल लैंडिंग',landingsSub:'Suicide burn',chartLandings:'लैंडिंग परिणाम',chartLandingsNote:'टचडाउन · suicide burn',chartMissions:'मिशन सफलता',chartMissionsNote:'सफलता बनाम RUD',landSuccess:'उतरा',landFail:'विफल',landingsCount:'लैंडिंग',lblLanding:'लैंडिंग',lblAttempt:'प्रयास',attemptFirst:'पहली उड़ान · कोई होल्ड नहीं',attemptN:'प्रयास #{n}',kpiLastLaunch:'पिछला प्रक्षेपण',lblTarget:'लक्ष्य',lblDate:'तारीख',lblSite:'स्थल',lblVehicle:'वाहन',lblStatus:'स्थिति',watchRecord:'YouTube पर रिकॉर्डिंग देखें',today:'आज',granAll:'सभी'},
+  pl:{secStats:'Statystyki',statLandings:'Udane Lądowania',landingsSub:'Suicide burn',chartLandings:'Wyniki lądowania',chartLandingsNote:'Przyziemienie · suicide burn',chartMissions:'Sukces misji',chartMissionsNote:'Sukces vs RUD',landSuccess:'Wylądował',landFail:'Nieudane',landingsCount:'lądowań',lblLanding:'Lądowanie',lblAttempt:'Próba',attemptFirst:'1. lot · bez wstrzymań',attemptN:'Próba #{n}',kpiLastLaunch:'Ostatni start',lblTarget:'Cel',lblDate:'Data',lblSite:'Miejsce',lblVehicle:'Pojazd',lblStatus:'Status',watchRecord:'Obejrzyj nagranie na YouTube',today:'Dziś',granAll:'Wszystko'},
+  ja:{secStats:'統計',statLandings:'着陸成功',landingsSub:'Suicide burn',chartLandings:'着陸結果',chartLandingsNote:'着地 · suicide burn',chartMissions:'ミッション成功率',chartMissionsNote:'成功 vs RUD',landSuccess:'着陸',landFail:'失敗',landingsCount:'回の着陸',lblLanding:'着陸',lblAttempt:'試行',attemptFirst:'初飛行 · ホールドなし',attemptN:'試行 #{n}',kpiLastLaunch:'前回の打ち上げ',lblTarget:'目標',lblDate:'日付',lblSite:'射場',lblVehicle:'機体',lblStatus:'ステータス',watchRecord:'YouTubeで録画を見る',today:'今日',granAll:'全て'},
+  af:{secStats:'Statistieke',statLandings:'Suksesvolle Landings',landingsSub:'Suicide burn',chartLandings:'Landingsuitkomste',chartLandingsNote:'Neersit · suicide burn',chartMissions:'Missiesukses',chartMissionsNote:'Sukses vs RUD',landSuccess:'Geland',landFail:'Misluk',landingsCount:'landings',lblLanding:'Landing',lblAttempt:'Poging',attemptFirst:'1ste vlug · geen onderbrekings',attemptN:'Poging #{n}',kpiLastLaunch:'Laaste Lansering',lblTarget:'Teiken',lblDate:'Datum',lblSite:'Terrein',lblVehicle:'Voertuig',lblStatus:'Status',watchRecord:'Kyk opname op YouTube',today:'Vandag',granAll:'Alles'},
+  hu:{secStats:'Statisztika',statLandings:'Sikeres Landolások',landingsSub:'Suicide burn',chartLandings:'Landolási eredmények',chartLandingsNote:'Földet érés · suicide burn',chartMissions:'Küldetés sikere',chartMissionsNote:'Siker vs RUD',landSuccess:'Landolt',landFail:'Sikertelen',landingsCount:'landolás',lblLanding:'Landolás',lblAttempt:'Próbálkozás',attemptFirst:'1. repülés · nincs leállás',attemptN:'Próbálkozás #{n}',kpiLastLaunch:'Utolsó indítás',lblTarget:'Cél',lblDate:'Dátum',lblSite:'Helyszín',lblVehicle:'Jármű',lblStatus:'Állapot',watchRecord:'Felvétel megtekintése a YouTube-on',today:'Ma',granAll:'Mind'},
+};
+Object.keys(I18N_EXT2).forEach(l=>{ if(TRANSLATIONS[l])Object.assign(TRANSLATIONS[l],I18N_EXT2[l]); });
 
 const LANG_NAMES={en:'EN',es:'ES',de:'DE',fr:'FR',ru:'RU',zh:'中文',pt:'PT',hi:'HI',pl:'PL',ja:'JA',af:'AF',hu:'HU'};
 const LANG_LABELS={en:'English (US)',es:'Spanish',de:'German',fr:'French',ru:'Russian',zh:'Chinese',pt:'Brazilian',hi:'Hindi',pl:'Polish',ja:'Japanese',af:'Afrikaans (SA)',hu:'Hungarian'};
@@ -1247,8 +1363,7 @@ function ensureOverlayStars(el,count=70){if(!el||el.dataset.filled)return;create
 const OUTCOMES=[
   {key:'Success',color:'#37e0a0',launched:true},
   {key:'RUD',color:'#ff5d5d',launched:true},
-  {key:'Mishap Investigation',color:'#ffc94d',launched:true},
-  {key:'Off-nominal',color:'#ff9e3d',launched:true},
+  {key:'SCRUB',color:'#9aa3b2',launched:false},
   {key:'Cancelled',color:'#7e8794',launched:false},
 ];
 const OUTCOME_COLOR={};OUTCOMES.forEach(o=>{OUTCOME_COLOR[o.key]=o.color;});
@@ -1265,7 +1380,7 @@ function statusLabel(s){
   if(s==='Planned')return t('statusPlanned');
   if(s==='Success')return t('statusCompleted');
   if(s==='Cancelled')return t('statusCanceled');
-  return s; /* RUD · Mishap Investigation · Off-nominal — shown as-is */
+  return s; /* RUD and any other custom status — shown as typed */
 }
 
 /* ─────────── NAV + HEADER RIGHT ─────────── */
@@ -1315,23 +1430,38 @@ function buildHeaderRight(){
 /* ════════════════════════════════════════════════════════════
    DATA · LAUNCHES (preserved)
 ════════════════════════════════════════════════════════════ */
+/* ════════ LAUNCH SCHEDULE — add / edit launches here ════════
+   Per-launch fields:
+   • rocket / vehicle : display name        • status : 'Success' | 'RUD' | 'SCRUB' | 'Cancelled' | 'Planned'
+   • date : 'YYYY-MM-DD HH:MM' (local)       • nameId : vehicle key — matches a vehicles[] id, OR a brand-new key (it auto-appears across Flight Analytics)
+   • site / target / type / desc : optional  • durationMin : mission length in minutes (drives countdown + end time)
+   • watchUrl : per-launch stream/recording. Paste ANY of: a normal watch link (youtube.com/watch?v=ID),
+       a youtu.be/ID link, an embed link (youtube.com/embed/ID), OR the whole YouTube "Embed" <iframe …> code.
+       '' = no player. When set → an embedded player + a "Watch live/record on YouTube" button appear in the modal.
+       Example: watchUrl:'<iframe width="560" height="315" src="https://www.youtube.com/embed/LJwvYCgvUL0" ...></iframe>'
+       or simply  watchUrl:'https://www.youtube.com/embed/LJwvYCgvUL0'
+   • landing : true = successful touchdown (suicide-burn / vertical landing) · false = landing failed · null = no landing attempt
+       (drives the "Successful Landings" stat and the Landings pie in Flight Analytics — set it per launch as you like)
+   • showWatchMin : reveal the live link on the schedule row this many minutes before T-0
+   • phases : MISSION PROFILE for points 2-4 (T-0 is always launch time). For each of meco / sep / landing:
+        number = minutes after T-0 (e.g. 2.5) → node auto-lights at that moment during a live flight ·
+        true = force the node done · omit the key (or whole phases) = auto (a finished Success shows all done)
+   ════════════════════════════════════════════════════════════ */
 const launches=[
-  {rocket:'SunPower One SN5 (V2.2)',date:'2026-03-07 14:00',status:'Cancelled',nameId:'sunpower',vehicle:'SunPower One SN5 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30},
-  {rocket:'SunPower One SN3 (V2.2)',date:'2026-03-03 17:00',status:'Cancelled',nameId:'sunpower',vehicle:'SunPower One SN3 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN2 (V2.2)',date:'2026-03-02 23:00',status:'Cancelled',nameId:'sunorbit',vehicle:'SunOrbit One SN2 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30},
-  {rocket:'SunPower One SN1 (V2.2)',date:'2026-03-01 14:00',status:'Cancelled',nameId:'sunpower',vehicle:'SunPower One SN1 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN51 (V2.4)',date:'2026-05-01 05:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN51 (V2.4)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN49 (V2.2)',date:'2026-04-16 20:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN49 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN48 (V2.2)',date:'2026-04-13 15:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN48 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN10 (V2.2)',date:'2026-04-02 00:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN10 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN9 (V2.2)',date:'2026-03-29 07:30',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN9 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN8 (V2.2)',date:'2026-03-29 03:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN8 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN7 (V2.2)',date:'2026-03-21 16:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN7 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN7 (V2.2)',date:'2026-03-19 14:30',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN7 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN6 (V2.2)',date:'2026-03-11 13:45',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN6 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN4 (V2.2)',date:'2026-03-06 11:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN4 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30},
-  {rocket:'SunOrbit One SN4 (V2.2)',date:'2026-03-06 11:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN4 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30},
-  {rocket:'???',date:'2331-10-31 08:13',status:'Planned',nameId:'2331',vehicle:'SunOrbit One SN4 (V2.2)',site:'Milky Way',target:'New Era',type:'???',desc:'???',durationMin:3,watchUrl:'',showWatchMin:30},
+  {rocket:'SunPower One SN5 (V2.2)',date:'2026-03-07 14:00',status:'Cancelled',nameId:'sunpower',vehicle:'SunPower One SN5 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30,landing:null,attempt:''},
+  {rocket:'SunPower One SN3 (V2.2)',date:'2026-03-03 17:00',status:'Cancelled',nameId:'sunpower',vehicle:'SunPower One SN3 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30,landing:null,attempt:''},
+  {rocket:'SunOrbit One SN2 (V2.2)',date:'2026-03-02 23:00',status:'Cancelled',nameId:'sunorbit',vehicle:'SunOrbit One SN2 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30,landing:null,attempt:''},
+  {rocket:'SunPower One SN1 (V2.2)',date:'2026-03-01 14:00',status:'Cancelled',nameId:'sunpower',vehicle:'SunPower One SN1 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30,landing:null,attempt:''},
+  {rocket:'SunOrbit One SN51 (V2.4)',date:'2026-05-01 05:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN51 (V2.4)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=LJwvYCgvUL0',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
+  {rocket:'SunOrbit One SN49 (V2.2)',date:'2026-04-16 20:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN49 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=eeCeayunxTQ',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
+  {rocket:'SunOrbit One SN48 (V2.2)',date:'2026-04-13 15:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN48 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=ziUfpxiQDr8',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
+  {rocket:'SunOrbit One SN10 (V2.2)',date:'2026-04-02 00:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN10 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=owEnhXMpteg',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
+  {rocket:'SunOrbit One SN9 (V2.2)',date:'2026-03-29 07:30',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN9 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=aUHgTNAcYUk',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
+  {rocket:'SunOrbit One SN8 (V2.2)',date:'2026-03-29 03:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN8 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=qKE7VkezfEQ',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
+  {rocket:'SunOrbit One SN7 (V2.2)',date:'2026-03-21 16:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN7 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=pKEioBiCdww',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
+  {rocket:'SunOrbit One SN7 (V2.2)',date:'2026-03-19 14:30',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN7 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=Mi7JRTVNzAs',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
+  {rocket:'SunOrbit One SN6 (V2.2)',date:'2026-03-11 13:45',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN6 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=LeixKcmVWws',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
+  {rocket:'SunOrbit One SN4 (V2.2)',date:'2026-03-06 11:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN4 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=nTobGdyWFNU',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.9,sep:3,landing:10}}
 ]
 launches.forEach(l=>{
   const[d,tm]=l.date.split(' ');const[year,month,day]=d.split('-').map(Number);const[hour,minute]=tm.split(':').map(Number);
@@ -1340,8 +1470,25 @@ launches.forEach(l=>{
 });
 /* sequence number: earliest launch overall = #1, most recent = highest (chronological flight number) */
 launches.slice().sort((a,b)=>a.dateObj-b.dateObj).forEach((l,i)=>{l.seq=i+1;});
-function launchCountFor(nameId){return launches.filter(l=>l.nameId===nameId&&l.status==='Success').length;}
+function launchCountFor(nameId){return launches.filter(l=>l.nameId===nameId&&OUTCOME_LAUNCHED[l.status]===true).length;} /* flights = anything that flew (Success/RUD); excludes Cancelled & Planned */
+/* master vehicle list for ALL Flight-Analytics per-vehicle widgets = declared vehicles[] PLUS any nameId that
+   appears in launches[] but isn't declared (auto-integration: add a launch with a new nameId and it shows up everywhere). */
+function vehList(){
+  const PAL=['#6f93c7','#c79a6f','#a982c4','#6fb29c','#c77e93','#b3a86f','#8a93a3','#9f86b8','#c2b6a0','#7f9ab0'];
+  const out=vehicles.map(v=>({id:v.id,name:v.name,color:v.color}));
+  const have=new Set(out.map(v=>v.id));
+  launches.forEach(l=>{
+    if(l.nameId&&!have.has(l.nameId)){
+      have.add(l.nameId);
+      const nm=(l.vehicle||l.nameId).replace(/\s*\(.*?\)\s*/g,'').trim()||l.nameId;
+      out.push({id:l.nameId,name:nm,color:PAL[out.length%PAL.length]});
+    }
+  });
+  return out;
+}
 function lastCompleted(){const c=launches.filter(l=>l.status==='Success');return c.length?c.reduce((a,b)=>a.dateObj>b.dateObj?a:b):null;}
+function lastLaunched(){const c=launches.filter(l=>OUTCOME_LAUNCHED[l.status]===true);return c.length?c.reduce((a,b)=>a.dateObj>b.dateObj?a:b):null;} /* most recent launch that actually flew (Success/RUD) */
+function daysAgoOf(dObj){if(!dObj)return null;const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate());const dd=new Date(dObj.getFullYear(),dObj.getMonth(),dObj.getDate());return Math.max(0,Math.floor((today-dd)/86400000));}
 function daysSinceLast(){const l=lastCompleted();if(!l)return null;const now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate());const ll=new Date(l.dateObj.toLocaleDateString('en-CA'));return Math.max(0,Math.floor((today-ll)/86400000));}
 function syncCountdownLabels(){if(window.__missionTick)window.__missionTick();}
 function rebuildDaysSince(){if(window.__missionTick)window.__missionTick();}
@@ -1379,14 +1526,14 @@ function renderFleet(){
     `<button class="vt-btn${fleetView==='compare'?' active':''}" onclick="setFleetView('compare')"><svg viewBox="0 0 24 24"><path d="M3 4h18v2H3zm0 7h18v2H3zm0 7h18v2H3z"/></svg> ${t('compareView')}</button>`;
   const wrap=document.getElementById('fleet-grid-wrap');
   if(fleetView==='grid'){
-    wrap.innerHTML=`<div class="fleet-grid">${vehicles.map(v=>{
+    wrap.innerHTML=`<div class="fleet-rows">${vehicles.map((v,i)=>{
       const p=statPillFor(v);
-      const cells=[{l:t('specHeight'),v:v.specs.find(s=>s.lbl==='Height')?.val||'—'},{l:t('specMass'),v:v.specs.find(s=>s.lbl==='Mass')?.val||'—'},{l:'TWR',v:v.specs.find(s=>s.lbl==='TWR')?.val||'—'}];
-      return `<div class="veh-card" style="--vc:${v.color}" onclick="playSound('details');showVehicleDetail('${v.id}')">
-        <div class="vc-stripe"></div>
-        <div class="vc-head"><div class="vc-row1"><span class="vc-class">${v.class}</span><span class="vc-stat-pill" style="color:${p.col};border:1px solid currentColor">${p.txt}</span></div><div class="vc-name">${v.name}</div></div>
-        <div class="vc-specs">${cells.map(c=>`<div class="vc-spec"><span class="vc-spec-l">${c.l}</span><span class="vc-spec-v">${c.v}</span></div>`).join('')}</div>
-        <div class="vc-foot"><span class="vc-foot-t">${t('openDossier')}</span><span class="vc-foot-a">&#8599;</span></div>
+      const cells=[{l:t('specHeight'),v:v.specs.find(s=>s.lbl==='Height')?.val||'—'},{l:t('specMass'),v:v.specs.find(s=>s.lbl==='Mass')?.val||'—'},{l:'Delta-V',v:v.specs.find(s=>s.lbl==='Delta-V')?.val||'—'},{l:'TWR',v:v.specs.find(s=>s.lbl==='TWR')?.val||'—'}];
+      return `<div class="veh-row" style="--vc:${v.color};animation-delay:${(i*0.06).toFixed(2)}s" onclick="playSound('details');showVehicleDetail('${v.id}')">
+        <span class="vr-stripe"></span>
+        <div class="vr-id"><span class="vr-class">${v.class}</span><span class="vr-name">${v.name}</span></div>
+        <div class="vr-specs">${cells.map(c=>`<div class="vr-spec"><span class="vr-spec-l">${c.l}</span><span class="vr-spec-v">${c.v}</span></div>`).join('')}</div>
+        <div class="vr-right"><span class="vc-stat-pill" style="color:${p.col};border:1px solid currentColor">${p.txt}</span><span class="vr-dossier">${t('openDossier')} <span class="vr-arrow">&#8599;</span></span></div>
       </div>`;
     }).join('')}</div>`;
   }else{
@@ -1430,13 +1577,13 @@ function rebuildStats(){
   const completed=launches.filter(l=>l.status==='Success').length;
   const cutoff=Date.now()-365*86400000;
   const last365=launches.filter(l=>l.status==='Success'&&l.dateObj.getTime()>=cutoff).length;
-  const active=vehicles.filter(v=>v.class!=='COMING SOON').length;
+  const landingsOk=launches.filter(l=>l.landing===true).length;
   const earliest=launches.reduce((a,b)=>a.dateObj<b.dateObj?a:b);
   const daysActive=Math.max(0,Math.floor((Date.now()-earliest.dateObj.getTime())/86400000));
   const cells=[
     {num:completed,lbl:t('statFlights'),sub:t('teleTotal')},
     {num:last365,lbl:t('teleWindow'),sub:t('launchesCount')},
-    {num:active,lbl:t('statVehicles'),sub:t('vehicles')},
+    {num:landingsOk,lbl:t('statLandings'),sub:t('landingsSub')},
     {num:daysActive,lbl:t('statDays'),sub:''},
   ];
   document.getElementById('tele-grid').innerHTML=cells.map(c=>`<div class="tele-cell"><div class="tele-num">${c.num}</div><div class="tele-lbl">${c.lbl}</div>${c.sub?`<div class="tele-sub">${c.sub}</div>`:''}</div>`).join('');
@@ -1445,26 +1592,29 @@ function rebuildStats(){
 /* ─────────── HERO FLIGHT-PROFILE TRAJECTORY ─────────── */
 /* ── CONFIG · flight-profile visual mode. Options: 'horizon' | 'orbit' | 'suborbital' ── */
 const TRAJECTORY_MODE='suborbital';
+/* ░░░ Launch Momentum line style — flip this one word ░░░  'linear' = sharp straight segments (default) · 'smooth' = gently curved through the points */
+const MOMENTUM_STYLE='linear';
 function buildTrajectory(){
   const ascent='M60 206 C 112 204 152 170 200 116';
   const boosterRet='M200 116 C 184 94 168 80 158 88 C 142 100 130 150 112 206';
   const node=(x,y,c,lbl,lx,ly,anchor)=>`<circle cx="${x}" cy="${y}" r="5.6" fill="none" stroke="${c}" stroke-width="0.8" opacity="0.28"/><circle cx="${x}" cy="${y}" r="3.2" fill="#0a0d15" stroke="${c}" stroke-width="1.5"/><circle cx="${x}" cy="${y}" r="1.35" fill="${c}"/><text x="${lx}" y="${ly}" text-anchor="${anchor||'middle'}" class="chart-axis-lbl" fill="${c}">${lbl}</text>`;
   const pad=(x)=>`<line x1="${x-7}" y1="206" x2="${x+7}" y2="206" stroke="rgba(190,195,205,0.45)" stroke-width="1.4"/><line x1="${x-4}" y1="206" x2="${x-6}" y2="210" stroke="rgba(190,195,205,0.3)" stroke-width="1"/><line x1="${x+4}" y1="206" x2="${x+6}" y2="210" stroke="rgba(190,195,205,0.3)" stroke-width="1"/>`;
   /* shared launch / staging / booster-return nodes */
-  let nodes=node(60,206,'#ff9e3d','LAUNCH',60,228,'middle')+node(200,116,'#4d8dff','STAGING',206,110,'start')+node(160,84,'#4d8dff','BOOSTBACK',160,74,'middle')+node(112,206,'#37e0a0','BOOSTER',112,228,'middle');
+  let nodes=node(60,206,'#ff9e3d','LAUNCH',60,228,'middle')+node(200,116,'#4d8dff','STAGING',208,138,'start')+node(160,84,'#4d8dff','BOOSTBACK',160,74,'middle')+node(112,206,'#37e0a0','BOOSTER',112,228,'middle');
   let pads=pad(60)+pad(112), shipSolid='', shipDashed='', stackFull='', shipFull='', footer='';
   if(TRAJECTORY_MODE==='orbit'){
     /* ascent rises into the orbital flyby, then a near-vertical descent where the ship belly-flops and flips to land */
-    shipSolid='M200 116 C 246 88 286 66 330 60 C 374 54 416 58 446 76';       /* ascent + orbital flyby (continuous) */
+    shipSolid='M200 116 C 236 76 286 66 330 60 C 374 54 416 58 446 76';       /* ascent + orbital flyby (continuous, tangent-matched at staging) */
     shipDashed='M446 76 C 451 110 455 150 456 182 C 456 192 456 200 456 206'; /* belly-flop descent (near-vertical) */
     shipFull='';
-    stackFull='M60 206 C 112 204 152 170 200 116 C 246 88 286 66 330 60';
+    stackFull='M60 206 C 112 204 152 170 200 116';
     nodes+=node(370,54,'#3fcde2','ORBIT',370,44,'middle')+node(456,206,'#37e0a0','SHIP',456,228,'middle');
     pads+=pad(456);footer='ASCENT · ORBIT · FLYBY · LANDING';
   }else if(TRAJECTORY_MODE==='suborbital'){
     shipSolid='M200 116 C 256 92 312 80 356 90';
     shipDashed='M356 90 C 398 102 428 152 444 206';
-    stackFull=ascent+' C 256 92 312 80 356 90';
+    shipFull='M200 116 C 256 92 312 80 356 90 C 398 102 428 152 444 206';
+    stackFull='M60 206 C 112 204 152 170 200 116';
     nodes+=node(356,86,'#3fcde2','APOGEE',356,76,'middle')+node(444,206,'#37e0a0','SPLASHDOWN',444,228,'end');
     pads+=pad(444);footer='ASCENT · STAGING · APOGEE · SPLASHDOWN';
   }else{ /* horizon (default): ship departs over the horizon, booster returns */
@@ -1480,24 +1630,33 @@ function buildTrajectory(){
     return `<g opacity="0"><g><g><use href="#rkt"/>${flame}<animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" calcMode="linear" values="${o.rVals}" keyTimes="${o.rKeyTimes}"/></g><animateMotion dur="7s" repeatCount="indefinite" rotate="0" calcMode="spline" keyPoints="${o.mKeyPoints}" keyTimes="${o.mKeyTimes}" keySplines="${o.mSplines}" path="${o.path}"/></g><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="${o.opVals}" keyTimes="${o.opKeyTimes}"/></g>`;
   }
   /* stack: accelerating liftoff (ease-in), nose follows path, fades at separation */
-  const stackG=`<g opacity="0"><use href="#rkt"/><animateMotion dur="7s" repeatCount="indefinite" rotate="auto" calcMode="spline" keyPoints="0;1;1" keyTimes="0;0.5;1" keySplines="0.42 0 0.62 1;0 0 1 1" path="${stackFull}"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;1;1;0;0" keyTimes="0;0.05;0.46;0.52;1"/></g>`;
+  const stackG=`<g opacity="0"><use href="#rkt"/><animateMotion dur="7s" repeatCount="indefinite" rotate="auto" calcMode="spline" keyPoints="0;1;1" keyTimes="0;0.47;1" keySplines="0.42 0 0.62 1;0 0 1 1" path="${stackFull}"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;1;1;0;0" keyTimes="0;0.05;0.47;0.52;1"/></g>`;
   /* booster: boostback -> flip maneuver -> engine-down descent -> landing burn (decelerates) -> touchdown */
-  const boosterG=vehAnim({path:boosterRet,mKeyPoints:'0;0;1;1',mKeyTimes:'0;0.22;0.58;1',mSplines:'0 0 1 1;0.28 0 0.08 1;0 0 1 1',rVals:'-100;-100;-128;-70;-90;-90;-90',rKeyTimes:'0;0.22;0.31;0.43;0.50;0.58;1',opVals:'0;0;1;1;0;0',opKeyTimes:'0;0.22;0.27;0.58;0.62;1',flameKeyTimes:'0;0.44;0.49;0.58;0.61;1'});
+  const boosterG=vehAnim({path:boosterRet,mKeyPoints:'0;0;1;1',mKeyTimes:'0;0.47;0.82;1',mSplines:'0 0 1 1;0.28 0 0.08 1;0 0 1 1',rVals:'-100;-100;-128;-70;-90;-90;-90',rKeyTimes:'0;0.47;0.56;0.66;0.71;0.82;1',opVals:'0;0;1;1;0;0',opKeyTimes:'0;0.47;0.52;0.82;0.86;1',flameKeyTimes:'0;0.71;0.76;0.82;0.85;1'});
   /* ship descent (mode dependent) */
   let shipG='';
   if(TRAJECTORY_MODE==='orbit'){
     /* Ship A: prograde ascent + orbital flyby (auto-orients to the arc), hands off at entry */
-    const shipAsc=`<g opacity="0"><use href="#rkt"/><animateMotion dur="7s" repeatCount="indefinite" rotate="auto" calcMode="spline" keyPoints="0;0;1;1" keyTimes="0;0.48;0.70;1" keySplines="0 0 1 1;0.4 0 0.4 1;0 0 1 1" path="${shipSolid}"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.47;0.51;0.68;0.72;1"/></g>`;
+    const shipAsc=`<g opacity="0"><use href="#rkt"/><animateMotion dur="7s" repeatCount="indefinite" rotate="auto" calcMode="spline" keyPoints="0;0;1;1" keyTimes="0;0.47;0.70;1" keySplines="0 0 1 1;0.4 0 0.4 1;0 0 1 1" path="${shipSolid}"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.46;0.52;0.68;0.72;1"/></g>`;
     /* Ship B: BELLY-FLOP — held horizontal (belly-down, angle 0 = nose-right for this symbol) through the whole descent,
        then a smooth flip to vertical (nose-up = -90) only in the last ~10% of the path; rotation pivots about the ship's centre, landing burn lights on the flip */
     const flopFlame=`<g opacity="0"><path d="M-10,0 L-22,-3.2 -16,0 -22,3.2 Z" fill="rgba(255,150,60,0.92)"/><path d="M-10,0 L-16.5,-1.7 -13.5,0 -16.5,1.7 Z" fill="rgba(255,224,150,0.97)"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0;0.95;0.9;0;0" keyTimes="0;0.925;0.935;0.95;0.96;0.97;1"/></g>`;
-    const shipFlop=`<g opacity="0"><g><use href="#rkt"/>${flopFlame}<animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" calcMode="spline" values="0;0;0;-90;-90" keyTimes="0;0.70;0.925;0.95;1" keySplines="0 0 1 1;0 0 1 1;0.45 0 0.2 1;0 0 1 1"/></g><animateMotion dur="7s" repeatCount="indefinite" rotate="0" calcMode="spline" keyPoints="0;0;1;1" keyTimes="0;0.70;0.95;1" keySplines="0 0 1 1;0.3 0 0.35 1;0 0 1 1" path="${shipDashed}"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.69;0.72;0.95;0.975;1"/></g>`;
+    const shipFlop=`<g opacity="0"><g><use href="#rkt"/>${flopFlame}<animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" calcMode="spline" values="31;31;0;0;-90;-90" keyTimes="0;0.70;0.80;0.925;0.95;1" keySplines="0 0 1 1;0.3 0 0.3 1;0 0 1 1;0.45 0 0.2 1;0 0 1 1"/></g><animateMotion dur="7s" repeatCount="indefinite" rotate="0" calcMode="spline" keyPoints="0;0;1;1" keyTimes="0;0.70;0.95;1" keySplines="0 0 1 1;0.3 0 0.35 1;0 0 1 1" path="${shipDashed}"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.69;0.72;0.95;0.975;1"/></g>`;
     shipG=shipAsc+shipFlop;
   }
-  else if(TRAJECTORY_MODE==='suborbital'){shipG=vehAnim({path:shipDashed,mKeyPoints:'0;0;1;1',mKeyTimes:'0;0.5;0.86;1',mSplines:'0 0 1 1;0.2 0 0.1 1;0 0 1 1',rVals:'2;2;6;6;-90;-90;-90',rKeyTimes:'0;0.5;0.62;0.74;0.83;0.87;1',opVals:'0;0;1;1;0;0',opKeyTimes:'0;0.5;0.54;0.85;0.89;1',flameKeyTimes:'0;0.81;0.84;0.87;0.9;1'});}
+  else if(TRAJECTORY_MODE==='suborbital'){
+    /* Ship A: powered ascent to apogee, auto-orients along the arc, fades at the top */
+    const shipAscSub=`<g opacity="0"><use href="#rkt"/><animateMotion dur="7s" repeatCount="indefinite" rotate="auto" calcMode="spline" keyPoints="0;0;1;1" keyTimes="0;0.47;0.71;1" keySplines="0 0 1 1;0.3 0 0.4 1;0 0 1 1" path="${shipSolid}"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;1;1;0;0" keyTimes="0;0.46;0.52;0.70;0.735;1"/></g>`;
+    /* Ship B: BELLY-FLOP — coasts belly-down (held horizontal, angle 0 = nose-right for this symbol) through the
+       descent, then ONE smooth flip to nose-up (-90 = engine-down) for the suicide-burn landing; stays visible and
+       settles nose-up at splashdown before the loop resets (no vanishing mid-flip, no phase jumps) */
+    const flopFlameSub=`<g opacity="0"><path d="M-10,0 L-23,-3.4 -16,0 -23,3.4 Z" fill="rgba(255,150,60,0.92)"/><path d="M-10,0 L-17,-1.8 -13.5,0 -17,1.8 Z" fill="rgba(255,224,150,0.97)"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0;0.95;0.95;0.55;0" keyTimes="0;0.88;0.905;0.93;0.985;0.995;1"/></g>`;
+    const shipFlopSub=`<g opacity="0"><g><use href="#rkt"/>${flopFlameSub}<animateTransform attributeName="transform" type="rotate" dur="7s" repeatCount="indefinite" calcMode="spline" values="0;0;-90;-90" keyTimes="0;0.84;0.915;1" keySplines="0 0 1 1;0.5 0 0.25 1;0 0 1 1"/></g><animateMotion dur="7s" repeatCount="indefinite" rotate="0" calcMode="spline" keyPoints="0;0;1;1" keyTimes="0;0.70;0.925;1" keySplines="0 0 1 1;0.34 0 0.32 1;0 0 1 1" path="${shipDashed}"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;1;1;1;0" keyTimes="0;0.695;0.72;0.925;0.99;1"/></g>`;
+    shipG=shipAscSub+shipFlopSub;
+  }
   /* detail FX (timed to the 7s loop): liftoff plume, staging flash, booster landing burn */
   const liftoffFx=`<g><circle cx="60" cy="206" fill="rgba(255,176,90,0.5)" r="0"><animate attributeName="r" dur="7s" repeatCount="indefinite" values="0;0;10;3;0;0" keyTimes="0;0.03;0.075;0.13;0.18;1"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0.9;0.35;0;0" keyTimes="0;0.03;0.075;0.13;0.18;1"/></circle></g>`;
-  const stagingFx=`<circle cx="200" cy="116" fill="rgba(132,179,255,0.95)" r="0"><animate attributeName="r" dur="7s" repeatCount="indefinite" values="0;0;7.5;0;0" keyTimes="0;0.47;0.51;0.56;1"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0.95;0;0" keyTimes="0;0.47;0.51;0.56;1"/></circle>`;
+  const stagingFx=`<g><circle cx="200" cy="116" fill="rgba(168,200,255,0.98)" r="0"><animate attributeName="r" dur="7s" repeatCount="indefinite" values="0;0;9;0;0" keyTimes="0;0.47;0.515;0.575;1"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;1;0;0" keyTimes="0;0.47;0.515;0.575;1"/></circle><circle cx="200" cy="116" fill="none" stroke="rgba(132,179,255,0.85)" stroke-width="1.1" r="0"><animate attributeName="r" dur="7s" repeatCount="indefinite" values="0;0;4;18;0;0" keyTimes="0;0.47;0.505;0.56;0.58;1"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0.85;0;0;0" keyTimes="0;0.47;0.505;0.56;0.58;1"/></circle></g>`;
   const landingFx=`<g><circle cx="112" cy="206" fill="rgba(255,176,90,0.5)" r="0"><animate attributeName="r" dur="7s" repeatCount="indefinite" values="0;0;9;4;0;0" keyTimes="0;0.50;0.545;0.575;0.61;1"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0.85;0.4;0;0" keyTimes="0;0.50;0.545;0.575;0.61;1"/></circle><circle cx="112" cy="206" fill="none" stroke="rgba(255,176,90,0.8)" stroke-width="1" r="0"><animate attributeName="r" dur="7s" repeatCount="indefinite" values="0;0;3;13;0;0" keyTimes="0;0.50;0.545;0.6;0.62;1"/><animate attributeName="opacity" dur="7s" repeatCount="indefinite" values="0;0;0.8;0;0;0" keyTimes="0;0.50;0.545;0.6;0.62;1"/></circle></g>`;
   const svg=`
   <svg class="chart-svg" viewBox="0 0 480 250" preserveAspectRatio="xMidYMid meet">
@@ -1546,17 +1705,40 @@ function rebuildHeroQuick(){
 
 /* ─────────── HOME / PRIMARY WATCH ─────────── */
 function goHome(){playSound('close');closeAllOverlays();window.scrollTo({top:0,behavior:'smooth'});}
+/* Convert a YouTube watch / youtu.be / live / shorts / embed URL into an embeddable player URL (null if not embeddable). */
+function ytEmbed(url){
+  if(!url)return null;
+  url=String(url).trim();
+  const ifr=url.match(/<iframe[^>]*\ssrc=["']([^"']+)["']/i);if(ifr)url=ifr[1];   /* allow pasting the whole YouTube "Embed" <iframe> code */
+  try{
+    const u=new URL(url);const h=u.hostname.replace(/^www\./,'');let id='';
+    if(h==='youtu.be')id=u.pathname.slice(1);
+    else if(h.endsWith('youtube.com')||h.endsWith('youtube-nocookie.com')){
+      if(u.pathname==='/watch')id=u.searchParams.get('v')||'';
+      else{const m=u.pathname.match(/^\/(embed|live|shorts|v)\/([^/?#]+)/);if(m)id=m[2];}
+    }
+    if(id&&/^[A-Za-z0-9_-]{6,}$/.test(id)){
+      let e='https://www.youtube.com/embed/'+id+'?rel=0&modestbranding=1';
+      try{const o=location.origin;if(o&&/^https?:/i.test(o))e+='&origin='+encodeURIComponent(o);}catch(_){}
+      return e;
+    }
+  }catch(e){}
+  return null;
+}
 function watchPrimary(){
   playSound('details');
   const planned=launches.filter(l=>l.status==='Planned'&&l.watchUrl).sort((a,b)=>a.dateObj-b.dateObj)[0];
-  const lc=lastCompleted();
-  const url=(planned&&planned.watchUrl)||(lc&&lc.watchUrl)||'https://www.youtube.com/@OXeall';
-  window.open(url,'_blank');
+  const rec=launches.filter(l=>OUTCOME_LAUNCHED[l.status]===true&&l.watchUrl).sort((a,b)=>b.dateObj-a.dateObj)[0];
+  const target=planned||rec;
+  if(target){openLaunchModal(launches.indexOf(target));}      /* open the in-modal player panel (live or recording) */
+  else{window.open('https://www.youtube.com/@OXeall','_blank');}
 }
 
 /* ─────────── extra label keys (5 langs + English fallback) ─────────── */
 Object.assign(TRANSLATIONS.en,{lblDate:'Date',lblVehicle:'Vehicle',lblStatus:'Status',lblSite:'Site',newsPendingTitle:'News pending restore'});
 Object.assign(TRANSLATIONS.ru,{lblDate:'Дата',lblVehicle:'Аппарат',lblStatus:'Статус',lblSite:'Площадка',newsPendingTitle:'Новости будут восстановлены'});
+Object.assign(TRANSLATIONS.en,{kpiLastLaunch:'Last Launch',today:'today',lblAttempt:'Attempt',attemptFirst:'1st flight · no holds',attemptN:'Attempt #{n}',granDay:'Day',granWeek:'Week',granMonth:'Month',granYear:'Year',clear:'Clear',granAll:'All',watchLive:'Watch live on YouTube',watchRecord:'Watch record on YouTube',lblTarget:'Target'});
+Object.assign(TRANSLATIONS.ru,{kpiLastLaunch:'Последний запуск',today:'сегодня',lblAttempt:'Попытка',attemptFirst:'Первый полёт · без переносов',attemptN:'Попытка №{n}',granDay:'День',granWeek:'Неделя',granMonth:'Месяц',granYear:'Год',clear:'Сброс',granAll:'Всё время',watchLive:'Смотреть трансляцию на YouTube',watchRecord:'Смотреть запись на YouTube',lblTarget:'Цель'});
 Object.assign(TRANSLATIONS.de,{lblDate:'Datum',lblVehicle:'Fahrzeug',lblStatus:'Status',lblSite:'Startplatz',newsPendingTitle:'Nachrichten werden wiederhergestellt'});
 Object.assign(TRANSLATIONS.es,{lblDate:'Fecha',lblVehicle:'Vehículo',lblStatus:'Estado',lblSite:'Sitio',newsPendingTitle:'Noticias por restaurar'});
 Object.assign(TRANSLATIONS.fr,{lblDate:'Date',lblVehicle:'Véhicule',lblStatus:'Statut',lblSite:'Site',newsPendingTitle:'Actualités à restaurer'});
@@ -1657,7 +1839,7 @@ function showNewsList(){
       document.getElementById('cd-h').textContent=pad(Math.floor((ts%86400)/3600));
       document.getElementById('cd-m').textContent=pad(Math.floor((ts%3600)/60));
       document.getElementById('cd-s').textContent=pad(ts%60);
-      metaCells([{l:t('lblVehicle'),v:cur.vehicle||'—'},{l:t('lblSite'),v:cur.site||'—'},{l:t('lblStatus'),v:statusLabel(cur.status)}]);
+      metaCells([{l:t('lblVehicle'),v:cur.vehicle||'—'},{l:t('lblSite'),v:cur.site||'—'},{l:t('lblAttempt'),v:(()=>{const a=String(cur.attempt||'').trim();return (+a>=2)?t('attemptN').replace('{n}',a):t('attemptFirst');})()}]);
       if(ts<=10){playSound('final10');if(!last10){last10=true;showToast({icon:'rocket',color:'#ff9e3d',title:t('notifT10'),sub:t('notifT10Sub'),duration:5000});}}else last10=false;
       return;
     }
@@ -1669,7 +1851,7 @@ function showNewsList(){
       document.getElementById('cd-h').textContent=pad(Math.floor(el/3600));
       document.getElementById('cd-m').textContent=pad(Math.floor((el%3600)/60));
       document.getElementById('cd-s').textContent=pad(el%60);
-      metaCells([{l:t('lblVehicle'),v:cur.vehicle||'—'},{l:t('lblSite'),v:cur.site||'—'},{l:t('lblStatus'),v:statusLabel(cur.status)}]);
+      metaCells([{l:t('lblVehicle'),v:cur.vehicle||'—'},{l:t('lblSite'),v:cur.site||'—'},{l:t('lblAttempt'),v:(()=>{const a=String(cur.attempt||'').trim();return (+a>=2)?t('attemptN').replace('{n}',a):t('attemptFirst');})()}]);
       return;
     }
     /* STANDBY */
@@ -1788,17 +1970,40 @@ function openLaunchModal(idx){
   if(l.type&&l.type.trim()){typeEl.textContent=l.type;typeEl.style.display='';}else{typeEl.style.display='none';}
   document.getElementById('m-profile').innerHTML=missionProfileInner(l);
   const dStr=l.dateObj.toLocaleString(undefined,{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  const at=String(l.attempt||'').trim();
+  const cell4=(at===''||at==='0')?{l:t('lblSite'),v:l.site||'—'}
+    :(at==='1')?{l:t('lblAttempt'),v:t('attemptFirst')}
+    :{l:t('lblAttempt'),v:t('attemptN').replace('{n}',at)};
   const cells=[
     {l:t('lblDate'),v:dStr},
     {l:t('lblVehicle'),v:l.vehicle||'—'},
     {l:t('lblStatus'),v:statusLabel(l.status)},
-    {l:t('lblSite'),v:l.site||'—'},
+    cell4,
   ];
   document.getElementById('m-grid').innerHTML=cells.map(c=>`<div class="m-cell"><div class="m-cell-l">${c.l}</div><div class="m-cell-v">${c.v}</div></div>`).join('');
   const descEl=document.getElementById('m-desc');
   if(l.desc&&l.desc.trim()){descEl.innerHTML=l.desc;descEl.style.display='';}else{descEl.style.display='none';}
-  const w=document.getElementById('m-watch');
-  if(l.watchUrl){w.style.display='block';document.getElementById('m-watch-link').href=l.watchUrl;}else{w.style.display='none';}
+  /* ── media player: centre iframe + flanking specs (Our Vehicles + mission); fall back to plain layout when not embeddable ── */
+  const emb=ytEmbed(l.watchUrl);
+  const stageEl=document.getElementById('m-stage'),modalEl=document.getElementById('modal'),gridEl=document.getElementById('m-grid'),wEl=document.getElementById('m-watch');
+  const isRecord=(typeof OUTCOME_LAUNCHED!=='undefined'&&OUTCOME_LAUNCHED[l.status]===true);
+  const watchKey=isRecord?'watchRecord':'watchLive';
+  if(emb){
+    const veh=vehicles.find(v=>v.id===l.nameId);
+    const leftStats=((veh&&veh.specs)?veh.specs.slice(0,4):[]).map(sp=>`<div class="m-stat"><div class="m-stat-l">${sp.lbl}</div><div class="m-stat-v">${sp.val}</div></div>`).join('');
+    const rArr=[{l:t('lblDate'),v:dStr},{l:t('lblSite'),v:l.site||'—'}];
+    if(l.target&&l.target.trim())rArr.push({l:t('lblTarget'),v:l.target});
+    rArr.push({l:t('lblAttempt'),v:(+at>=2)?t('attemptN').replace('{n}',at):t('attemptFirst')});
+    const rightStats=rArr.slice(0,4).map(c=>`<div class="m-stat"><div class="m-stat-l">${c.l}</div><div class="m-stat-v">${c.v}</div></div>`).join('');
+    stageEl.innerHTML=`<div class="m-side">${leftStats}</div>`+
+      `<div class="m-player"><div class="m-frame"><iframe src="${emb}" title="${(l.rocket||'Launch').replace(/"/g,'&quot;')}" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>`+
+      `<a class="ignition-btn m-watch-btn" href="${l.watchUrl}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M6 5v14l12-7z"/></svg><span data-i="${watchKey}">${t(watchKey)}</span></a></div>`+
+      `<div class="m-side">${rightStats}</div>`;
+    stageEl.style.display='';modalEl.classList.add('has-stage');gridEl.style.display='none';wEl.style.display='none';
+  }else{
+    stageEl.style.display='none';stageEl.innerHTML='';modalEl.classList.remove('has-stage');gridEl.style.display='';
+    if(l.watchUrl){wEl.style.display='block';const lk=document.getElementById('m-watch-link');lk.href=l.watchUrl;const sp=lk.querySelector('span');sp.setAttribute('data-i',watchKey);sp.textContent=t(watchKey);}else{wEl.style.display='none';}
+  }
   const bd=document.getElementById('modal-bd');bd.classList.add('active');
   requestAnimationFrame(()=>requestAnimationFrame(()=>bd.classList.add('visible')));
 }
@@ -1806,7 +2011,48 @@ function closeLaunchModal(e,force){
   if(e&&!force&&e.target&&e.target.id!=='modal-bd')return;
   window.__openModalLaunch=null;
   playSound('close');const bd=document.getElementById('modal-bd');bd.classList.remove('visible');
+  const st=document.getElementById('m-stage');if(st){st.innerHTML='';st.style.display='none';}  /* stop the embedded player */
+  const md=document.getElementById('modal');if(md)md.classList.remove('has-stage');
   setTimeout(()=>bd.classList.remove('active'),400);
+}
+/* ── Launch spec preview (opened from the hero mission meta): vehicle specs (Our Vehicles) + mission facts (m-inner) ── */
+function attemptVal(l){const a=String(l.attempt||'').trim();return (+a>=2)?t('attemptN').replace('{n}',a):t('attemptFirst');}
+function openSpec(idx){
+  const l=launches[idx];if(!l)return;playSound('details');
+  window.__specIdx=idx;
+  const veh=vehicles.find(v=>v.id===l.nameId);
+  const col=(veh&&veh.color)||statusColor(l.status);
+  document.getElementById('spec-bar').style.background=col;
+  let eyebrow=t('specifications');
+  if(l.status==='Planned')eyebrow=(l.dateObj.getTime()>Date.now())?t('nextLaunch'):t('missionInProgress');
+  else if(OUTCOME_LAUNCHED[l.status]===true)eyebrow=t('kpiLastLaunch');
+  const eb=document.getElementById('spec-eyebrow');eb.textContent=eyebrow;eb.style.color=col;
+  document.getElementById('spec-name').textContent=(veh&&veh.name)||l.vehicle||l.rocket;
+  document.getElementById('spec-class').textContent=(veh&&veh.class)||statusLabel(l.status);
+  document.getElementById('spec-vsec').textContent=t('specifications');
+  const specs=(veh&&veh.specs)?veh.specs:[];
+  document.getElementById('spec-grid').innerHTML=specs.length?specs.map(s=>`<div class="m-stat"><div class="m-stat-l">${s.lbl}</div><div class="m-stat-v">${s.val}</div></div>`).join(''):`<div class="spec-empty">${t('noImage')}</div>`;
+  document.getElementById('spec-msec').textContent=t('details');
+  const dStr=l.dateObj.toLocaleString(undefined,{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  const mf=[{l:t('lblStatus'),v:statusLabel(l.status)},{l:t('lblDate'),v:dStr},{l:t('lblSite'),v:l.site||'—'}];
+  mf.push({l:t('lblLanding'),v:l.landing===true?t('landSuccess'):(l.landing===false?t('landFail'):'—')});
+  if(l.target&&l.target.trim())mf.push({l:t('lblTarget'),v:l.target});
+  mf.push({l:t('lblAttempt'),v:attemptVal(l)});
+  if(l.rocket)mf.push({l:t('lblVehicle'),v:l.rocket});
+  document.getElementById('spec-mgrid').innerHTML=mf.map(c=>`<div class="m-stat"><div class="m-stat-l">${c.l}</div><div class="m-stat-v">${c.v}</div></div>`).join('');
+  document.getElementById('spec-nav').innerHTML=`<button class="ghost-btn spec-go" onclick="specToModal()">${t('fullDetails')} →</button><button class="ghost-btn spec-go spec-alt" onclick="closeSpec(null,true)">${t('back')}</button>`;
+  const bd=document.getElementById('spec-bd');bd.classList.add('active');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>bd.classList.add('visible')));
+}
+function closeSpec(e,force){
+  if(e&&!force&&e.target&&e.target.id!=='spec-bd')return;
+  const bd=document.getElementById('spec-bd');bd.classList.remove('visible');
+  setTimeout(()=>bd.classList.remove('active'),360);
+}
+function specToModal(){const i=window.__specIdx;closeSpec(null,true);if(i!=null&&i>=0)setTimeout(()=>openLaunchModal(i),140);}
+function openSpecFromHero(){
+  const cur=launches.filter(l=>l.status==='Planned'&&l.endObj&&l.endObj.getTime()>Date.now()).sort((a,b)=>a.dateObj-b.dateObj)[0]||lastLaunched()||lastCompleted();
+  if(cur)openSpec(launches.indexOf(cur));
 }
 
 /* ════════════════════════════════════════════════════════════
@@ -1819,10 +2065,12 @@ function setCadencePage(delta){cadencePage+=delta;renderAnalytics();}
 let analyticsRange='all';
 const RANGE_MS={'24h':864e5,'7d':7*864e5,'30d':30*864e5,'1y':365*864e5};
 function rangeFilteredLaunches(){
-  if(analyticsRange==='all'||!RANGE_MS[analyticsRange])return launches;
-  /* keep every launch whose timestamp is within the window from now: timestamp >= (currentDate - range) */
-  const cutoff=Date.now()-RANGE_MS[analyticsRange];
-  return launches.filter(l=>l.dateObj.getTime()>=cutoff);
+  if(analyticsRange==='all'||!RANGE_MS[analyticsRange]||!launches.length)return launches;
+  /* Launch dates are fixed/scheduled and don't track the wall clock, so a "last N days" window measured from
+     today would miss them and show NO DATA. Anchor the window to the most recent launch so every range stays populated. */
+  const anchor=launches.reduce((m,l)=>Math.max(m,l.dateObj.getTime()),0);
+  const cutoff=anchor-RANGE_MS[analyticsRange];
+  return launches.filter(l=>{const t=l.dateObj.getTime();return t>=cutoff&&t<=anchor;});
 }
 function setAnalyticsRange(r){analyticsRange=r;cadencePage=0;renderAnalytics();}
 function computeStats(){
@@ -1831,11 +2079,11 @@ function computeStats(){
   const isLaunched=l=>OUTCOME_LAUNCHED[l.status]===true;            /* actually flew */
   const launched=L.filter(isLaunched);
   const total=L.length;
-  const successRate=total?Math.round(comp.length/total*1000)/10:0;  /* (Success / Total) ×100, one decimal. RUD/Mishap/Off-nominal/Cancelled = NOT success. 24/65 -> 36.9 */
-  const byVehLaunched=vehicles.map(v=>({name:v.name,color:v.color,count:launched.filter(l=>l.nameId===v.id).length}));
-  const byVehSuccess=vehicles.map(v=>({name:v.name,color:v.color,count:comp.filter(l=>l.nameId===v.id).length}));
+  const successRate=total?Math.round(comp.length/total*1000)/10:0;  /* (Success / Total) ×100, one decimal. RUD/Cancelled = NOT success. 24/65 -> 36.9 */
+  const byVehLaunched=vehList().map(v=>({name:v.name,color:v.color,count:launched.filter(l=>l.nameId===v.id).length}));
+  const byVehSuccess=vehList().map(v=>({name:v.name,color:v.color,count:comp.filter(l=>l.nameId===v.id).length}));
   const outcomeCounts=OUTCOMES.map(o=>({key:o.key,color:o.color,count:L.filter(l=>l.status===o.key).length}));
-  const byVehOutcome=vehicles.map(v=>({name:v.name,segs:OUTCOMES.map(o=>({key:o.key,color:o.color,count:L.filter(l=>l.nameId===v.id&&l.status===o.key).length})).filter(s=>s.count>0)})).filter(v=>v.segs.length>0);
+  const byVehOutcome=vehList().map(v=>({name:v.name,segs:OUTCOMES.map(o=>({key:o.key,color:o.color,count:L.filter(l=>l.nameId===v.id&&l.status===o.key).length})).filter(s=>s.count>0)})).filter(v=>v.segs.length>0);
   const monLabel=(y,m)=>new Date(y,m,1).toLocaleDateString('en-US',{month:'short'})+" '"+String(y).slice(2);
   /* cadence: per-period stacked by outcome (month or year). Full list; renderAnalytics windows + paginates it */
   let cadence=[];
@@ -1850,24 +2098,90 @@ function computeStats(){
   }
   const cbm={};comp.forEach(l=>{const k=l.dateObj.getFullYear()*12+l.dateObj.getMonth();cbm[k]=(cbm[k]||0)+1;});
   let busiest=null;Object.keys(cbm).forEach(k=>{const idx=+k;if(!busiest||cbm[k]>busiest.completed)busiest={label:monLabel(Math.floor(idx/12),idx%12),completed:cbm[k]};});
-  /* Launch momentum: each successful launch boosts the line; every idle day decays it, so the curve
-     rises AND falls with the real history of activity (gaps in the chronology show as a decline). Tune ↓ */
-  const MOM_RETAIN=0.86, MOM_BOOST=2;
-  const dayKey=d=>Date.UTC(d.getFullYear(),d.getMonth(),d.getDate());
-  const succByDay=new Map();comp.forEach(l=>{const k=dayKey(l.dateObj);succByDay.set(k,(succByDay.get(k)||0)+1);});
-  let cum=[];
-  if(succByDay.size){
-    const ks=[...succByDay.keys()].sort((a,b)=>a-b);
-    const now=new Date(),todayK=Date.UTC(now.getFullYear(),now.getMonth(),now.getDate());
-    const startK=ks[0];let endK=Math.min(Math.max(ks[ks.length-1],todayK),ks[ks.length-1]+90*864e5);
-    let m=0,iter=0;
-    for(let k=startK;k<=endK&&iter<400;k+=864e5,iter++){
-      m=m*MOM_RETAIN+(succByDay.get(k)||0)*MOM_BOOST;     /* decay, then add the day's successes */
-      cum.push({t:k,y:+m.toFixed(3),label:new Date(k).toLocaleDateString('en-US',{month:'short',day:'numeric'})});
-    }
-  }
+  /* Launch momentum = accumulating impulse, driven ONLY by outcomes (no time-decay). Success builds it up;
+     only negative outcomes pull it down. cumByVeh applies the SAME logic per vehicle (auto-multi-line). */
+  const MOM_STEP={'Success':1,'RUD':-1.5,'Cancelled':-0.5,'SCRUB':-0.5};
+  const evs=L.filter(l=>MOM_STEP.hasOwnProperty(l.status)).slice().sort((a,b)=>a.dateObj-b.dateObj);
+  let cum=[],m=0;
+  evs.forEach(l=>{
+    m=m+MOM_STEP[l.status];   /* running sum: Success climbs · RUD/Cancelled/SCRUB dip (may go below 0); no hard floor so declines are visible */
+    cum.push({t:l.dateObj.getTime(),y:+m.toFixed(3),label:l.dateObj.toLocaleDateString('en-US',{month:'short',day:'numeric'})});
+  });
+  /* per-vehicle cumulative momentum — colour pulled from vehList() so a brand-new vehicle/launch auto-appears
+     as its own line with its assigned colour, consistent with every other per-vehicle widget */
+  const cumByVeh=vehList().map(v=>{
+    const ve=L.filter(l=>l.nameId===v.id&&MOM_STEP.hasOwnProperty(l.status)).slice().sort((a,b)=>a.dateObj-b.dateObj);
+    let mm=0;const pts=[];
+    ve.forEach(l=>{mm=mm+MOM_STEP[l.status];pts.push({t:l.dateObj.getTime(),y:+mm.toFixed(3)});});
+    return{id:v.id,name:v.name,color:v.color,pts};
+  }).filter(v=>v.pts.length>0);
   const mostFlown=byVehLaunched.slice().sort((a,b)=>b.count-a.count)[0]||null;
-  return{comp,canc,plan,launched,total,successRate,byVehLaunched,byVehSuccess,outcomeCounts,byVehOutcome,cadence,busiest,cum,mostFlown};
+  /* landings pie = touchdown outcome (l.landing true/false); missions pie = Success vs RUD (global mission outcome) */
+  const landingSplit=[{label:t('landSuccess'),color:'#37e0a0',count:L.filter(l=>l.landing===true).length},{label:t('landFail'),color:'#ff5d5d',count:L.filter(l=>l.landing===false).length}];
+  const missionSplit=[{label:t('statusCompleted'),color:'#37e0a0',count:comp.length},{label:t('missionFailed'),color:'#ff5d5d',count:L.filter(l=>l.status==='RUD').length}];
+  return{comp,canc,plan,launched,total,successRate,byVehLaunched,byVehSuccess,outcomeCounts,byVehOutcome,cadence,busiest,cum,cumByVeh,mostFlown,landingSplit,missionSplit};
+}
+/* ─── Launch Momentum (multi-line per vehicle) · granularity day/week/month/year · arrow paging · flexible from–to range ─── */
+let momGran='week',momOffset=0;
+function setMomGran(g){momGran=g;momOffset=0;renderMomentum();}
+function momPage(dir){momOffset+=dir;renderMomentum();}
+/* re-render ONLY the chart host + control states (targeted, leaves the toggle/pager DOM intact) */
+function renderMomentum(){
+  const host=document.getElementById('mom-host');if(!host)return;
+  const s=computeStats(),series=s.cumByVeh||[];
+  const win=series.length?momWindow(series):{paged:false,canOlder:false,canNewer:false};
+  const legend=series.map(v=>`<span class="cl-item"><span class="cl-swatch" style="background:${v.color}"></span>${v.name}</span>`).join('');
+  host.innerHTML=(series.length?momentumChartSVG(series):`<svg class="chart-svg" viewBox="0 0 680 240"><text x="340" y="120" text-anchor="middle" class="chart-axis-lbl">No data</text></svg>`)+`<div class="chart-legend">${legend}</div>`;
+  document.querySelectorAll('#mom-gran .cad-btn').forEach(b=>b.classList.toggle('on',b.dataset.g===momGran));
+  const pg=document.getElementById('mom-pager');
+  if(pg){pg.style.display=win.paged?'inline-flex':'none';const ar=pg.querySelectorAll('.cad-arrow');if(ar[0])ar[0].disabled=!win.canOlder;if(ar[1])ar[1].disabled=!win.canNewer;}
+}
+function smoothPathArr(P){if(P.length<3)return 'M'+P.map(p=>p[0]+','+p[1]).join(' L');let d='M'+P[0][0]+','+P[0][1];for(let i=0;i<P.length-1;i++){const p0=P[i-1]||P[i],p1=P[i],p2=P[i+1],p3=P[i+2]||P[i+1];const c1x=(p1[0]+(p2[0]-p0[0])/6).toFixed(1),c1y=(p1[1]+(p2[1]-p0[1])/6).toFixed(1);const c2x=(p2[0]-(p3[0]-p1[0])/6).toFixed(1),c2y=(p2[1]-(p3[1]-p1[1])/6).toFixed(1);d+=' C'+c1x+','+c1y+' '+c2x+','+c2y+' '+p2[0]+','+p2[1];}return d;}
+const MOM_UNIT={day:864e5,week:7*864e5,month:30*864e5,year:365*864e5},MOM_SPAN={day:16,week:12,month:14,year:40};
+function momWindow(series){
+  const allPts=series.reduce((a,s)=>a.concat(s.pts),[]);
+  if(!allPts.length)return{empty:true,paged:false,canOlder:false,canNewer:false};
+  const dataMin=Math.min(...allPts.map(p=>p.t)),dataMax=Math.max(...allPts.map(p=>p.t));
+  const span=MOM_SPAN[momGran]*MOM_UNIT[momGran];
+  if(momGran==='all'){const days=(dataMax-dataMin)/864e5;return{t0:dataMin,t1:dataMax,axisMode:days>800?'year':days>140?'month':days>40?'week':'day',custom:false,paged:false,canOlder:false,canNewer:false};}
+  const maxOff=Math.max(0,Math.ceil((dataMax-dataMin)/span));
+  momOffset=Math.min(Math.max(0,momOffset),maxOff);
+  const t1=dataMax-momOffset*span,t0=t1-span;
+  return{t0,t1,axisMode:momGran,custom:false,paged:(dataMax-dataMin)>span,canOlder:t0>dataMin,canNewer:momOffset>0};
+}
+function momentumChartSVG(series){
+  const W=680,H=240,x0=42,x1=660,y0=18,y1=198;
+  const win=momWindow(series);
+  if(win.empty)return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}"><text x="${W/2}" y="${H/2}" text-anchor="middle" class="chart-axis-lbl">No data</text></svg>`;
+  const {t0,t1,axisMode}=win;
+  const valAt=(pts,t)=>{let y=0;for(let i=0;i<pts.length;i++){if(pts[i].t<=t)y=pts[i].y;else break;}return y;};
+  const wseries=series.map(s=>{const inWin=s.pts.filter(p=>p.t>=t0&&p.t<=t1);return{color:s.color,wpts:[{t:t0,y:valAt(s.pts,t0)}].concat(inWin,[{t:t1,y:valAt(s.pts,t1)}]),evt:inWin};});
+  const allY=wseries.reduce((a,s)=>a.concat(s.wpts.map(p=>p.y)),[]);
+  let maxY=Math.max(1,...allY),minY=Math.min(0,...allY);if(maxY<=minY)maxY=minY+1;
+  const span=Math.max(1,t1-t0);
+  const X=t=>x0+((t-t0)/span)*(x1-x0),Y=v=>y1-((v-minY)/(maxY-minY))*(y1-y0);
+  const tk=v=>Number.isInteger(v)?v:v.toFixed(1);
+  let yticks=minY<0?[minY,0,maxY]:[0,+(maxY/2).toFixed(2),maxY];yticks=yticks.filter((v,i,a)=>a.indexOf(v)===i);
+  const grid=yticks.map(v=>`<line class="chart-axis" x1="${x0}" y1="${Y(v).toFixed(1)}" x2="${x1}" y2="${Y(v).toFixed(1)}"${(v===0&&minY<0)?' stroke-opacity="0.6"':''}/><text class="chart-axis-lbl" x="${x0-8}" y="${(Y(v)+3).toFixed(1)}" text-anchor="end">${tk(v)}</text>`).join('');
+  const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  let ticks=[];
+  if(axisMode==='year'){for(let y=new Date(t0).getUTCFullYear(),ye=new Date(t1).getUTCFullYear();y<=ye;y++)ticks.push({t:Date.UTC(y,0,1),label:String(y)});}
+  else if(axisMode==='month'){let mt=Date.UTC(new Date(t0).getUTCFullYear(),new Date(t0).getUTCMonth(),1);while(mt<=t1){const n=new Date(mt);ticks.push({t:mt,label:MON[n.getUTCMonth()]+" '"+String(n.getUTCFullYear()).slice(-2)});mt=Date.UTC(n.getUTCFullYear(),n.getUTCMonth()+1,1);}}
+  else{const stepD=axisMode==='week'?7:1;let pm=-1,t=Date.UTC(new Date(t0).getUTCFullYear(),new Date(t0).getUTCMonth(),new Date(t0).getUTCDate());while(t<=t1){const d=new Date(t),mo=d.getUTCMonth();ticks.push({t,label:(mo!==pm?MON[mo]+' ':'')+d.getUTCDate()});pm=mo;t+=stepD*864e5;}}
+  const everyN=Math.max(1,Math.ceil(ticks.length/11));ticks=ticks.filter((_,i)=>i%everyN===0);
+  const xAxis=ticks.map(it=>{const xr=X(it.t),xc=Math.max(x0,Math.min(x1,xr)),anc=xc<=x0+1?'start':(xc>=x1-1?'end':'middle'),gl=(xr>x0+1&&xr<x1-1)?`<line class="chart-axis" x1="${xr.toFixed(1)}" y1="${y0}" x2="${xr.toFixed(1)}" y2="${y1}"/>`:'';return gl+`<text class="chart-axis-lbl" x="${xc.toFixed(1)}" y="${y1+18}" text-anchor="${anc}">${it.label}</text>`;}).join('');
+  const lines=wseries.map(s=>{const P=s.wpts.map(p=>[+X(p.t).toFixed(1),+Y(p.y).toFixed(1)]);const dd=(typeof MOMENTUM_STYLE!=='undefined'&&MOMENTUM_STYLE==='smooth')?smoothPathArr(P):'M'+P.map(p=>p[0]+','+p[1]).join(' L');const dots=s.evt.map(p=>`<circle cx="${X(p.t).toFixed(1)}" cy="${Y(p.y).toFixed(1)}" r="2.4" fill="#0f1011" stroke="${s.color}" stroke-width="1.4"/>`).join('');return `<path d="${dd}" fill="none" stroke="${s.color}" stroke-width="2.1" stroke-linejoin="round" stroke-linecap="round" opacity="0.96"/>${dots}`;}).join('');
+  return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}">${grid}${xAxis}${lines}</svg>`;
+}
+function momentumCardInner(s){
+  const series=s.cumByVeh||[];
+  const win=series.length?momWindow(series):{paged:false,canOlder:false,canNewer:false};
+  const G=[['day','granDay'],['week','granWeek'],['month','granMonth'],['year','granYear'],['all','granAll']];
+  const granBtns=G.map(([g,k])=>`<button class="cad-btn${momGran===g?' on':''}" data-g="${g}" onclick="setMomGran('${g}')">${t(k)}</button>`).join('');
+  const pager=`<div id="mom-pager" class="cad-nav" style="display:${win.paged?'inline-flex':'none'}"><button class="cad-arrow" onclick="momPage(1)" ${win.canOlder?'':'disabled'} aria-label="Older">‹</button><button class="cad-arrow" onclick="momPage(-1)" ${win.canNewer?'':'disabled'} aria-label="Newer">›</button></div>`;
+  const legend=series.map(v=>`<span class="cl-item"><span class="cl-swatch" style="background:${v.color}"></span>${v.name}</span>`).join('');
+  const chart=series.length?momentumChartSVG(series):`<svg class="chart-svg" viewBox="0 0 680 240"><text x="340" y="120" text-anchor="middle" class="chart-axis-lbl">No data</text></svg>`;
+  return `<div class="mom-ctrl"><div id="mom-gran" class="cad-toggle">${granBtns}</div><div class="mom-side">${pager}</div></div><div id="mom-host">${chart}<div class="chart-legend">${legend}</div></div>`;
 }
 function cumulativeChartSVG(cum){
   const W=680,H=240,x0=42,x1=660,y0=18,y1=198;
@@ -1877,9 +2191,16 @@ function cumulativeChartSVG(cum){
   const X=t=>span<=0?(x0+x1)/2:x0+((t-tmin)/span)*(x1-x0);
   const Y=v=>y1-(v/maxY)*(y1-y0);
   const P=cum.map(p=>[+X(p.t).toFixed(1),+Y(p.y).toFixed(1)]);
-  /* LINEAR interpolation across the whole series — straight sloped segments, no steps, no Bézier (no waves) */
-  const line='M'+P.map(p=>p[0]+','+p[1]).join(' L');
-  const area='M'+P[0][0]+','+y1+' L'+P.map(p=>p[0]+','+p[1]).join(' L')+' L'+P[P.length-1][0]+','+y1+' Z';
+  /* line style controlled by the global MOMENTUM_STYLE: 'linear' = straight segments · 'smooth' = Catmull-Rom curve through the points */
+  const lin='M'+P.map(p=>p[0]+','+p[1]).join(' L');
+  const smooth=()=>{if(P.length<3)return lin;let d='M'+P[0][0]+','+P[0][1];
+    for(let i=0;i<P.length-1;i++){const p0=P[i-1]||P[i],p1=P[i],p2=P[i+1],p3=P[i+2]||P[i+1];
+      const c1x=(p1[0]+(p2[0]-p0[0])/6).toFixed(1),c1y=(p1[1]+(p2[1]-p0[1])/6).toFixed(1);
+      const c2x=(p2[0]-(p3[0]-p1[0])/6).toFixed(1),c2y=(p2[1]-(p3[1]-p1[1])/6).toFixed(1);
+      d+=' C'+c1x+','+c1y+' '+c2x+','+c2y+' '+p2[0]+','+p2[1];}
+    return d;};
+  const line=(typeof MOMENTUM_STYLE!=='undefined'&&MOMENTUM_STYLE==='smooth')?smooth():lin;
+  const area=line+' L'+P[P.length-1][0]+','+y1+' L'+P[0][0]+','+y1+' Z';
   const tk=v=>Number.isInteger(v)?v:v.toFixed(1);
   const ticks=[0,maxY/2,maxY].filter((v,i,a)=>a.indexOf(v)===i);
   const grid=ticks.map(v=>`<line class="chart-axis" x1="${x0}" y1="${Y(v).toFixed(1)}" x2="${x1}" y2="${Y(v).toFixed(1)}"/><text class="chart-axis-lbl" x="${x0-8}" y="${(Y(v)+3).toFixed(1)}" text-anchor="end">${tk(v)}</text>`).join('');
@@ -1901,8 +2222,10 @@ function cadenceChartSVG(periods){
   let bars='';
   periods.forEach((p,i)=>{
     const cx=x0+gW*i+gW/2,total=totals[i];
-    bars+=`<rect class="chart-bartrack" x="${(cx-bW/2).toFixed(1)}" y="${y0}" width="${bW}" height="${y1-y0}" rx="3"/>`;
-    let yc=y1;p.segs.filter(s=>s.count>0).forEach(s=>{const h=(s.count/maxV)*(y1-y0);yc-=h;bars+=`<rect x="${(cx-bW/2).toFixed(1)}" y="${yc.toFixed(1)}" width="${bW}" height="${h.toFixed(1)}" fill="${s.color}"/>`;});
+    const bx2=(cx-bW/2).toFixed(1),cid='cad'+i;
+    bars+=`<rect class="chart-bartrack" x="${bx2}" y="${y0}" width="${bW}" height="${y1-y0}" rx="4"/>`;
+    let yc=y1,stack='';p.segs.filter(s=>s.count>0).forEach(s=>{const h=(s.count/maxV)*(y1-y0);yc-=h;stack+=`<rect x="${bx2}" y="${yc.toFixed(1)}" width="${bW}" height="${h.toFixed(1)}" fill="${s.color}"/>`;});
+    bars+=`<clipPath id="${cid}"><rect x="${bx2}" y="${y0}" width="${bW}" height="${y1-y0}" rx="4"/></clipPath><g clip-path="url(#${cid})">${stack}</g>`;
     if(total>0)bars+=`<text class="chart-val-lbl" x="${cx.toFixed(1)}" y="${(Y(total)-6).toFixed(1)}" text-anchor="middle">${total}</text>`;
     bars+=`<text class="chart-axis-lbl" x="${cx.toFixed(1)}" y="${y1+16}" text-anchor="middle">${p.label}</text>`;
   });
@@ -1934,10 +2257,12 @@ function outcomesByVehicleSVG(data){
   const totals=data.map(v=>v.segs.reduce((a,s)=>a+s.count,0));const maxT=Math.max(1,...totals);
   const rows=data.map((v,i)=>{const y=top+i*rowH+8,bh=22;let x=bx,segHTML='';
     v.segs.forEach(s=>{const w=(s.count/maxT)*bMax;segHTML+=`<rect x="${x.toFixed(1)}" y="${y}" width="${Math.max(1,w).toFixed(1)}" height="${bh}" fill="${s.color}" opacity="0.9"/>`;x+=w;});
-    const tot=totals[i];
+    const tot=totals[i],totW=(tot/maxT)*bMax,cid='ovc'+i;
     return `<text class="chart-val-lbl" x="${lx-14}" y="${(y+bh/2+4).toFixed(1)}" text-anchor="end" style="font-size:11px;fill:var(--tx)">${v.name}</text>`+
-      `<rect class="chart-bartrack" x="${bx}" y="${y}" width="${bMax}" height="${bh}" rx="4"/>`+segHTML+
-      `<text class="chart-val-lbl" x="${(bx+(tot/maxT)*bMax+10).toFixed(1)}" y="${(y+bh/2+4).toFixed(1)}">${tot}</text>`;}).join('');
+      `<rect class="chart-bartrack" x="${bx}" y="${y}" width="${bMax}" height="${bh}" rx="4"/>`+
+      `<clipPath id="${cid}"><rect x="${bx}" y="${y}" width="${Math.max(1,totW).toFixed(1)}" height="${bh}" rx="4"/></clipPath>`+
+      `<g clip-path="url(#${cid})">${segHTML}</g>`+
+      `<text class="chart-val-lbl" x="${(bx+totW+10).toFixed(1)}" y="${(y+bh/2+4).toFixed(1)}">${tot}</text>`;}).join('');
   return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}">${rows}</svg>`;
 }
 function renderAnalytics(){
@@ -1946,7 +2271,7 @@ function renderAnalytics(){
     {l:t('kpiCompletion'),v:s.successRate+'<small>%</small>',sub:`${s.comp.length}/${s.total}`,c:'var(--go)'},
     {l:t('kpiTopVehicle'),v:s.mostFlown&&s.mostFlown.count>0?s.mostFlown.name:'—',sub:s.mostFlown&&s.mostFlown.count>0?`${s.mostFlown.count}× ${t('flights')}`:'',c:'var(--blue)'},
     {l:t('kpiBusiest'),v:s.busiest?s.busiest.label:'—',sub:s.busiest?`${s.busiest.completed} ${t('flights')}`:'',c:'var(--amber)'},
-    {l:t('kpiCancelled'),v:String(s.canc.length),sub:t('launchesCount'),c:'var(--neutral)'},
+    {l:t('kpiLastLaunch'),v:(()=>{const ll=lastLaunched();return ll?ll.dateObj.toLocaleDateString('en-US',{month:'short',day:'numeric'}):'—';})(),sub:(()=>{const ll=lastLaunched();if(!ll)return'';const dd=daysAgoOf(ll.dateObj);return dd===0?t('today'):dd+' '+(dd===1?t('dayAgo'):t('daysAgo'));})(),c:'var(--go)'},
   ];
   const kpiHTML=kpis.map(k=>`<div class="kpi" style="--kc:${k.c}"><div class="kpi-l">${k.l}</div><div class="kpi-v">${k.v}</div>${k.sub?`<div class="kpi-sub">${k.sub}</div>`:''}</div>`).join('');
   const outcomeLegend=OUTCOMES.map(o=>`<span class="cl-item"><span class="cl-swatch" style="background:${o.color}"></span>${o.key}</span>`).join('');
@@ -1963,10 +2288,12 @@ function renderAnalytics(){
   const rangeBar=`<div class="range-bar"><span class="range-lbl">${t('rangeLabel')}</span><div class="range-pills">${RANGES.map(([k,lab])=>`<button class="range-pill${analyticsRange===k?' on':''}" onclick="setAnalyticsRange('${k}')">${lab}</button>`).join('')}</div></div>`;
   document.getElementById('analytics-body').innerHTML=
     rangeBar+`<div class="kpi-grid">${kpiHTML}</div><div class="chart-grid">`+
-    `<div class="chart-card wide"><div class="chart-head"><span class="chart-title">${t('chartMomentum')}</span><span class="chart-note">${t('momentumNote')}</span></div>${cumulativeChartSVG(s.cum)}</div>`+
+    `<div class="chart-card wide"><div class="chart-head"><span class="chart-title">${t('chartMomentum')}</span><span class="chart-note">${t('momentumNote')}</span></div>${momentumCardInner(s)}</div>`+
     `<div class="chart-card wide"><div class="chart-head"><span class="chart-title">${t('chartCadence')}</span><div class="cad-ctrl">${cadNav}${cadToggle}</div></div>${cadenceChartSVG(cadView)}<div class="chart-legend">${outcomeLegend}</div></div>`+
     `<div class="chart-card"><div class="chart-head"><span class="chart-title">${t('chartOutcome')}</span></div>${donutSVG(s.byVehLaunched,t('launchesCount'))}</div>`+
     `<div class="chart-card"><div class="chart-head"><span class="chart-title">${t('chartOutcomes')}</span></div>${donutSVG(s.outcomeCounts,t('missionsCount'))}</div>`+
+    `<div class="chart-card"><div class="chart-head"><span class="chart-title">${t('chartLandings')}</span><span class="chart-note">${t('chartLandingsNote')}</span></div>${donutSVG(s.landingSplit,t('landingsCount'))}</div>`+
+    `<div class="chart-card"><div class="chart-head"><span class="chart-title">${t('chartMissions')}</span><span class="chart-note">${t('chartMissionsNote')}</span></div>${donutSVG(s.missionSplit,t('missionsCount'))}</div>`+
     `<div class="chart-card wide"><div class="chart-head"><span class="chart-title">${t('chartByVehicle')}</span><span class="chart-note">${t('statusCompleted')}</span></div>${hBarChartSVG(s.byVehSuccess)}</div>`+
     `<div class="chart-card wide"><div class="chart-head"><span class="chart-title">${t('chartOutByVeh')}</span></div>${outcomesByVehicleSVG(s.byVehOutcome)}<div class="chart-legend">${outcomeLegend}</div></div>`+
     `</div>`;
@@ -2104,7 +2431,7 @@ document.addEventListener('keydown',e=>{
     const ov=document.getElementById('gop-game-overlay');
     document.getElementById('gop-over-title').textContent=t('missionFailed');
     document.getElementById('gop-over-sub').textContent=t('scoreLabel')+': '+sc+'  ·  '+t('bestLabel')+': '+best;
-    const btn=ov.querySelector('.gop-start-btn');if(btn)btn.textContent=t('launch');
+    const btn=ov.querySelector('.gop-start-btn span');if(btn)btn.textContent=t('launch');
     ov.classList.remove('hidden');
     playSound('close');
   }
