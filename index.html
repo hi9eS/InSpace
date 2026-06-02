@@ -114,11 +114,11 @@ header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px
 
 .hdr-left{display:flex;align-items:center;flex-shrink:0;}
 .hdr-right{display:flex;align-items:center;gap:9px;flex-shrink:0;}
-.hdr-clock{display:inline-flex;flex-direction:column;align-items:flex-start;gap:1px;
+.hdr-clock{display:inline-flex;flex-direction:row;align-items:baseline;gap:7px;
   font-family:var(--f-mono);background:rgba(190,195,205,0.035);border:1px solid var(--line);
-  padding:6px 13px;border-radius:6px;}
-.hdr-clock .hc-time{font-size:0.86em;letter-spacing:0.1em;color:var(--tx);line-height:1.18;}
-.hdr-clock .hc-tz{font-size:0.5em;letter-spacing:0.2em;color:var(--tx-3);text-transform:uppercase;line-height:1;}
+  padding:7px 13px;border-radius:6px;white-space:nowrap;}
+.hdr-clock .hc-time{font-size:0.82em;letter-spacing:0.1em;color:var(--tx);line-height:1;}
+.hdr-clock .hc-tz{font-size:0.5em;letter-spacing:0.18em;color:var(--tx-3);text-transform:uppercase;line-height:1;}
 
 .lang-picker{position:relative;}
 .lang-btn{display:flex;align-items:center;gap:7px;font-family:var(--f-mono);font-size:0.7em;letter-spacing:0.1em;
@@ -148,6 +148,28 @@ header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1px
 .social-btn:hover{border-color:var(--line-2);background:rgba(190,195,205,0.06);transform:scale(1.08);box-shadow:0 6px 18px rgba(0,0,0,.35);}
 .social-btn svg{width:14px;height:14px;fill:var(--tx-2);transition:fill .2s;display:block;}
 .social-btn:hover svg{fill:var(--tx);}
+
+/* ── mute (click-sound) button ── */
+.mute-wrap{position:relative;display:inline-flex;align-items:center;margin-left:10px;flex-shrink:0;}
+.mute-btn{width:34px;height:34px;border-radius:6px;border:1px solid var(--line);background:transparent;
+  display:inline-flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;
+  transition:border-color .2s,background .2s;}
+.mute-btn:hover{border-color:var(--line-2);background:rgba(190,195,205,0.06);}
+.mute-btn svg{width:17px;height:17px;display:block;overflow:visible;}
+.mute-btn .spk{fill:var(--tx-2);transition:fill .2s;}
+.mute-btn:hover .spk{fill:var(--tx);}
+.mute-btn .wave{fill:none;stroke:var(--tx-2);stroke-width:2;stroke-linecap:round;transition:opacity .26s ease,stroke .2s;}
+.mute-btn:hover .wave{stroke:var(--tx);}
+.mute-btn .slash{stroke:var(--rud,#ff5d5d);stroke-width:2;stroke-linecap:round;stroke-dasharray:22;stroke-dashoffset:22;opacity:0;transition:stroke-dashoffset .3s ease,opacity .2s ease;}
+.mute-btn.muted .wave{opacity:0;}
+.mute-btn.muted .slash{stroke-dashoffset:0;opacity:1;}
+.mute-btn.muted .spk{fill:var(--tx-3);}
+.mute-tip{position:absolute;left:calc(100% + 8px);top:50%;transform:translateY(-50%) translateX(-6px);
+  white-space:nowrap;font-family:var(--f-mono);font-size:0.54em;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--tx-2);background:var(--bg-3);border:1px solid var(--line-2);border-radius:6px;padding:6px 10px;
+  opacity:0;pointer-events:none;max-width:0;overflow:hidden;z-index:60;
+  transition:opacity .25s ease,transform .28s var(--out),max-width .3s ease;}
+.mute-wrap:hover .mute-tip{opacity:1;transform:translateY(-50%) translateX(0);max-width:300px;}
 
 /* ══════════════════════════════════════ HERO / MISSION CONTROL ══════════════════════════════════════ */
 .hero{position:relative;z-index:3;max-width:1180px;margin:0 auto;padding:118px 24px 64px;}
@@ -208,7 +230,7 @@ h1.hero-title{font-family:var(--f-disp);font-weight:600;font-size:clamp(2.7em,7v
 .mp-meta:hover{border-color:var(--line-2);}
 .mp-meta:hover .mp-mc{background:var(--bg-3);}
 @media(max-width:560px){.mp-meta{grid-template-columns:1fr 1fr;}}
-.mp-mc{background:var(--bg-2);padding:12px 15px;}
+.mp-mc{background:var(--bg-2);padding:12px 15px;transition:background .28s ease;}
 .mp-mc-l{font-family:var(--f-mono);font-size:0.52em;letter-spacing:0.14em;text-transform:uppercase;color:var(--tx-3);margin-bottom:5px;}
 .mp-mc-v{font-family:var(--f-mono);font-size:0.84em;color:var(--tx);font-weight:500;}
 
@@ -234,7 +256,7 @@ h1.hero-title{font-family:var(--f-disp);font-weight:600;font-size:clamp(2.7em,7v
   font-size:0.9em;letter-spacing:0.04em;padding:0 30px;min-width:230px;min-height:54px;justify-content:center;border-radius:7px;color:var(--tx);
   background:rgba(190,195,205,0.04);border:1px solid var(--line-2);
   transition:background .2s,border-color .2s,transform .2s var(--spring);}
-.ghost-btn:hover{background:rgba(190,195,205,0.09);border-color:var(--line-3);transform:scale(1.02);}
+.ghost-btn:hover{background:rgba(190,195,205,0.09);border-color:var(--line-3);}
 .ghost-btn svg{width:13px;height:13px;fill:var(--tx-2);transition:fill .2s,transform .25s var(--spring);}
 .ghost-btn:hover svg{fill:var(--tx);}
 
@@ -289,13 +311,15 @@ h1.hero-title{font-family:var(--f-disp);font-weight:600;font-size:clamp(2.7em,7v
 .quick-tile:hover .q-arr{color:var(--qc,var(--blue));}
 
 /* ── FOOTER ── */
-footer{position:relative;z-index:3;text-align:center;padding:30px 22px;border-top:1px solid var(--line);
+footer{position:relative;z-index:3;text-align:center;padding:18px 22px;border-top:1px solid var(--line);
   font-family:var(--f-mono);font-size:0.7em;letter-spacing:0.04em;color:var(--tx-3);}
 footer .foot-mark{color:var(--tx-2);font-weight:500;}
 footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .foot-issues{position:absolute;right:22px;bottom:18px;}
+.foot-update{position:absolute;left:22px;bottom:17px;font-family:var(--f-mono);font-size:0.82em;letter-spacing:0.06em;color:var(--tx-4);}
+.foot-update #foot-update-val{color:var(--tx-2);}
 .foot-issues:hover svg{fill:var(--amber);}
-@media(max-width:640px){.foot-issues{position:static;margin:14px auto 0;}}
+@media(max-width:640px){.foot-issues{position:static;margin:14px auto 0;}.foot-update{position:static;margin:10px auto 0;}}
 
 /* ══════════════════════════════════════ OVERLAY SYSTEM ══════════════════════════════════════ */
 .overlay{display:none;position:fixed;inset:0;background:var(--bg-0);z-index:300;overflow-y:auto;
@@ -445,7 +469,7 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 
 #launch-list{display:flex;flex-direction:column;gap:7px;transition:opacity .16s;}
 #launch-list.fading{opacity:0;}
-.launch-row{display:grid;grid-template-columns:1.7fr 1.4fr 0.9fr 1fr;align-items:center;gap:10px;
+.launch-row{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1.4fr) minmax(0,0.9fr) minmax(264px,1fr);align-items:center;gap:10px;
   padding:14px 18px;background:var(--bg-2);border:1px solid var(--line);border-radius:9px;cursor:pointer;
   opacity:0;transform:translateY(6px);animation:rowIn .3s var(--out) forwards;
   transition:background .2s,border-color .2s,box-shadow .2s,transform .2s;}
@@ -531,6 +555,13 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 @media(max-width:820px){.chart-grid{grid-template-columns:1fr;}}
 .chart-card{background:linear-gradient(180deg,var(--bg-2),var(--bg-1));border:1px solid var(--line);border-radius:12px;padding:18px 18px 14px;display:flex;flex-direction:column;}
 .chart-card.wide{grid-column:1 / -1;}
+.donut-row{grid-column:1 / -1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;}
+.donut-row .chart-card{padding:18px 18px 14px;}
+.donut-row .chart-head{margin-bottom:12px;flex-wrap:wrap;gap:2px 8px;}
+.donut-row .chart-title{font-size:0.98em;}
+.donut-row .chart-note{font-size:0.56em;}
+@media(max-width:560px){.donut-row{grid-template-columns:1fr;}}
+
 .chart-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
 .chart-title{font-family:var(--f-disp);font-weight:500;font-size:0.98em;letter-spacing:0.01em;color:var(--tx);}
 .chart-note{font-family:var(--f-mono);font-size:0.56em;letter-spacing:0.1em;text-transform:uppercase;color:var(--tx-3);}
@@ -631,9 +662,9 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .m-watch{margin-top:20px;padding-top:18px;border-top:1px solid var(--line);text-align:center;}
 .m-watch a.ignition-btn{text-decoration:none;}
 /* ── Launch media player (centre) + side specs (Our Vehicles + mission) ── */
-#modal.has-stage{width:min(860px,100%);}
+#modal.has-stage{width:min(980px,100%);}
 .m-stage{display:flex;gap:16px;align-items:stretch;margin:10px 0 6px;}
-.m-side{flex:0 0 148px;display:flex;flex-direction:column;gap:9px;justify-content:center;min-width:0;}
+.m-side{flex:0 0 138px;display:flex;flex-direction:column;gap:9px;justify-content:center;min-width:0;}
 .m-player{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;align-items:center;gap:14px;}
 .m-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:11px;overflow:hidden;border:1px solid var(--line-2);background:#000;box-shadow:0 14px 40px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.02);}
 .m-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;}
@@ -791,6 +822,7 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 <footer>
   <span class="foot-mark">2026–2331 InSpace</span>
   <div class="foot-line" data-i="footerNote">This website is for informational purposes only and does not engage in any commercial activity.</div>
+  <div class="foot-update"><span data-i="lastUpdate">Latest Website Update</span>: <span id="foot-update-val"></span></div>
   <a class="foot-issues social-btn" href="https://github.com/hi9es/InSpace/issues/new?title=&body=%23%23%23+Name%3A%0A%0A%23%23%23+Issue%3A" target="_blank" rel="noopener" aria-label="GitHub Issues" title="GitHub Issues"><svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"></path></svg></a>
 </footer>
 
@@ -1180,16 +1212,16 @@ Object.keys(I18N_EXT).forEach(l=>{ if(TRANSLATIONS[l])Object.assign(TRANSLATIONS
 
 /* localize the newer landing / mission / attempt / stats UI into every remaining language */
 const I18N_EXT2={
-  de:{secStats:'Statistik',statLandings:'Erfolgreiche Landungen',landingsSub:'Suicide Burn',chartLandings:'Landeergebnisse',chartLandingsNote:'Aufsetzen · Suicide Burn',chartMissions:'Missionserfolg',chartMissionsNote:'Erfolg vs. RUD',landSuccess:'Gelandet',landFail:'Gescheitert',landingsCount:'Landungen',lblLanding:'Landung',lblAttempt:'Versuch',attemptFirst:'1. Flug · keine Holds',attemptN:'Versuch #{n}',kpiLastLaunch:'Letzter Start',lblTarget:'Ziel',lblDate:'Datum',lblSite:'Startplatz',lblVehicle:'Fahrzeug',lblStatus:'Status',watchRecord:'Aufzeichnung auf YouTube ansehen',today:'Heute',granAll:'Alle'},
-  es:{secStats:'Estadísticas',statLandings:'Aterrizajes Exitosos',landingsSub:'Suicide burn',chartLandings:'Resultados de Aterrizaje',chartLandingsNote:'Toma de contacto · suicide burn',chartMissions:'Éxito de Misión',chartMissionsNote:'Éxito vs RUD',landSuccess:'Aterrizado',landFail:'Fallido',landingsCount:'aterrizajes',lblLanding:'Aterrizaje',lblAttempt:'Intento',attemptFirst:'1.er vuelo · sin pausas',attemptN:'Intento #{n}',kpiLastLaunch:'Último Lanzamiento',lblTarget:'Objetivo',lblDate:'Fecha',lblSite:'Sitio',lblVehicle:'Vehículo',lblStatus:'Estado',watchRecord:'Ver grabación en YouTube',today:'Hoy',granAll:'Todo'},
-  fr:{secStats:'Statistiques',statLandings:'Atterrissages Réussis',landingsSub:'Suicide burn',chartLandings:'Résultats d’atterrissage',chartLandingsNote:'Toucher · suicide burn',chartMissions:'Réussite de Mission',chartMissionsNote:'Réussite vs RUD',landSuccess:'Atterri',landFail:'Échoué',landingsCount:'atterrissages',lblLanding:'Atterrissage',lblAttempt:'Tentative',attemptFirst:'1er vol · sans interruption',attemptN:'Tentative #{n}',kpiLastLaunch:'Dernier Lancement',lblTarget:'Cible',lblDate:'Date',lblSite:'Site',lblVehicle:'Véhicule',lblStatus:'Statut',watchRecord:'Voir l’enregistrement sur YouTube',today:'Aujourd’hui',granAll:'Tout'},
-  zh:{secStats:'统计',statLandings:'成功着陆',landingsSub:'Suicide burn',chartLandings:'着陆结果',chartLandingsNote:'触地 · suicide burn',chartMissions:'任务成功率',chartMissionsNote:'成功 vs RUD',landSuccess:'已着陆',landFail:'失败',landingsCount:'次着陆',lblLanding:'着陆',lblAttempt:'尝试',attemptFirst:'首飞 · 无暂停',attemptN:'第 {n} 次尝试',kpiLastLaunch:'上次发射',lblTarget:'目标',lblDate:'日期',lblSite:'发射场',lblVehicle:'飞行器',lblStatus:'状态',watchRecord:'在 YouTube 观看录像',today:'今天',granAll:'全部'},
-  pt:{secStats:'Estatísticas',statLandings:'Pousos Bem-Sucedidos',landingsSub:'Suicide burn',chartLandings:'Resultados de Pouso',chartLandingsNote:'Toque no solo · suicide burn',chartMissions:'Sucesso da Missão',chartMissionsNote:'Sucesso vs RUD',landSuccess:'Pousou',landFail:'Falhou',landingsCount:'pousos',lblLanding:'Pouso',lblAttempt:'Tentativa',attemptFirst:'1º voo · sem pausas',attemptN:'Tentativa #{n}',kpiLastLaunch:'Último Lançamento',lblTarget:'Alvo',lblDate:'Data',lblSite:'Local',lblVehicle:'Veículo',lblStatus:'Estado',watchRecord:'Ver gravação no YouTube',today:'Hoje',granAll:'Tudo'},
-  hi:{secStats:'आँकड़े',statLandings:'सफल लैंडिंग',landingsSub:'Suicide burn',chartLandings:'लैंडिंग परिणाम',chartLandingsNote:'टचडाउन · suicide burn',chartMissions:'मिशन सफलता',chartMissionsNote:'सफलता बनाम RUD',landSuccess:'उतरा',landFail:'विफल',landingsCount:'लैंडिंग',lblLanding:'लैंडिंग',lblAttempt:'प्रयास',attemptFirst:'पहली उड़ान · कोई होल्ड नहीं',attemptN:'प्रयास #{n}',kpiLastLaunch:'पिछला प्रक्षेपण',lblTarget:'लक्ष्य',lblDate:'तारीख',lblSite:'स्थल',lblVehicle:'वाहन',lblStatus:'स्थिति',watchRecord:'YouTube पर रिकॉर्डिंग देखें',today:'आज',granAll:'सभी'},
-  pl:{secStats:'Statystyki',statLandings:'Udane Lądowania',landingsSub:'Suicide burn',chartLandings:'Wyniki lądowania',chartLandingsNote:'Przyziemienie · suicide burn',chartMissions:'Sukces misji',chartMissionsNote:'Sukces vs RUD',landSuccess:'Wylądował',landFail:'Nieudane',landingsCount:'lądowań',lblLanding:'Lądowanie',lblAttempt:'Próba',attemptFirst:'1. lot · bez wstrzymań',attemptN:'Próba #{n}',kpiLastLaunch:'Ostatni start',lblTarget:'Cel',lblDate:'Data',lblSite:'Miejsce',lblVehicle:'Pojazd',lblStatus:'Status',watchRecord:'Obejrzyj nagranie na YouTube',today:'Dziś',granAll:'Wszystko'},
-  ja:{secStats:'統計',statLandings:'着陸成功',landingsSub:'Suicide burn',chartLandings:'着陸結果',chartLandingsNote:'着地 · suicide burn',chartMissions:'ミッション成功率',chartMissionsNote:'成功 vs RUD',landSuccess:'着陸',landFail:'失敗',landingsCount:'回の着陸',lblLanding:'着陸',lblAttempt:'試行',attemptFirst:'初飛行 · ホールドなし',attemptN:'試行 #{n}',kpiLastLaunch:'前回の打ち上げ',lblTarget:'目標',lblDate:'日付',lblSite:'射場',lblVehicle:'機体',lblStatus:'ステータス',watchRecord:'YouTubeで録画を見る',today:'今日',granAll:'全て'},
-  af:{secStats:'Statistieke',statLandings:'Suksesvolle Landings',landingsSub:'Suicide burn',chartLandings:'Landingsuitkomste',chartLandingsNote:'Neersit · suicide burn',chartMissions:'Missiesukses',chartMissionsNote:'Sukses vs RUD',landSuccess:'Geland',landFail:'Misluk',landingsCount:'landings',lblLanding:'Landing',lblAttempt:'Poging',attemptFirst:'1ste vlug · geen onderbrekings',attemptN:'Poging #{n}',kpiLastLaunch:'Laaste Lansering',lblTarget:'Teiken',lblDate:'Datum',lblSite:'Terrein',lblVehicle:'Voertuig',lblStatus:'Status',watchRecord:'Kyk opname op YouTube',today:'Vandag',granAll:'Alles'},
-  hu:{secStats:'Statisztika',statLandings:'Sikeres Landolások',landingsSub:'Suicide burn',chartLandings:'Landolási eredmények',chartLandingsNote:'Földet érés · suicide burn',chartMissions:'Küldetés sikere',chartMissionsNote:'Siker vs RUD',landSuccess:'Landolt',landFail:'Sikertelen',landingsCount:'landolás',lblLanding:'Landolás',lblAttempt:'Próbálkozás',attemptFirst:'1. repülés · nincs leállás',attemptN:'Próbálkozás #{n}',kpiLastLaunch:'Utolsó indítás',lblTarget:'Cél',lblDate:'Dátum',lblSite:'Helyszín',lblVehicle:'Jármű',lblStatus:'Állapot',watchRecord:'Felvétel megtekintése a YouTube-on',today:'Ma',granAll:'Mind'},
+  de:{secStats:'Statistik',statLandings:'Erfolgreiche Landungen',landingsSub:'Suicide Burn',chartLandings:'Landeergebnisse',chartLandingsNote:'Aufsetzen · Suicide Burn',chartMissions:'Missionserfolg',chartMissionsNote:'Erfolg vs. RUD',landSuccess:'Gelandet',landFail:'Gescheitert',landingsCount:'Landungen',lblLanding:'Landung',lblAttempt:'Versuch',attemptFirst:'Keine Scrubs',attemptN:'{n} Scrubs',kpiLastLaunch:'Letzter Start',lblTarget:'Ziel',lblDate:'Datum',lblSite:'Startplatz',lblVehicle:'Fahrzeug',lblStatus:'Status',watchRecord:'Aufzeichnung auf YouTube ansehen',today:'Heute',granAll:'Alle'},
+  es:{secStats:'Estadísticas',statLandings:'Aterrizajes Exitosos',landingsSub:'Suicide burn',chartLandings:'Resultados de Aterrizaje',chartLandingsNote:'Toma de contacto · suicide burn',chartMissions:'Éxito de Misión',chartMissionsNote:'Éxito vs RUD',landSuccess:'Aterrizado',landFail:'Fallido',landingsCount:'aterrizajes',lblLanding:'Aterrizaje',lblAttempt:'Intento',attemptFirst:'Sin scrubs',attemptN:'{n} scrubs',kpiLastLaunch:'Último Lanzamiento',lblTarget:'Objetivo',lblDate:'Fecha',lblSite:'Sitio',lblVehicle:'Vehículo',lblStatus:'Estado',watchRecord:'Ver grabación en YouTube',today:'Hoy',granAll:'Todo'},
+  fr:{secStats:'Statistiques',statLandings:'Atterrissages Réussis',landingsSub:'Suicide burn',chartLandings:'Résultats d’atterrissage',chartLandingsNote:'Toucher · suicide burn',chartMissions:'Réussite de Mission',chartMissionsNote:'Réussite vs RUD',landSuccess:'Atterri',landFail:'Échoué',landingsCount:'atterrissages',lblLanding:'Atterrissage',lblAttempt:'Tentative',attemptFirst:'Aucun scrub',attemptN:'{n} scrubs',kpiLastLaunch:'Dernier Lancement',lblTarget:'Cible',lblDate:'Date',lblSite:'Site',lblVehicle:'Véhicule',lblStatus:'Statut',watchRecord:'Voir l’enregistrement sur YouTube',today:'Aujourd’hui',granAll:'Tout'},
+  zh:{secStats:'统计',statLandings:'成功着陆',landingsSub:'Suicide burn',chartLandings:'着陆结果',chartLandingsNote:'触地 · suicide burn',chartMissions:'任务成功率',chartMissionsNote:'成功 vs RUD',landSuccess:'已着陆',landFail:'失败',landingsCount:'次着陆',lblLanding:'着陆',lblAttempt:'尝试',attemptFirst:'无中止',attemptN:'{n} 次中止',kpiLastLaunch:'上次发射',lblTarget:'目标',lblDate:'日期',lblSite:'发射场',lblVehicle:'飞行器',lblStatus:'状态',watchRecord:'在 YouTube 观看录像',today:'今天',granAll:'全部'},
+  pt:{secStats:'Estatísticas',statLandings:'Pousos Bem-Sucedidos',landingsSub:'Suicide burn',chartLandings:'Resultados de Pouso',chartLandingsNote:'Toque no solo · suicide burn',chartMissions:'Sucesso da Missão',chartMissionsNote:'Sucesso vs RUD',landSuccess:'Pousou',landFail:'Falhou',landingsCount:'pousos',lblLanding:'Pouso',lblAttempt:'Tentativa',attemptFirst:'Sem scrubs',attemptN:'{n} scrubs',kpiLastLaunch:'Último Lançamento',lblTarget:'Alvo',lblDate:'Data',lblSite:'Local',lblVehicle:'Veículo',lblStatus:'Estado',watchRecord:'Ver gravação no YouTube',today:'Hoje',granAll:'Tudo'},
+  hi:{secStats:'आँकड़े',statLandings:'सफल लैंडिंग',landingsSub:'Suicide burn',chartLandings:'लैंडिंग परिणाम',chartLandingsNote:'टचडाउन · suicide burn',chartMissions:'मिशन सफलता',chartMissionsNote:'सफलता बनाम RUD',landSuccess:'उतरा',landFail:'विफल',landingsCount:'लैंडिंग',lblLanding:'लैंडिंग',lblAttempt:'प्रयास',attemptFirst:'कोई स्क्रब नहीं',attemptN:'{n} स्क्रब',kpiLastLaunch:'पिछला प्रक्षेपण',lblTarget:'लक्ष्य',lblDate:'तारीख',lblSite:'स्थल',lblVehicle:'वाहन',lblStatus:'स्थिति',watchRecord:'YouTube पर रिकॉर्डिंग देखें',today:'आज',granAll:'सभी'},
+  pl:{secStats:'Statystyki',statLandings:'Udane Lądowania',landingsSub:'Suicide burn',chartLandings:'Wyniki lądowania',chartLandingsNote:'Przyziemienie · suicide burn',chartMissions:'Sukces misji',chartMissionsNote:'Sukces vs RUD',landSuccess:'Wylądował',landFail:'Nieudane',landingsCount:'lądowań',lblLanding:'Lądowanie',lblAttempt:'Próba',attemptFirst:'Bez scrubów',attemptN:'{n} scrubów',kpiLastLaunch:'Ostatni start',lblTarget:'Cel',lblDate:'Data',lblSite:'Miejsce',lblVehicle:'Pojazd',lblStatus:'Status',watchRecord:'Obejrzyj nagranie na YouTube',today:'Dziś',granAll:'Wszystko'},
+  ja:{secStats:'統計',statLandings:'着陸成功',landingsSub:'Suicide burn',chartLandings:'着陸結果',chartLandingsNote:'着地 · suicide burn',chartMissions:'ミッション成功率',chartMissionsNote:'成功 vs RUD',landSuccess:'着陸',landFail:'失敗',landingsCount:'回の着陸',lblLanding:'着陸',lblAttempt:'試行',attemptFirst:'中止なし',attemptN:'{n} 回中止',kpiLastLaunch:'前回の打ち上げ',lblTarget:'目標',lblDate:'日付',lblSite:'射場',lblVehicle:'機体',lblStatus:'ステータス',watchRecord:'YouTubeで録画を見る',today:'今日',granAll:'全て'},
+  af:{secStats:'Statistieke',statLandings:'Suksesvolle Landings',landingsSub:'Suicide burn',chartLandings:'Landingsuitkomste',chartLandingsNote:'Neersit · suicide burn',chartMissions:'Missiesukses',chartMissionsNote:'Sukses vs RUD',landSuccess:'Geland',landFail:'Misluk',landingsCount:'landings',lblLanding:'Landing',lblAttempt:'Poging',attemptFirst:'Geen scrubs',attemptN:'{n} scrubs',kpiLastLaunch:'Laaste Lansering',lblTarget:'Teiken',lblDate:'Datum',lblSite:'Terrein',lblVehicle:'Voertuig',lblStatus:'Status',watchRecord:'Kyk opname op YouTube',today:'Vandag',granAll:'Alles'},
+  hu:{secStats:'Statisztika',statLandings:'Sikeres Landolások',landingsSub:'Suicide burn',chartLandings:'Landolási eredmények',chartLandingsNote:'Földet érés · suicide burn',chartMissions:'Küldetés sikere',chartMissionsNote:'Siker vs RUD',landSuccess:'Landolt',landFail:'Sikertelen',landingsCount:'landolás',lblLanding:'Landolás',lblAttempt:'Próbálkozás',attemptFirst:'Nincs scrub',attemptN:'{n} scrub',kpiLastLaunch:'Utolsó indítás',lblTarget:'Cél',lblDate:'Dátum',lblSite:'Helyszín',lblVehicle:'Jármű',lblStatus:'Állapot',watchRecord:'Felvétel megtekintése a YouTube-on',today:'Ma',granAll:'Mind'},
 };
 Object.keys(I18N_EXT2).forEach(l=>{ if(TRANSLATIONS[l])Object.assign(TRANSLATIONS[l],I18N_EXT2[l]); });
 
@@ -1208,6 +1240,7 @@ function applyLang(){
   document.querySelectorAll('[data-i-ph]').forEach(el=>{ el.setAttribute('placeholder',t(el.getAttribute('data-i-ph'))); });
   const lb=document.getElementById('lang-lbl'); if(lb)lb.textContent=LANG_NAMES[currentLang]||'EN';
   document.documentElement.setAttribute('lang',currentLang);
+  updateMuteUI();
 }
 function setLang(code){
   currentLang=code;lsSet('inspace_lang',code);applyLang();
@@ -1222,7 +1255,7 @@ function setLang(code){
 
 /* ─────────── CONFIG + SOUND (preserved) ─────────── */
 const showClock=true;
-const enableSounds=true;
+let enableSounds=(lsGet('inspace-sound')!=='off');
 const sounds={
   nav:{volume:0.13,freq:520,freq2:680,duration:0.07,type:'sine',envelope:'click'},
   back:{volume:0.11,freq:380,freq2:260,duration:0.07,type:'sine',envelope:'click'},
@@ -1400,6 +1433,26 @@ function rebuildNav(){
   });
 }
 
+/* ── click-sound mute (persisted) ── */
+function updateMuteUI(){
+  const b=document.getElementById('mute-btn'),tip=document.getElementById('mute-tip');
+  if(b)b.classList.toggle('muted',!enableSounds);
+  if(tip)tip.textContent=enableSounds?t('soundMute'):t('soundUnmute');
+}
+function toggleMute(){
+  enableSounds=!enableSounds;
+  lsSet('inspace-sound',enableSounds?'on':'off');
+  updateMuteUI();
+}
+/* ── footer "Latest Website Update" — two modes ──
+   LAST_UPDATE_MODE='manual' : edit LAST_UPDATE_MANUAL by hand on each update
+   LAST_UPDATE_MODE='auto'   : always shows the current date (e.g. "Jun 2 '26") */
+const LAST_UPDATE_MODE='manual';
+const LAST_UPDATE_MANUAL="Jun 2 '26";
+function lastUpdateStr(){
+  if(LAST_UPDATE_MODE==='auto'){const n=new Date();return n.toLocaleDateString('en-US',{month:'short',day:'numeric'})+" '"+String(n.getFullYear()).slice(2);}
+  return LAST_UPDATE_MANUAL;
+}
 function buildHeaderRight(){
   const left=document.getElementById('hdr-left');if(left){left.innerHTML='';
     if(showClock){
@@ -1409,7 +1462,12 @@ function buildHeaderRight(){
       const tick=()=>{const n=new Date();const el=document.getElementById('hc-time');if(el)el.textContent=`${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`;};
       tick();setInterval(tick,1000);
     }
+    const mw=document.createElement('div');mw.className='mute-wrap';
+    mw.innerHTML=`<button class="mute-btn${enableSounds?'':' muted'}" id="mute-btn" type="button" aria-label="mute click sounds" onclick="toggleMute()"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M4 9.5v5h3.3L12 18.6V5.4L7.3 9.5H4z"/><path class="wave" d="M15.4 8.7a4.5 4.5 0 0 1 0 6.6"/><line class="slash" x1="4.5" y1="4.5" x2="19.5" y2="19.5"/></svg></button><span class="mute-tip" id="mute-tip"></span>`;
+    left.appendChild(mw);
+    updateMuteUI();
   }
+  const fu=document.getElementById('foot-update-val');if(fu)fu.textContent=lastUpdateStr();
   const wrap=document.getElementById('hdr-right');wrap.innerHTML='';
   const lp=document.createElement('div');lp.className='lang-picker';
   const lb=document.createElement('button');lb.className='lang-btn';
@@ -1737,8 +1795,38 @@ function watchPrimary(){
 /* ─────────── extra label keys (5 langs + English fallback) ─────────── */
 Object.assign(TRANSLATIONS.en,{lblDate:'Date',lblVehicle:'Vehicle',lblStatus:'Status',lblSite:'Site',newsPendingTitle:'News pending restore'});
 Object.assign(TRANSLATIONS.ru,{lblDate:'Дата',lblVehicle:'Аппарат',lblStatus:'Статус',lblSite:'Площадка',newsPendingTitle:'Новости будут восстановлены'});
-Object.assign(TRANSLATIONS.en,{kpiLastLaunch:'Last Launch',today:'today',lblAttempt:'Attempt',attemptFirst:'1st flight · no holds',attemptN:'Attempt #{n}',granDay:'Day',granWeek:'Week',granMonth:'Month',granYear:'Year',clear:'Clear',granAll:'All',watchLive:'Watch live on YouTube',watchRecord:'Watch record on YouTube',lblTarget:'Target'});
-Object.assign(TRANSLATIONS.ru,{kpiLastLaunch:'Последний запуск',today:'сегодня',lblAttempt:'Попытка',attemptFirst:'Первый полёт · без переносов',attemptN:'Попытка №{n}',granDay:'День',granWeek:'Неделя',granMonth:'Месяц',granYear:'Год',clear:'Сброс',granAll:'Всё время',watchLive:'Смотреть трансляцию на YouTube',watchRecord:'Смотреть запись на YouTube',lblTarget:'Цель'});
+Object.assign(TRANSLATIONS.en,{kpiLastLaunch:'Last Launch',today:'today',lblAttempt:'Attempt',attemptFirst:'No scrubs',attemptN:'{n} scrubs',granDay:'Day',granWeek:'Week',granMonth:'Month',granYear:'Year',clear:'Clear',granAll:'All',watchLive:'Watch live on YouTube',watchRecord:'Watch record on YouTube',lblTarget:'Target'});
+Object.assign(TRANSLATIONS.ru,{kpiLastLaunch:'Последний запуск',today:'сегодня',lblAttempt:'Попытка',attemptFirst:'Без скрабов',attemptN:'{n} скрабов',granDay:'День',granWeek:'Неделя',granMonth:'Месяц',granYear:'Год',clear:'Сброс',granAll:'Всё время',watchLive:'Смотреть трансляцию на YouTube',watchRecord:'Смотреть запись на YouTube',lblTarget:'Цель'});
+const I18N_EXT3={
+  en:{soundMute:'Mute click sounds',soundUnmute:'Enable click sounds',lastUpdate:'Latest Website Update'},
+  ru:{soundMute:'Отключить звуки кликов',soundUnmute:'Включить звуки кликов',lastUpdate:'Последнее обновление'},
+  de:{soundMute:'Klickgeräusche stumm',soundUnmute:'Klickgeräusche an',lastUpdate:'Letztes Website-Update'},
+  es:{soundMute:'Silenciar sonidos',soundUnmute:'Activar sonidos',lastUpdate:'Última actualización'},
+  fr:{soundMute:'Couper les sons',soundUnmute:'Activer les sons',lastUpdate:'Dernière mise à jour'},
+  zh:{soundMute:'关闭点击音效',soundUnmute:'开启点击音效',lastUpdate:'最近网站更新'},
+  pt:{soundMute:'Silenciar sons',soundUnmute:'Ativar sons',lastUpdate:'Última atualização'},
+  hi:{soundMute:'क्लिक ध्वनि बंद करें',soundUnmute:'क्लिक ध्वनि चालू करें',lastUpdate:'नवीनतम अपडेट'},
+  pl:{soundMute:'Wycisz dźwięki',soundUnmute:'Włącz dźwięki',lastUpdate:'Ostatnia aktualizacja'},
+  ja:{soundMute:'クリック音をオフ',soundUnmute:'クリック音をオン',lastUpdate:'最終更新'},
+  af:{soundMute:'Demp klikklanke',soundUnmute:'Aktiveer klikklanke',lastUpdate:'Jongste opdatering'},
+  hu:{soundMute:'Kattintáshangok el',soundUnmute:'Kattintáshangok be',lastUpdate:'Legutóbbi frissítés'}
+};
+Object.keys(I18N_EXT3).forEach(l=>{ if(TRANSLATIONS[l])Object.assign(TRANSLATIONS[l],I18N_EXT3[l]); });
+const I18N_EXT4={
+  en:{specFirstStage:'First Stage',fsRecov:'Recovered',fsLost:'Lost'},
+  ru:{specFirstStage:'Первая ступень',fsRecov:'Возвращается',fsLost:'Потеряна'},
+  de:{specFirstStage:'Erste Stufe',fsRecov:'Geborgen',fsLost:'Verloren'},
+  es:{specFirstStage:'Primera Etapa',fsRecov:'Recuperada',fsLost:'Perdida'},
+  fr:{specFirstStage:'Premier Étage',fsRecov:'Récupéré',fsLost:'Perdu'},
+  zh:{specFirstStage:'第一级',fsRecov:'已回收',fsLost:'损失'},
+  pt:{specFirstStage:'Primeiro Estágio',fsRecov:'Recuperado',fsLost:'Perdido'},
+  hi:{specFirstStage:'पहला चरण',fsRecov:'वापस',fsLost:'खोई'},
+  pl:{specFirstStage:'Pierwszy Stopień',fsRecov:'Odzyskany',fsLost:'Utracony'},
+  ja:{specFirstStage:'第1段',fsRecov:'回収',fsLost:'喪失'},
+  af:{specFirstStage:'Eerste Trap',fsRecov:'Herwin',fsLost:'Verloor'},
+  hu:{specFirstStage:'Első Fokozat',fsRecov:'Visszanyert',fsLost:'Elveszett'}
+};
+Object.keys(I18N_EXT4).forEach(l=>{ if(TRANSLATIONS[l])Object.assign(TRANSLATIONS[l],I18N_EXT4[l]); });
 Object.assign(TRANSLATIONS.de,{lblDate:'Datum',lblVehicle:'Fahrzeug',lblStatus:'Status',lblSite:'Startplatz',newsPendingTitle:'Nachrichten werden wiederhergestellt'});
 Object.assign(TRANSLATIONS.es,{lblDate:'Fecha',lblVehicle:'Vehículo',lblStatus:'Estado',lblSite:'Sitio',newsPendingTitle:'Noticias por restaurar'});
 Object.assign(TRANSLATIONS.fr,{lblDate:'Date',lblVehicle:'Véhicule',lblStatus:'Statut',lblSite:'Site',newsPendingTitle:'Actualités à restaurer'});
@@ -2031,7 +2119,9 @@ function openSpec(idx){
   document.getElementById('spec-class').textContent=(veh&&veh.class)||statusLabel(l.status);
   document.getElementById('spec-vsec').textContent=t('specifications');
   const specs=(veh&&veh.specs)?veh.specs:[];
-  document.getElementById('spec-grid').innerHTML=specs.length?specs.map(s=>`<div class="m-stat"><div class="m-stat-l">${s.lbl}</div><div class="m-stat-v">${s.val}</div></div>`).join(''):`<div class="spec-empty">${t('noImage')}</div>`;
+  const specCells=specs.slice();
+  if(veh)specCells.push({lbl:t('specFirstStage'),val:(l.landing===true?t('fsRecov'):(l.landing===false?t('fsLost'):'—'))});
+  document.getElementById('spec-grid').innerHTML=specs.length?specCells.map(s=>`<div class="m-stat"><div class="m-stat-l">${s.lbl}</div><div class="m-stat-v">${s.val}</div></div>`).join(''):`<div class="spec-empty">${t('noImage')}</div>`;
   document.getElementById('spec-msec').textContent=t('details');
   const dStr=l.dateObj.toLocaleString(undefined,{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
   const mf=[{l:t('lblStatus'),v:statusLabel(l.status)},{l:t('lblDate'),v:dStr},{l:t('lblSite'),v:l.site||'—'}];
@@ -2146,8 +2236,11 @@ function momWindow(series){
   if(momGran==='all'){const days=(dataMax-dataMin)/864e5;return{t0:dataMin,t1:dataMax,axisMode:days>800?'year':days>140?'month':days>40?'week':'day',custom:false,paged:false,canOlder:false,canNewer:false};}
   const maxOff=Math.max(0,Math.ceil((dataMax-dataMin)/span));
   momOffset=Math.min(Math.max(0,momOffset),maxOff);
-  const t1=dataMax-momOffset*span,t0=t1-span;
-  return{t0,t1,axisMode:momGran,custom:false,paged:(dataMax-dataMin)>span,canOlder:t0>dataMin,canNewer:momOffset>0};
+  const t1=dataMax-momOffset*span;
+  const t0=Math.max(t1-span,dataMin);
+  const dispDays=(t1-t0)/864e5;
+  const axisMode=dispDays>800?'year':dispDays>140?'month':dispDays>40?'week':'day';
+  return{t0,t1,axisMode,custom:false,paged:(dataMax-dataMin)>span,canOlder:t0>dataMin,canNewer:momOffset>0};
 }
 function momentumChartSVG(series){
   const W=680,H=240,x0=42,x1=660,y0=18,y1=198;
@@ -2233,13 +2326,13 @@ function cadenceChartSVG(periods){
 }
 function clampLabel(s){s=String(s);return s.length>10?s.substring(0,10)+'...':s;}
 function donutSVG(items,centerLabel){
-  const W=320,H=240,cx=120,cy=120,r=72,sw=24,C=2*Math.PI*r;
+  const W=320,H=240,cx=120,cy=120,r=84,sw=27,C=2*Math.PI*r;
   const segs=items.filter(v=>v.count>0);
   const total=segs.reduce((a,b)=>a+b.count,0)||1;let acc=0,arcs='';
   segs.forEach(seg=>{const frac=seg.count/total,dash=frac*C;arcs+=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${seg.color}" stroke-width="${sw}" stroke-dasharray="${dash.toFixed(2)} ${(C-dash).toFixed(2)}" stroke-dashoffset="${(-acc*C).toFixed(2)}" transform="rotate(-90 ${cx} ${cy})" stroke-linecap="butt"/>`;acc+=frac;});
   if(segs.length===0)arcs=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--line-2)" stroke-width="${sw}"/>`;
   const lg=segs.map((it,i)=>`<g transform="translate(232,${74+i*28})"><rect x="0" y="-9" width="11" height="11" rx="2" fill="${it.color}"/><text x="18" y="0" class="chart-val-lbl" style="font-size:10.5px;fill:var(--tx)">${clampLabel(it.label||it.name||it.key)}</text><text x="18" y="14" class="chart-axis-lbl">${it.count}</text></g>`).join('');
-  return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}"><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(190,195,205,0.06)" stroke-width="${sw}"/>${arcs}<text x="${cx}" y="${cy-4}" text-anchor="middle" class="donut-center-v" style="font-size:30px">${total}</text><text x="${cx}" y="${cy+16}" text-anchor="middle" class="donut-center-l" style="font-size:9px">${centerLabel}</text>${lg}</svg>`;
+  return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}"><circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="rgba(190,195,205,0.06)" stroke-width="${sw}"/>${arcs}<text x="${cx}" y="${cy-4}" text-anchor="middle" class="donut-center-v" style="font-size:35px">${total}</text><text x="${cx}" y="${cy+18}" text-anchor="middle" class="donut-center-l" style="font-size:10px">${centerLabel}</text>${lg}</svg>`;
 }
 function hBarChartSVG(bv){
   const W=680,rowH=46,top=12,H=Math.max(1,bv.length)*rowH+top;const lx=150,bx=lx,bMax=W-lx-52;
@@ -2290,10 +2383,10 @@ function renderAnalytics(){
     rangeBar+`<div class="kpi-grid">${kpiHTML}</div><div class="chart-grid">`+
     `<div class="chart-card wide"><div class="chart-head"><span class="chart-title">${t('chartMomentum')}</span><span class="chart-note">${t('momentumNote')}</span></div>${momentumCardInner(s)}</div>`+
     `<div class="chart-card wide"><div class="chart-head"><span class="chart-title">${t('chartCadence')}</span><div class="cad-ctrl">${cadNav}${cadToggle}</div></div>${cadenceChartSVG(cadView)}<div class="chart-legend">${outcomeLegend}</div></div>`+
-    `<div class="chart-card"><div class="chart-head"><span class="chart-title">${t('chartOutcome')}</span></div>${donutSVG(s.byVehLaunched,t('launchesCount'))}</div>`+
+    `<div class="donut-row"><div class="chart-card"><div class="chart-head"><span class="chart-title">${t('chartOutcome')}</span></div>${donutSVG(s.byVehLaunched,t('launchesCount'))}</div>`+
     `<div class="chart-card"><div class="chart-head"><span class="chart-title">${t('chartOutcomes')}</span></div>${donutSVG(s.outcomeCounts,t('missionsCount'))}</div>`+
     `<div class="chart-card"><div class="chart-head"><span class="chart-title">${t('chartLandings')}</span><span class="chart-note">${t('chartLandingsNote')}</span></div>${donutSVG(s.landingSplit,t('landingsCount'))}</div>`+
-    `<div class="chart-card"><div class="chart-head"><span class="chart-title">${t('chartMissions')}</span><span class="chart-note">${t('chartMissionsNote')}</span></div>${donutSVG(s.missionSplit,t('missionsCount'))}</div>`+
+    `<div class="chart-card"><div class="chart-head"><span class="chart-title">${t('chartMissions')}</span><span class="chart-note">${t('chartMissionsNote')}</span></div>${donutSVG(s.missionSplit,t('missionsCount'))}</div></div>`+
     `<div class="chart-card wide"><div class="chart-head"><span class="chart-title">${t('chartByVehicle')}</span><span class="chart-note">${t('statusCompleted')}</span></div>${hBarChartSVG(s.byVehSuccess)}</div>`+
     `<div class="chart-card wide"><div class="chart-head"><span class="chart-title">${t('chartOutByVeh')}</span></div>${outcomesByVehicleSVG(s.byVehOutcome)}<div class="chart-legend">${outcomeLegend}</div></div>`+
     `</div>`;
