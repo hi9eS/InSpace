@@ -65,6 +65,10 @@ button{font-family:inherit;color:inherit;}
              radial-gradient(circle at 85% 12%,rgba(255,158,61,0.05),transparent 45%);}
 .vignette{position:fixed;inset:0;pointer-events:none;z-index:2;
   box-shadow:inset 0 0 240px 40px rgba(0,0,0,0.55);}
+/* ── Admin panel elements (hidden when empty, styled when Supabase fills them) ── */
+[data-admin]:empty{display:none!important;}
+.admin-banner{font-family:var(--f-mono);font-size:0.68em;letter-spacing:0.2em;text-transform:uppercase;color:var(--amber-2);text-align:center;padding:10px 0 2px;animation:fadeUp .55s .15s var(--out) both;}
+.admin-status{font-family:var(--f-mono);font-size:0.58em;letter-spacing:0.16em;text-transform:uppercase;color:var(--tx-3);display:block;margin-top:10px;text-align:center;}
 
 /* ── UTIL: corner frame ── */
 .cf{position:relative;}
@@ -675,9 +679,9 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .m-watch{margin-top:20px;padding-top:18px;border-top:1px solid var(--line);text-align:center;}
 .m-watch a.ignition-btn{text-decoration:none;}
 /* ── Launch media player (centre) + side specs (Our Vehicles + mission) ── */
-#modal.has-stage{width:min(980px,100%);}
+#modal.has-stage{width:min(1010px,100%);}
 .m-stage{display:flex;gap:16px;align-items:stretch;margin:10px 0 6px;}
-.m-side{flex:0 0 138px;display:flex;flex-direction:column;gap:9px;justify-content:center;min-width:0;}
+.m-side{flex:0 0 180px;display:flex;flex-direction:column;gap:9px;justify-content:center;min-width:0;}
 .m-player{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;align-items:center;gap:14px;}
 .m-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:11px;overflow:hidden;border:1px solid var(--line-2);background:#000;box-shadow:0 14px 40px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.02);}
 .m-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;}
@@ -693,6 +697,7 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .m-stat{background:var(--bg-2);border:1px solid var(--line);border-radius:8px;padding:9px 12px;}
 .m-stat-l{font-family:var(--f-mono);font-size:0.5em;letter-spacing:0.13em;text-transform:uppercase;color:var(--tx-3);margin-bottom:4px;}
 .m-stat-v{font-family:var(--f-mono);font-size:0.8em;color:var(--tx);font-weight:500;line-height:1.25;}
+.m-side .m-stat-v{font-size:0.78em;line-height:1.3;}
 .m-watch-btn{min-width:auto;min-height:44px;font-size:0.82em;padding:0 22px;}
 .m-watch-btn svg{width:13px;height:13px;}
 @media(max-width:680px){
@@ -798,6 +803,7 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
   <div class="hero-top">
     <h1 class="hero-title" data-i="heroTitle">Welcome to InSpace</h1>
     <p class="hero-sub" data-i="heroSub">Keep an eye out for updates</p>
+    <p class="admin-banner" data-admin="banner"></p>
   </div>
 
   <div class="mission-panel cf" id="mission-panel" style="--cfc:rgba(190,195,205,0.3)">
@@ -805,6 +811,7 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
       <div class="mp-clabel" id="mp-clabel" data-i="nextLaunch">Next launch in</div>
       <div id="mp-readout"></div>
       <div class="mp-meta" id="mp-meta" onclick="openSpecFromHero()" title="View vehicle & mission specs"></div>
+      <small class="admin-status" data-admin="status"></small>
       <div class="ignition-row">
         <div class="ignition-btn" onclick="watchPrimary()">
           <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
@@ -2756,6 +2763,59 @@ rebuildScheduleTabs();
 window.addEventListener('load',()=>{
   setTimeout(()=>showToast({icon:'rocket',color:'#4d8dff',title:t('toastWelcome'),sub:t('toastWelcomeSub'),duration:4200}),900);
 });
+</script>
+
+<!-- ═══════ REALTIME ADMIN PANEL · Supabase (live content control) ═══════ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ════════════════════════════════════════════════════════════
+   Realtime admin panel via Supabase.
+   The supabase-js CDN script above MUST load before this block.
+   Bind any element with  data-admin="column_name"  — its text updates
+   live the instant the admin_panel table changes (no page reload).
+   e.g.  <span data-admin="banner">…</span>  +  a row/column "banner".
+════════════════════════════════════════════════════════════ */
+(function(){
+  const SUPABASE_URL='https://nndjoqpceujheakwygba.supabase.co';
+  const SUPABASE_KEY='sb_publishable_Gwfnm2RsThI647b6MY8Kyw_6ZMLx';   /* ← replace with your FULL publishable key */
+  const TABLE='admin_panel';
+  if(!window.supabase||!window.supabase.createClient){console.warn('[admin] supabase-js CDN not loaded');return;}
+  const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  const esc=function(v){return (window.CSS&&CSS.escape)?CSS.escape(String(v)):String(v).replace(/"/g,'\\"');};
+  /* Apply data to the page. Two table shapes are supported automatically:
+       key/value rows  {key:'hero_title', value:'…'}  → fills [data-admin="hero_title"]
+       one wide row    {hero_title:'…', banner:'…'}    → each column fills [data-admin="<column>"] */
+  function updatePage(data){
+    if(!data)return;
+    var rows=Array.isArray(data)?data:[data];
+    rows.forEach(function(row){
+      if(!row||typeof row!=='object')return;
+      if('key' in row && 'value' in row){
+        document.querySelectorAll('[data-admin="'+esc(row.key)+'"]').forEach(function(el){el.textContent=row.value;});
+      }else{
+        Object.keys(row).forEach(function(c){
+          document.querySelectorAll('[data-admin="'+esc(c)+'"]').forEach(function(el){el.textContent=row[c];});
+        });
+      }
+    });
+  }
+  window.updatePage=updatePage;
+  async function loadAll(){
+    try{
+      var res=await sb.from(TABLE).select('*');
+      if(res.error){console.warn('[admin] read error:',res.error.message);return;}
+      updatePage(res.data);
+    }catch(e){console.warn('[admin]',e);}
+  }
+  /* Realtime: any INSERT / UPDATE / DELETE on admin_panel re-applies instantly */
+  sb.channel('admin_panel_rt')
+    .on('postgres_changes',{event:'*',schema:'public',table:TABLE},function(p){
+      if(p.new&&Object.keys(p.new).length)updatePage(p.new);
+      loadAll();
+    })
+    .subscribe(function(st){ if(st==='SUBSCRIBED')console.log('[admin] realtime connected'); });
+  loadAll();   /* initial paint */
+})();
 </script>
 </body>
 </html>
