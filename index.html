@@ -670,6 +670,8 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .m-phase.seekable:hover .pn{filter:brightness(1.25);box-shadow:0 0 18px var(--pc,var(--blue)),0 0 0 8px rgba(255,255,255,.05);}
 .m-profile-live{display:flex;align-items:center;gap:10px;padding:14px 16px;border:1px dashed var(--line-2);border-radius:10px;background:rgba(190,195,205,0.03);font-family:var(--f-mono);font-size:0.6em;letter-spacing:0.04em;line-height:1.4;color:var(--tx-3);}
 .m-profile-live .mpl-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);box-shadow:0 0 8px var(--blue);flex-shrink:0;animation:mplPulse 1.6s ease-in-out infinite;}
+.m-profile-live-badge{display:inline-flex;align-items:center;gap:5px;margin-left:10px;font-family:var(--f-mono);font-size:0.72em;letter-spacing:0.14em;text-transform:uppercase;color:#ff5d5d;opacity:0.85;vertical-align:middle;}
+.m-profile-live-badge .mpl-dot{background:#ff5d5d!important;box-shadow:0 0 8px #ff5d5d!important;animation:mplPulse 1s ease-in-out infinite;}
 @keyframes mplPulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
 .m-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:9px;overflow:hidden;margin-bottom:20px;}
 .m-cell{background:var(--bg-2);padding:13px 16px;}
@@ -1545,7 +1547,6 @@ const launches=[
   {rocket:'SunPower One SN3 (V2.2)',date:'2026-03-03 17:00',status:'Cancelled',nameId:'sunpower',vehicle:'SunPower One SN3 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30,landing:null,attempt:''},
   {rocket:'SunOrbit One SN2 (V2.2)',date:'2026-03-02 23:00',status:'Cancelled',nameId:'sunorbit',vehicle:'SunOrbit One SN2 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30,landing:null,attempt:''},
   {rocket:'SunPower One SN1 (V2.2)',date:'2026-03-01 14:00',status:'Cancelled',nameId:'sunpower',vehicle:'SunPower One SN1 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30,landing:null,attempt:''},
-  {rocket:'SunOrbit One SN53 (V2.5)',date:'2026-06-03 13:35',status:'Planned',nameId:'sunorbit',vehicle:'SunOrbit One SN51 (V2.4)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=LJwvYCgvUL0',showWatchMin:30,landing:true,attempt:'',phases:{sep:"H",land:"3:25"}},
   {rocket:'SunOrbit One SN51 (V2.4)',date:'2026-05-01 05:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN51 (V2.4)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=LJwvYCgvUL0',showWatchMin:30,landing:true,attempt:'',phases:{sep:"H",land:"3:25"}},
   {rocket:'SunOrbit One SN49 (V2.2)',date:'2026-04-16 20:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN49 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=eeCeayunxTQ',showWatchMin:30,landing:true,attempt:'',phases:{sep:"H",land:"1:10"}},
   {rocket:'SunOrbit One SN48 (V2.2)',date:'2026-04-13 15:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN48 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=ziUfpxiQDr8',showWatchMin:30,landing:true,attempt:'',phases:{sep:"H",land:"0:50"}},
@@ -2205,45 +2206,68 @@ function seekPlayerTo(secs){
   const fr=document.querySelector('#m-stage .m-frame iframe');if(!fr)return;
   try{fr.contentWindow.postMessage(JSON.stringify({event:'command',func:'seekTo',args:[secs,true]}),'*');}catch(e){}
 }
+window.__adminPhases=null; /* set by Supabase updatePage when 'mission_phases' row changes */
 function missionProfileInner(l){
   const now=Date.now(),clrDone='#37e0a0',clrFail='#ff5d5d';
-  if(isMissionLive(l)){
+  const adm=window.__adminPhases;
+  /* Live message only when no admin is controlling the phases */
+  if(isMissionLive(l)&&!adm){
     return `<div class="m-profile-lbl">${t('profileLabel')}</div><div class="m-profile-live"><span class="mpl-dot"></span><span>${t('phasesLive')}</span></div>`;
   }
-  /* filter hidden phases; redistribute positions across visible ones */
-  const phases=MISSION_PHASES.filter(p=>!phaseIsHidden(l,p));
+  /* filter hidden phases — when admin controls: ONLY admin :H hides; data l.phases ignored */
+  const phases=MISSION_PHASES.filter(p=>{
+    if(adm)return!(adm[p]&&adm[p].code==='H');  /* admin takes full control */
+    return !phaseIsHidden(l,p);                   /* normal data-driven hide */
+  });
   const n=phases.length;if(!n)return `<div class="m-profile-lbl">${t('profileLabel')}</div>`;
-  /* find first failed phase (mission ended there) */
-  const failIdx=phases.findIndex(p=>phaseIsFailed(l,p));
+  /* find first failed phase (admin code 'F' or data-driven) */
+  const failIdx=phases.findIndex(p=>adm?(adm[p]&&adm[p].code==='F'):phaseIsFailed(l,p));
   const states=phases.map((p,i)=>{
-    if(failIdx>=0&&i>failIdx)return '';        /* not reached */
+    if(failIdx>=0&&i>failIdx)return '';
     if(failIdx>=0&&i===failIdx)return 'failed';
+    if(adm){const ap=adm[p];return ap&&ap.code!=='H'?'done':'';}
     return phaseState(l,p,now)?'done':'';
   });
   let lastDonePure=-1;for(let i=0;i<states.length;i++){if(states[i]==='done')lastDonePure=i;else break;}
   const fillPct=failIdx>=0?(n>1?failIdx/(n-1)*100:100):(lastDonePure<=0?0:lastDonePure/(n-1)*100);
   const fillClr=failIdx>=0?clrFail:clrDone;
+  /* phase label: admin overrides for 'land' code S/F */
+  function admLabel(p){
+    if(p==='land'&&adm&&adm.land){
+      if(adm.land.code==='S')return 'Landed';
+      if(adm.land.code==='F')return 'Lost';
+      return 'Ended';
+    }
+    return phaseLabel(l,p);
+  }
+  /* timing: admin @M:SS takes priority, then fallback to l.phases timing */
+  function admTimingLabel(p){
+    if(adm&&adm[p]&&adm[p].timing)return 'T+'+adm[p].timing;
+    return phaseTimeLabel(l,p);
+  }
   const nodes=phases.map((p,i)=>{
     const pct=n>1?i/(n-1)*100:50;
     const st=states[i];
-    const tl=phaseTimeLabel(l,p);
-    /* seek: only DONE nodes with a valid timestamp; failed/unreached → not clickable */
+    const tl=admTimingLabel(p);
     const s=p!=='liftoff'?phaseSecs(phaseCfg(l,p)):null;
-    const seekable=s!=null&&st==='done';
+    const seekable=!adm&&s!=null&&st==='done'; /* seek disabled when admin is controlling live */
     const pc=st==='failed'?clrFail:clrDone;
-    return `<div class="m-phase${st?' '+st:''}${seekable?' seekable':''}" style="left:${pct}%;--pc:${pc}"${seekable?` onclick="seekPlayerTo(${s})"`:''} ><span class="pn"></span><span class="pl">${phaseLabel(l,p)}</span>${tl?`<span class="pt">${tl}</span>`:''}</div>`;
+    return `<div class="m-phase${st?' '+st:''}${seekable?' seekable':''}" style="left:${pct}%;--pc:${pc}"${seekable?` onclick="seekPlayerTo(${s})"`:''} ><span class="pn"></span><span class="pl">${admLabel(p)}</span>${tl?`<span class="pt">${tl}</span>`:''}</div>`;
   }).join('');
-  return `<div class="m-profile-lbl">${t('profileLabel')}</div><div class="m-track m-track-multi"><div class="m-track-line"></div><div class="m-track-fill" style="width:${fillPct}%;background:${fillClr};box-shadow:0 0 10px ${fillClr}"></div>${nodes}</div>`;
+  /* LIVE badge shown when admin is pushing phases in real-time */
+  const liveTag=adm?`<span class="m-profile-live-badge"><span class="mpl-dot"></span>LIVE</span>`:'';
+  return `<div class="m-profile-lbl">${t('profileLabel')}${liveTag}</div><div class="m-track m-track-multi"><div class="m-track-line"></div><div class="m-track-fill" style="width:${fillPct}%;background:${fillClr};box-shadow:0 0 10px ${fillClr}"></div>${nodes}</div>`;
 }
 function updateModalProfile(){
   const bd=document.getElementById('modal-bd');
   if(!bd||!bd.classList.contains('active'))return;
   const idx=window.__openModalLaunch;if(idx==null)return;const l=launches[idx];if(!l)return;
   const host=document.getElementById('m-profile');if(!host)return;
+  /* admin phases are updated via updatePage (immediate re-render); skip interval updates to avoid transition flicker */
+  if(window.__adminPhases)return;
   const live=isMissionLive(l);
   if((host.getAttribute('data-live')==='1')!==live){host.innerHTML=missionProfileInner(l);host.setAttribute('data-live',live?'1':'0');return;}
   if(live)return;
-  /* if any phase is F → terminal static state, already rendered correctly */
   if(MISSION_PHASES.some(p=>phaseIsFailed(l,p)))return;
   const phases=MISSION_PHASES.filter(p=>!phaseIsHidden(l,p));
   const now=Date.now();
@@ -2786,16 +2810,50 @@ window.addEventListener('load',()=>{
   /* Apply data to the page. Two table shapes are supported automatically:
        key/value rows  {key:'hero_title', value:'…'}  → fills [data-admin="hero_title"]
        one wide row    {hero_title:'…', banner:'…'}    → each column fills [data-admin="<column>"] */
+  /* Parse admin phases string into a phase-map used by missionProfileInner.
+     Format: space/comma-separated tokens, each:  phase[:code][@M:SS]
+       phase   = liftoff | sep | boostback | land  (aliases: lift, boost, landing, etc.)
+       code    = S (Landed/Success) | F (Failed/Lost) | H (hidden) | omit = done
+       @M:SS   = optional timing label, shown as T+M:SS on the node
+     Examples:
+       "liftoff sep boostback land:S"
+       "liftoff sep@3:12 boostback@3:25 land:S@7:35"
+       "liftoff sep boostback:F"          (failed at boostback)
+       ""  or delete value               (clears admin control, restores normal display)
+  */
+  var PHASE_ALIASES={lift:'liftoff',launch:'liftoff',boost:'boostback',landing:'land',landed:'land',separation:'sep'};
+  function parseAdminPhases(str){
+    if(!str||!str.trim())return null;
+    var result={};
+    str.trim().split(/[\s,]+/).filter(Boolean).forEach(function(token){
+      var parts=token.split('@'); var phCode=parts[0]; var timing=parts[1]||null;
+      var cp=phCode.split(':'); var rawKey=cp[0].toLowerCase();
+      var code=(cp[1]||'done').toUpperCase();
+      var key=PHASE_ALIASES[rawKey]||rawKey;
+      if(key)result[key]={code:code,timing:timing};
+    });
+    return Object.keys(result).length?result:null;
+  }
+  function applyAdminPhasesToProfile(adm){
+    window.__adminPhases=adm;
+    var bd=document.getElementById('modal-bd');
+    if(bd&&bd.classList.contains('active')){
+      var idx=window.__openModalLaunch;
+      if(idx!=null){var l=launches[idx];if(l){var host=document.getElementById('m-profile');if(host){host.innerHTML=missionProfileInner(l);host.setAttribute('data-live',isMissionLive(l)?'1':'0');}}}
+    }
+  }
   function updatePage(data){
     if(!data)return;
     var rows=Array.isArray(data)?data:[data];
     rows.forEach(function(row){
       if(!row||typeof row!=='object')return;
       if('key' in row && 'value' in row){
-        document.querySelectorAll('[data-admin="'+esc(row.key)+'"]').forEach(function(el){el.textContent=row.value;});
+        /* special key: mission_phases — drives the m-track in real time */
+        if(row.key==='mission_phases'){applyAdminPhasesToProfile(parseAdminPhases(row.value));return;}
+        document.querySelectorAll('[data-admin="'+esc(row.key)+'"]').forEach(function(el){el.textContent=row.value||'';});
       }else{
         Object.keys(row).forEach(function(c){
-          document.querySelectorAll('[data-admin="'+esc(c)+'"]').forEach(function(el){el.textContent=row[c];});
+          document.querySelectorAll('[data-admin="'+esc(c)+'"]').forEach(function(el){el.textContent=row[c]||'';});
         });
       }
     });
