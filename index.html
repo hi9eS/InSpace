@@ -660,6 +660,10 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .m-track-multi .pl{font-size:0.45em;}
 .m-phase .pt{font-family:var(--f-mono);font-size:0.45em;letter-spacing:0.05em;color:var(--tx-4);white-space:nowrap;margin-top:-3px;}
 .m-phase.done .pt{color:var(--accent,#37e0a0);}
+.m-phase.failed .pn{background:#ff5d5d;border-color:#ff5d5d;box-shadow:0 0 12px #ff5d5d,0 0 0 5px rgba(255,93,93,.07);}
+.m-phase.failed .pl,.m-phase.failed .pt{color:#ff5d5d;}
+.m-phase.seekable{cursor:pointer;}
+.m-phase.seekable:hover .pn{filter:brightness(1.25);box-shadow:0 0 18px var(--pc,var(--blue)),0 0 0 8px rgba(255,255,255,.05);}
 .m-profile-live{display:flex;align-items:center;gap:10px;padding:14px 16px;border:1px dashed var(--line-2);border-radius:10px;background:rgba(190,195,205,0.03);font-family:var(--f-mono);font-size:0.6em;letter-spacing:0.04em;line-height:1.4;color:var(--tx-3);}
 .m-profile-live .mpl-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);box-shadow:0 0 8px var(--blue);flex-shrink:0;animation:mplPulse 1.6s ease-in-out infinite;}
 @keyframes mplPulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
@@ -1534,16 +1538,16 @@ const launches=[
   {rocket:'SunPower One SN3 (V2.2)',date:'2026-03-03 17:00',status:'Cancelled',nameId:'sunpower',vehicle:'SunPower One SN3 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30,landing:null,attempt:''},
   {rocket:'SunOrbit One SN2 (V2.2)',date:'2026-03-02 23:00',status:'Cancelled',nameId:'sunorbit',vehicle:'SunOrbit One SN2 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30,landing:null,attempt:''},
   {rocket:'SunPower One SN1 (V2.2)',date:'2026-03-01 14:00',status:'Cancelled',nameId:'sunpower',vehicle:'SunPower One SN1 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30,landing:null,attempt:''},
-  {rocket:'SunOrbit One SN51 (V2.4)',date:'2026-05-01 05:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN51 (V2.4)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=LJwvYCgvUL0',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
-  {rocket:'SunOrbit One SN49 (V2.2)',date:'2026-04-16 20:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN49 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=eeCeayunxTQ',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
-  {rocket:'SunOrbit One SN48 (V2.2)',date:'2026-04-13 15:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN48 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=ziUfpxiQDr8',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
-  {rocket:'SunOrbit One SN10 (V2.2)',date:'2026-04-02 00:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN10 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=owEnhXMpteg',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
-  {rocket:'SunOrbit One SN9 (V2.2)',date:'2026-03-29 07:30',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN9 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=aUHgTNAcYUk',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
-  {rocket:'SunOrbit One SN8 (V2.2)',date:'2026-03-29 03:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN8 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=qKE7VkezfEQ',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
-  {rocket:'SunOrbit One SN7 (V2.2)',date:'2026-03-21 16:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN7 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=pKEioBiCdww',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
-  {rocket:'SunOrbit One SN7 (V2.2)',date:'2026-03-19 14:30',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN7 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=Mi7JRTVNzAs',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
-  {rocket:'SunOrbit One SN6 (V2.2)',date:'2026-03-11 13:45',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN6 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=LeixKcmVWws',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
-  {rocket:'SunOrbit One SN4 (V2.2)',date:'2026-03-06 11:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN4 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=nTobGdyWFNU',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.9,sep:3,landing:10}}
+  {rocket:'SunOrbit One SN51 (V2.4)',date:'2026-05-01 05:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN51 (V2.4)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=LJwvYCgvUL0',showWatchMin:30,landing:true,attempt:'',phases:{sep:"H",land:"3:25"}},
+  {rocket:'SunOrbit One SN49 (V2.2)',date:'2026-04-16 20:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN49 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=eeCeayunxTQ',showWatchMin:30,landing:true,attempt:'',phases:{sep:"H",land:"1:10"}},
+  {rocket:'SunOrbit One SN48 (V2.2)',date:'2026-04-13 15:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN48 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=ziUfpxiQDr8',showWatchMin:30,landing:true,attempt:'',phases:{sep:"H",land:"0:50"}},
+  {rocket:'SunOrbit One SN10 (V2.2)',date:'2026-04-02 00:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN10 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=owEnhXMpteg',showWatchMin:30,landing:true,attempt:'',phases:{sep:"H",land:"1:49"}},
+  {rocket:'SunOrbit One SN9 (V2.2)',date:'2026-03-29 07:30',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN9 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=aUHgTNAcYUk',showWatchMin:30,landing:true,attempt:'',phases:{sep:"H",land:"1:27"}},
+  {rocket:'SunOrbit One SN8 (V2.2)',date:'2026-03-29 03:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN8 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=qKE7VkezfEQ',showWatchMin:30,landing:true,attempt:'',phases:{sep:"H",land:"1:22"}},
+  {rocket:'SunOrbit One SN7 (V2.2)',date:'2026-03-21 16:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN7 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=pKEioBiCdww',showWatchMin:30,landing:true,attempt:'',phases:{sep:"H",land:"4:10"}},
+  {rocket:'SunOrbit One SN7 (V2.2)',date:'2026-03-19 14:30',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN7 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=Mi7JRTVNzAs',showWatchMin:30,landing:true,attempt:'',phases:{sep:"H",land:"1:35"}},
+  {rocket:'SunOrbit One SN6 (V2.2)',date:'2026-03-11 13:45',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN6 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=LeixKcmVWws',showWatchMin:30,landing:true,attempt:'',phases:{sep:"H",land:"1:05"}},
+  {rocket:'SunOrbit One SN4 (V2.2)',date:'2026-03-06 11:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN4 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=nTobGdyWFNU',showWatchMin:30,landing:true,attempt:'',phases:{sep:"0:20",land:"1:35"}}
 ]
 launches.forEach(l=>{
   const[d,tm]=l.date.split(' ');const[year,month,day]=d.split('-').map(Number);const[hour,minute]=tm.split(':').map(Number);
@@ -1800,7 +1804,7 @@ function ytEmbed(url){
       else{const m=u.pathname.match(/^\/(embed|live|shorts|v)\/([^/?#]+)/);if(m)id=m[2];}
     }
     if(id&&/^[A-Za-z0-9_-]{6,}$/.test(id)){
-      let e='https://www.youtube.com/embed/'+id+'?rel=0&modestbranding=1';
+      let e='https://www.youtube.com/embed/'+id+'?rel=0&modestbranding=1&enablejsapi=1';
       try{const o=location.origin;if(o&&/^https?:/i.test(o))e+='&origin='+encodeURIComponent(o);}catch(_){}
       return e;
     }
@@ -2054,13 +2058,13 @@ function onSearch(){schedQuery=(document.getElementById('sch-search').value||'')
 
 /* ─────────── LAUNCH MODAL ─────────── */
 /* 7-stage mission profile. Liftoff is always at T-0; set the rest per launch in launches[].phases
-   using "M:SS" after liftoff, e.g.  phases:{maxq:"0:55",cutoff:"2:38",sep:"2:44",boostback:"3:25",entry:"6:10",land:"7:35"}
+   using "M:SS" after liftoff, e.g.  phases:{sep:"2:44",boostback:"3:25",land:"7:35"}
    A plain number = minutes (back-compat) · true = force done · omit a key = auto.
    The last node reads "Landed" on a successful landing, "Lost" on a failed one, otherwise "Ended".
    DURING a LIVE mission exact stage times are unknown, so the timeline is hidden and a
    "available after the broadcast" note is shown instead (set via status:'Planned'). */
-const MISSION_PHASES=['liftoff','maxq','cutoff','sep','boostback','entry','land'];
-const PHASE_NAME={liftoff:'Liftoff',maxq:'Max-Q',cutoff:'Cutoff',sep:'Sep',boostback:'Boostback',entry:'Entry',land:'Landed'};
+const MISSION_PHASES=['liftoff','sep','boostback','land'];
+const PHASE_NAME={liftoff:'Liftoff',sep:'Sep',boostback:'Boostback',land:'Landed'};
 const PHASE_ALIAS={cutoff:'meco',land:'landing',liftoff:'t0'};   /* accept old phase keys too */
 function phaseCfg(l,key){if(!l.phases)return undefined;if(l.phases[key]!==undefined)return l.phases[key];const a=PHASE_ALIAS[key];return a&&l.phases[a]!==undefined?l.phases[a]:undefined;}
 function phaseSecs(cfg){
@@ -2080,16 +2084,41 @@ function phaseState(l,key,now){
 function phaseLabel(l,key){if(key==='land')return l.landing===true?'Landed':(l.landing===false?'Lost':'Ended');return PHASE_NAME[key];}
 function phaseTimeLabel(l,key){if(key==='liftoff')return 'T-0';const s=phaseSecs(phaseCfg(l,key));if(s==null)return '';return 'T+'+Math.floor(s/60)+':'+String(Math.round(s%60)).padStart(2,'0');}
 function isMissionLive(l){const now=Date.now();const end=l.endObj?l.endObj.getTime():l.dateObj.getTime()+36e5;return l.status==='Planned'&&now>=l.dateObj.getTime()&&now<end;}
+function phaseIsHidden(l,k){return phaseCfg(l,k)==='H';}
+function phaseIsFailed(l,k){return phaseCfg(l,k)==='F';}
+function seekPlayerTo(secs){
+  const fr=document.querySelector('#m-stage .m-frame iframe');if(!fr)return;
+  try{fr.contentWindow.postMessage(JSON.stringify({event:'command',func:'seekTo',args:[secs,true]}),'*');}catch(e){}
+}
 function missionProfileInner(l){
-  const phases=MISSION_PHASES,now=Date.now(),done='#37e0a0';
+  const now=Date.now(),clrDone='#37e0a0',clrFail='#ff5d5d';
   if(isMissionLive(l)){
     return `<div class="m-profile-lbl">${t('profileLabel')}</div><div class="m-profile-live"><span class="mpl-dot"></span><span>${t('phasesLive')}</span></div>`;
   }
-  const states=phases.map(p=>phaseState(l,p,now));
-  let lastDone=-1;for(let i=0;i<states.length;i++){if(states[i])lastDone=i;else break;}
-  const fillPct=lastDone<=0?0:(lastDone/(phases.length-1))*100;
-  const nodes=phases.map((p,i)=>{const pct=(i/(phases.length-1))*100;const tl=phaseTimeLabel(l,p);return `<div class="m-phase${states[i]?' done':''}" style="left:${pct}%;--pc:${done}"><span class="pn"></span><span class="pl">${phaseLabel(l,p)}</span>${tl?`<span class="pt">${tl}</span>`:''}</div>`;}).join('');
-  return `<div class="m-profile-lbl">${t('profileLabel')}</div><div class="m-track m-track-multi"><div class="m-track-line"></div><div class="m-track-fill" style="width:${fillPct}%;background:${done};box-shadow:0 0 10px ${done}"></div>${nodes}</div>`;
+  /* filter hidden phases; redistribute positions across visible ones */
+  const phases=MISSION_PHASES.filter(p=>!phaseIsHidden(l,p));
+  const n=phases.length;if(!n)return `<div class="m-profile-lbl">${t('profileLabel')}</div>`;
+  /* find first failed phase (mission ended there) */
+  const failIdx=phases.findIndex(p=>phaseIsFailed(l,p));
+  const states=phases.map((p,i)=>{
+    if(failIdx>=0&&i>failIdx)return '';        /* not reached */
+    if(failIdx>=0&&i===failIdx)return 'failed';
+    return phaseState(l,p,now)?'done':'';
+  });
+  let lastDonePure=-1;for(let i=0;i<states.length;i++){if(states[i]==='done')lastDonePure=i;else break;}
+  const fillPct=failIdx>=0?(n>1?failIdx/(n-1)*100:100):(lastDonePure<=0?0:lastDonePure/(n-1)*100);
+  const fillClr=failIdx>=0?clrFail:clrDone;
+  const nodes=phases.map((p,i)=>{
+    const pct=n>1?i/(n-1)*100:50;
+    const st=states[i];
+    const tl=phaseTimeLabel(l,p);
+    /* seek: only DONE nodes with a valid timestamp; failed/unreached → not clickable */
+    const s=p!=='liftoff'?phaseSecs(phaseCfg(l,p)):null;
+    const seekable=s!=null&&st==='done';
+    const pc=st==='failed'?clrFail:clrDone;
+    return `<div class="m-phase${st?' '+st:''}${seekable?' seekable':''}" style="left:${pct}%;--pc:${pc}"${seekable?` onclick="seekPlayerTo(${s})"`:''} ><span class="pn"></span><span class="pl">${phaseLabel(l,p)}</span>${tl?`<span class="pt">${tl}</span>`:''}</div>`;
+  }).join('');
+  return `<div class="m-profile-lbl">${t('profileLabel')}</div><div class="m-track m-track-multi"><div class="m-track-line"></div><div class="m-track-fill" style="width:${fillPct}%;background:${fillClr};box-shadow:0 0 10px ${fillClr}"></div>${nodes}</div>`;
 }
 function updateModalProfile(){
   const bd=document.getElementById('modal-bd');
@@ -2099,11 +2128,14 @@ function updateModalProfile(){
   const live=isMissionLive(l);
   if((host.getAttribute('data-live')==='1')!==live){host.innerHTML=missionProfileInner(l);host.setAttribute('data-live',live?'1':'0');return;}
   if(live)return;
-  const phases=MISSION_PHASES,now=Date.now();
+  /* if any phase is F → terminal static state, already rendered correctly */
+  if(MISSION_PHASES.some(p=>phaseIsFailed(l,p)))return;
+  const phases=MISSION_PHASES.filter(p=>!phaseIsHidden(l,p));
+  const now=Date.now();
   const states=phases.map(p=>phaseState(l,p,now));
   let lastDone=-1;for(let i=0;i<states.length;i++){if(states[i])lastDone=i;else break;}
   const track=host.querySelector('.m-track');if(!track)return;
-  const fill=track.querySelector('.m-track-fill');if(fill)fill.style.width=(lastDone<=0?0:(lastDone/(phases.length-1))*100)+'%';
+  const fill=track.querySelector('.m-track-fill');if(fill)fill.style.width=(lastDone<=0?0:lastDone/(phases.length-1)*100)+'%';
   track.querySelectorAll('.m-phase').forEach((el,i)=>el.classList.toggle('done',!!states[i]));
 }
 setInterval(updateModalProfile,1000);
