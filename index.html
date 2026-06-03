@@ -2766,7 +2766,7 @@ window.addEventListener('load',()=>{
 </script>
 
 <!-- ═══════ REALTIME ADMIN PANEL · Supabase (live content control) ═══════ -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
 <script>
 /* ════════════════════════════════════════════════════════════
    Realtime admin panel via Supabase.
@@ -2776,8 +2776,8 @@ window.addEventListener('load',()=>{
    e.g.  <span data-admin="banner">…</span>  +  a row/column "banner".
 ════════════════════════════════════════════════════════════ */
 (function(){
-  const SUPABASE_URL='https://nndjoqpceujheakwygba.supabase.co/rest/v1/';
-  const SUPABASE_KEY='sb_publishable_Gwfnm2RsThI647b6MY8Kyw_6ZMlXhlI';   /* ← replace with your FULL publishable key */
+  const SUPABASE_URL='https://nndjoqpceujheakwygba.supabase.co';
+  const SUPABASE_KEY='sb_publishable_Gwfnm2RsThI647b6MY8Kyw_6ZMLx';   /* ← replace with your FULL publishable key */
   const TABLE='admin_panel';
   if(!window.supabase||!window.supabase.createClient){console.warn('[admin] supabase-js CDN not loaded');return;}
   const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
