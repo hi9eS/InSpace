@@ -1483,7 +1483,7 @@ function toggleMute(){
 /* ── footer "Latest Website Update" — two modes ──
    LAST_UPDATE_MODE='manual' : edit LAST_UPDATE_MANUAL by hand on each update
    LAST_UPDATE_MODE='auto'   : always shows the current date (e.g. "Jun 2 '26") */
-const LAST_UPDATE_MODE='manual';
+const LAST_UPDATE_MODE='auto';
 const LAST_UPDATE_MANUAL="Jun 2 '26";
 function lastUpdateStr(){
   if(LAST_UPDATE_MODE==='auto'){const n=new Date();return n.toLocaleDateString('en-US',{month:'short',day:'numeric'})+" '"+String(n.getFullYear()).slice(2);}
