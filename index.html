@@ -655,6 +655,14 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .m-phase.done .pn::after{content:'';position:absolute;inset:4px;border-radius:50%;background:rgba(255,255,255,.92);}
 .m-phase .pl{font-family:var(--f-mono);font-size:0.5em;letter-spacing:0.09em;text-transform:uppercase;color:var(--tx-4);white-space:nowrap;font-weight:500;}
 .m-phase.done .pl{color:var(--tx);}
+.m-track-multi{height:60px;}
+.m-track-multi .m-phase{gap:7px;}
+.m-track-multi .pl{font-size:0.45em;}
+.m-phase .pt{font-family:var(--f-mono);font-size:0.45em;letter-spacing:0.05em;color:var(--tx-4);white-space:nowrap;margin-top:-3px;}
+.m-phase.done .pt{color:var(--accent,#37e0a0);}
+.m-profile-live{display:flex;align-items:center;gap:10px;padding:14px 16px;border:1px dashed var(--line-2);border-radius:10px;background:rgba(190,195,205,0.03);font-family:var(--f-mono);font-size:0.6em;letter-spacing:0.04em;line-height:1.4;color:var(--tx-3);}
+.m-profile-live .mpl-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);box-shadow:0 0 8px var(--blue);flex-shrink:0;animation:mplPulse 1.6s ease-in-out infinite;}
+@keyframes mplPulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
 .m-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:9px;overflow:hidden;margin-bottom:20px;}
 .m-cell{background:var(--bg-2);padding:13px 16px;}
 .m-cell-l{font-family:var(--f-mono);font-size:0.54em;letter-spacing:0.12em;text-transform:uppercase;color:var(--tx-3);margin-bottom:5px;}
@@ -669,12 +677,15 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .m-player{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;align-items:center;gap:14px;}
 .m-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:11px;overflow:hidden;border:1px solid var(--line-2);background:#000;box-shadow:0 14px 40px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.02);}
 .m-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;}
-.m-chat{flex:0 0 322px;display:flex;flex-direction:column;min-width:0;position:relative;}
-.m-chat-frame{position:relative;flex:1 1 auto;min-height:300px;border-radius:11px;overflow:hidden;border:1px solid var(--line-2);background:#0f0f0f;box-shadow:0 14px 40px rgba(0,0,0,.5);}
+.m-chat{display:flex;flex-direction:column;min-width:0;position:relative;}
+.m-live-row{display:flex;gap:14px;align-items:stretch;width:100%;}
+.m-live-row .m-frame{flex:1 1 auto;width:auto;align-self:flex-start;}
+.m-live-row .m-chat{flex:0 0 258px;align-self:stretch;}
+.m-chat-frame{position:relative;flex:1 1 auto;min-height:0;border-radius:11px;overflow:hidden;border:1px solid var(--line-2);background:#0f0f0f;box-shadow:0 14px 40px rgba(0,0,0,.5);}
 .m-chat-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;}
 .m-chat-x{position:absolute;top:6px;right:8px;z-index:5;width:26px;height:26px;border-radius:6px;border:1px solid var(--line-2);background:rgba(15,16,17,0.82);color:var(--tx-2);font-size:17px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:color .2s,border-color .2s,background .2s;}
 .m-chat-x:hover{color:var(--tx);border-color:var(--line-3);background:rgba(15,16,17,0.95);}
-#modal.has-stage.has-chat{width:min(1200px,100%);}
+#modal.has-stage.has-chat{width:min(1260px,100%);}
 .m-stat{background:var(--bg-2);border:1px solid var(--line);border-radius:8px;padding:9px 12px;}
 .m-stat-l{font-family:var(--f-mono);font-size:0.5em;letter-spacing:0.13em;text-transform:uppercase;color:var(--tx-3);margin-bottom:4px;}
 .m-stat-v{font-family:var(--f-mono);font-size:0.8em;color:var(--tx);font-weight:500;line-height:1.25;}
@@ -686,7 +697,9 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
   .m-stage{flex-direction:column;gap:12px;}
   .m-side{flex:none;flex-direction:row;flex-wrap:wrap;justify-content:stretch;}
   .m-side .m-stat{flex:1 1 calc(50% - 5px);}
-  .m-chat{flex:none;}
+  .m-live-row{flex-direction:column;}
+  .m-live-row .m-frame{width:100%;align-self:stretch;}
+  .m-live-row .m-chat{flex:none;align-self:stretch;}
   .m-chat-frame{min-height:360px;}
 }
 .m-close{position:absolute;top:14px;right:15px;width:30px;height:30px;border-radius:6px;background:transparent;border:1px solid var(--line);
@@ -1511,16 +1524,17 @@ function buildHeaderRight(){
    • landing : true = successful touchdown (suicide-burn / vertical landing) · false = landing failed · null = no landing attempt
        (drives the "Successful Landings" stat and the Landings pie in Flight Analytics — set it per launch as you like)
    • showWatchMin : reveal the live link on the schedule row this many minutes before T-0
-   • phases : MISSION PROFILE for points 2-4 (T-0 is always launch time). For each of meco / sep / landing:
-        number = minutes after T-0 (e.g. 2.5) → node auto-lights at that moment during a live flight ·
-        true = force the node done · omit the key (or whole phases) = auto (a finished Success shows all done)
+   • phases : 7-STAGE MISSION PROFILE (liftoff is always launch time). Keys: maxq / cutoff / sep / boostback / entry / land
+        "M:SS" = time after liftoff (e.g. "2:38") → node auto-lights at that moment · number = minutes (old format) ·
+        true = force the node done · omit a key (or whole phases) = auto (a finished Success shows all done).
+        During a LIVE mission (status:'Planned', in progress) the bar is hidden and "available after broadcast" is shown.
    ════════════════════════════════════════════════════════════ */
 const launches=[
   {rocket:'SunPower One SN5 (V2.2)',date:'2026-03-07 14:00',status:'Cancelled',nameId:'sunpower',vehicle:'SunPower One SN5 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30,landing:null,attempt:''},
   {rocket:'SunPower One SN3 (V2.2)',date:'2026-03-03 17:00',status:'Cancelled',nameId:'sunpower',vehicle:'SunPower One SN3 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30,landing:null,attempt:''},
   {rocket:'SunOrbit One SN2 (V2.2)',date:'2026-03-02 23:00',status:'Cancelled',nameId:'sunorbit',vehicle:'SunOrbit One SN2 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30,landing:null,attempt:''},
   {rocket:'SunPower One SN1 (V2.2)',date:'2026-03-01 14:00',status:'Cancelled',nameId:'sunpower',vehicle:'SunPower One SN1 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'',showWatchMin:30,landing:null,attempt:''},
-  {rocket:'SunOrbit One SN51 (V2.4)',date:'2026-05-01 05:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN51 (V2.4)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=x55gKneL_60',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
+  {rocket:'SunOrbit One SN51 (V2.4)',date:'2026-05-01 05:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN51 (V2.4)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=LJwvYCgvUL0',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
   {rocket:'SunOrbit One SN49 (V2.2)',date:'2026-04-16 20:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN49 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=eeCeayunxTQ',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
   {rocket:'SunOrbit One SN48 (V2.2)',date:'2026-04-13 15:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN48 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=ziUfpxiQDr8',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
   {rocket:'SunOrbit One SN10 (V2.2)',date:'2026-04-02 00:00',status:'Success',nameId:'sunorbit',vehicle:'SunOrbit One SN10 (V2.2)',site:'',target:'',type:'',desc:'',durationMin:3,watchUrl:'https://www.youtube.com/watch?v=owEnhXMpteg',showWatchMin:30,landing:true,attempt:'',phases:{meco:2.5,sep:3.2,landing:7}},
@@ -1856,6 +1870,8 @@ const I18N_EXT4={
   hu:{specFirstStage:'Első Fokozat',fsRecov:'Visszanyert',fsLost:'Elveszett'}
 };
 Object.keys(I18N_EXT4).forEach(l=>{ if(TRANSLATIONS[l])Object.assign(TRANSLATIONS[l],I18N_EXT4[l]); });
+Object.assign(TRANSLATIONS.en,{phasesLive:'Detailed phase timings will be available after the broadcast'});
+Object.assign(TRANSLATIONS.ru,{phasesLive:'Детальные тайминги этапов будут доступны после трансляции'});
 Object.assign(TRANSLATIONS.de,{lblDate:'Datum',lblVehicle:'Fahrzeug',lblStatus:'Status',lblSite:'Startplatz',newsPendingTitle:'Nachrichten werden wiederhergestellt'});
 Object.assign(TRANSLATIONS.es,{lblDate:'Fecha',lblVehicle:'Vehículo',lblStatus:'Estado',lblSite:'Sitio',newsPendingTitle:'Noticias por restaurar'});
 Object.assign(TRANSLATIONS.fr,{lblDate:'Date',lblVehicle:'Véhicule',lblStatus:'Statut',lblSite:'Site',newsPendingTitle:'Actualités à restaurer'});
@@ -2037,40 +2053,56 @@ function renderScheduleRows(reset){
 function onSearch(){schedQuery=(document.getElementById('sch-search').value||'').trim().toLowerCase();renderScheduleRows(true);}
 
 /* ─────────── LAUNCH MODAL ─────────── */
-/* ── CONFIG · mission-profile phases ──────────────────────────────────────────
-   Per flight you can add a `phases` object to a launch in the launches[] list:
-     phases:{ meco:1.2, sep:3.5, landing:8 }   // minutes after T-0 (decimals OK) → turns green automatically in real time
-     phases:{ meco:true, sep:true, landing:true } // mark done manually right now (no timer)
-     mix freely, e.g. phases:{ meco:1.2, sep:true }
-   T-0 turns green automatically the moment the countdown reaches 0 (launch time).
-   With no `phases` set, a Success mission shows all stages green after it has flown. */
-const MISSION_PHASES=['T-0','MECO','SEP','LANDING'];
-const PHASE_KEY={'T-0':'t0','MECO':'meco','SEP':'sep','LANDING':'landing'};
-function phaseState(l,phaseName,now){
-  const k=PHASE_KEY[phaseName];
-  if(k==='t0')return now>=l.dateObj.getTime();                 /* T-0 done at launch time */
-  const cfg=l.phases?l.phases[k]:undefined;
-  if(cfg===true)return true;                                    /* manual override */
-  if(typeof cfg==='number')return now>=l.dateObj.getTime()+cfg*60000; /* auto: minutes after T-0 */
-  if(l.status==='Success'&&now>=l.endObj.getTime())return true; /* default: completed successful mission */
+/* 7-stage mission profile. Liftoff is always at T-0; set the rest per launch in launches[].phases
+   using "M:SS" after liftoff, e.g.  phases:{maxq:"0:55",cutoff:"2:38",sep:"2:44",boostback:"3:25",entry:"6:10",land:"7:35"}
+   A plain number = minutes (back-compat) · true = force done · omit a key = auto.
+   The last node reads "Landed" on a successful landing, "Lost" on a failed one, otherwise "Ended".
+   DURING a LIVE mission exact stage times are unknown, so the timeline is hidden and a
+   "available after the broadcast" note is shown instead (set via status:'Planned'). */
+const MISSION_PHASES=['liftoff','maxq','cutoff','sep','boostback','entry','land'];
+const PHASE_NAME={liftoff:'Liftoff',maxq:'Max-Q',cutoff:'Cutoff',sep:'Sep',boostback:'Boostback',entry:'Entry',land:'Landed'};
+const PHASE_ALIAS={cutoff:'meco',land:'landing',liftoff:'t0'};   /* accept old phase keys too */
+function phaseCfg(l,key){if(!l.phases)return undefined;if(l.phases[key]!==undefined)return l.phases[key];const a=PHASE_ALIAS[key];return a&&l.phases[a]!==undefined?l.phases[a]:undefined;}
+function phaseSecs(cfg){
+  if(typeof cfg==='number')return cfg*60;                              /* minutes (back-compat) */
+  if(typeof cfg==='string'){const m=cfg.trim().match(/^(\d+):([0-5]?\d)$/);if(m)return (+m[1])*60+(+m[2]);const n=parseFloat(cfg);if(!isNaN(n))return n*60;}
+  return null;
+}
+function phaseState(l,key,now){
+  if(key==='liftoff')return now>=l.dateObj.getTime();                  /* lights at launch time */
+  const cfg=phaseCfg(l,key);
+  if(cfg===true)return true;
+  const s=phaseSecs(cfg);
+  if(s!=null)return now>=l.dateObj.getTime()+s*1000;                   /* auto at T+ that time */
+  if(l.status==='Success'&&l.endObj&&now>=l.endObj.getTime())return true; /* finished success → all done */
   return false;
 }
+function phaseLabel(l,key){if(key==='land')return l.landing===true?'Landed':(l.landing===false?'Lost':'Ended');return PHASE_NAME[key];}
+function phaseTimeLabel(l,key){if(key==='liftoff')return 'T-0';const s=phaseSecs(phaseCfg(l,key));if(s==null)return '';return 'T+'+Math.floor(s/60)+':'+String(Math.round(s%60)).padStart(2,'0');}
+function isMissionLive(l){const now=Date.now();const end=l.endObj?l.endObj.getTime():l.dateObj.getTime()+36e5;return l.status==='Planned'&&now>=l.dateObj.getTime()&&now<end;}
 function missionProfileInner(l){
   const phases=MISSION_PHASES,now=Date.now(),done='#37e0a0';
+  if(isMissionLive(l)){
+    return `<div class="m-profile-lbl">${t('profileLabel')}</div><div class="m-profile-live"><span class="mpl-dot"></span><span>${t('phasesLive')}</span></div>`;
+  }
   const states=phases.map(p=>phaseState(l,p,now));
   let lastDone=-1;for(let i=0;i<states.length;i++){if(states[i])lastDone=i;else break;}
   const fillPct=lastDone<=0?0:(lastDone/(phases.length-1))*100;
-  const nodes=phases.map((p,i)=>{const pct=(i/(phases.length-1))*100;return `<div class="m-phase${states[i]?' done':''}" style="left:${pct}%;--pc:${done}"><span class="pn"></span><span class="pl">${p}</span></div>`;}).join('');
-  return `<div class="m-profile-lbl">${t('profileLabel')}</div><div class="m-track"><div class="m-track-line"></div><div class="m-track-fill" style="width:${fillPct}%;background:linear-gradient(90deg,${done},${done});box-shadow:0 0 10px ${done}"></div>${nodes}</div>`;
+  const nodes=phases.map((p,i)=>{const pct=(i/(phases.length-1))*100;const tl=phaseTimeLabel(l,p);return `<div class="m-phase${states[i]?' done':''}" style="left:${pct}%;--pc:${done}"><span class="pn"></span><span class="pl">${phaseLabel(l,p)}</span>${tl?`<span class="pt">${tl}</span>`:''}</div>`;}).join('');
+  return `<div class="m-profile-lbl">${t('profileLabel')}</div><div class="m-track m-track-multi"><div class="m-track-line"></div><div class="m-track-fill" style="width:${fillPct}%;background:${done};box-shadow:0 0 10px ${done}"></div>${nodes}</div>`;
 }
 function updateModalProfile(){
   const bd=document.getElementById('modal-bd');
   if(!bd||!bd.classList.contains('active'))return;
   const idx=window.__openModalLaunch;if(idx==null)return;const l=launches[idx];if(!l)return;
+  const host=document.getElementById('m-profile');if(!host)return;
+  const live=isMissionLive(l);
+  if((host.getAttribute('data-live')==='1')!==live){host.innerHTML=missionProfileInner(l);host.setAttribute('data-live',live?'1':'0');return;}
+  if(live)return;
   const phases=MISSION_PHASES,now=Date.now();
   const states=phases.map(p=>phaseState(l,p,now));
   let lastDone=-1;for(let i=0;i<states.length;i++){if(states[i])lastDone=i;else break;}
-  const track=document.querySelector('#m-profile .m-track');if(!track)return;
+  const track=host.querySelector('.m-track');if(!track)return;
   const fill=track.querySelector('.m-track-fill');if(fill)fill.style.width=(lastDone<=0?0:(lastDone/(phases.length-1))*100)+'%';
   track.querySelectorAll('.m-phase').forEach((el,i)=>el.classList.toggle('done',!!states[i]));
 }
@@ -2085,7 +2117,7 @@ function openLaunchModal(idx){
   document.getElementById('m-name').textContent=l.rocket;
   const typeEl=document.getElementById('m-type');
   if(l.type&&l.type.trim()){typeEl.textContent=l.type;typeEl.style.display='';}else{typeEl.style.display='none';}
-  document.getElementById('m-profile').innerHTML=missionProfileInner(l);
+  {const mp=document.getElementById('m-profile');mp.innerHTML=missionProfileInner(l);mp.setAttribute('data-live',isMissionLive(l)?'1':'0');}
   const dStr=l.dateObj.toLocaleString(undefined,{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
   const at=String(l.attempt||'').trim();
   const cell4=(at===''||at==='0')?{l:t('lblSite'),v:l.site||'—'}
@@ -2113,14 +2145,15 @@ function openLaunchModal(idx){
     rArr.push({l:t('lblAttempt'),v:(+at>=2)?t('attemptN').replace('{n}',at):t('attemptFirst')});
     const rightStats=rArr.slice(0,4).map(c=>`<div class="m-stat"><div class="m-stat-l">${c.l}</div><div class="m-stat-v">${c.v}</div></div>`).join('');
     const vid=ytVideoId(l.watchUrl);const host=(location.hostname||'').trim();
-    const showChat=(l.liveChat!==false)&&!!vid&&!!host;   /* chat shows by default for any stream; set liveChat:false per-launch to hide, or use the × button */
-    const chatPanel=showChat
-      ?`<div class="m-chat" id="m-chat"><button class="m-chat-x" type="button" onclick="closeMomChat()" aria-label="Hide chat" title="Hide chat">×</button><div class="m-chat-frame"><iframe src="https://www.youtube.com/live_chat?v=${vid}&embed_domain=${encodeURIComponent(host)}" title="Live chat" frameborder="0"></iframe></div></div>`
-      :`<div class="m-side">${rightStats}</div>`;
-    stageEl.innerHTML=`<div class="m-side">${leftStats}</div>`+
-      `<div class="m-player"><div class="m-frame"><iframe src="${emb}" title="${(l.rocket||'Launch').replace(/"/g,'&quot;')}" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>`+
-      `<a class="ignition-btn m-watch-btn" href="${l.watchUrl}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M6 5v14l12-7z"/></svg><span data-i="${watchKey}">${t(watchKey)}</span></a></div>`+
-      chatPanel;
+    /* Chat ONLY for live/upcoming streams (status Planned). Recordings have no live chat (replay chat is usually off), so we don't insert it — per expert UX. liveChat:true forces it on, liveChat:false forces it off. */
+    const showChat=(l.liveChat===true||(l.liveChat!==false&&l.status==='Planned'))&&!!vid&&!!host;
+    const frameHTML=`<div class="m-frame"><iframe src="${emb}" title="${(l.rocket||'Launch').replace(/"/g,'&quot;')}" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>`;
+    const chatHTML=`<div class="m-chat" id="m-chat"><button class="m-chat-x" type="button" onclick="closeMomChat()" aria-label="Hide chat" title="Hide chat">×</button><div class="m-chat-frame"><iframe src="https://www.youtube.com/live_chat?v=${vid}&embed_domain=${encodeURIComponent(host)}" title="Live chat" frameborder="0"></iframe></div></div>`;
+    const watchBtn=`<a class="ignition-btn m-watch-btn" href="${l.watchUrl}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M6 5v14l12-7z"/></svg><span data-i="${watchKey}">${t(watchKey)}</span></a>`;
+    const playerCol=showChat
+      ?`<div class="m-player"><div class="m-live-row">${frameHTML}${chatHTML}</div>${watchBtn}</div>`
+      :`<div class="m-player">${frameHTML}${watchBtn}</div>`;
+    stageEl.innerHTML=`<div class="m-side">${leftStats}</div>`+playerCol+`<div class="m-side">${rightStats}</div>`;
     stageEl.style.display='';modalEl.classList.add('has-stage');modalEl.classList.toggle('has-chat',showChat);gridEl.style.display='none';wEl.style.display='none';
   }else{
     stageEl.style.display='none';stageEl.innerHTML='';modalEl.classList.remove('has-stage');modalEl.classList.remove('has-chat');gridEl.style.display='';
