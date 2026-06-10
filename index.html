@@ -813,6 +813,37 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 #splash-skip span{display:inline-block;}
 @media(max-width:768px){#splash-skip{bottom:18px;right:16px;}}
 .intro-wrap{position:relative;}
+/* ── Notifications panel (launch reminders) ── */
+.ntf-panel{position:absolute;top:calc(100% + 12px);right:0;width:250px;background:var(--bg-1,#0e1014);border:1px solid var(--line-2,rgba(255,255,255,.08));border-radius:14px;padding:14px;z-index:400;box-shadow:0 18px 50px rgba(0,0,0,.55);opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .2s var(--out,ease),transform .2s var(--out,ease);text-align:left;}
+.ntf-panel.open{opacity:1;transform:translateY(0);pointer-events:auto;}
+.ntf-head{font-family:var(--f-disp,inherit);font-size:0.95em;font-weight:600;color:var(--tx,#eaecef);margin-bottom:8px;}
+.ntf-status{font-family:var(--f-mono,monospace);font-size:0.62em;letter-spacing:.04em;text-transform:uppercase;padding:6px 9px;border-radius:8px;margin-bottom:11px;line-height:1.4;}
+.ntf-status.on{color:#37e0a0;background:rgba(55,224,160,.10);}
+.ntf-status.off{color:var(--tx-3,#8a909c);background:rgba(255,255,255,.04);}
+.ntf-status.blocked{color:#ff7a59;background:rgba(255,122,89,.10);}
+.ntf-btn{display:block;width:100%;text-align:center;font-family:var(--f-ui,inherit);font-size:0.8em;font-weight:600;padding:9px 12px;border-radius:9px;border:none;cursor:pointer;margin-bottom:8px;background:var(--blue,#4d8dff);color:#fff;transition:filter .15s,opacity .15s;}
+.ntf-btn:hover{filter:brightness(1.08);}
+.ntf-btn:disabled{opacity:.45;cursor:not-allowed;}
+.ntf-btn.ntf-ghost{background:transparent;border:1px solid var(--line-2,rgba(255,255,255,.12));color:var(--tx-2,#c4c8d0);}
+.ntf-btn.ntf-ghost:hover{background:rgba(255,255,255,.05);filter:none;}
+.ntf-note{font-size:0.66em;line-height:1.45;color:var(--tx-3,#8a909c);margin-top:2px;}
+/* ── Analytics data export bar ── */
+.an-export{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:2px 0 18px;}
+.an-export-l{font-family:var(--f-mono,monospace);font-size:0.66em;letter-spacing:.12em;text-transform:uppercase;color:var(--tx-3,#8a909c);margin-right:2px;}
+.an-exp-btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono,monospace);font-size:0.72em;letter-spacing:.04em;padding:6px 12px;border-radius:8px;border:1px solid var(--line-2,rgba(255,255,255,.12));background:rgba(255,255,255,.02);color:var(--tx-2,#c4c8d0);cursor:pointer;transition:background .15s,border-color .15s,color .15s;}
+.an-exp-btn:hover{background:rgba(63,205,226,.10);border-color:rgba(63,205,226,.4);color:var(--tx,#eaecef);}
+.an-exp-btn svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+/* ── Live ticker (up-to-date programme facts) ── */
+.live-ticker{display:flex;align-items:center;gap:10px;overflow:hidden;}
+.live-ticker .lt-dot{width:6px;height:6px;border-radius:50%;background:#37e0a0;box-shadow:0 0 8px #37e0a0;flex-shrink:0;animation:pulse 2s infinite;}
+.live-ticker .lt-view{overflow:hidden;flex:1;min-width:0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);}
+.live-ticker .lt-track{display:inline-flex;align-items:center;white-space:nowrap;will-change:transform;animation:ltScroll 38s linear infinite;}
+.live-ticker:hover .lt-track{animation-play-state:paused;}
+.live-ticker .lt-item{font-family:var(--f-mono,monospace);font-size:0.72em;letter-spacing:0.04em;color:var(--tx-2,#c4c8d0);}
+.live-ticker .lt-sep{margin:0 14px;color:var(--tx-4,#555);font-size:0.7em;}
+@keyframes ltScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.hero-ticker{width:fit-content;max-width:min(560px,92%);margin:0 auto 20px;justify-content:center;background:rgba(255,255,255,.025);border:1px solid var(--line-2,rgba(255,255,255,.07));border-radius:999px;padding:7px 15px;}
+.news-ticker{margin:0 0 22px;background:rgba(55,224,160,.05);border:1px solid rgba(55,224,160,.16);border-radius:12px;padding:10px 16px;}
 </style>
 </head>
 <body>
@@ -833,6 +864,7 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 
 <!-- ═══════ HERO / MISSION CONTROL ═══════ -->
 <section class="hero" id="hero">
+  <div class="live-ticker hero-ticker" id="hero-ticker" style="display:none"><span class="lt-dot"></span><div class="lt-view"><div class="lt-track" id="hero-ticker-track"></div></div></div>
   <div class="hero-top">
     <h1 class="hero-title" data-i="heroTitle">Welcome to InSpace</h1>
     <p class="hero-sub" data-i="heroSub">Keep an eye out for updates</p>
@@ -950,6 +982,7 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
     <div class="sub-page active" id="log-list">
       <div class="op-hero-title" data-i="latestNews">Latest News</div>
       <div class="op-hero-sub" data-i="latestNewsSub">Mission updates · Programme announcements</div>
+      <div class="live-ticker news-ticker" id="news-ticker" style="display:none"><span class="lt-dot"></span><div class="lt-view"><div class="lt-track" id="news-ticker-track"></div></div></div>
       <div class="manifest-controls">
         <div class="search-box">
           <svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
@@ -1291,6 +1324,9 @@ const I18N_EXT2={
   hu:{secStats:'Statisztika',statLandings:'Sikeres Landolások',landingsSub:'Suicide burn',chartLandings:'Landolási eredmények',chartLandingsNote:'Földet érés · suicide burn',chartMissions:'Küldetés sikere',chartMissionsNote:'Siker vs RUD',landSuccess:'Landolt',landFail:'Sikertelen',landingsCount:'landolás',lblLanding:'Landolás',lblAttempt:'Próbálkozás',attemptFirst:'Nincs scrub',attemptN:'{n} scrub',kpiLastLaunch:'Utolsó indítás',lblTarget:'Cél',lblDate:'Dátum',lblSite:'Helyszín',lblVehicle:'Jármű',lblStatus:'Állapot',watchRecord:'Felvétel megtekintése a YouTube-on',today:'Ma',granAll:'Mind'},
 };
 Object.keys(I18N_EXT2).forEach(l=>{ if(TRANSLATIONS[l])Object.assign(TRANSLATIONS[l],I18N_EXT2[l]); });
+/* notifications + data export strings (English is the default; other languages fall back to English) */
+Object.assign(TRANSLATIONS.en,{notifTip:'Notifications',notifTitle:'Launch reminders',notifEnable:'Enable notifications',notifDisable:'Turn off reminders',notifTest:'Send test',notifNote:'Reminders fire while this page is open. Upcoming launches are scheduled automatically.',notifStatusOn:"On — you'll be reminded of upcoming launches",notifStatusOff:'Off',notifStatusDefault:'Click Enable to allow notifications',notifStatusBlocked:'Blocked — allow notifications in your browser settings',notifStatusUnsupported:'Not supported in this browser',notifTestTitle:'InSpace',notifTestBody:'Test notification — launch reminders are working.',notifEnabledBody:'Launch reminders are on.',notifLaunchTitle:'Launch reminder',notifLaunchNow:'{name} is launching now',notifScrub:'{name} — launch scrubbed',notifLaunchSoon:'{name} launches in 5 minutes',exportData:'Export',exportDone:'Export ready',exportCsvDone:'CSV file downloaded',exportJsonDone:'JSON file downloaded',exportPdfDone:'PDF report downloaded',exportPdfPrep:'Generating PDF report…',exportPdfFail:'Could not generate PDF (check connection)',tkFirst:'{n} days since the first launch',tkFirstExact:'Exactly {n} days since the first launch!',tkLogged:'{n} launches logged',tkSuccess:'{n} successful flights',tkRate:'{n}% mission success rate',tkLast:'{n} days since the last launch',tkMostFlown:'Most flown: {name} · {n}×'});
+Object.assign(TRANSLATIONS.ru,{notifTip:'Уведомления',notifTitle:'Напоминания о запусках',notifEnable:'Включить уведомления',notifDisable:'Выключить напоминания',notifTest:'Тест',notifNote:'Напоминания работают, пока открыта эта страница. Предстоящие запуски ставятся в расписание автоматически.',notifStatusOn:'Вкл — напомним о предстоящих запусках',notifStatusOff:'Выкл',notifStatusDefault:'Нажмите «Включить», чтобы разрешить уведомления',notifStatusBlocked:'Заблокировано — разрешите уведомления в настройках браузера',notifStatusUnsupported:'Не поддерживается в этом браузере',notifTestTitle:'InSpace',notifTestBody:'Тестовое уведомление — напоминания работают.',notifEnabledBody:'Напоминания о запусках включены.',notifLaunchTitle:'Напоминание о запуске',notifLaunchNow:'{name} стартует сейчас',notifScrub:'{name} — запуск отменён (SCRUB)',notifLaunchSoon:'{name} стартует через 5 минут',exportData:'Экспорт',exportDone:'Экспорт готов',exportCsvDone:'CSV-файл скачан',exportJsonDone:'JSON-файл скачан',exportPdfDone:'PDF-отчёт скачан',exportPdfPrep:'Формируется PDF-отчёт…',exportPdfFail:'Не удалось сформировать PDF (проверьте соединение)',tkFirst:'{n} дней с первого запуска',tkFirstExact:'Ровно {n} дней с первого запуска!',tkLogged:'{n} запусков в журнале',tkSuccess:'{n} успешных полётов',tkRate:'{n}% успешных миссий',tkLast:'{n} дней с последнего запуска',tkMostFlown:'Чаще всех летал: {name} · {n}×'});
 
 const LANG_NAMES={en:'EN',es:'ES',de:'DE',fr:'FR',ru:'RU',zh:'中文',pt:'PT',hi:'HI',pl:'PL',ja:'JA',af:'AF',hu:'HU'};
 const LANG_LABELS={en:'English (US)',es:'Spanish',de:'German',fr:'French',ru:'Russian',zh:'Chinese',pt:'Brazilian',hi:'Hindi',pl:'Polish',ja:'Japanese',af:'Afrikaans (SA)',hu:'Hungarian'};
@@ -1309,10 +1345,11 @@ function applyLang(){
   document.documentElement.setAttribute('lang',currentLang);
   updateMuteUI();
   updateIntroUI();
+  updateNotifyUI();
 }
 function setLang(code){
   currentLang=code;lsSet('inspace_lang',code);applyLang();
-  rebuildNav();rebuildStats();rebuildDaysSince();rebuildHeroQuick();
+  rebuildNav();rebuildStats();rebuildDaysSince();rebuildHeroQuick();renderLiveTicker();
   rebuildScheduleTabs();renderScheduleRows();
   if(document.getElementById('ov-fleet').classList.contains('active')){renderFleet();}
   if(document.getElementById('ov-analytics').classList.contains('active')){renderAnalytics();}
@@ -1540,17 +1577,296 @@ function toggleIntro(){
 /* ── footer "Latest Website Update" — two modes ──
    LAST_UPDATE_MODE='manual' : edit LAST_UPDATE_MANUAL by hand on each update
    LAST_UPDATE_MODE='auto'   : auto-derives from the most recent launch in the manifest */
-const LAST_UPDATE_MODE='manual';
+const LAST_UPDATE_MODE='Manual';
 
 /* ─── INTRO SPLASH — master on/off switch ────────────────────────────────────
    'on'  : the intro splash plays on load AND a show/hide toggle button appears in the header.
    'off' : the intro is COMPLETELY removed — no splash, no scroll-lock on load, and the
            header toggle button is NOT created at all. Flip this single value to disable it all. */
 const INTRO_FEATURE='off';
-const LAST_UPDATE_MANUAL="Jun 4 '26";
+
+/* ─── LIVE TICKER — full control ─────────────────────────────────────────────
+   hero / news : show the ticker on the main screen / pinned at the top of News ('on' | 'off').
+   custom      : your own messages, e.g. ['Crew assignments soon','New pad under construction'].
+                 They appear FIRST, before the auto-generated facts.
+   auto        : turn each auto-generated fact on/off:
+                 daysSinceFirst · totalLogged · successfulFlights · successRate · daysSinceLast · mostFlown
+   speedSec    : seconds per full scroll loop (higher = slower).                                        */
+const LIVE_TICKER={
+  hero:'on',
+  news:'on',
+  custom:[],
+  auto:{daysSinceFirst:true,totalLogged:true,successfulFlights:true,successRate:true,daysSinceLast:true,mostFlown:true},
+  speedSec:38
+};
+const LAST_UPDATE_MANUAL="Jun 10 '26";
 function lastUpdateStr(){
   if(LAST_UPDATE_MODE==='auto'){const now=Date.now();const dated=launches.filter(l=>l.dateObj);const past=dated.filter(l=>l.dateObj.getTime()<=now);const pool=past.length?past:dated;const n=pool.length?pool.reduce((m,l)=>l.dateObj>m?l.dateObj:m,pool[0].dateObj):new Date();return n.toLocaleDateString('en-US',{month:'short',day:'numeric'})+" '"+String(n.getFullYear()).slice(2);}
   return LAST_UPDATE_MANUAL;
+}
+/* ─────────────────────────────────────────────────────────────────────────
+   PUSH NOTIFICATIONS — launch reminders. Uses the Web Notifications API, which
+   works on desktop and mobile browsers (iOS requires the site added to the Home
+   Screen). Reminders are armed while the page is open; upcoming launches are
+   scheduled automatically and re-checked periodically. State persists locally.
+───────────────────────────────────────────────────────────────────────────── */
+const NOTIFY_ICON='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#0a0c10"/><circle cx="32" cy="32" r="14" fill="none" stroke="#4d8dff" stroke-width="4"/><circle cx="32" cy="32" r="4" fill="#4d8dff"/></svg>');
+let __notifyOn=(lsGet('inspace-notify')==='on');
+let __notifyTimers=[];
+let __notifyReArm=null;
+function notifySupported(){return typeof window!=='undefined' && 'Notification' in window;}
+function notifyPerm(){return notifySupported()?Notification.permission:'unsupported';}
+function launchKey(l){return (l.nameId||l.rocket||'launch')+'@'+l.date;}
+function __notifiedSet(){try{return new Set(JSON.parse(lsGet('inspace-notified')||'[]'));}catch(_){return new Set();}}
+function __notifiedSave(set){try{lsSet('inspace-notified',JSON.stringify([...set].slice(-200)));}catch(_){}}
+function showNotification(title,body,tag){
+  if(notifyPerm()!=='granted')return false;
+  const opts={body:body||'',tag:tag||'inspace',icon:NOTIFY_ICON,badge:NOTIFY_ICON};
+  try{
+    const n=new Notification(title,opts);
+    n.onclick=()=>{try{window.focus();}catch(_){}try{n.close();}catch(_){}};
+    return true;
+  }catch(_){
+    /* some platforms (e.g. Android Chrome) only allow notifications via a ServiceWorker */
+    try{ if(navigator.serviceWorker&&navigator.serviceWorker.ready){navigator.serviceWorker.ready.then(reg=>{try{reg.showNotification(title,opts);}catch(__){}});return true;} }catch(__){}
+    return false;
+  }
+}
+/* dual delivery: fire a system notification AND an in-app toast, so feedback is always visible
+   even when the OS/browser suppresses system notifications (common cause of "nothing shows"). */
+function notifyDeliver(title,body,tag){
+  const ok=showNotification(title,body,tag);
+  try{showToast({icon:'rocket',color:'#4d8dff',title:title,sub:body,duration:5500});}catch(_){}
+  return ok;
+}
+function notifyRequest(then){
+  if(!notifySupported()){if(typeof then==='function')then('unsupported');return;}
+  let done=false;const fin=p=>{if(done)return;done=true;if(typeof then==='function')then(p);};
+  try{
+    const r=Notification.requestPermission(fin);          /* legacy browsers use the callback */
+    if(r&&typeof r.then==='function')r.then(fin).catch(()=>fin(notifyPerm()));
+  }catch(_){ fin(notifyPerm()); }
+}
+function clearLaunchTimers(){__notifyTimers.forEach(id=>clearTimeout(id));__notifyTimers=[];}
+function scheduleLaunchNotifications(){
+  clearLaunchTimers();
+  if(!__notifyOn||notifyPerm()!=='granted')return;
+  const now=Date.now(),MAX=2147483647,fired=__notifiedSet();
+  (typeof launches!=='undefined'?launches:[]).forEach(l=>{
+    if(!l.dateObj||!isUpcomingStatus(l.status))return;
+    const tLaunch=l.dateObj.getTime();if(tLaunch<=now)return;
+    const key=launchKey(l),name=(l.rocket||l.nameId||'Launch');
+    const tSoon=tLaunch-300000,soonKey=key+'#soon';      /* T-5 min */
+    if(tSoon>now && !fired.has(soonKey) && (tSoon-now)<MAX){
+      __notifyTimers.push(setTimeout(()=>{const f=__notifiedSet();if(f.has(soonKey))return;
+        notifyDeliver(t('notifLaunchTitle'),t('notifLaunchSoon').replace('{name}',name),'launch-soon-'+key);f.add(soonKey);__notifiedSave(f);},tSoon-now));
+    }
+    if(!fired.has(key) && (tLaunch-now)<MAX){             /* T-0 */
+      __notifyTimers.push(setTimeout(()=>{const f=__notifiedSet();if(f.has(key))return;
+        notifyDeliver(t('notifLaunchTitle'),t('notifLaunchNow').replace('{name}',name),'launch-'+key);f.add(key);__notifiedSave(f);},tLaunch-now));
+    }
+  });
+}
+function startNotifyReArm(){ if(__notifyReArm)return; __notifyReArm=setInterval(()=>{if(__notifyOn&&notifyPerm()==='granted'){scheduleLaunchNotifications();checkScrubs();}},60000); }
+function stopNotifyReArm(){ if(__notifyReArm){clearInterval(__notifyReArm);__notifyReArm=null;} }
+/* SCRUB watcher — snapshots upcoming launches; if one's status later flips to SCRUB
+   (e.g. via the data file or the realtime admin panel), a notification is fired once. */
+function checkScrubs(){
+  if(!__notifyOn||notifyPerm()!=='granted')return;
+  let snap={};try{snap=JSON.parse(lsGet('inspace-upcoming-snap')||'{}');}catch(_){snap={};}
+  const next={},fired=__notifiedSet();
+  (typeof launches!=='undefined'?launches:[]).forEach(l=>{
+    if(!l.dateObj)return;
+    const key=launchKey(l),name=(l.rocket||l.nameId||'Launch');
+    if(isUpcomingStatus(l.status)){next[key]=1;return;}
+    if(l.status==='SCRUB'&&snap[key]){                    /* was upcoming → now scrubbed */
+      const sk=key+'#scrub';
+      if(!fired.has(sk)){notifyDeliver(t('notifLaunchTitle'),t('notifScrub').replace('{name}',name),'scrub-'+key);fired.add(sk);__notifiedSave(fired);}
+    }
+  });
+  try{lsSet('inspace-upcoming-snap',JSON.stringify(next));}catch(_){}
+}
+function notifyEnableToggle(){
+  if(!notifySupported()){updateNotifyUI();showToast({icon:'info',color:'#888',title:t('notifTitle'),sub:t('notifStatusUnsupported'),duration:4000});return;}
+  const perm=notifyPerm();
+  if(perm==='denied'){updateNotifyUI();showToast({icon:'info',color:'#ff7a59',title:t('notifTitle'),sub:t('notifStatusBlocked'),duration:5000});return;}
+  if(perm==='granted'){
+    __notifyOn=!__notifyOn;lsSet('inspace-notify',__notifyOn?'on':'off');
+    if(__notifyOn){scheduleLaunchNotifications();checkScrubs();startNotifyReArm();notifyDeliver(t('notifTestTitle'),t('notifEnabledBody'),'inspace-on');}
+    else{clearLaunchTimers();stopNotifyReArm();}
+    updateNotifyUI();return;
+  }
+  notifyRequest(p=>{
+    if(p==='granted'){__notifyOn=true;lsSet('inspace-notify','on');scheduleLaunchNotifications();checkScrubs();startNotifyReArm();notifyDeliver(t('notifTestTitle'),t('notifEnabledBody'),'inspace-on');}
+    updateNotifyUI();
+  });
+}
+function notifyTest(){
+  if(!notifySupported()){showToast({icon:'info',color:'#888',title:t('notifTitle'),sub:t('notifStatusUnsupported'),duration:4000});return;}
+  const perm=notifyPerm();
+  if(perm==='granted'){showNotification(t('notifTestTitle'),t('notifTestBody'),'inspace-test');return;}
+  if(perm==='denied'){showToast({icon:'info',color:'#ff7a59',title:t('notifTitle'),sub:t('notifStatusBlocked'),duration:5000});return;}
+  notifyRequest(p=>{if(p==='granted')showNotification(t('notifTestTitle'),t('notifTestBody'),'inspace-test');updateNotifyUI();});
+}
+function updateNotifyUI(){
+  const supported=notifySupported(),perm=notifyPerm(),on=__notifyOn&&perm==='granted';
+  const btn=document.getElementById('notify-btn'),tip=document.getElementById('notify-tip');
+  if(btn)btn.classList.toggle('muted',!on);
+  if(tip)tip.textContent=t('notifTip');
+  const st=document.getElementById('ntf-status'),en=document.getElementById('ntf-enable'),ts=document.getElementById('ntf-test'),tl=document.getElementById('ntf-title'),nt=document.getElementById('ntf-note');
+  if(tl)tl.textContent=t('notifTitle');
+  if(nt)nt.textContent=t('notifNote');
+  if(ts)ts.textContent=t('notifTest');
+  if(en){
+    if(!supported||perm==='denied'){en.textContent=t('notifEnable');en.disabled=true;}
+    else{en.disabled=false;en.textContent=on?t('notifDisable'):t('notifEnable');}
+  }
+  if(st){
+    let cls='off',txt=t('notifStatusOff');
+    if(!supported){cls='off';txt=t('notifStatusUnsupported');}
+    else if(perm==='denied'){cls='blocked';txt=t('notifStatusBlocked');}
+    else if(perm==='default'){cls='off';txt=t('notifStatusDefault');}
+    else if(on){cls='on';txt=t('notifStatusOn');}
+    st.className='ntf-status '+cls;st.textContent=txt;
+  }
+}
+function toggleNotifyPanel(e){
+  if(e){e.stopPropagation();}
+  const p=document.getElementById('notify-panel');if(!p)return;
+  const open=!p.classList.contains('open');p.classList.toggle('open',open);
+  if(open)updateNotifyUI();
+}
+document.addEventListener('click',function(e){
+  const p=document.getElementById('notify-panel');if(!p||!p.classList.contains('open'))return;
+  const b=document.getElementById('notify-btn');
+  if(p.contains(e.target)||(b&&b.contains(e.target)))return;
+  p.classList.remove('open');
+});
+
+/* ─── Analytics data export (CSV / JSON) ─── */
+function downloadBlob(filename,text,mime){
+  try{
+    const blob=new Blob([text],{type:mime||'text/plain;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download=filename;
+    document.body.appendChild(a);a.click();
+    setTimeout(()=>{try{document.body.removeChild(a);URL.revokeObjectURL(url);}catch(_){}} ,0);
+  }catch(_){}
+}
+function csvCell(v){v=(v==null?'':String(v));return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+function watchLink(l){
+  if(!l||!l.watchUrl)return '';
+  try{const id=(typeof ytVideoId==='function')?ytVideoId(l.watchUrl):'';if(id)return 'https://youtu.be/'+id;}catch(_){}
+  return /^https?:\/\//.test(l.watchUrl)?l.watchUrl:'';
+}
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement('script');s.src=src;s.onload=()=>res();s.onerror=()=>rej(new Error('load failed'));document.head.appendChild(s);});}
+function exportRows(){
+  return (typeof launches!=='undefined'?launches:[]).slice().sort((a,b)=>a.dateObj-b.dateObj).map(l=>({
+    date:l.date||'',iso:(l.dateObj?l.dateObj.toISOString():''),name:l.rocket||'',vehicle:l.vehicle||'',nameId:l.nameId||'',
+    status:l.status||'',site:l.site||'',target:l.target||'',type:l.type||'',
+    landing:(l.landing===true?'success':l.landing===false?'failed':''),
+    attempt:(l.attempt!=null?l.attempt:''),durationMin:(l.durationMin!=null?l.durationMin:''),video:watchLink(l)
+  }));
+}
+function exportLaunchesCSV(){
+  const cols=['date','iso','name','vehicle','nameId','status','site','target','type','landing','attempt','durationMin','video'];
+  const rows=exportRows().map(r=>cols.map(c=>csvCell(r[c])).join(','));
+  const csv=[cols.join(',')].concat(rows).join('\r\n');
+  downloadBlob('inspace-launches.csv',csv,'text/csv;charset=utf-8');
+  showToast({icon:'rocket',color:'#3fcde2',title:t('exportCsvDone'),sub:'inspace-launches.csv · '+rows.length+' '+t('launchesCount'),duration:3200});
+}
+function exportLaunchesJSON(){
+  let s={};try{s=computeStats();}catch(_){s={};}
+  const data={
+    exported:new Date().toISOString(),programme:'InSpace',source:location.href,
+    summary:{total:s.total,completed:s.comp?s.comp.length:undefined,successRate:s.successRate,mostFlown:(s.mostFlown&&s.mostFlown.count>0)?s.mostFlown.name:undefined},
+    launches:exportRows().map(r=>({date:r.date,iso:r.iso||null,name:r.name,vehicle:r.vehicle,nameId:r.nameId,status:r.status,site:r.site||null,target:r.target||null,type:r.type||null,landing:r.landing||null,attempt:r.attempt===''?null:r.attempt,durationMin:r.durationMin===''?null:r.durationMin,video:r.video||null}))
+  };
+  downloadBlob('inspace-data.json',JSON.stringify(data,null,2),'application/json;charset=utf-8');
+  showToast({icon:'rocket',color:'#3fcde2',title:t('exportJsonDone'),sub:'inspace-data.json · '+data.launches.length+' '+t('launchesCount'),duration:3200});
+}
+async function exportLaunchesPDF(){
+  try{
+    showToast({icon:'info',color:'#3fcde2',title:t('exportData'),sub:t('exportPdfPrep'),duration:2200});
+    if(!(window.jspdf&&window.jspdf.jsPDF))await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+    const jsPDF=window.jspdf&&window.jspdf.jsPDF;if(!jsPDF)throw new Error('jspdf');
+    if(!(jsPDF.API&&jsPDF.API.autoTable))await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js');
+    const doc=new jsPDF({orientation:'landscape',unit:'pt',format:'a4'});
+    const PW=doc.internal.pageSize.getWidth(),PH=doc.internal.pageSize.getHeight();
+    let s={};try{s=computeStats();}catch(_){}
+    const data=exportRows();
+    const body=data.map(r=>[r.date,r.name,r.vehicle,r.status,(r.landing||'—'),(r.site||'—'),(r.video||'—')]);
+    doc.autoTable({
+      head:[['Date','Mission','Vehicle','Status','Landing','Site','Video']],body:body,
+      startY:96,margin:{top:96,left:28,right:28,bottom:34},theme:'grid',
+      styles:{font:'helvetica',fontSize:8,cellPadding:5,textColor:[200,205,214],fillColor:[12,14,19],lineColor:[38,44,54],lineWidth:0.4,overflow:'linebreak'},
+      headStyles:{fillColor:[22,26,33],textColor:[233,237,242],fontStyle:'bold',lineColor:[38,44,54]},
+      alternateRowStyles:{fillColor:[16,19,25]},
+      columnStyles:{0:{cellWidth:92},1:{cellWidth:148},6:{cellWidth:150,textColor:[100,160,235]}},
+      willDrawPage:function(){
+        doc.setFillColor(7,8,10);doc.rect(0,0,PW,PH,'F');
+        doc.setTextColor(240,241,244);doc.setFont('helvetica','bold');doc.setFontSize(18);doc.text('InSpace — Flight Report',28,42);
+        doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(120,128,140);
+        doc.text('PROGRAMME STATISTICS · DERIVED FROM FLIGHT LOG',28,58);
+        const summary='Total '+(s.total!=null?s.total:'—')+'    Completed '+(s.comp?s.comp.length:'—')+'    Success '+(s.successRate!=null?s.successRate+'%':'—')+'    Generated '+new Date().toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
+        doc.setTextColor(160,167,178);doc.text(summary,28,76);
+        doc.setDrawColor(40,46,56);doc.line(28,84,PW-28,84);
+      },
+      didDrawPage:function(d){
+        doc.setTextColor(95,102,114);doc.setFont('helvetica','normal');doc.setFontSize(7.5);
+        doc.text('InSpace · OXeall',28,PH-16);
+        doc.text('Page '+d.pageNumber,PW-28,PH-16,{align:'right'});
+      }
+    });
+    doc.save('inspace-report.pdf');
+    showToast({icon:'rocket',color:'#3fcde2',title:t('exportPdfDone'),sub:'inspace-report.pdf · '+data.length+' '+t('launchesCount'),duration:3200});
+  }catch(e){ showToast({icon:'info',color:'#ff7a59',title:t('exportDone'),sub:t('exportPdfFail'),duration:5000}); }
+}
+function analyticsExportBar(){
+  const ic='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5v8M5 6.5l3 3 3-3M2.5 13.5h11"/></svg>';
+  return `<div class="an-export"><span class="an-export-l">${t('exportData')}</span>`+
+    `<button class="an-exp-btn" type="button" onclick="exportLaunchesCSV()">${ic}CSV</button>`+
+    `<button class="an-exp-btn" type="button" onclick="exportLaunchesJSON()">${ic}JSON</button>`+
+    `<button class="an-exp-btn" type="button" onclick="exportLaunchesPDF()">${ic}PDF</button></div>`;
+}
+
+/* ── Live ticker: rotating up-to-date programme facts (main screen + News). Configure via LIVE_TICKER above. ── */
+function liveTickerItems(){
+  const items=[];
+  (LIVE_TICKER.custom||[]).forEach(x=>{if(x)items.push(String(x));});
+  const A=LIVE_TICKER.auto||{};
+  const ls=(typeof launches!=='undefined'?launches:[]).filter(l=>l.dateObj);
+  if(ls.length){
+    const now=Date.now();
+    if(A.daysSinceFirst!==false){
+      const first=ls.reduce((m,l)=>l.dateObj<m?l.dateObj:m,ls[0].dateObj);
+      const dFirst=Math.max(0,Math.floor((now-first.getTime())/86400000));
+      items.push((dFirst>0&&dFirst%100===0?t('tkFirstExact'):t('tkFirst')).replace('{n}',dFirst));
+    }
+    let s={};try{s=computeStats();}catch(_){}
+    if(A.totalLogged!==false&&s.total!=null)items.push(t('tkLogged').replace('{n}',s.total));
+    if(A.successfulFlights!==false&&s.comp)items.push(t('tkSuccess').replace('{n}',s.comp.length));
+    if(A.successRate!==false&&s.successRate!=null)items.push(t('tkRate').replace('{n}',s.successRate));
+    if(A.daysSinceLast!==false){
+      const past=ls.filter(l=>l.dateObj.getTime()<=now);
+      if(past.length){const last=past.reduce((m,l)=>l.dateObj>m.dateObj?l:m,past[0]);const dl=Math.max(0,Math.floor((now-last.dateObj.getTime())/86400000));items.push(t('tkLast').replace('{n}',dl));}
+    }
+    if(A.mostFlown!==false&&s.mostFlown&&s.mostFlown.count>0)items.push(t('tkMostFlown').replace('{name}',s.mostFlown.name).replace('{n}',s.mostFlown.count));
+  }
+  return items;
+}
+function renderLiveTicker(){
+  const items=liveTickerItems();
+  const esc=(typeof escAttr==='function')?escAttr:(x=>String(x));
+  const inner=items.map(x=>`<span class="lt-item">${esc(x)}</span>`).join('<span class="lt-sep">●</span>');
+  const track=items.length?(inner+'<span class="lt-sep">●</span>'+inner):'';
+  const spd=(LIVE_TICKER.speedSec||38)+'s';
+  [['hero-ticker-track',LIVE_TICKER.hero],['news-ticker-track',LIVE_TICKER.news]].forEach(([id,mode])=>{
+    const el=document.getElementById(id);if(!el)return;
+    el.innerHTML=track;el.style.animationDuration=spd;
+    const host=el.closest('.live-ticker');
+    if(host)host.style.display=(mode!=='off'&&items.length)?'flex':'none';
+  });
 }
 function buildHeaderRight(){
   const left=document.getElementById('hdr-left');if(left){left.innerHTML='';
@@ -1571,6 +1887,10 @@ function buildHeaderRight(){
     left.appendChild(iw);
     updateIntroUI();
     }
+    const nw=document.createElement('div');nw.className='mute-wrap';
+    nw.innerHTML=`<button class="mute-btn muted" id="notify-btn" type="button" aria-label="launch notifications" onclick="toggleNotifyPanel(event)"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="spk" d="M12 3a5 5 0 0 0-5 5c0 4-1.5 5.5-2 6.2-.3.4 0 .9.5.9h13c.5 0 .8-.5.5-.9-.5-.7-2-2.2-2-6.2a5 5 0 0 0-5-5z"/><path class="wave" d="M10.3 19a2 2 0 0 0 3.4 0"/><line class="slash" x1="4.5" y1="4.5" x2="19.5" y2="19.5"/></svg></button><span class="mute-tip" id="notify-tip"></span><div class="ntf-panel" id="notify-panel" role="dialog" aria-label="Launch notifications"><div class="ntf-head" id="ntf-title">Launch reminders</div><div class="ntf-status off" id="ntf-status"></div><button class="ntf-btn" id="ntf-enable" type="button" onclick="notifyEnableToggle()">Enable notifications</button><div class="ntf-note" id="ntf-note"></div></div>`;
+    left.appendChild(nw);
+    updateNotifyUI();
   }
   const fu=document.getElementById('foot-update-val');if(fu)fu.textContent=lastUpdateStr();
   const wrap=document.getElementById('hdr-right');wrap.innerHTML='';
@@ -2218,7 +2538,7 @@ function showNewsList(){
 const SCHED_TABS=[
   {id:'all',status:null,color:'rgba(190,195,205,0.55)',label:()=>t('schedAll')},
   {id:'planned',status:'Planned',color:'#cfd3da',label:()=>t('schedPlanned')},
-].concat(OUTCOMES.map(o=>({
+].concat(OUTCOMES.filter(o=>o.key!=='SCRUB').map(o=>({   /* SCRUB stays a valid status, just not a visible filter tab */
   id:o.key.toLowerCase().replace(/[^a-z0-9]+/g,'-'),
   status:o.key,color:o.color,
   label:()=> o.key==='Success'?t('schedCompleted'):(o.key==='Cancelled'?t('schedCanceled'):o.key)
@@ -2249,7 +2569,7 @@ function renderScheduleRows(reset){
   cont.innerHTML=shown.map(l=>{
     const idx=launches.indexOf(l);const es=effectiveStatus(l);const col=statusColor(es);
     const d=l.dateObj.toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
-    const tm=l.dateObj.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+    const tm=l.dateObj.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit',hour12:false});
     const watch=l.watchUrl?`<a class="row-watch visible" href="${l.watchUrl}" target="_blank" onclick="event.stopPropagation()">${t('watchLive')}</a>`:'';
     return `<div class="launch-row" onclick="openLaunchModal(${idx})"><div class="lr-name"><span class="lr-idx">#${String(l.seq).padStart(2,'0')}</span><strong>${l.rocket}</strong></div><div class="lr-meta">${d}</div><div class="lr-time">${tm}</div><div class="lr-right">${watch}<div class="status-badge${es==='LIVE'?' status-live':''}" style="color:${col}">${es==='LIVE'?'<span class="live-dot"></span>':''}${statusLabel(es)}</div></div></div>`;
   }).join('');
@@ -2418,7 +2738,7 @@ function openLaunchModal(idx){
   const typeEl=document.getElementById('m-type');
   if(l.type&&l.type.trim()){typeEl.textContent=l.type;typeEl.style.display='';}else{typeEl.style.display='none';}
   {const mp=document.getElementById('m-profile');mp.innerHTML=missionProfileInner(l);mp.setAttribute('data-live',isMissionLive(l)?'1':'0');}
-  const dStr=l.dateObj.toLocaleString(undefined,{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  const dStr=l.dateObj.toLocaleString(undefined,{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false});
   const at=String(l.attempt||'').trim();
   const cell4=(at===''||at==='0')?{l:t('lblSite'),v:l.site||'—'}
     :(at==='1')?{l:t('lblAttempt'),v:t('attemptFirst')}
@@ -2492,7 +2812,7 @@ function openSpec(idx){
   if(veh)specCells.push({lbl:t('specFirstStage'),val:(l.landing===true?t('fsRecov'):(l.landing===false?t('fsLost'):'—'))});
   document.getElementById('spec-grid').innerHTML=specs.length?specCells.map(s=>`<div class="m-stat"><div class="m-stat-l">${s.lbl}</div><div class="m-stat-v">${s.val}</div></div>`).join(''):`<div class="spec-empty">${t('noImage')}</div>`;
   document.getElementById('spec-msec').textContent=t('details');
-  const dStr=l.dateObj.toLocaleString(undefined,{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  const dStr=l.dateObj.toLocaleString(undefined,{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false});
   const mf=[{l:t('lblStatus'),v:statusLabel(l.status)},{l:t('lblDate'),v:dStr},{l:t('lblSite'),v:l.site||'—'}];
   mf.push({l:t('lblLanding'),v:l.landing===true?t('landSuccess'):(l.landing===false?t('landFail'):'—')});
   if(l.target&&l.target.trim())mf.push({l:t('lblTarget'),v:l.target});
@@ -2563,7 +2883,7 @@ function computeStats(){
   const evs=L.filter(l=>MOM_STEP.hasOwnProperty(l.status)).slice().sort((a,b)=>a.dateObj-b.dateObj);
   let cum=[],m=0;
   evs.forEach(l=>{
-    m=Math.max(0,m+MOM_STEP[l.status]);   /* running sum, floored at 0 — the minimum is strictly 0 (never negative) */
+    m=m+MOM_STEP[l.status];   /* successes (+1) build · RUD (-1.5) / Cancelled (-0.5) / SCRUB (-0.5) pull the line down (declines visible, may dip below 0) */
     cum.push({t:l.dateObj.getTime(),y:+m.toFixed(3),label:l.dateObj.toLocaleDateString('en-US',{month:'short',day:'numeric'})});
   });
   /* per-vehicle cumulative momentum — colour pulled from vehList() so a brand-new vehicle/launch auto-appears
@@ -2571,7 +2891,7 @@ function computeStats(){
   const cumByVeh=vehList().map(v=>{
     const ve=L.filter(l=>l.nameId===v.id&&MOM_STEP.hasOwnProperty(l.status)).slice().sort((a,b)=>a.dateObj-b.dateObj);
     let mm=0;const pts=[];
-    ve.forEach(l=>{mm=Math.max(0,mm+MOM_STEP[l.status]);pts.push({t:l.dateObj.getTime(),y:+mm.toFixed(3)});});
+    ve.forEach(l=>{mm=mm+MOM_STEP[l.status];pts.push({t:l.dateObj.getTime(),y:+mm.toFixed(3)});});
     return{id:v.id,name:v.name,color:v.color,pts};
   }).filter(v=>v.pts.length>0);
   const mostFlown=byVehLaunched.slice().sort((a,b)=>b.count-a.count)[0]||null;
@@ -2749,7 +3069,7 @@ function renderAnalytics(){
   const RANGES=[['24h','24H'],['7d','7D'],['30d','30D'],['1y','1Y'],['all',t('rangeAll')]];
   const rangeBar=`<div class="range-bar"><span class="range-lbl">${t('rangeLabel')}</span><div class="range-pills">${RANGES.map(([k,lab])=>`<button class="range-pill${analyticsRange===k?' on':''}" onclick="setAnalyticsRange('${k}')">${lab}</button>`).join('')}</div></div>`;
   document.getElementById('analytics-body').innerHTML=
-    rangeBar+`<div class="kpi-grid">${kpiHTML}</div><div class="chart-grid">`+
+    analyticsExportBar()+rangeBar+`<div class="kpi-grid">${kpiHTML}</div><div class="chart-grid">`+
     `<div class="chart-card wide"><div class="chart-head"><span class="chart-title">${t('chartMomentum')}</span><span class="chart-note">${t('momentumNote')}</span></div>${momentumCardInner(s)}</div>`+
     `<div class="chart-card wide"><div class="chart-head"><span class="chart-title">${t('chartCadence')}</span><div class="cad-ctrl">${cadNav}${cadToggle}</div></div>${cadenceChartSVG(cadView)}<div class="chart-legend">${outcomeLegend}</div></div>`+
     `<div class="donut-row"><div class="chart-card"><div class="chart-head"><span class="chart-title">${t('chartOutcome')}</span></div>${donutSVG(s.byVehLaunched,t('launchesCount'))}</div>`+
@@ -2957,34 +3277,47 @@ function splashUnlockAudio(){try{const c=getAudioCtx();if(c&&c.state==='suspende
 function splashThud(vol){
   if(!enableSounds)return;
   const now=performance.now();__thudTimes=__thudTimes.filter(x=>now-x<90);
-  if(__thudTimes.length>=5)return;__thudTimes.push(now);
+  if(__thudTimes.length>=4)return;__thudTimes.push(now);   /* cap 4 / 90ms — avoids low-end pile-up */
   try{
     const ctx=getAudioCtx();if(!ctx||ctx.state==='suspended')return;const t0=ctx.currentTime;
+    const f0=82+Math.random()*16;                          /* 82–98 Hz, jittered so overlaps don't buzz */
     const o=ctx.createOscillator(),g=ctx.createGain();
-    o.type='sine';o.frequency.setValueAtTime(120,t0);o.frequency.exponentialRampToValueAtTime(44,t0+0.18);
-    g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(vol,t0+0.006);g.gain.exponentialRampToValueAtTime(0.0001,t0+0.22);
-    o.connect(g);g.connect(ctx.destination);o.start(t0);o.stop(t0+0.26);
-    const dur=0.09,sr=ctx.sampleRate||44100,buf=ctx.createBuffer(1,Math.max(1,Math.floor(sr*dur)),sr),d=buf.getChannelData(0);
-    for(let i=0;i<d.length;i++){d[i]=(Math.random()*2-1)*(1-i/d.length);}
+    o.type='sine';o.frequency.setValueAtTime(f0,t0);o.frequency.exponentialRampToValueAtTime(f0*0.62,t0+0.05);
+    g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(vol,t0+0.004);g.gain.exponentialRampToValueAtTime(0.0001,t0+0.13);
+    o.connect(g);g.connect(ctx.destination);o.start(t0);o.stop(t0+0.16);
+    /* crisp impact tick: short high-passed noise — definition without the drone */
+    const dur=0.028,sr=ctx.sampleRate||44100,buf=ctx.createBuffer(1,Math.max(1,Math.floor(sr*dur)),sr),d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++){d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,2);}
     const src=ctx.createBufferSource();src.buffer=buf;
-    const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.setValueAtTime(900,t0);
-    const ng=ctx.createGain();ng.gain.setValueAtTime(vol*0.5,t0);ng.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
-    src.connect(lp);lp.connect(ng);ng.connect(ctx.destination);src.start(t0);src.stop(t0+dur+0.02);
+    const hp=ctx.createBiquadFilter();hp.type='highpass';hp.frequency.setValueAtTime(1500,t0);
+    const ng=ctx.createGain();ng.gain.setValueAtTime(vol*0.32,t0);ng.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+    src.connect(hp);hp.connect(ng);ng.connect(ctx.destination);src.start(t0);src.stop(t0+dur+0.01);
   }catch(_){}
 }
 function splashReveal(){
   if(!enableSounds)return;
   try{
     const ctx=getAudioCtx();if(!ctx||ctx.state==='suspended')return;const t0=ctx.currentTime;
-    const o=ctx.createOscillator(),g=ctx.createGain(),lp=ctx.createBiquadFilter();
-    o.type='sawtooth';o.frequency.setValueAtTime(150,t0);o.frequency.exponentialRampToValueAtTime(620,t0+0.5);
-    lp.type='lowpass';lp.frequency.setValueAtTime(700,t0);lp.frequency.exponentialRampToValueAtTime(4200,t0+0.5);
-    g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(0.10,t0+0.04);g.gain.exponentialRampToValueAtTime(0.0001,t0+0.7);
-    o.connect(lp);lp.connect(g);g.connect(ctx.destination);o.start(t0);o.stop(t0+0.74);
+    /* airy whoosh: white noise through a band-pass sweeping upward */
+    const dur=0.55,sr=ctx.sampleRate||44100,buf=ctx.createBuffer(1,Math.max(1,Math.floor(sr*dur)),sr),d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++){d[i]=(Math.random()*2-1);}
+    const src=ctx.createBufferSource();src.buffer=buf;
+    const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.Q.setValueAtTime(0.8,t0);
+    bp.frequency.setValueAtTime(300,t0);bp.frequency.exponentialRampToValueAtTime(2600,t0+0.42);
+    const ng=ctx.createGain();ng.gain.setValueAtTime(0.0001,t0);ng.gain.linearRampToValueAtTime(0.07,t0+0.08);ng.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+    src.connect(bp);bp.connect(ng);ng.connect(ctx.destination);src.start(t0);src.stop(t0+dur+0.02);
+    /* soft confirmation chime: two clean sines (a fifth apart) */
+    [[523.25,0],[784,0.04]].forEach(([f,delay])=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.type='sine';o.frequency.setValueAtTime(f,t0+delay);
+      g.gain.setValueAtTime(0.0001,t0+delay);g.gain.linearRampToValueAtTime(0.10,t0+delay+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t0+delay+0.5);
+      o.connect(g);g.connect(ctx.destination);o.start(t0+delay);o.stop(t0+delay+0.55);
+    });
+    /* gentle low body thump (no sweep) */
     const b=ctx.createOscillator(),bg=ctx.createGain();
-    b.type='sine';b.frequency.setValueAtTime(110,t0);b.frequency.exponentialRampToValueAtTime(55,t0+0.3);
-    bg.gain.setValueAtTime(0.0001,t0);bg.gain.linearRampToValueAtTime(0.16,t0+0.01);bg.gain.exponentialRampToValueAtTime(0.0001,t0+0.45);
-    b.connect(bg);bg.connect(ctx.destination);b.start(t0);b.stop(t0+0.5);
+    b.type='sine';b.frequency.setValueAtTime(120,t0);b.frequency.exponentialRampToValueAtTime(70,t0+0.18);
+    bg.gain.setValueAtTime(0.0001,t0);bg.gain.linearRampToValueAtTime(0.12,t0+0.01);bg.gain.exponentialRampToValueAtTime(0.0001,t0+0.3);
+    b.connect(bg);bg.connect(ctx.destination);b.start(t0);b.stop(t0+0.34);
   }catch(_){}
 }
 /* draws one vehicle, base (engine) at (x,y). type 'ship' (nose cone) | 'booster' (grid fins). */
@@ -3129,9 +3462,12 @@ rebuildNav();
 applyLang();
 rebuildStats();
 rebuildHeroQuick();
+renderLiveTicker();
 buildTrajectory();
 rebuildScheduleTabs();
 applyHashView();   /* open the section matching #hash on load (F5 / deep link) */
+if(__notifyOn&&notifyPerm()==='granted'){scheduleLaunchNotifications();checkScrubs();startNotifyReArm();}
+updateNotifyUI();
 runSplash();       /* intro splash — skippable (Space / button) & toggle-able; owns the welcome toast via fireWelcome() */
 </script>
 
