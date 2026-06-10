@@ -842,8 +842,15 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .live-ticker .lt-item{font-family:var(--f-mono,monospace);font-size:0.72em;letter-spacing:0.04em;color:var(--tx-2,#c4c8d0);}
 .live-ticker .lt-sep{margin:0 14px;color:var(--tx-4,#555);font-size:0.7em;}
 @keyframes ltScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
-.hero-ticker{width:fit-content;max-width:min(560px,92%);margin:0 auto 20px;justify-content:center;background:rgba(255,255,255,.025);border:1px solid var(--line-2,rgba(255,255,255,.07));border-radius:999px;padding:7px 15px;}
+.hero-ticker{width:100%;max-width:min(560px,92%);margin:0 auto 20px;background:rgba(255,255,255,.025);border:1px solid var(--line-2,rgba(255,255,255,.07));border-radius:999px;padding:7px 15px;}
 .news-ticker{margin:0 0 22px;background:rgba(55,224,160,.05);border:1px solid rgba(55,224,160,.16);border-radius:12px;padding:10px 16px;}
+/* static mode (everything fits → no scroll, no fade mask, centered) */
+.live-ticker.lt-static .lt-track{animation:none!important;}
+.live-ticker.lt-static .lt-view{-webkit-mask-image:none;mask-image:none;display:flex;justify-content:center;}
+/* URGENT mode — only the urgent line, no effects; click dismisses */
+.live-ticker.lt-urgent{cursor:pointer;border-color:rgba(255,122,89,.5);background:rgba(255,122,89,.07);}
+.live-ticker.lt-urgent .lt-dot{background:#ff7a59;box-shadow:none;animation:none;}
+.live-ticker.lt-urgent .lt-item{color:#ffb9a6;}
 </style>
 </head>
 <body>
@@ -1325,8 +1332,8 @@ const I18N_EXT2={
 };
 Object.keys(I18N_EXT2).forEach(l=>{ if(TRANSLATIONS[l])Object.assign(TRANSLATIONS[l],I18N_EXT2[l]); });
 /* notifications + data export strings (English is the default; other languages fall back to English) */
-Object.assign(TRANSLATIONS.en,{notifTip:'Notifications',notifTitle:'Launch reminders',notifEnable:'Enable notifications',notifDisable:'Turn off reminders',notifTest:'Send test',notifNote:'Reminders fire while this page is open. Upcoming launches are scheduled automatically.',notifStatusOn:"On — you'll be reminded of upcoming launches",notifStatusOff:'Off',notifStatusDefault:'Click Enable to allow notifications',notifStatusBlocked:'Blocked — allow notifications in your browser settings',notifStatusUnsupported:'Not supported in this browser',notifTestTitle:'InSpace',notifTestBody:'Test notification — launch reminders are working.',notifEnabledBody:'Launch reminders are on.',notifLaunchTitle:'Launch reminder',notifLaunchNow:'{name} is launching now',notifScrub:'{name} — launch scrubbed',notifLaunchSoon:'{name} launches in 5 minutes',exportData:'Export',exportDone:'Export ready',exportCsvDone:'CSV file downloaded',exportJsonDone:'JSON file downloaded',exportPdfDone:'PDF report downloaded',exportPdfPrep:'Generating PDF report…',exportPdfFail:'Could not generate PDF (check connection)',tkFirst:'{n} days since the first launch',tkFirstExact:'Exactly {n} days since the first launch!',tkLogged:'{n} launches logged',tkSuccess:'{n} successful flights',tkRate:'{n}% mission success rate',tkLast:'{n} days since the last launch',tkMostFlown:'Most flown: {name} · {n}×'});
-Object.assign(TRANSLATIONS.ru,{notifTip:'Уведомления',notifTitle:'Напоминания о запусках',notifEnable:'Включить уведомления',notifDisable:'Выключить напоминания',notifTest:'Тест',notifNote:'Напоминания работают, пока открыта эта страница. Предстоящие запуски ставятся в расписание автоматически.',notifStatusOn:'Вкл — напомним о предстоящих запусках',notifStatusOff:'Выкл',notifStatusDefault:'Нажмите «Включить», чтобы разрешить уведомления',notifStatusBlocked:'Заблокировано — разрешите уведомления в настройках браузера',notifStatusUnsupported:'Не поддерживается в этом браузере',notifTestTitle:'InSpace',notifTestBody:'Тестовое уведомление — напоминания работают.',notifEnabledBody:'Напоминания о запусках включены.',notifLaunchTitle:'Напоминание о запуске',notifLaunchNow:'{name} стартует сейчас',notifScrub:'{name} — запуск отменён (SCRUB)',notifLaunchSoon:'{name} стартует через 5 минут',exportData:'Экспорт',exportDone:'Экспорт готов',exportCsvDone:'CSV-файл скачан',exportJsonDone:'JSON-файл скачан',exportPdfDone:'PDF-отчёт скачан',exportPdfPrep:'Формируется PDF-отчёт…',exportPdfFail:'Не удалось сформировать PDF (проверьте соединение)',tkFirst:'{n} дней с первого запуска',tkFirstExact:'Ровно {n} дней с первого запуска!',tkLogged:'{n} запусков в журнале',tkSuccess:'{n} успешных полётов',tkRate:'{n}% успешных миссий',tkLast:'{n} дней с последнего запуска',tkMostFlown:'Чаще всех летал: {name} · {n}×'});
+Object.assign(TRANSLATIONS.en,{notifTip:'Notifications',notifTitle:'Launch reminders',notifEnable:'Enable notifications',notifDisable:'Turn off reminders',notifTest:'Send test',notifNote:'Reminders fire while this page is open. Upcoming launches are scheduled automatically.',notifStatusOn:"On — you'll be reminded of upcoming launches",notifStatusOff:'Off',notifStatusDefault:'Click Enable to allow notifications',notifStatusBlocked:'Blocked — allow notifications in your browser settings',notifStatusUnsupported:'Not supported in this browser',notifTestTitle:'InSpace',notifTestBody:'Test notification — launch reminders are working.',notifEnabledBody:'Launch reminders are on.',notifLaunchTitle:'Launch reminder',notifLaunchNow:'{name} is launching now',notifScrub:'{name} — launch scrubbed',notifLaunchSoon:'{name} launches in 5 minutes',exportData:'Export',exportDone:'Export ready',exportCsvDone:'CSV file downloaded',exportJsonDone:'JSON file downloaded',exportPdfDone:'PDF report downloaded',exportPdfPrep:'Generating PDF report…',exportPdfFail:'Could not generate PDF (check connection)',tkDay1:'Day {n} of the InSpace programme',tkDay2:'{n} days since the first launch',tkDayExact:'Exactly {n} days since the first launch!',tkLog1:'{c} of {t} missions completed',tkLog2:'{t} missions logged · {c} clean successes',tkLast1:'Last flight: {name} · {ago}',tkLast2:'{name} flew the latest mission · {ago}',tkLastToday:'{name} flew today',tkFleet1:'{name} leads the fleet with {k} flights',tkFleet2:'Fleet workhorse: {name} · {k} flights',tkLand1:'{k} successful landings on record',tkStreak1:'Longest success streak: {k} missions',tkStreak2:'Best run: {k} successes in a row',tkNext1:'Next up: {name} · in {d} days',tkNextTmrw:'Next up: {name} · tomorrow',tkNextToday:'Next up: {name} · today',tkBusy1:'Busiest month: {label} · {k} flights',tkUrgentHint:'Click to dismiss'});
+Object.assign(TRANSLATIONS.ru,{notifTip:'Уведомления',notifTitle:'Напоминания о запусках',notifEnable:'Включить уведомления',notifDisable:'Выключить напоминания',notifTest:'Тест',notifNote:'Напоминания работают, пока открыта эта страница. Предстоящие запуски ставятся в расписание автоматически.',notifStatusOn:'Вкл — напомним о предстоящих запусках',notifStatusOff:'Выкл',notifStatusDefault:'Нажмите «Включить», чтобы разрешить уведомления',notifStatusBlocked:'Заблокировано — разрешите уведомления в настройках браузера',notifStatusUnsupported:'Не поддерживается в этом браузере',notifTestTitle:'InSpace',notifTestBody:'Тестовое уведомление — напоминания работают.',notifEnabledBody:'Напоминания о запусках включены.',notifLaunchTitle:'Напоминание о запуске',notifLaunchNow:'{name} стартует сейчас',notifScrub:'{name} — запуск отменён (SCRUB)',notifLaunchSoon:'{name} стартует через 5 минут',exportData:'Экспорт',exportDone:'Экспорт готов',exportCsvDone:'CSV-файл скачан',exportJsonDone:'JSON-файл скачан',exportPdfDone:'PDF-отчёт скачан',exportPdfPrep:'Формируется PDF-отчёт…',exportPdfFail:'Не удалось сформировать PDF (проверьте соединение)',tkDay1:'День {n} программы InSpace',tkDay2:'{n} дней с первого запуска',tkDayExact:'Ровно {n} дней с первого запуска!',tkLog1:'{c} из {t} миссий завершены',tkLog2:'{t} миссий в журнале · {c} чистых успехов',tkLast1:'Последний полёт: {name} · {ago}',tkLast2:'{name} выполнил последнюю миссию · {ago}',tkLastToday:'{name} летал сегодня',tkFleet1:'{name} — лидер флота: {k} полётов',tkFleet2:'Рабочая лошадка флота: {name} · {k} полётов',tkLand1:'{k} успешных посадок в журнале',tkStreak1:'Серия успехов: {k} миссий подряд',tkStreak2:'Лучшая серия: {k} успехов подряд',tkNext1:'Следующий: {name} · через {d} дн.',tkNextTmrw:'Следующий: {name} · завтра',tkNextToday:'Следующий: {name} · сегодня',tkBusy1:'Самый активный месяц: {label} · {k} полётов',tkUrgentHint:'Нажмите, чтобы скрыть'});
 
 const LANG_NAMES={en:'EN',es:'ES',de:'DE',fr:'FR',ru:'RU',zh:'中文',pt:'PT',hi:'HI',pl:'PL',ja:'JA',af:'AF',hu:'HU'};
 const LANG_LABELS={en:'English (US)',es:'Spanish',de:'German',fr:'French',ru:'Russian',zh:'Chinese',pt:'Brazilian',hi:'Hindi',pl:'Polish',ja:'Japanese',af:'Afrikaans (SA)',hu:'Hungarian'};
@@ -1577,7 +1584,7 @@ function toggleIntro(){
 /* ── footer "Latest Website Update" — two modes ──
    LAST_UPDATE_MODE='manual' : edit LAST_UPDATE_MANUAL by hand on each update
    LAST_UPDATE_MODE='auto'   : auto-derives from the most recent launch in the manifest */
-const LAST_UPDATE_MODE='Manual';
+const LAST_UPDATE_MODE='manual';
 
 /* ─── INTRO SPLASH — master on/off switch ────────────────────────────────────
    'on'  : the intro splash plays on load AND a show/hide toggle button appears in the header.
@@ -1586,18 +1593,28 @@ const LAST_UPDATE_MODE='Manual';
 const INTRO_FEATURE='off';
 
 /* ─── LIVE TICKER — full control ─────────────────────────────────────────────
-   hero / news : show the ticker on the main screen / pinned at the top of News ('on' | 'off').
-   custom      : your own messages, e.g. ['Crew assignments soon','New pad under construction'].
-                 They appear FIRST, before the auto-generated facts.
-   auto        : turn each auto-generated fact on/off:
-                 daysSinceFirst · totalLogged · successfulFlights · successRate · daysSinceLast · mostFlown
-   speedSec    : seconds per full scroll loop (higher = slower).                                        */
+   enabled  : MASTER switch. 'off' removes the ticker EVERYWHERE (hero + News).
+   hero/news: per-location visibility ('on' | 'off').
+   custom   : your own lines, shown FIRST in the rotation, e.g. ['Crew assignments soon'].
+   urgent   : URGENT mode. Non-empty string → ONLY this text is shown, static, no effects.
+              Clicking the ticker dismisses it (for the current browser session) and the
+              automatic analytics feed resumes. Clear the string to turn URGENT off in code.
+   auto     : per-fact toggles. Every fact is derived live from Flight-Analytics data
+              (computeStats + the launch log) — human phrasing, real numbers, NO percentages:
+              programmeDay · missionsCompleted · lastFlight · fleetLeader · landings ·
+              successStreak · nextLaunch · busiestMonth
+   speedSec : seconds per scroll loop (only when the strip overflows; if everything fits,
+              it renders static — self-measured).
+   refreshSec: the ticker re-derives its facts and re-phrases itself every N seconds.     */
 const LIVE_TICKER={
+  enabled:'on',
   hero:'on',
   news:'on',
   custom:[],
-  auto:{daysSinceFirst:true,totalLogged:true,successfulFlights:true,successRate:true,daysSinceLast:true,mostFlown:true},
-  speedSec:38
+  urgent:'',
+  auto:{programmeDay:true,missionsCompleted:true,lastFlight:true,fleetLeader:true,landings:true,successStreak:true,nextLaunch:true,busiestMonth:true},
+  speedSec:38,
+  refreshSec:60
 };
 const LAST_UPDATE_MANUAL="Jun 10 '26";
 function lastUpdateStr(){
@@ -1734,13 +1751,27 @@ function toggleNotifyPanel(e){
   if(e){e.stopPropagation();}
   const p=document.getElementById('notify-panel');if(!p)return;
   const open=!p.classList.contains('open');p.classList.toggle('open',open);
-  if(open)updateNotifyUI();
+  if(open){updateNotifyUI();requestAnimationFrame(placeNotifyPanel);}
+  else p.style.transform='';
 }
+/* self-measuring placement: the panel is right-anchored to the bell; if the header buttons
+   shift (e.g. the intro toggle is disabled in code) it could poke past the viewport edge.
+   Measure the real rect and clamp it inside with an 8px gutter — on open and on resize. */
+function placeNotifyPanel(){
+  const p=document.getElementById('notify-panel');
+  if(!p||!p.classList.contains('open'))return;
+  p.style.transform='';
+  const r=p.getBoundingClientRect(),vw=document.documentElement.clientWidth,g=8;
+  let dx=0;
+  if(r.left<g)dx=g-r.left;else if(r.right>vw-g)dx=(vw-g)-r.right;
+  if(dx)p.style.transform='translateX('+dx+'px)';
+}
+window.addEventListener('resize',placeNotifyPanel);
 document.addEventListener('click',function(e){
   const p=document.getElementById('notify-panel');if(!p||!p.classList.contains('open'))return;
   const b=document.getElementById('notify-btn');
   if(p.contains(e.target)||(b&&b.contains(e.target)))return;
-  p.classList.remove('open');
+  p.classList.remove('open');p.style.transform='';
 });
 
 /* ─── Analytics data export (CSV / JSON) ─── */
@@ -1830,44 +1861,103 @@ function analyticsExportBar(){
     `<button class="an-exp-btn" type="button" onclick="exportLaunchesPDF()">${ic}PDF</button></div>`;
 }
 
-/* ── Live ticker: rotating up-to-date programme facts (main screen + News). Configure via LIVE_TICKER above. ── */
+/* ── Live ticker — a small phrase engine over real Flight-Analytics data.
+   Every line is derived from computeStats() + the launch log (nothing invented),
+   phrased in rotating human variants, re-derived every LIVE_TICKER.refreshSec.
+   Master switch / per-location visibility / custom lines / URGENT mode: see LIVE_TICKER. ── */
+function ltFill(s,o){return String(s).replace(/\{(\w+)\}/g,(m,k)=>o[k]!=null?o[k]:m);}
 function liveTickerItems(){
-  const items=[];
-  (LIVE_TICKER.custom||[]).forEach(x=>{if(x)items.push(String(x));});
+  const out=[];(LIVE_TICKER.custom||[]).forEach(x=>{if(x)out.push(String(x));});
   const A=LIVE_TICKER.auto||{};
   const ls=(typeof launches!=='undefined'?launches:[]).filter(l=>l.dateObj);
-  if(ls.length){
-    const now=Date.now();
-    if(A.daysSinceFirst!==false){
-      const first=ls.reduce((m,l)=>l.dateObj<m?l.dateObj:m,ls[0].dateObj);
-      const dFirst=Math.max(0,Math.floor((now-first.getTime())/86400000));
-      items.push((dFirst>0&&dFirst%100===0?t('tkFirstExact'):t('tkFirst')).replace('{n}',dFirst));
-    }
-    let s={};try{s=computeStats();}catch(_){}
-    if(A.totalLogged!==false&&s.total!=null)items.push(t('tkLogged').replace('{n}',s.total));
-    if(A.successfulFlights!==false&&s.comp)items.push(t('tkSuccess').replace('{n}',s.comp.length));
-    if(A.successRate!==false&&s.successRate!=null)items.push(t('tkRate').replace('{n}',s.successRate));
-    if(A.daysSinceLast!==false){
-      const past=ls.filter(l=>l.dateObj.getTime()<=now);
-      if(past.length){const last=past.reduce((m,l)=>l.dateObj>m.dateObj?l:m,past[0]);const dl=Math.max(0,Math.floor((now-last.dateObj.getTime())/86400000));items.push(t('tkLast').replace('{n}',dl));}
-    }
-    if(A.mostFlown!==false&&s.mostFlown&&s.mostFlown.count>0)items.push(t('tkMostFlown').replace('{name}',s.mostFlown.name).replace('{n}',s.mostFlown.count));
+  if(!ls.length)return out;
+  const now=Date.now();
+  const seed=Math.floor(now/(Math.max(15,LIVE_TICKER.refreshSec||60)*1000));   /* rotates phrasing each refresh */
+  const pick=(i,arr)=>arr[(seed+i)%arr.length];
+  const agoStr=d=>d+' '+(d===1?t('dayAgo'):t('daysAgo'));
+  let s={};try{s=computeStats();}catch(_){}
+  const facts=[];
+  if(A.programmeDay!==false){
+    const first=ls.reduce((m,l)=>l.dateObj<m?l.dateObj:m,ls[0].dateObj);
+    const n=Math.max(0,Math.floor((now-first.getTime())/86400000));
+    facts.push(n>0&&n%100===0?ltFill(t('tkDayExact'),{n}):ltFill(pick(0,[t('tkDay1'),t('tkDay2')]),{n}));
   }
-  return items;
+  if(A.missionsCompleted!==false&&s.total!=null&&s.comp)
+    facts.push(ltFill(pick(1,[t('tkLog1'),t('tkLog2')]),{c:s.comp.length,t:s.total}));
+  if(A.lastFlight!==false){
+    const past=ls.filter(l=>l.dateObj.getTime()<=now&&!isUpcomingStatus(l.status));
+    if(past.length){
+      const last=past.reduce((m,l)=>l.dateObj>m.dateObj?l:m,past[0]);
+      const d=Math.max(0,Math.floor((now-last.dateObj.getTime())/86400000)),nm=last.rocket||last.nameId||'—';
+      facts.push(d===0?ltFill(t('tkLastToday'),{name:nm}):ltFill(pick(2,[t('tkLast1'),t('tkLast2')]),{name:nm,ago:agoStr(d)}));
+    }
+  }
+  if(A.fleetLeader!==false&&s.mostFlown&&s.mostFlown.count>0)
+    facts.push(ltFill(pick(3,[t('tkFleet1'),t('tkFleet2')]),{name:s.mostFlown.name,k:s.mostFlown.count}));
+  if(A.landings!==false){
+    const k=ls.filter(l=>l.landing===true).length;
+    if(k>0)facts.push(ltFill(t('tkLand1'),{k}));
+  }
+  if(A.successStreak!==false){
+    let best=0,cur=0;
+    ls.slice().sort((a,b)=>a.dateObj-b.dateObj).forEach(l=>{
+      if(l.status==='Success'){cur++;if(cur>best)best=cur;}
+      else if(l.status==='RUD')cur=0;          /* only a flight failure breaks the streak */
+    });
+    if(best>=2)facts.push(ltFill(pick(4,[t('tkStreak1'),t('tkStreak2')]),{k:best}));
+  }
+  if(A.nextLaunch!==false){
+    const up=ls.filter(l=>isUpcomingStatus(l.status)&&l.dateObj.getTime()>now).sort((a,b)=>a.dateObj-b.dateObj)[0];
+    if(up){
+      const d=Math.floor((up.dateObj.getTime()-now)/86400000),nm=up.rocket||up.nameId||'—';
+      facts.push(d<=0?ltFill(t('tkNextToday'),{name:nm}):(d===1?ltFill(t('tkNextTmrw'),{name:nm}):ltFill(t('tkNext1'),{name:nm,d})));
+    }
+  }
+  if(A.busiestMonth!==false&&s.busiest)
+    facts.push(ltFill(t('tkBusy1'),{label:s.busiest.label,k:s.busiest.completed}));
+  const rot=facts.length?seed%facts.length:0;                                  /* strip order also rotates */
+  return out.concat(facts.slice(rot),facts.slice(0,rot));
 }
 function renderLiveTicker(){
-  const items=liveTickerItems();
   const esc=(typeof escAttr==='function')?escAttr:(x=>String(x));
+  const off=(LIVE_TICKER.enabled==='off');
+  const urg=String(LIVE_TICKER.urgent||'').trim();
+  let urgActive=false;
+  if(urg&&!off){let dis='';try{dis=sessionStorage.getItem('inspace-urgent-dismissed')||'';}catch(_){}urgActive=(dis!==urg);}
+  const items=(!off&&!urgActive)?liveTickerItems():[];
   const inner=items.map(x=>`<span class="lt-item">${esc(x)}</span>`).join('<span class="lt-sep">●</span>');
-  const track=items.length?(inner+'<span class="lt-sep">●</span>'+inner):'';
-  const spd=(LIVE_TICKER.speedSec||38)+'s';
-  [['hero-ticker-track',LIVE_TICKER.hero],['news-ticker-track',LIVE_TICKER.news]].forEach(([id,mode])=>{
-    const el=document.getElementById(id);if(!el)return;
-    el.innerHTML=track;el.style.animationDuration=spd;
-    const host=el.closest('.live-ticker');
-    if(host)host.style.display=(mode!=='off'&&items.length)?'flex':'none';
+  [['hero-ticker','hero-ticker-track',LIVE_TICKER.hero],['news-ticker','news-ticker-track',LIVE_TICKER.news]].forEach(([hid,tid,mode])=>{
+    const host=document.getElementById(hid),el=document.getElementById(tid);
+    if(!host||!el)return;
+    if(off||mode==='off'){host.style.display='none';host.classList.remove('lt-urgent','lt-static');el.innerHTML='';host.onclick=null;return;}
+    if(urgActive){                                            /* URGENT: only this text, static, click = dismiss */
+      host.classList.add('lt-urgent','lt-static');
+      el.innerHTML=`<span class="lt-item">${esc(urg)}</span>`;el.style.animation='none';
+      host.style.display='flex';host.style.width='';host.title=t('tkUrgentHint');
+      host.onclick=function(){try{sessionStorage.setItem('inspace-urgent-dismissed',urg);}catch(_){}host.onclick=null;host.title='';renderLiveTicker();};
+      return;
+    }
+    host.classList.remove('lt-urgent');host.title='';host.onclick=null;
+    if(!items.length){host.style.display='none';el.innerHTML='';return;}
+    /* self-measuring: render ONE set, measure; if it fits → static; if it overflows → loop + scroll */
+    el.innerHTML=inner;el.style.animation='none';
+    host.classList.add('lt-static');host.style.display='flex';host.style.width='';
+    requestAnimationFrame(function(){
+      try{
+        const view=host.querySelector('.lt-view');if(!view)return;
+        const w=el.scrollWidth,vw=view.clientWidth;
+        if(w>vw+1){
+          el.innerHTML=inner+'<span class="lt-sep">●</span>'+inner+'<span class="lt-sep">●</span>';
+          host.classList.remove('lt-static');
+          el.style.animation='';el.style.animationDuration=(LIVE_TICKER.speedSec||38)+'s';
+        }else if(hid==='hero-ticker'&&w>0){
+          host.style.width=Math.ceil(w+58)+'px';              /* snug pill; CSS max-width still caps it */
+        }
+      }catch(_){}
+    });
   });
 }
+let __ltRz=0;window.addEventListener('resize',function(){clearTimeout(__ltRz);__ltRz=setTimeout(renderLiveTicker,250);});
 function buildHeaderRight(){
   const left=document.getElementById('hdr-left');if(left){left.innerHTML='';
     if(showClock){
@@ -3115,7 +3205,7 @@ function openOverlay(name){
   const sf=ov.querySelector('.ov-starfield');ensureOverlayStars(sf,70);
   playSound('nav');
   if(name==='fleet'){renderFleet();showVehicleListSilent();}
-  else if(name==='news'){renderNews(true);showNewsListSilent();}
+  else if(name==='news'){renderNews(true);showNewsListSilent();setTimeout(renderLiveTicker,60);}   /* re-measure the pinned ticker once visible */
   else if(name==='manifest'){rebuildScheduleTabs();renderScheduleRows(true);}
   else if(name==='analytics'){renderAnalytics();}
   else if(name==='game'){setTimeout(()=>{if(window.setupGameCanvas)window.setupGameCanvas();},90);}
@@ -3463,6 +3553,7 @@ applyLang();
 rebuildStats();
 rebuildHeroQuick();
 renderLiveTicker();
+setInterval(renderLiveTicker,Math.max(15,(LIVE_TICKER.refreshSec||60))*1000);   /* self-refresh: facts re-derive + re-phrase */
 buildTrajectory();
 rebuildScheduleTabs();
 applyHashView();   /* open the section matching #hash on load (F5 / deep link) */
