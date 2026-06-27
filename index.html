@@ -692,15 +692,6 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .m-player{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;align-items:center;gap:14px;}
 .m-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:11px;overflow:hidden;border:1px solid var(--line-2);background:#000;box-shadow:0 14px 40px rgba(0,0,0,.5),inset 0 0 0 1px rgba(255,255,255,.02);}
 .m-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;}
-.m-chat{display:flex;flex-direction:column;min-width:0;position:relative;}
-.m-live-row{display:flex;gap:14px;align-items:stretch;width:100%;}
-.m-live-row .m-frame{flex:1 1 auto;width:auto;align-self:flex-start;}
-.m-live-row .m-chat{flex:0 0 258px;align-self:stretch;}
-.m-chat-frame{position:relative;flex:1 1 auto;min-height:0;border-radius:11px;overflow:hidden;border:1px solid var(--line-2);background:#0f0f0f;box-shadow:0 14px 40px rgba(0,0,0,.5);}
-.m-chat-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block;}
-.m-chat-x{position:absolute;top:6px;right:8px;z-index:5;width:26px;height:26px;border-radius:6px;border:1px solid var(--line-2);background:rgba(15,16,17,0.82);color:var(--tx-2);font-size:17px;line-height:1;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:color .2s,border-color .2s,background .2s;}
-.m-chat-x:hover{color:var(--tx);border-color:var(--line-3);background:rgba(15,16,17,0.95);}
-#modal.has-stage.has-chat{width:min(1260px,100%);}
 .m-stat{background:var(--bg-2);border:1px solid var(--line);border-radius:8px;padding:9px 12px;}
 .m-stat-l{font-family:var(--f-mono);font-size:0.5em;letter-spacing:0.13em;text-transform:uppercase;color:var(--tx-3);margin-bottom:4px;}
 .m-stat-v{font-family:var(--f-mono);font-size:0.8em;color:var(--tx);font-weight:500;line-height:1.25;}
@@ -709,14 +700,9 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .m-watch-btn svg{width:13px;height:13px;}
 @media(max-width:680px){
   #modal.has-stage{width:min(620px,100%);}
-  #modal.has-stage.has-chat{width:min(620px,100%);}
   .m-stage{flex-direction:column;gap:12px;}
   .m-side{flex:none;flex-direction:row;flex-wrap:wrap;justify-content:stretch;}
   .m-side .m-stat{flex:1 1 calc(50% - 5px);}
-  .m-live-row{flex-direction:column;}
-  .m-live-row .m-frame{width:100%;align-self:stretch;}
-  .m-live-row .m-chat{flex:none;align-self:stretch;}
-  .m-chat-frame{min-height:360px;}
 }
 .m-close{position:absolute;top:14px;right:15px;width:30px;height:30px;border-radius:6px;background:transparent;border:1px solid var(--line);
   color:var(--tx-3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .22s var(--spring);z-index:2;}
@@ -857,9 +843,6 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .ver-dev{display:inline-block;font-family:var(--f-mono);font-size:0.56em;letter-spacing:0.1em;text-transform:uppercase;color:var(--orange,#f5a623);border:1px solid var(--orange,#f5a623);border-radius:100px;padding:1px 7px;margin-left:7px;vertical-align:middle;opacity:.85;}
 .compare-table tr.ct-secrow td{background:var(--bg-3);font-family:var(--f-mono);font-size:0.56em;letter-spacing:0.16em;text-transform:uppercase;color:var(--tx-2);padding:11px 18px;}
 .ver-empty{text-align:center;color:var(--tx-3);padding:46px 0;font-family:var(--f-mono);font-size:0.78em;letter-spacing:0.08em;}
-.countdown-badge{display:flex;flex-direction:column;align-items:center;gap:8px;margin:20px 0;padding:16px 18px;border:1px solid var(--line);border-radius:10px;background:rgba(190,195,205,0.05);font-family:var(--f-mono);text-align:center;}
-.cd-label{font-size:0.58em;letter-spacing:0.12em;text-transform:uppercase;color:var(--tx-3);}
-.cd-time{font-size:0.9em;letter-spacing:0.05em;color:var(--tx);font-weight:500;line-height:1.4;}
 </style>
 </head>
 <body>
@@ -2571,10 +2554,24 @@ function familyList(){
    Deduplicates by label so multiple flights of the same SN show once.
    Falls back to VEHICLE_VERSIONS if versionSpecs absent. */
 function versionsForFamily(nameId){
-  const seen=new Set();const out=[];
+  const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  /* Group launches by version label. firstFlight is AUTO-derived from the EARLIEST launch
+     that actually flew — status NOT 'Planned' and NOT 'Cancelled'. A version whose every
+     launch is Planned and/or Cancelled gets firstFlight '—'. The version's other specs come
+     from the first launch entry carrying that label (edit them in launches[].versionSpecs). */
+  const groups={},order=[];
   launches.filter(l=>l.nameId===nameId&&l.versionSpecs).forEach(l=>{
-    const vs=l.versionSpecs;if(!vs||seen.has(vs.label))return;
-    seen.add(vs.label);out.push(vs);
+    const vs=l.versionSpecs,lab=vs.label;
+    if(!groups[lab]){groups[lab]={spec:vs,months:[]};order.push(lab);}
+    if(l.status!=='Planned'&&l.status!=='Cancelled'&&l.date){
+      const p=l.date.split(' ')[0].split('-');groups[lab].months.push((+p[0])*12+(+p[1]));  /* year*12+month, comparable */
+    }
+  });
+  let out=order.map(lab=>{
+    const g=groups[lab],vs=Object.assign({},g.spec);   /* clone — never mutate launches[].versionSpecs */
+    if(g.months.length){const e=Math.min.apply(null,g.months);vs.firstFlight=MON[((e-1)%12)]+' '+Math.floor((e-1)/12);}
+    else vs.firstFlight='—';
+    return vs;
   });
   // fallback to VEHICLE_VERSIONS if launches carry no versionSpecs for this family
   if(!out.length)(VEHICLE_VERSIONS[nameId]||[]).forEach(v=>{
@@ -2585,10 +2582,15 @@ function versionsForFamily(nameId){
     vs.s2={engines:rv2('Engines'),thrust:rv2('Thrust (vac)'),burn:rv2('Burn time'),prop:rv2('Propellant'),recovery:rv2('Recovery'),reusable:rv2('Reusable')};
     out.push(vs);
   });
-  /* Sort from newest to oldest by firstFlight (reverse chronological).
-     Non-date entries ("—", "Development") sort to the end. */
-  const dateVal=d=>{const m=/^(\w+)\s+(\d+)/.exec(d);if(!m)return -Infinity;const y=2026,mo={Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};return y*10000+(mo[m[1]]||0)*100+(+m[2]||0);};
-  out.sort((a,b)=>dateVal(b.firstFlight||'—')-dateVal(a.firstFlight||'—'));
+  /* Order: the current version pins to the top (it's the newest by definition), then the rest
+     sort newest → oldest by firstFlight; '—' (Planned/Cancelled, no flight yet) sinks to the bottom. */
+  const MN={Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};
+  const dateVal=d=>{const m=/^([A-Za-z]{3,})\s+(\d{4})/.exec(String(d||''));return m?(+m[2])*100+(MN[m[1].slice(0,3)]||0):-Infinity;};
+  out.sort((a,b)=>{
+    if(a.current&&!b.current)return -1;
+    if(b.current&&!a.current)return 1;
+    return dateVal(b.firstFlight)-dateVal(a.firstFlight);
+  });
   return out;
 }
 function ensureVersionsInit(){
@@ -2830,10 +2832,6 @@ function ytVideoId(url){
   }catch(e){}
   return '';
 }
-function closeMomChat(){
-  const c=document.getElementById('m-chat');if(c)c.style.display='none';
-  const m=document.getElementById('modal');if(m)m.classList.remove('has-chat');
-}
 function watchPrimary(){
   playSound('details');
   const planned=launches.filter(l=>isUpcomingStatus(l.status)&&l.watchUrl).sort((a,b)=>a.dateObj-b.dateObj)[0];
@@ -2889,8 +2887,7 @@ const I18N_VERSIONS={
   versionSource:{en:'Source',ru:'Источник',de:'Quelle',es:'Fuente',fr:'Source',zh:'来源',pt:'Fonte',hi:'स्रोत',pl:'Źródło',ja:'ソース',af:'Bron',hu:'Forrás'},
   versionCurrent:{en:'Current',ru:'Текущая',de:'Aktuell',es:'Actual',fr:'Actuelle',zh:'当前',pt:'Atual',hi:'वर्तमान',pl:'Bieżąca',ja:'現行',af:'Huidige',hu:'Jelenlegi'},
   versionDev:{en:'Development',ru:'В разработке',de:'Entwicklung',es:'En desarrollo',fr:'En développement',zh:'开发中',pt:'Em desenvolvimento',hi:'विकास में',pl:'W opracowaniu',ja:'開発中',af:'In ontwikkeling',hu:'Fejlesztés alatt'},
-  versionsEmpty:{en:'Select versions to compare',ru:'Выберите версии для сравнения',de:'Versionen zum Vergleichen wählen',es:'Selecciona versiones para comparar',fr:'Sélectionnez des versions à comparer',zh:'选择要比较的版本',pt:'Selecione versões para comparar',hi:'तुलना के लिए संस्करण चुनें',pl:'Wybierz wersje do porównania',ja:'比較するバージョンを選択',af:'Kies weergawes om te vergelyk',hu:'Válassz verziókat az összehasonlításhoz'},
-  launchIn:{en:'Launch in',ru:'Запуск через',de:'Start in',es:'Lanzamiento en',fr:'Lancement dans',zh:'发射倒计时',pt:'Lançamento em',hi:'लॉन्च में',pl:'Start za',ja:'打ち上げまで',af:'Lansering oor',hu:'Indítás'}
+  versionsEmpty:{en:'Select versions to compare',ru:'Выберите версии для сравнения',de:'Versionen zum Vergleichen wählen',es:'Selecciona versiones para comparar',fr:'Sélectionnez des versions à comparer',zh:'选择要比较的版本',pt:'Selecione versões para comparar',hi:'तुलना के लिए संस्करण चुनें',pl:'Wybierz wersje do porównania',ja:'比較するバージョンを選択',af:'Kies weergawes om te vergelyk',hu:'Válassz verziókat az összehasonlításhoz'}
 };
 Object.keys(I18N_VERSIONS).forEach(k=>{Object.keys(I18N_VERSIONS[k]).forEach(l=>{if(TRANSLATIONS[l])TRANSLATIONS[l][k]=I18N_VERSIONS[k][l];});});
 /* ── best-score-saved note · LIVE status · intro toggle · skip ── */
@@ -3274,20 +3271,14 @@ function openLaunchModal(idx){
     if(l.target&&l.target.trim())rArr.push({l:t('lblTarget'),v:l.target});
     rArr.push({l:t('lblAttempt'),v:(+at>=2)?t('attemptN').replace('{n}',at):t('attemptFirst')});
     const rightStats=rArr.slice(0,4).map(c=>`<div class="m-stat"><div class="m-stat-l">${c.l}</div><div class="m-stat-v">${c.v}</div></div>`).join('');
-    const vid=ytVideoId(l.watchUrl);const host=(location.hostname||'').trim();
-    /* Chat ONLY for live/upcoming streams (status Planned). Recordings have no live chat (replay chat is usually off), so we don't insert it — per expert UX. liveChat:true forces it on, liveChat:false forces it off. */
-    const showChat=(l.liveChat===true||(l.liveChat!==false&&l.status==='Planned'))&&!!vid&&!!host;
     const frameHTML=`<div class="m-frame"><iframe src="${emb}" title="${(l.rocket||'Launch').replace(/"/g,'&quot;')}" loading="lazy" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>`;
-    const chatHTML=`<div class="m-chat" id="m-chat"><button class="m-chat-x" type="button" onclick="closeMomChat()" aria-label="Hide chat" title="Hide chat">×</button><div class="m-chat-frame"><iframe src="https://www.youtube.com/live_chat?v=${vid}&embed_domain=${encodeURIComponent(host)}" title="Live chat" frameborder="0"></iframe></div></div>`;
-    const watchBtn = `<a class="ignition-btn m-watch-btn" href="${l.watchUrl}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M6 5v14l12-7z"/></svg><span data-i="${watchKey}">${t(watchKey)}</span></a>`;
-    const countdownHTML = '';
-    const playerCol = showChat
-      ? `<div class="m-player"><div class="m-live-row">${frameHTML}${chatHTML}</div>${watchBtn}</div>`
-      : `<div class="m-player">${frameHTML}${watchBtn}</div>`;    stageEl.innerHTML=`<div class="m-side">${leftStats}</div>`+playerCol+`<div class="m-side">${rightStats}</div>`;
-    stageEl.style.display='';modalEl.classList.add('has-stage');modalEl.classList.toggle('has-chat',showChat);gridEl.style.display='none';wEl.style.display='none';
+    const watchBtn=`<a class="ignition-btn m-watch-btn" href="${l.watchUrl}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M6 5v14l12-7z"/></svg><span data-i="${watchKey}">${t(watchKey)}</span></a>`;
+    const playerCol=`<div class="m-player">${frameHTML}${watchBtn}</div>`;
+    stageEl.innerHTML=`<div class="m-side">${leftStats}</div>`+playerCol+`<div class="m-side">${rightStats}</div>`;
+    stageEl.style.display='';modalEl.classList.add('has-stage');gridEl.style.display='none';wEl.style.display='none';
     setupLiveDetect(l);   /* watch the embedded player: auto-flip badge to LIVE the moment the stream/premiere starts */
   }else{
-    stageEl.style.display='none';stageEl.innerHTML='';modalEl.classList.remove('has-stage');modalEl.classList.remove('has-chat');gridEl.style.display='';
+    stageEl.style.display='none';stageEl.innerHTML='';modalEl.classList.remove('has-stage');gridEl.style.display='';
     if(l.watchUrl){wEl.style.display='block';const lk=document.getElementById('m-watch-link');lk.href=l.watchUrl;const sp=lk.querySelector('span');sp.setAttribute('data-i',watchKey);sp.textContent=t(watchKey);}else{wEl.style.display='none';}
   }
   const bd=document.getElementById('modal-bd');bd.classList.add('active');
@@ -3299,7 +3290,7 @@ function closeLaunchModal(e,force){
   window.__liveDetectVid=null;   /* stop iframe live-detection for the closed player */
   playSound('close');const bd=document.getElementById('modal-bd');bd.classList.remove('visible');
   const st=document.getElementById('m-stage');if(st){st.innerHTML='';st.style.display='none';}  /* stop the embedded player */
-  const md=document.getElementById('modal');if(md){md.classList.remove('has-stage');md.classList.remove('has-chat');}
+  const md=document.getElementById('modal');if(md){md.classList.remove('has-stage');}
   setTimeout(()=>bd.classList.remove('active'),400);
 }
 /* ── Launch spec preview (opened from the hero mission meta): vehicle specs (Our Vehicles) + mission facts (m-inner) ── */
