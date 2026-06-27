@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<title>InSpace · Flight Operations</title>
+<title>InSpace</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Saira:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
@@ -2509,6 +2509,20 @@ function statPillFor(v){
   if(count>0)return{txt:count+'× '+t('flights'),col:'var(--go)'};
   return{txt:'0× '+t('flights'),col:'var(--tx-3)'};
 }
+/* Latest-flight specs: Compare & Grid show each vehicle's CURRENT performance numbers, pulled from the
+   versionSpecs of its most recent launch BY DATE (Planned or flown). A newer flight with different numbers
+   (e.g. 205m → 209m) updates the whole fleet automatically. Falls back to vehicles[].specs when a vehicle
+   has no launch carrying versionSpecs. */
+function latestVersionSpec(nameId){
+  let best=null;
+  launches.forEach(l=>{if(l.nameId===nameId&&l.versionSpecs&&l.dateObj&&(!best||l.dateObj>best.dateObj))best=l;});
+  return best?best.versionSpecs:null;
+}
+function vehSpec(v,lbl,vsKey){
+  const vs=latestVersionSpec(v.id);
+  if(vs&&(vsKey in vs))return vs[vsKey]!=null?vs[vsKey]:'—';
+  const s=v.specs.find(x=>x.lbl===lbl);return s?s.val:'—';
+}
 function renderFleet(){
   document.getElementById('fleet-view-toggle').innerHTML=
     `<button class="vt-btn${fleetView==='grid'?' active':''}" onclick="setFleetView('grid')"><svg viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg> ${t('gridView')}</button>`+
@@ -2518,7 +2532,7 @@ function renderFleet(){
   if(fleetView==='grid'){
     wrap.innerHTML=`<div class="fleet-rows">${vehicles.map((v,i)=>{
       const p=statPillFor(v);
-      const cells=[{l:t('specHeight'),v:v.specs.find(s=>s.lbl==='Height')?.val||'—'},{l:t('specMass'),v:v.specs.find(s=>s.lbl==='Mass')?.val||'—'},{l:'Delta-V',v:v.specs.find(s=>s.lbl==='Delta-V')?.val||'—'},{l:'TWR',v:v.specs.find(s=>s.lbl==='TWR')?.val||'—'}];
+      const cells=[{l:t('specHeight'),v:vehSpec(v,'Height','height')},{l:t('specMass'),v:vehSpec(v,'Mass','mass')},{l:'Delta-V',v:vehSpec(v,'Delta-V','deltaV')},{l:'TWR',v:vehSpec(v,'TWR','twr')}];
       return `<div class="veh-row" style="--vc:${v.color};animation-delay:${(i*0.06).toFixed(2)}s" onclick="playSound('details');showVehicleDetail('${v.id}')">
         <span class="vr-stripe"></span>
         <div class="vr-id"><span class="vr-class">${v.class}</span><span class="vr-name">${v.name}</span></div>
@@ -2528,10 +2542,10 @@ function renderFleet(){
     }).join('')}</div>`;
   }else if(fleetView==='compare'){
     const rows=[
-      {l:t('specHeight'),f:v=>v.specs.find(s=>s.lbl==='Height')?.val||'—'},
-      {l:t('specMass'),f:v=>v.specs.find(s=>s.lbl==='Mass')?.val||'—'},
-      {l:'Delta-V',f:v=>v.specs.find(s=>s.lbl==='Delta-V')?.val||'—'},
-      {l:'TWR',f:v=>v.specs.find(s=>s.lbl==='TWR')?.val||'—'},
+      {l:t('specHeight'),f:v=>vehSpec(v,'Height','height')},
+      {l:t('specMass'),f:v=>vehSpec(v,'Mass','mass')},
+      {l:'Delta-V',f:v=>vehSpec(v,'Delta-V','deltaV')},
+      {l:'TWR',f:v=>vehSpec(v,'TWR','twr')},
       {l:t('specLaunches'),f:v=>{const c=launchCountFor(v.id);return c>0?c+'×':'—';}},
       {l:'First Flight',f:v=>v.specs.find(s=>s.lbl==='First Flight')?.val||'—'},
       {l:'Class',f:v=>v.class},
