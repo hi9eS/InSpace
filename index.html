@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<title>InSpace</title>
+<title>InSpace · Flight Operations</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Saira:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
 
@@ -1519,7 +1519,7 @@ function statusColor(s){
   if(s==='LIVE')return'#ff2d55';
   if(OUTCOME_COLOR[s])return OUTCOME_COLOR[s];
   switch(s){
-    case'Planned':return'#cfd3da';case'Delayed':case'Big Event Plans':return'#ffc94d';
+    case'Planned':return'#cfd3da';case'Static Burn':return'#ff8c42';case'Delayed':case'Big Event Plans':return'#ffc94d';
     case'Concept/Plan':return'#3fcde2';case'Coming Soon':return'#a4a8b2';case'Recorded':return'#37e0a0';
     default:return'#a4a8b2';
   }
@@ -1527,18 +1527,20 @@ function statusColor(s){
 function statusLabel(s){
   if(s==='LIVE')return t('statusLive');
   if(s==='Planned')return t('statusPlanned');
+  if(s==='Static Burn')return t('statusStaticBurn');
   if(s==='Success')return t('statusCompleted');
   if(s==='Cancelled')return t('statusCanceled');
   return s; /* RUD and any other custom status — shown as typed */
 }
-/* Planned & LIVE share the "upcoming/in-flight" pipeline (countdown, watch, spec). */
-function isUpcomingStatus(s){return s==='Planned'||s==='LIVE';}
-/* effectiveStatus: a Planned launch auto-displays as LIVE while its broadcast window is open, OR once the
-   embedded YouTube stream is detected playing (window.__liveStreams, set by the iframe live-detector).
+/* Planned, Static Burn & LIVE share the "upcoming/in-flight" pipeline (countdown, watch, spec, notifications).
+   Static Burn = a held-down static fire test; it behaves exactly like Planned but never counts as a flight/landing. */
+function isUpcomingStatus(s){return s==='Planned'||s==='Static Burn'||s==='LIVE';}
+/* effectiveStatus: a Planned/Static-Burn entry auto-displays as LIVE while its broadcast window is open, OR once
+   the embedded YouTube stream is detected playing (window.__liveStreams, set by the iframe live-detector).
    status:'LIVE' forces it. Everything else returns the raw status — flights/landings stats are unaffected. */
 function effectiveStatus(l){
   if(l.status==='LIVE')return'LIVE';
-  if(l.status==='Planned'){
+  if(l.status==='Planned'||l.status==='Static Burn'){
     const vid=(typeof ytVideoId==='function')?ytVideoId(l.watchUrl):'';
     if((vid&&window.__liveStreams&&window.__liveStreams[vid])||isMissionLive(l))return'LIVE';
   }
@@ -1618,7 +1620,7 @@ const LIVE_TICKER={
   speedSec:38,
   refreshSec:60
 };
-const LAST_UPDATE_MANUAL="Jun 27 '26";
+const LAST_UPDATE_MANUAL="Jun 10 '26";
 function lastUpdateStr(){
   if(LAST_UPDATE_MODE==='auto'){const now=Date.now();const dated=launches.filter(l=>l.dateObj);const past=dated.filter(l=>l.dateObj.getTime()<=now);const pool=past.length?past:dated;const n=pool.length?pool.reduce((m,l)=>l.dateObj>m?l.dateObj:m,pool[0].dateObj):new Date();return n.toLocaleDateString('en-US',{month:'short',day:'numeric'})+" '"+String(n.getFullYear()).slice(2);}
   return LAST_UPDATE_MANUAL;
@@ -2002,7 +2004,9 @@ function buildHeaderRight(){
 ════════════════════════════════════════════════════════════ */
 /* ════════ LAUNCH SCHEDULE — add / edit launches here ════════
    Per-launch fields:
-   • rocket / vehicle : display name        • status : 'Success' | 'RUD' | 'SCRUB' | 'Cancelled' | 'Planned'
+   • rocket / vehicle : display name        • status : 'Success' | 'RUD' | 'SCRUB' | 'Cancelled' | 'Planned' | 'Static Burn'
+   •  'Static Burn' = a held-down static fire test. Behaves EXACTLY like 'Planned' (countdown, watch link, schedule tab,
+       auto-LIVE during its window) but never counts as a flight/landing and is excluded from a version's First Flight.
    • date : 'YYYY-MM-DD HH:MM' (local)       • nameId : vehicle key — matches a vehicles[] id, OR a brand-new key (it auto-appears across Flight Analytics)
    • site / target / type / desc : optional  • durationMin : mission length in minutes (drives countdown + end time)
    • watchUrl : per-launch stream/recording. Paste ANY of: a normal watch link (youtube.com/watch?v=ID),
@@ -2554,7 +2558,7 @@ function renderFleet(){
   }else{
     ensureVersionsInit();renderVersionsView(wrap);
   }
-  if(fleetView==='versions'){const _n=(VEHICLE_VERSIONS[versionsFamily]||[]).length;document.getElementById('ov-fleet-meta').textContent=_n+' '+t('versionsCount');}
+  if(fleetView==='versions'){const _n=versionsForFamily(versionsFamily).length;document.getElementById('ov-fleet-meta').textContent=_n+' '+t('versionsCount');}
   else document.getElementById('ov-fleet-meta').textContent=`${vehicles.length} ${t('vehicles')}`;
 }
 function setFleetView(v){if(v===fleetView)return;fleetView=v;playSound('tab');renderFleet();}
@@ -2563,6 +2567,25 @@ function setFleetView(v){if(v===fleetView)return;fleetView=v;playSound('tab');re
 let versionsFamily=null,versionsPick=[0,1,null];
 function familyList(){
   return Object.keys(VEHICLE_VERSIONS).map(id=>{const v=vehicles.find(x=>x.id===id);return{id,name:(v&&v.name)||id,color:(v&&v.color)||'#5b8def'};}).filter(f=>(VEHICLE_VERSIONS[f.id]||[]).length>0);
+}
+/* Additional craft VERSIONS not (yet) tied to a launch — design iterations shown in the Versions comparison
+   ONLY. They never appear in the schedule and never change Compare/Grid (those reflect the latest flown/
+   scheduled flight). HEIGHT is read from each craft file's geometry (real). Mass / Delta-V / TWR and the
+   per-stage thrust / burn / propellant are computed by Juno at runtime (its in-game craft-info panel) and are
+   NOT stored in the .xml, so they stay '—' until the in-game numbers are supplied. firstFlight stays '—'. */
+const EXTRA_VERSIONS={
+  sunorbit:[
+    {label:'SN63 (V7.1)',height:'214.5m'},
+    {label:'SN62 (V7.0)',height:'214.5m'},
+    {label:'SN61 (V6.2)',height:'214.5m'},
+    {label:'SN60 (V6.1)',height:'214.5m'},
+    {label:'SN59 (V6.0)',height:'214.5m'},
+    {label:'SN58 (V5.1)',height:'209m'}
+  ]
+};
+function extraVersionSpec(v){
+  const blank=()=>({engines:'—',thrust:'—',burn:'—',prop:'—',recovery:'—',reusable:'—'});
+  return {label:v.label,current:false,height:v.height||'—',mass:'—',deltaV:'—',twr:'—',firstFlight:'—',s1:blank(),s2:blank()};
 }
 /* Build unique version entries for a family FROM launches[].versionSpecs.
    Deduplicates by label so multiple flights of the same SN show once.
@@ -2577,7 +2600,7 @@ function versionsForFamily(nameId){
   launches.filter(l=>l.nameId===nameId&&l.versionSpecs).forEach(l=>{
     const vs=l.versionSpecs,lab=vs.label;
     if(!groups[lab]){groups[lab]={spec:vs,months:[]};order.push(lab);}
-    if(l.status!=='Planned'&&l.status!=='Cancelled'&&l.date){
+    if(l.status!=='Planned'&&l.status!=='Cancelled'&&l.status!=='Static Burn'&&l.date){
       const p=l.date.split(' ')[0].split('-');groups[lab].months.push((+p[0])*12+(+p[1]));  /* year*12+month, comparable */
     }
   });
@@ -2587,6 +2610,8 @@ function versionsForFamily(nameId){
     else vs.firstFlight='—';
     return vs;
   });
+  // merge design-iteration versions not tied to a launch (Versions view only; deduped by label)
+  (EXTRA_VERSIONS[nameId]||[]).forEach(v=>{ if(!out.some(o=>o.label===v.label)) out.push(extraVersionSpec(v)); });
   // fallback to VEHICLE_VERSIONS if launches carry no versionSpecs for this family
   if(!out.length)(VEHICLE_VERSIONS[nameId]||[]).forEach(v=>{
     const vs={label:v.label,current:v.current,height:v.specs.find(s=>s.lbl==='Height')?.val||'—',mass:v.specs.find(s=>s.lbl==='Mass')?.val||'—',deltaV:v.specs.find(s=>s.lbl==='Delta-V')?.val||'—',twr:v.specs.find(s=>s.lbl==='TWR')?.val||'—',firstFlight:v.specs.find(s=>s.lbl==='First Flight')?.val||'—'};
@@ -2904,6 +2929,12 @@ const I18N_VERSIONS={
   versionsEmpty:{en:'Select versions to compare',ru:'Выберите версии для сравнения',de:'Versionen zum Vergleichen wählen',es:'Selecciona versiones para comparar',fr:'Sélectionnez des versions à comparer',zh:'选择要比较的版本',pt:'Selecione versões para comparar',hi:'तुलना के लिए संस्करण चुनें',pl:'Wybierz wersje do porównania',ja:'比較するバージョンを選択',af:'Kies weergawes om te vergelyk',hu:'Válassz verziókat az összehasonlításhoz'}
 };
 Object.keys(I18N_VERSIONS).forEach(k=>{Object.keys(I18N_VERSIONS[k]).forEach(l=>{if(TRANSLATIONS[l])TRANSLATIONS[l][k]=I18N_VERSIONS[k][l];});});
+/* ── Static Burn (held-down static fire test) status — full status label + short schedule-tab label, all 12 langs ── */
+const I18N_STATICBURN={
+  statusStaticBurn:{en:'Static Burn<br>Test',ru:'Огневое<br>испытание',de:'Statischer<br>Brenntest',es:'Prueba de fuego<br>estático',fr:'Essai à feu<br>statique',zh:'静态<br>点火测试',pt:'Teste de fogo<br>estático',hi:'स्टैटिक<br>बर्न टेस्ट',pl:'Statyczny test<br>ognia',ja:'静的<br>燃焼試験',af:'Statiese<br>Vuurtoets',hu:'Statikus<br>tűzteszt'},
+  schedStaticBurn:{en:'Static Burn',ru:'Огневое',de:'Brenntest',es:'Fuego estático',fr:'Feu statique',zh:'静态点火',pt:'Fogo estático',hi:'स्टैटिक बर्न',pl:'Test ognia',ja:'静的燃焼',af:'Vuurtoets',hu:'Tűzteszt'}
+};
+Object.keys(I18N_STATICBURN).forEach(k=>{Object.keys(I18N_STATICBURN[k]).forEach(l=>{if(TRANSLATIONS[l])TRANSLATIONS[l][k]=I18N_STATICBURN[k][l];});});
 /* ── best-score-saved note · LIVE status · intro toggle · skip ── */
 const I18N_LIVE={
   en:{noSave:'Your best score is saved on this device.',statusLive:'LIVE',introDisable:'Disable intro',introEnable:'Enable intro',skipIntro:'Skip'},
@@ -3059,6 +3090,7 @@ function showNewsList(){
 const SCHED_TABS=[
   {id:'all',status:null,color:'rgba(190,195,205,0.55)',label:()=>t('schedAll')},
   {id:'planned',status:'Planned',color:'#cfd3da',label:()=>t('schedPlanned')},
+  {id:'static-burn',status:'Static Burn',color:'#ff8c42',label:()=>t('schedStaticBurn')},
 ].concat(OUTCOMES.filter(o=>o.key!=='SCRUB').map(o=>({   /* SCRUB stays a valid status, just not a visible filter tab */
   id:o.key.toLowerCase().replace(/[^a-z0-9]+/g,'-'),
   status:o.key,color:o.color,
@@ -3316,7 +3348,7 @@ function openSpec(idx){
   const col=(veh&&veh.color)||statusColor(l.status);
   document.getElementById('spec-bar').style.background=col;
   let eyebrow=t('specifications');
-  if(l.status==='Planned')eyebrow=(l.dateObj.getTime()>Date.now())?t('nextLaunch'):t('missionInProgress');
+  if(isUpcomingStatus(l.status))eyebrow=(l.dateObj.getTime()>Date.now())?t('nextLaunch'):t('missionInProgress');
   else if(OUTCOME_LAUNCHED[l.status]===true)eyebrow=t('kpiLastLaunch');
   const eb=document.getElementById('spec-eyebrow');eb.textContent=eyebrow;eb.style.color=col;
   document.getElementById('spec-name').textContent=(veh&&veh.name)||l.vehicle||l.rocket;
