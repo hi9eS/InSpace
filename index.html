@@ -1620,7 +1620,7 @@ const LIVE_TICKER={
   speedSec:38,
   refreshSec:60
 };
-const LAST_UPDATE_MANUAL="Jun 10 '26";
+const LAST_UPDATE_MANUAL="Jun 28 '26";
 function lastUpdateStr(){
   if(LAST_UPDATE_MODE==='auto'){const now=Date.now();const dated=launches.filter(l=>l.dateObj);const past=dated.filter(l=>l.dateObj.getTime()<=now);const pool=past.length?past:dated;const n=pool.length?pool.reduce((m,l)=>l.dateObj>m?l.dateObj:m,pool[0].dateObj):new Date();return n.toLocaleDateString('en-US',{month:'short',day:'numeric'})+" '"+String(n.getFullYear()).slice(2);}
   return LAST_UPDATE_MANUAL;
