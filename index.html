@@ -434,6 +434,21 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .vd-img img{width:100%;height:100%;object-fit:cover;}
 .vd-img-ph{font-family:var(--f-mono);font-size:0.64em;letter-spacing:0.18em;text-transform:uppercase;color:var(--tx-3);display:flex;flex-direction:column;align-items:center;gap:12px;}
 .vd-img-ph svg{width:42px;height:42px;stroke:var(--tx-4);fill:none;stroke-width:1.2;}
+/* ── image carousel (vehicle detail) ── */
+.vd-carousel{position:absolute;inset:0;}
+.vd-track{display:flex;width:100%;height:100%;transition:transform .5s cubic-bezier(.4,0,.2,1);will-change:transform;}
+.vd-slide{flex:0 0 100%;width:100%;height:100%;}
+.vd-slide img{width:100%;height:100%;object-fit:cover;display:block;}
+.vd-cap-bar{position:absolute;top:0;left:0;right:0;z-index:3;padding:12px 15px;background:linear-gradient(180deg,rgba(8,10,14,0.74),rgba(8,10,14,0));pointer-events:none;}
+.vd-cap{font-family:var(--f-mono);font-size:0.6em;letter-spacing:0.1em;text-transform:uppercase;color:#eef1f6;text-shadow:0 1px 7px rgba(0,0,0,0.65);}
+.vd-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:4;width:38px;height:38px;padding:0;border-radius:50%;border:1px solid rgba(255,255,255,0.16);background:rgba(10,12,16,0.46);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,border-color .2s,transform .14s;}
+.vd-arrow svg{width:19px;height:19px;}
+.vd-arrow:hover{background:rgba(10,12,16,0.8);border-color:rgba(255,255,255,0.42);}
+.vd-arrow:active{transform:translateY(-50%) scale(0.9);}
+.vd-prev{left:13px;} .vd-next{right:13px;}
+.vd-dots{position:absolute;bottom:12px;left:0;right:0;z-index:3;display:flex;justify-content:center;gap:6px;pointer-events:none;}
+.vd-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.34);transition:background .25s,width .25s,border-radius .25s;}
+.vd-dot.on{background:#fff;width:17px;border-radius:3px;}
 .vd-specs{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:8px;}
 @media(max-width:700px){.vd-specs{grid-template-columns:repeat(3,1fr);}}
 @media(max-width:460px){.vd-specs{grid-template-columns:repeat(2,1fr);}}
@@ -678,6 +693,27 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .m-profile-live-badge{display:inline-flex;align-items:center;gap:5px;margin-left:10px;font-family:var(--f-mono);font-size:0.72em;letter-spacing:0.14em;text-transform:uppercase;color:#ff5d5d;opacity:0.85;vertical-align:middle;}
 .m-profile-live-badge .mpl-dot{background:#ff5d5d!important;box-shadow:0 0 8px #ff5d5d!important;animation:mplPulse 1s ease-in-out infinite;}
 @keyframes mplPulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+/* ── AI flight-risk analysis panel ── */
+.m-ai{margin:2px 0 22px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg,rgba(190,195,205,0.04),rgba(190,195,205,0.012));padding:15px 16px 16px;}
+.m-ai-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;}
+.m-ai-ttl{display:flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:0.62em;letter-spacing:0.13em;text-transform:uppercase;color:var(--tx-2);}
+.m-ai-ttl svg{width:14px;height:14px;stroke:var(--blue);fill:none;stroke-width:1.7;flex-shrink:0;}
+.m-ai-tag{font-family:var(--f-mono);font-size:0.49em;letter-spacing:0.1em;text-transform:uppercase;color:var(--tx-4);border:1px solid var(--line);border-radius:5px;padding:3px 7px;white-space:nowrap;}
+.m-ai-prob{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px;}
+.m-ai-prob-l{font-size:0.74em;color:var(--tx-2);}
+.m-ai-prob-v{font-family:var(--f-mono);font-size:1.1em;font-weight:700;}
+.m-ai-bar{height:7px;border-radius:4px;background:rgba(190,195,205,0.1);overflow:hidden;margin-bottom:7px;}
+.m-ai-bar-f{height:100%;border-radius:4px;transition:width .7s cubic-bezier(.4,0,.2,1);}
+.m-ai-band{font-family:var(--f-mono);font-size:0.56em;color:var(--tx-3);letter-spacing:0.05em;margin-bottom:11px;}
+.m-ai-conf{display:inline-flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:0.55em;letter-spacing:0.05em;color:var(--tx-3);text-transform:uppercase;}
+.m-ai-conf b{color:var(--tx-2);font-weight:600;}
+.m-ai-sec{font-family:var(--f-mono);font-size:0.54em;letter-spacing:0.12em;text-transform:uppercase;color:var(--tx-3);margin:16px 0 8px;}
+.m-ai-fac{display:flex;flex-direction:column;gap:7px;}
+.m-ai-fac-i{display:flex;align-items:flex-start;gap:9px;font-size:0.74em;color:var(--tx-2);line-height:1.45;}
+.m-ai-fac-i .fx{flex-shrink:0;width:13px;text-align:center;font-family:var(--f-mono);font-weight:700;line-height:1.5;}
+.m-ai-seq{display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
+.m-ai-seq .sq{font-family:var(--f-mono);font-size:0.6em;color:var(--tx-2);background:rgba(190,195,205,0.06);border:1px solid var(--line);border-radius:5px;padding:4px 8px;}
+.m-ai-seq .ar{color:var(--tx-4);font-size:0.72em;}
 .m-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:9px;overflow:hidden;margin-bottom:20px;}
 .m-cell{background:var(--bg-2);padding:13px 16px;}
 .m-cell-l{font-family:var(--f-mono);font-size:0.54em;letter-spacing:0.12em;text-transform:uppercase;color:var(--tx-3);margin-bottom:5px;}
@@ -1050,6 +1086,7 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
       <div class="m-type" id="m-type"></div>
       <div class="m-stage" id="m-stage" style="display:none"></div>
       <div class="m-profile" id="m-profile"></div>
+      <div class="m-ai" id="m-ai" style="display:none"></div>
       <div class="m-grid" id="m-grid"></div>
       <div class="m-desc" id="m-desc"></div>
       <div class="m-watch" id="m-watch" style="display:none"><a class="ignition-btn" id="m-watch-link" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span data-i="watchLaunch">Watch Launch</span></a></div>
@@ -2028,12 +2065,6 @@ function buildHeaderRight(){
    ════════════════════════════════════════════════════════════ */
 const launches=[
   {
-    rocket:'SunOrbit One SN58 (V5.1)', vehicle:'SunOrbit One SN58 (V5.1)', nameId:'sunorbit',
-    date:'2026-06-30 18:00', status:'Static Burn', durationMin:0.3,
-    site:'Vandenberg (RSS)', target:'', type:'', desc:'Static fire test — booster held down, engines fired without launch.',
-    watchUrl:'https://www.youtube.com/watch?v=mhJRzQsLZGg', showWatchMin:30, landing:null, attempt:''
-  },
-  {
     rocket:'SunPower One SN5 (V2.2)', vehicle:'SunPower One SN5 (V2.2)', nameId:'sunpower',
     date:'2026-03-07 14:00', status:'Cancelled', durationMin:3,
     site:'', target:'', type:'', desc:'',
@@ -2230,7 +2261,18 @@ const vehicles = [
     class: 'Interplanetary Vehicle',
     color: '#4f8eff',
     dataUpdated: "Jun '26",
-    image: '991ef2dcfcd94c0f95050b657d1c6134.png',
+    /* ── CAROUSEL ──────────────────────────────────────────────────────────────────────────────────
+       Add as many images as you want. Each item: { src:'file.png', cap:{ en:'…', ru:'…', … } }
+       • cap is OPTIONAL — omit it for a slide with no caption.
+       • Captions are per-language (en is the fallback); add a language by adding its key to cap.
+       • Left/right arrows + dots appear AUTOMATICALLY when there are 2 or more images.
+       (A single `image: 'file.png'` string still works for other vehicles — back-compatible.) */
+    images: [
+      { src: '991ef2dcfcd94c0f95050b657d1c6134.png', cap: { en:'Booster engine view', ru:'Вид на двигатели бустера' } }
+      /* ↑ ONE image = one, no arrows. Add more objects below and arrows + dots appear automatically:
+         , { src: 'second.png', cap: { en:'Stage separation', ru:'Разделение ступеней' } }
+         , { src: 'third.png',  cap: { en:'On the pad',       ru:'На стартовом столе' } }            */
+    ],
     description: "SunOrbit is InSpace's primary interplanetary vehicle, built in modular stages.<br>It is equally capable of crewed and uncrewed missions to Low Earth Orbit and to other planets. For Earth orbit, the third stage can function as a crewed mini-station or as an uncrewed satellite that separates directly in orbit. For missions to other planets, the third stage can serve as the main crew habitat and command module with life support systems, or operate fully autonomously without pilots - including orbital insertion around other planets.<br>The first and second stages are reusable and designed for precise suicide burn landings on Earth and other planetary bodies. The vehicle features advanced docking capabilities and high-bandwidth communication relay systems.",
     specs: [
       { val: '205m', lbl: 'Height' },
@@ -2692,9 +2734,39 @@ function versionsCompareHTML(){
   return `<div class="compare-wrap"><table class="compare-table"><thead>${head}</thead><tbody>${body}</tbody></table></div>`;
 }
 
+/* ── carousel helpers ── */
+const CHEV_L='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>';
+const CHEV_R='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>';
+function vehImages(v){ if(Array.isArray(v.images)&&v.images.length)return v.images; if(v.image)return [{src:v.image}]; return []; }
+function vdCap(cap){ if(!cap)return ''; if(typeof cap==='string')return cap; return cap[currentLang]||cap.en||Object.values(cap)[0]||''; }
+function vdImgHTML(v){
+  const imgs=vehImages(v);
+  if(!imgs.length)return `<div class="vd-img-ph">${PH_ICON}<span>${t('noImage')}</span></div>`;
+  window.__vdCar={imgs,idx:0};
+  const slides=imgs.map(im=>`<div class="vd-slide"><img src="${escAttr(im.src)}" alt="${escAttr(v.name)}" onerror="vehImgFail(this)"></div>`).join('');
+  const hasCap=imgs.some(im=>vdCap(im.cap));
+  const capBar=hasCap?`<div class="vd-cap-bar"><span class="vd-cap" id="vd-cap">${escAttr(vdCap(imgs[0].cap))}</span></div>`:'';
+  const multi=imgs.length>1;
+  const arrows=multi?`<button class="vd-arrow vd-prev" onclick="vdSlide(-1)" aria-label="Previous image">${CHEV_L}</button><button class="vd-arrow vd-next" onclick="vdSlide(1)" aria-label="Next image">${CHEV_R}</button>`:'';
+  const dots=multi?`<div class="vd-dots" id="vd-dots">${imgs.map((_,i)=>`<span class="vd-dot${i===0?' on':''}"></span>`).join('')}</div>`:'';
+  return `<div class="vd-carousel">${capBar}<div class="vd-track" id="vd-track">${slides}</div>${arrows}${dots}</div>`;
+}
+function vdSlide(dir){
+  const st=window.__vdCar; if(!st||st.imgs.length<2)return;
+  st.idx=(st.idx+dir+st.imgs.length)%st.imgs.length;
+  const tr=document.getElementById('vd-track'); if(tr)tr.style.transform='translateX(-'+(st.idx*100)+'%)';
+  const cap=document.getElementById('vd-cap'); if(cap)cap.textContent=vdCap(st.imgs[st.idx].cap);
+  const dots=document.getElementById('vd-dots'); if(dots)Array.from(dots.children).forEach((d,i)=>d.classList.toggle('on',i===st.idx));
+  try{playSound('tab');}catch(_){}
+}
+if(!window.__vdKeyBound){window.__vdKeyBound=true;document.addEventListener('keydown',function(e){
+  const fd=document.getElementById('fleet-detail'); if(!fd||!fd.classList.contains('active'))return;
+  if(!document.getElementById('vd-track'))return;
+  if(e.key==='ArrowLeft')vdSlide(-1); else if(e.key==='ArrowRight')vdSlide(1);
+});}
 function showVehicleDetail(id){
   const v=vehicles.find(x=>x.id===id);if(!v)return;playSound('modal');
-  const imgHTML=v.image?`<img src="${v.image}" alt="${escAttr(v.name)}" onerror="vehImgFail(this)">`:`<div class="vd-img-ph">${PH_ICON}<span>${t('noImage')}</span></div>`;
+  const imgHTML=vdImgHTML(v);
   const specsHTML=v.specs.map(s=>`<div class="vd-spec"><div class="vd-spec-l">${s.lbl}</div><div class="vd-spec-v">${s.val}</div></div>`).join('');
   const stagesHTML=v.stages.map(st=>`<div class="vd-stage"><div class="vd-stage-t">${st.title}</div><div class="vd-stage-rows">${st.rows.map(r=>`<div class="vd-sr"><div class="vd-sr-k">${r.key}</div><div class="vd-sr-v">${r.val}</div></div>`).join('')}</div></div>`).join('');
   const descHTML=(v.description&&v.description.trim())?v.description:`<span style="color:var(--tx-3)">${t('contentPending')}</span>`;
@@ -2945,6 +3017,38 @@ const I18N_STATICBURN={
   schedStaticBurn:{en:'Static Burn',ru:'Огневое',de:'Brenntest',es:'Fuego estático',fr:'Feu statique',zh:'静态点火',pt:'Fogo estático',hi:'स्टैटिक बर्न',pl:'Test ognia',ja:'静的燃焼',af:'Vuurtoets',hu:'Tűzteszt'}
 };
 Object.keys(I18N_STATICBURN).forEach(k=>{Object.keys(I18N_STATICBURN[k]).forEach(l=>{if(TRANSLATIONS[l])TRANSLATIONS[l][k]=I18N_STATICBURN[k][l];});});
+/* ── AI flight-risk analysis panel (deterministic estimate from the flight log) ── */
+const I18N_AI={
+  aiTitle:{en:'Flight Analysis',ru:'Анализ полёта',de:'Fluganalyse',es:'Análisis de vuelo',fr:'Analyse de vol',zh:'飞行分析',pt:'Análise de voo',hi:'उड़ान विश्लेषण',pl:'Analiza lotu',ja:'飛行分析',af:'Vlugontleding',hu:'Repüléselemzés'},
+  aiTag:{en:'AI · flight-log',ru:'ИИ · по журналу',de:'KI · Flugprotokoll',es:'IA · registro',fr:'IA · journal',zh:'AI · 飞行日志',pt:'IA · registro',hi:'AI · लॉग',pl:'AI · dziennik',ja:'AI · 記録',af:'KI · vluglog',hu:'MI · napló'},
+  aiSuccess:{en:'Success likelihood',ru:'Вероятность успеха',de:'Erfolgswahrscheinlichkeit',es:'Probabilidad de éxito',fr:'Probabilité de succès',zh:'成功概率',pt:'Probabilidade de sucesso',hi:'सफलता की संभावना',pl:'Szansa powodzenia',ja:'成功確率',af:'Sukseswaarskynlikheid',hu:'Siker valószínűsége'},
+  aiRisk:{en:'Anomaly / RUD risk',ru:'Риск аварии / RUD',de:'Anomalie- / RUD-Risiko',es:'Riesgo de anomalía / RUD',fr:'Risque d’anomalie / RUD',zh:'异常 / RUD 风险',pt:'Risco de anomalia / RUD',hi:'विसंगति / RUD जोखिम',pl:'Ryzyko awarii / RUD',ja:'異常 / RUD リスク',af:'Anomalie- / RUD-risiko',hu:'Anomália / RUD kockázat'},
+  aiStaticRisk:{en:'Static-fire anomaly risk',ru:'Риск аномалии прожига',de:'Anomalierisiko Brenntest',es:'Riesgo de anomalía en encendido',fr:'Risque d’anomalie à feu statique',zh:'静态点火异常风险',pt:'Risco de anomalia no teste',hi:'स्टैटिक-फायर विसंगति जोखिम',pl:'Ryzyko anomalii testu',ja:'静的燃焼異常リスク',af:'Statiese vuur anomalie-risiko',hu:'Statikus égés anomália kockázat'},
+  aiConf:{en:'Confidence',ru:'Достоверность',de:'Konfidenz',es:'Confianza',fr:'Confiance',zh:'置信度',pt:'Confiança',hi:'विश्वास',pl:'Pewność',ja:'信頼度',af:'Vertroue',hu:'Megbízhatóság'},
+  aiConfHigh:{en:'High',ru:'Высокая',de:'Hoch',es:'Alta',fr:'Élevée',zh:'高',pt:'Alta',hi:'उच्च',pl:'Wysoka',ja:'高',af:'Hoog',hu:'Magas'},
+  aiConfMed:{en:'Medium',ru:'Средняя',de:'Mittel',es:'Media',fr:'Moyenne',zh:'中',pt:'Média',hi:'मध्यम',pl:'Średnia',ja:'中',af:'Medium',hu:'Közepes'},
+  aiConfLow:{en:'Low',ru:'Низкая',de:'Niedrig',es:'Baja',fr:'Faible',zh:'低',pt:'Baixa',hi:'निम्न',pl:'Niska',ja:'低',af:'Laag',hu:'Alacsony'},
+  aiNoFlights:{en:'no prior flights',ru:'нет прошлых полётов',de:'keine früheren Flüge',es:'sin vuelos previos',fr:'aucun vol antérieur',zh:'无历史飞行',pt:'sem voos anteriores',hi:'कोई पूर्व उड़ान नहीं',pl:'brak wcześniejszych lotów',ja:'過去の飛行なし',af:'geen vorige vlugte',hu:'nincs korábbi repülés'},
+  aiOneFlight:{en:'based on 1 flight',ru:'по 1 полёту',de:'auf Basis von 1 Flug',es:'según 1 vuelo',fr:'sur 1 vol',zh:'基于 1 次飞行',pt:'com base em 1 voo',hi:'1 उड़ान पर आधारित',pl:'na podstawie 1 lotu',ja:'1回の飛行に基づく',af:'gebaseer op 1 vlug',hu:'1 repülés alapján'},
+  aiNFlights:{en:'based on {n} flights',ru:'по {n} полётам',de:'auf Basis von {n} Flügen',es:'según {n} vuelos',fr:'sur {n} vols',zh:'基于 {n} 次飞行',pt:'com base em {n} voos',hi:'{n} उड़ानों पर आधारित',pl:'na podstawie {n} lotów',ja:'{n}回の飛行に基づく',af:'gebaseer op {n} vlugte',hu:'{n} repülés alapján'},
+  aiFactors:{en:'Key factors',ru:'Ключевые факторы',de:'Schlüsselfaktoren',es:'Factores clave',fr:'Facteurs clés',zh:'关键因素',pt:'Fatores-chave',hi:'मुख्य कारक',pl:'Kluczowe czynniki',ja:'主要因子',af:'Sleutelfaktore',hu:'Kulcstényezők'},
+  aiExpected:{en:'Expected sequence',ru:'Ожидаемая последовательность',de:'Erwartete Sequenz',es:'Secuencia esperada',fr:'Séquence attendue',zh:'预期流程',pt:'Sequência esperada',hi:'अपेक्षित अनुक्रम',pl:'Oczekiwana sekwencja',ja:'予想シーケンス',af:'Verwagte volgorde',hu:'Várt sorrend'},
+  aiFacVeh:{en:'{name}: {s}/{n} flights successful ({p}%)',ru:'{name}: {s}/{n} полётов успешно ({p}%)',de:'{name}: {s}/{n} Flüge erfolgreich ({p}%)',es:'{name}: {s}/{n} vuelos con éxito ({p}%)',fr:'{name} : {s}/{n} vols réussis ({p}%)',zh:'{name}：{s}/{n} 次飞行成功（{p}%）',pt:'{name}: {s}/{n} voos bem-sucedidos ({p}%)',hi:'{name}: {s}/{n} उड़ानें सफल ({p}%)',pl:'{name}: {s}/{n} lotów udanych ({p}%)',ja:'{name}：{s}/{n} 回成功（{p}%）',af:'{name}: {s}/{n} vlugte suksesvol ({p}%)',hu:'{name}: {s}/{n} repülés sikeres ({p}%)'},
+  aiFacNoVeh:{en:'{name}: no flight history yet',ru:'{name}: пока нет истории полётов',de:'{name}: noch keine Flughistorie',es:'{name}: aún sin historial',fr:'{name} : pas encore d’historique',zh:'{name}：暂无飞行记录',pt:'{name}: sem histórico ainda',hi:'{name}: अभी कोई इतिहास नहीं',pl:'{name}: brak historii lotów',ja:'{name}：飛行履歴なし',af:'{name}: nog geen geskiedenis',hu:'{name}: még nincs előzmény'},
+  aiFacVer:{en:'Version {v}: {s}/{n} successful',ru:'Версия {v}: {s}/{n} успешно',de:'Version {v}: {s}/{n} erfolgreich',es:'Versión {v}: {s}/{n} con éxito',fr:'Version {v} : {s}/{n} réussis',zh:'版本 {v}：{s}/{n} 成功',pt:'Versão {v}: {s}/{n} bem-sucedidos',hi:'संस्करण {v}: {s}/{n} सफल',pl:'Wersja {v}: {s}/{n} udanych',ja:'バージョン {v}：{s}/{n} 成功',af:'Weergawe {v}: {s}/{n} suksesvol',hu:'{v} verzió: {s}/{n} sikeres'},
+  aiFacVerNew:{en:'Version {v}: first flight — no prior data',ru:'Версия {v}: первый полёт — нет данных',de:'Version {v}: Erstflug — keine Daten',es:'Versión {v}: primer vuelo — sin datos',fr:'Version {v} : premier vol — aucune donnée',zh:'版本 {v}：首飞 — 无历史数据',pt:'Versão {v}: primeiro voo — sem dados',hi:'संस्करण {v}: पहली उड़ान — कोई डेटा नहीं',pl:'Wersja {v}: pierwszy lot — brak danych',ja:'バージョン {v}：初飛行 — データなし',af:'Weergawe {v}: eerste vlug — geen data',hu:'{v} verzió: első repülés — nincs adat'},
+  aiFacNewRisk:{en:'New version → higher uncertainty',ru:'Новая версия → выше неопределённость',de:'Neue Version → höhere Unsicherheit',es:'Nueva versión → mayor incertidumbre',fr:'Nouvelle version → incertitude accrue',zh:'新版本 → 不确定性更高',pt:'Nova versão → maior incerteza',hi:'नया संस्करण → अधिक अनिश्चितता',pl:'Nowa wersja → większa niepewność',ja:'新バージョン → 不確実性増',af:'Nuwe weergawe → meer onsekerheid',hu:'Új verzió → nagyobb bizonytalanság'},
+  aiFacStrong:{en:'Strong track record',ru:'Уверенная статистика',de:'Starke Bilanz',es:'Sólido historial',fr:'Solide historique',zh:'良好的历史记录',pt:'Histórico sólido',hi:'मजबूत रिकॉर्ड',pl:'Solidna historia',ja:'高い実績',af:'Sterk rekord',hu:'Erős múlt'},
+  aiSeqLiftoff:{en:'Liftoff',ru:'Старт',de:'Abheben',es:'Despegue',fr:'Décollage',zh:'升空',pt:'Decolagem',hi:'लिफ्टऑफ',pl:'Start',ja:'リフトオフ',af:'Opstyg',hu:'Felszállás'},
+  aiSeqMeco:{en:'MECO',ru:'MECO',de:'MECO',es:'MECO',fr:'MECO',zh:'MECO',pt:'MECO',hi:'MECO',pl:'MECO',ja:'MECO',af:'MECO',hu:'MECO'},
+  aiSeqSep:{en:'Stage sep',ru:'Разделение',de:'Stufentrennung',es:'Separación',fr:'Séparation',zh:'级间分离',pt:'Separação',hi:'स्टेज सेप',pl:'Separacja',ja:'分離',af:'Skeiding',hu:'Szétválás'},
+  aiSeqBoostback:{en:'Boostback',ru:'Boostback',de:'Boostback',es:'Boostback',fr:'Boostback',zh:'返航点火',pt:'Boostback',hi:'बूस्टबैक',pl:'Boostback',ja:'ブーストバック',af:'Boostback',hu:'Boostback'},
+  aiSeqLanding:{en:'Landing',ru:'Посадка',de:'Landung',es:'Aterrizaje',fr:'Atterrissage',zh:'着陆',pt:'Pouso',hi:'लैंडिंग',pl:'Lądowanie',ja:'着陸',af:'Landing',hu:'Leszállás'},
+  aiSeqIgnition:{en:'Ignition',ru:'Зажигание',de:'Zündung',es:'Ignición',fr:'Allumage',zh:'点火',pt:'Ignição',hi:'इग्निशन',pl:'Zapłon',ja:'点火',af:'Ontsteking',hu:'Gyújtás'},
+  aiSeqHold:{en:'Full-thrust hold',ru:'Удержание тяги',de:'Volllast-Halten',es:'Mantener empuje',fr:'Maintien pleine poussée',zh:'全推力保持',pt:'Empuxo máximo',hi:'फुल-थ्रस्ट होल्ड',pl:'Pełny ciąg',ja:'フルスラスト保持',af:'Volstukrag hou',hu:'Teljes tolóerő'},
+  aiSeqShutdown:{en:'Shutdown',ru:'Останов',de:'Abschaltung',es:'Apagado',fr:'Arrêt',zh:'关机',pt:'Desligamento',hi:'शटडाउन',pl:'Wyłączenie',ja:'停止',af:'Afsluiting',hu:'Leállás'}
+};
+Object.keys(I18N_AI).forEach(k=>{Object.keys(I18N_AI[k]).forEach(l=>{if(TRANSLATIONS[l])TRANSLATIONS[l][k]=I18N_AI[k][l];});});
 /* ── best-score-saved note · LIVE status · intro toggle · skip ── */
 const I18N_LIVE={
   en:{noSave:'Your best score is saved on this device.',statusLive:'LIVE',introDisable:'Disable intro',introEnable:'Enable intro',skipIntro:'Skip'},
@@ -3289,6 +3393,57 @@ window.addEventListener('message',function(e){
       try{showToast({icon:'rocket',color:'#ff2d55',title:t('statusLive'),sub:t('missionInProgress'),duration:3500});}catch(_){}}
   }
 });
+/* ── AI FLIGHT-RISK ENGINE ─────────────────────────────────────────────────────────────────────
+   Deterministic, transparent estimate computed ONLY from the program's own flight log (launches[]).
+   Model: Beta-Bernoulli with partial pooling. A neutral Beta(2,2) prior (= 50% with zero data, i.e.
+   maximum uncertainty — never a fabricated number) is updated by the version's own flight history at
+   full weight and by the parent vehicle's history at half weight. P(success)=α/(α+β); the ± band is the
+   posterior standard deviation, so it widens when there is little data and tightens as flights accumulate.
+   Only launches that ACTUALLY FLEW (Success/RUD) count; Planned / Cancelled / Static Burn are ignored as
+   evidence. No video, no network, no hidden state — re-derivable from the data on screen. */
+const AI_ICON='<svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="3"/><path d="M9 3v2M15 3v2M9 19v2M15 19v2M3 9h2M3 15h2M19 9h2M19 15h2M9.5 9.5h5v5h-5z"/></svg>';
+function flightRisk(l){
+  const flew=x=>OUTCOME_LAUNCHED[x.status]===true;                 /* actually attempted flight */
+  const veh=launches.filter(x=>x.nameId===l.nameId&&flew(x)&&x!==l);
+  const vehS=veh.filter(x=>x.status==='Success').length,vehN=veh.length;
+  const vlab=(l.versionSpecs&&l.versionSpecs.label)||null;
+  const ver=vlab?launches.filter(x=>x.versionSpecs&&x.versionSpecs.label===vlab&&flew(x)&&x!==l):[];
+  const verS=ver.filter(x=>x.status==='Success').length,verN=ver.length;
+  let a=2,b=2;                                                      /* neutral prior → 50% with no data */
+  a+=0.5*vehS; b+=0.5*(vehN-vehS);                                  /* vehicle history, half weight */
+  a+=verS;     b+=(verN-verS);                                      /* version history, full weight */
+  const pS=a/(a+b), sd=Math.sqrt((a*b)/((a+b)*(a+b)*(a+b+1)));
+  const sample=vehN+verN, conf=sample>=8?'high':(sample>=3?'med':'low');
+  return {pS,pFail:1-pS,sd,conf,vehN,vehS,verN,verS,vlab,sample};
+}
+function aiRiskColor(p){return p>=0.75?'#37e0a0':(p>=0.5?'#ffc94d':'#ff5d5d');}
+function aiAnalysisHTML(l){
+  const veh=vehicles.find(v=>v.id===l.nameId), vname=(veh&&veh.name)||l.nameId;
+  const isSB=l.status==='Static Burn', r=flightRisk(l);
+  const pct=Math.round(r.pS*100), fpct=Math.round(r.pFail*100), band=Math.round(r.sd*100), clr=aiRiskColor(r.pS);
+  const F=[];
+  if(r.vehN>0){const vp=Math.round(r.vehS/r.vehN*100);F.push({x:vp>=80?'+':(vp>=50?'~':'\u2212'),t:t('aiFacVeh').replace('{name}',vname).replace('{s}',r.vehS).replace('{n}',r.vehN).replace('{p}',vp)});}
+  else F.push({x:'~',t:t('aiFacNoVeh').replace('{name}',vname)});
+  if(r.vlab){
+    if(r.verN>0)F.push({x:r.verS===r.verN?'+':'~',t:t('aiFacVer').replace('{v}',r.vlab).replace('{s}',r.verS).replace('{n}',r.verN)});
+    else {F.push({x:'\u2212',t:t('aiFacVerNew').replace('{v}',r.vlab)});F.push({x:'\u2212',t:t('aiFacNewRisk')});}
+  }
+  if(r.conf==='high'&&r.pS>=0.85)F.push({x:'+',t:t('aiFacStrong')});
+  const facHTML=F.map(f=>`<div class="m-ai-fac-i"><span class="fx" style="color:${f.x==='+'?'#37e0a0':(f.x==='\u2212'?'#ff5d5d':'var(--tx-4)')}">${f.x}</span><span>${f.t}</span></div>`).join('');
+  const seq=isSB?[t('aiSeqIgnition'),t('aiSeqHold'),t('aiSeqShutdown')]
+                :[t('aiSeqLiftoff'),t('aiSeqMeco'),t('aiSeqSep'),t('aiSeqBoostback'),t('aiSeqLanding')];
+  const seqHTML=seq.map((s,i)=>`${i?'<span class="ar">\u2192</span>':''}<span class="sq">${s}</span>`).join('');
+  const confTxt=t(r.conf==='high'?'aiConfHigh':(r.conf==='med'?'aiConfMed':'aiConfLow'));
+  const basedOn=r.sample===0?t('aiNoFlights'):(r.sample===1?t('aiOneFlight'):t('aiNFlights').replace('{n}',r.sample));
+  const riskLbl=isSB?t('aiStaticRisk'):t('aiRisk');
+  return `<div class="m-ai-hd"><div class="m-ai-ttl">${AI_ICON}${t('aiTitle')}</div><div class="m-ai-tag">${t('aiTag')}</div></div>`
+    +`<div class="m-ai-prob"><span class="m-ai-prob-l">${t('aiSuccess')}</span><span class="m-ai-prob-v" style="color:${clr}">${pct}%</span></div>`
+    +`<div class="m-ai-bar"><div class="m-ai-bar-f" style="width:${pct}%;background:${clr}"></div></div>`
+    +`<div class="m-ai-band">\u00b1 ${band}% \u00b7 ${riskLbl}: ${fpct}%</div>`
+    +`<div class="m-ai-conf">${t('aiConf')}: <b>${confTxt}</b> \u00b7 ${basedOn}</div>`
+    +`<div class="m-ai-sec">${t('aiFactors')}</div><div class="m-ai-fac">${facHTML}</div>`
+    +`<div class="m-ai-sec">${t('aiExpected')}</div><div class="m-ai-seq">${seqHTML}</div>`;
+}
 function openLaunchModal(idx){
   const l=launches[idx];if(!l)return;playSound('modal');
   window.__openModalLaunch=idx;
@@ -3301,6 +3456,7 @@ function openLaunchModal(idx){
   const typeEl=document.getElementById('m-type');
   if(l.type&&l.type.trim()){typeEl.textContent=l.type;typeEl.style.display='';}else{typeEl.style.display='none';}
   {const mp=document.getElementById('m-profile');mp.innerHTML=missionProfileInner(l);mp.setAttribute('data-live',isMissionLive(l)?'1':'0');}
+  {const aiEl=document.getElementById('m-ai');if(aiEl){if(isUpcomingStatus(l.status)){aiEl.innerHTML=aiAnalysisHTML(l);aiEl.style.display='';}else{aiEl.innerHTML='';aiEl.style.display='none';}}}
   const dStr=l.dateObj.toLocaleString(undefined,{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false});
   const at=String(l.attempt||'').trim();
   const cell4=(at===''||at==='0')?{l:t('lblSite'),v:l.site||'—'}
@@ -3414,7 +3570,7 @@ function computeStats(){
   const comp=L.filter(l=>l.status==='Success'),canc=L.filter(l=>l.status==='Cancelled'),plan=L.filter(l=>l.status==='Planned');
   const isLaunched=l=>OUTCOME_LAUNCHED[l.status]===true;            /* actually flew */
   const launched=L.filter(isLaunched);
-  const total=L.length;
+  const total=L.filter(l=>l.status!=='Static Burn').length;          /* Static Burn = ground test, not a launch — excluded from totals/success-rate */
   const successRate=total?Math.round(comp.length/total*1000)/10:0;  /* (Success / Total) ×100, one decimal. RUD/Cancelled = NOT success. 24/65 -> 36.9 */
   const byVehLaunched=vehList().map(v=>({name:v.name,color:v.color,count:launched.filter(l=>l.nameId===v.id).length}));
   const byVehSuccess=vehList().map(v=>({name:v.name,color:v.color,count:comp.filter(l=>l.nameId===v.id).length}));
