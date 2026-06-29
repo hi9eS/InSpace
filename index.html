@@ -819,8 +819,9 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .compare-table th:first-child,.compare-table td:first-child{width:178px;}
 .compare-table .ct-val,.compare-table .ct-rowlabel{overflow:hidden;text-overflow:ellipsis;}
 /* ── Vehicle detail · "data updated" line (subtle pill under the subtitle) ── */
-.vd-updated{display:inline-flex;align-items:center;gap:8px;margin:-22px 0 30px;padding:6px 12px;border:1px solid var(--line);border-radius:100px;background:rgba(190,195,205,0.03);font-family:var(--f-mono);font-size:0.58em;letter-spacing:0.1em;text-transform:uppercase;color:var(--tx-3);}
-.vd-updated .dot{width:5px;height:5px;border-radius:50%;background:var(--go);box-shadow:0 0 7px var(--go);flex-shrink:0;}
+.vd-updated{display:inline-flex;align-items:center;gap:7px;margin:-22px 0 30px;padding:5px 11px 5px 9px;border:1px solid var(--line);border-radius:7px;background:linear-gradient(180deg,rgba(190,195,205,0.045),rgba(190,195,205,0.012));font-family:var(--f-mono);font-size:0.56em;letter-spacing:0.08em;text-transform:uppercase;color:var(--tx-3);}
+.vd-updated svg{width:11px;height:11px;flex-shrink:0;opacity:0.55;stroke:currentColor;}
+.vd-updated b{color:var(--tx-2);font-weight:600;letter-spacing:0.04em;}
 /* ── Fleet · Versions compare view (family pills + version slots + side-by-side table) ── */
 .ver-controls{display:flex;flex-direction:column;gap:14px;margin-bottom:24px;}
 .ver-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
@@ -1532,6 +1533,9 @@ function statusLabel(s){
   if(s==='Cancelled')return t('statusCanceled');
   return s; /* RUD and any other custom status — shown as typed */
 }
+/* Plain (single-line) status label — for textContent contexts where raw HTML like <br> must NOT render
+   as literal text. The two-line badge keeps statusLabel() (inserted via innerHTML). */
+function statusLabelPlain(s){return statusLabel(s).replace(/<br\s*\/?>/gi,' ');}
 /* Planned, Static Burn & LIVE share the "upcoming/in-flight" pipeline (countdown, watch, spec, notifications).
    Static Burn = a held-down static fire test; it behaves exactly like Planned but never counts as a flight/landing. */
 function isUpcomingStatus(s){return s==='Planned'||s==='Static Burn'||s==='LIVE';}
@@ -1620,7 +1624,7 @@ const LIVE_TICKER={
   speedSec:38,
   refreshSec:60
 };
-const LAST_UPDATE_MANUAL="Jun 28 '26";
+const LAST_UPDATE_MANUAL="Jun 10 '26";
 function lastUpdateStr(){
   if(LAST_UPDATE_MODE==='auto'){const now=Date.now();const dated=launches.filter(l=>l.dateObj);const past=dated.filter(l=>l.dateObj.getTime()<=now);const pool=past.length?past:dated;const n=pool.length?pool.reduce((m,l)=>l.dateObj>m?l.dateObj:m,pool[0].dateObj):new Date();return n.toLocaleDateString('en-US',{month:'short',day:'numeric'})+" '"+String(n.getFullYear()).slice(2);}
   return LAST_UPDATE_MANUAL;
@@ -2023,6 +2027,12 @@ function buildHeaderRight(){
         During a LIVE mission (status:'Planned', in progress) the bar is hidden and "available after broadcast" is shown.
    ════════════════════════════════════════════════════════════ */
 const launches=[
+  {
+    rocket:'SunOrbit One SN58 (V5.1)', vehicle:'SunOrbit One SN58 (V5.1)', nameId:'sunorbit',
+    date:'2026-06-30 18:00', status:'Static Burn', durationMin:0.3,
+    site:'Vandenberg (RSS)', target:'', type:'', desc:'Static fire test — booster held down, engines fired without launch.',
+    watchUrl:'https://www.youtube.com/watch?v=mhJRzQsLZGg', showWatchMin:30, landing:null, attempt:''
+  },
   {
     rocket:'SunPower One SN5 (V2.2)', vehicle:'SunPower One SN5 (V2.2)', nameId:'sunpower',
     date:'2026-03-07 14:00', status:'Cancelled', durationMin:3,
@@ -2621,14 +2631,14 @@ function versionsForFamily(nameId){
     vs.s2={engines:rv2('Engines'),thrust:rv2('Thrust (vac)'),burn:rv2('Burn time'),prop:rv2('Propellant'),recovery:rv2('Recovery'),reusable:rv2('Reusable')};
     out.push(vs);
   });
-  /* Order: the current version pins to the top (it's the newest by definition), then the rest
-     sort newest → oldest by firstFlight; '—' (Planned/Cancelled, no flight yet) sinks to the bottom. */
-  const MN={Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};
-  const dateVal=d=>{const m=/^([A-Za-z]{3,})\s+(\d{4})/.exec(String(d||''));return m?(+m[2])*100+(MN[m[1].slice(0,3)]||0):-Infinity;};
+  /* Order: newest design on top. Sort by SN number descending (SN63 → SN2), then by version number
+     descending as a tiebreak. This keeps the latest craft iterations at the top regardless of whether
+     they have flown yet. */
+  const snVal=l=>{const m=/SN(\d+)/i.exec(String(l||''));return m?+m[1]:-1;};
+  const verVal=l=>{const m=/V(\d+)(?:\.(\d+))?/i.exec(String(l||''));return m?(+m[1])*100+(+(m[2]||0)):-1;};
   out.sort((a,b)=>{
-    if(a.current&&!b.current)return -1;
-    if(b.current&&!a.current)return 1;
-    return dateVal(b.firstFlight)-dateVal(a.firstFlight);
+    const d=snVal(b.label)-snVal(a.label); if(d)return d;
+    return verVal(b.label)-verVal(a.label);
   });
   return out;
 }
@@ -2688,7 +2698,7 @@ function showVehicleDetail(id){
   const specsHTML=v.specs.map(s=>`<div class="vd-spec"><div class="vd-spec-l">${s.lbl}</div><div class="vd-spec-v">${s.val}</div></div>`).join('');
   const stagesHTML=v.stages.map(st=>`<div class="vd-stage"><div class="vd-stage-t">${st.title}</div><div class="vd-stage-rows">${st.rows.map(r=>`<div class="vd-sr"><div class="vd-sr-k">${r.key}</div><div class="vd-sr-v">${r.val}</div></div>`).join('')}</div></div>`).join('');
   const descHTML=(v.description&&v.description.trim())?v.description:`<span style="color:var(--tx-3)">${t('contentPending')}</span>`;
-  const upd=(v.dataUpdated&&String(v.dataUpdated).trim())?`<div class="vd-updated"><span class="dot"></span>${t('dataUpdated')}: ${escAttr(v.dataUpdated)}</div>`:'';
+  const upd=(v.dataUpdated&&String(v.dataUpdated).trim())?`<div class="vd-updated"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg>${t('dataUpdated')}: <b>${escAttr(v.dataUpdated)}</b></div>`:'';
   document.getElementById('fleet-detail-body').innerHTML=`<div class="op-hero-title" style="color:${v.color}">${v.name}</div><div class="op-hero-sub">${v.class}</div>${upd}<div class="vd-img">${imgHTML}</div><div class="op-section">${t('specifications')}</div><div class="vd-specs">${specsHTML}</div><div class="op-section">${t('stages')}</div><div class="vd-stages">${stagesHTML}</div><div class="op-section">${t('overview')}</div><div class="vd-desc">${descHTML}</div>`;
   document.getElementById('fleet-list').classList.remove('active');
   document.getElementById('fleet-detail').classList.add('active');
@@ -3224,7 +3234,7 @@ function updateModalProfile(){
   if(!bd||!bd.classList.contains('active'))return;
   const idx=window.__openModalLaunch;if(idx==null)return;const l=launches[idx];if(!l)return;
   /* keep the status badge in sync with effectiveStatus (time-window or iframe-detected LIVE) */
-  (function(){const es=effectiveStatus(l);const lbl=statusLabel(es);const stE=document.getElementById('m-status-t');if(stE&&stE.textContent!==lbl){const col=statusColor(es);stE.textContent=lbl;stE.style.color=col;const dE=document.getElementById('m-dot');if(dE){dE.style.background=col;dE.style.boxShadow='0 0 8px '+col;}const cb=document.getElementById('m-colorbar');if(cb)cb.style.background=col;const sw=document.querySelector('#modal .m-status');if(sw)sw.classList.toggle('live',es==='LIVE');}})();
+  (function(){const es=effectiveStatus(l);const lbl=statusLabelPlain(es);const stE=document.getElementById('m-status-t');if(stE&&stE.textContent!==lbl){const col=statusColor(es);stE.textContent=lbl;stE.style.color=col;const dE=document.getElementById('m-dot');if(dE){dE.style.background=col;dE.style.boxShadow='0 0 8px '+col;}const cb=document.getElementById('m-colorbar');if(cb)cb.style.background=col;const sw=document.querySelector('#modal .m-status');if(sw)sw.classList.toggle('live',es==='LIVE');}})();
   const host=document.getElementById('m-profile');if(!host)return;
   /* admin phases are updated via updatePage (immediate re-render); skip interval updates to avoid transition flicker */
   if(window.__adminPhases)return;
@@ -3249,7 +3259,7 @@ function refreshLiveUI(){
   if(man&&man.classList.contains('active'))renderScheduleRows();
   const idx=window.__openModalLaunch;
   if(idx!=null){const l=launches[idx];if(l){const es=effectiveStatus(l),col=statusColor(es);
-    const stE=document.getElementById('m-status-t');if(stE){stE.textContent=statusLabel(es);stE.style.color=col;}
+    const stE=document.getElementById('m-status-t');if(stE){stE.textContent=statusLabelPlain(es);stE.style.color=col;}
     const dE=document.getElementById('m-dot');if(dE){dE.style.background=col;dE.style.boxShadow='0 0 8px '+col;}
     const cb=document.getElementById('m-colorbar');if(cb)cb.style.background=col;
     const sw=document.querySelector('#modal .m-status');if(sw)sw.classList.toggle('live',es==='LIVE');}}
@@ -3285,7 +3295,7 @@ function openLaunchModal(idx){
   const es=effectiveStatus(l);const col=statusColor(es);
   document.getElementById('m-colorbar').style.background=col;
   const dotE=document.getElementById('m-dot');dotE.style.background=col;dotE.style.boxShadow='0 0 8px '+col;
-  const stE=document.getElementById('m-status-t');stE.textContent=statusLabel(es);stE.style.color=col;
+  const stE=document.getElementById('m-status-t');stE.textContent=statusLabelPlain(es);stE.style.color=col;
   const stWrap=document.querySelector('#modal .m-status');if(stWrap)stWrap.classList.toggle('live',es==='LIVE');
   document.getElementById('m-name').textContent=l.rocket;
   const typeEl=document.getElementById('m-type');
@@ -3299,7 +3309,7 @@ function openLaunchModal(idx){
   const cells=[
     {l:t('lblDate'),v:dStr},
     {l:t('lblVehicle'),v:l.vehicle||'—'},
-    {l:t('lblStatus'),v:statusLabel(es)},
+    {l:t('lblStatus'),v:statusLabelPlain(es)},
     cell4,
   ];
   document.getElementById('m-grid').innerHTML=cells.map(c=>`<div class="m-cell"><div class="m-cell-l">${c.l}</div><div class="m-cell-v">${c.v}</div></div>`).join('');
@@ -3352,7 +3362,7 @@ function openSpec(idx){
   else if(OUTCOME_LAUNCHED[l.status]===true)eyebrow=t('kpiLastLaunch');
   const eb=document.getElementById('spec-eyebrow');eb.textContent=eyebrow;eb.style.color=col;
   document.getElementById('spec-name').textContent=(veh&&veh.name)||l.vehicle||l.rocket;
-  document.getElementById('spec-class').textContent=(veh&&veh.class)||statusLabel(l.status);
+  document.getElementById('spec-class').textContent=(veh&&veh.class)||statusLabelPlain(l.status);
   document.getElementById('spec-vsec').textContent=t('specifications');
   const specs=(veh&&veh.specs)?veh.specs:[];
   const specCells=specs.slice();
@@ -3360,7 +3370,7 @@ function openSpec(idx){
   document.getElementById('spec-grid').innerHTML=specs.length?specCells.map(s=>`<div class="m-stat"><div class="m-stat-l">${s.lbl}</div><div class="m-stat-v">${s.val}</div></div>`).join(''):`<div class="spec-empty">${t('noImage')}</div>`;
   document.getElementById('spec-msec').textContent=t('details');
   const dStr=l.dateObj.toLocaleString(undefined,{year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hour12:false});
-  const mf=[{l:t('lblStatus'),v:statusLabel(l.status)},{l:t('lblDate'),v:dStr},{l:t('lblSite'),v:l.site||'—'}];
+  const mf=[{l:t('lblStatus'),v:statusLabelPlain(l.status)},{l:t('lblDate'),v:dStr},{l:t('lblSite'),v:l.site||'—'}];
   mf.push({l:t('lblLanding'),v:l.landing===true?t('landSuccess'):(l.landing===false?t('landFail'):'—')});
   if(l.target&&l.target.trim())mf.push({l:t('lblTarget'),v:l.target});
   mf.push({l:t('lblAttempt'),v:attemptVal(l)});
