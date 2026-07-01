@@ -487,6 +487,16 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .sch-tab .cnt{color:var(--tx-4);}
 .sch-tab.active .cnt{color:var(--tx-3);}
 
+/* ── Launch Schedule · mission-date forecast plaque ── */
+.sch-forecast{margin-bottom:18px;}
+.sch-fc{display:flex;align-items:center;gap:16px;background:linear-gradient(180deg,var(--bg-2),var(--bg-1));border:1px solid var(--line);border-radius:11px;padding:13px 16px;flex-wrap:wrap;}
+.sch-fc-ic{width:36px;height:36px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:rgba(190,195,205,0.04);border:1px solid var(--line);}
+.sch-fc-ic svg{width:18px;height:18px;stroke:var(--amber-2);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.sch-fc-main{flex:1;min-width:160px;}
+.sch-fc-l{font-family:var(--f-mono);font-size:0.56em;letter-spacing:0.16em;text-transform:uppercase;color:var(--tx-3);margin-bottom:5px;}
+.sch-fc-v{font-family:var(--f-disp);font-weight:600;font-size:1.32em;color:var(--tx);line-height:1.1;}
+.sch-fc-v b{color:var(--amber-2);font-weight:600;}
+
 #launch-list{display:flex;flex-direction:column;gap:7px;transition:opacity .16s;}
 #launch-list.fading{opacity:0;}
 .launch-row{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1.4fr) minmax(0,0.9fr) minmax(264px,1fr);align-items:center;gap:10px;
@@ -661,15 +671,15 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
   transform:translateY(28px) scale(.96);opacity:0;transition:transform .45s var(--spring),opacity .4s var(--ease);}
 #modal-bd.visible #modal{transform:translateY(0) scale(1);opacity:1;}
 .m-colorbar{height:3px;}
-.m-inner{padding:26px 28px 24px;}
-.m-status{display:flex;align-items:center;gap:9px;margin-bottom:15px;}
+.m-inner{padding:18px 20px 16px;}
+.m-status{display:flex;align-items:center;gap:9px;margin-bottom:9px;}
 .m-dot{width:8px;height:8px;border-radius:50%;}
 .m-status-t{font-family:var(--f-mono);font-size:0.62em;letter-spacing:0.18em;text-transform:uppercase;}
 .m-name{font-family:var(--f-disp);font-weight:600;font-size:1.5em;letter-spacing:-0.01em;line-height:1.2;margin-bottom:5px;color:var(--tx);}
-.m-type{font-family:var(--f-mono);font-size:0.62em;letter-spacing:0.14em;text-transform:uppercase;color:var(--tx-2);margin-bottom:22px;}
+.m-type{font-family:var(--f-mono);font-size:0.62em;letter-spacing:0.14em;text-transform:uppercase;color:var(--tx-2);margin-bottom:12px;}
 /* mission profile mini-timeline */
-.m-profile{margin-bottom:24px;}
-.m-profile-lbl{font-family:var(--f-mono);font-size:0.54em;letter-spacing:0.16em;text-transform:uppercase;color:var(--tx-3);margin-bottom:18px;}
+.m-profile{margin-bottom:12px;}
+.m-profile-lbl{font-family:var(--f-mono);font-size:0.54em;letter-spacing:0.16em;text-transform:uppercase;color:var(--tx-3);margin-bottom:12px;}
 .m-track{position:relative;height:50px;}
 .m-track-line{position:absolute;top:13px;left:1px;right:1px;height:3px;background:var(--line-2);border-radius:3px;}
 .m-track-fill{position:absolute;top:13px;left:1px;height:3px;border-radius:3px;transition:width .55s var(--out);}
@@ -694,32 +704,33 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
 .m-profile-live-badge .mpl-dot{background:#ff5d5d!important;box-shadow:0 0 8px #ff5d5d!important;animation:mplPulse 1s ease-in-out infinite;}
 @keyframes mplPulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
 /* ── AI flight-risk analysis panel ── */
-.m-ai{margin:2px 0 22px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg,rgba(190,195,205,0.04),rgba(190,195,205,0.012));padding:15px 16px 16px;}
-.m-ai-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px;}
+.m-ai{margin:2px 0 12px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg,rgba(190,195,205,0.04),rgba(190,195,205,0.012));padding:10px 12px 11px;}
+.m-ai-hd{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;}
 .m-ai-ttl{display:flex;align-items:center;gap:8px;font-family:var(--f-mono);font-size:0.62em;letter-spacing:0.13em;text-transform:uppercase;color:var(--tx-2);}
 .m-ai-ttl svg{width:14px;height:14px;stroke:var(--blue);fill:none;stroke-width:1.7;flex-shrink:0;}
 .m-ai-tag{font-family:var(--f-mono);font-size:0.49em;letter-spacing:0.1em;text-transform:uppercase;color:var(--tx-4);border:1px solid var(--line);border-radius:5px;padding:3px 7px;white-space:nowrap;}
-.m-ai-prob{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px;}
+.m-ai-prob{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:4px;}
 .m-ai-prob-l{font-size:0.74em;color:var(--tx-2);}
 .m-ai-prob-v{font-family:var(--f-mono);font-size:1.1em;font-weight:700;}
-.m-ai-bar{height:7px;border-radius:4px;background:rgba(190,195,205,0.1);overflow:hidden;margin-bottom:7px;}
-.m-ai-bar-f{height:100%;border-radius:4px;transition:width .7s cubic-bezier(.4,0,.2,1);}
-.m-ai-band{font-family:var(--f-mono);font-size:0.56em;color:var(--tx-3);letter-spacing:0.05em;margin-bottom:11px;}
-.m-ai-conf{display:inline-flex;align-items:center;gap:5px;font-family:var(--f-mono);font-size:0.55em;letter-spacing:0.05em;color:var(--tx-3);text-transform:uppercase;}
+.m-ai-bar{height:5px;border-radius:3px;background:rgba(190,195,205,0.1);overflow:hidden;margin-bottom:5px;}
+.m-ai-bar-f{height:100%;border-radius:3px;transition:width .7s cubic-bezier(.4,0,.2,1);}
+.m-ai-conf{font-family:var(--f-mono);font-size:0.55em;letter-spacing:0.03em;color:var(--tx-3);text-transform:uppercase;line-height:1.5;margin-bottom:7px;}
 .m-ai-conf b{color:var(--tx-2);font-weight:600;}
-.m-ai-sec{font-family:var(--f-mono);font-size:0.54em;letter-spacing:0.12em;text-transform:uppercase;color:var(--tx-3);margin:16px 0 8px;}
-.m-ai-fac{display:flex;flex-direction:column;gap:7px;}
-.m-ai-fac-i{display:flex;align-items:flex-start;gap:9px;font-size:0.74em;color:var(--tx-2);line-height:1.45;}
-.m-ai-fac-i .fx{flex-shrink:0;width:13px;text-align:center;font-family:var(--f-mono);font-weight:700;line-height:1.5;}
-.m-ai-seq{display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
-.m-ai-seq .sq{font-family:var(--f-mono);font-size:0.6em;color:var(--tx-2);background:rgba(190,195,205,0.06);border:1px solid var(--line);border-radius:5px;padding:4px 8px;}
-.m-ai-seq .ar{color:var(--tx-4);font-size:0.72em;}
-.m-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:9px;overflow:hidden;margin-bottom:20px;}
-.m-cell{background:var(--bg-2);padding:13px 16px;}
+.m-ai-fac{display:flex;flex-direction:column;gap:4px;}
+.m-ai-fac-i{display:flex;align-items:flex-start;gap:8px;font-size:0.7em;color:var(--tx-2);line-height:1.4;}
+.m-ai-fac-i .fx{flex-shrink:0;width:12px;text-align:center;font-family:var(--f-mono);font-weight:700;line-height:1.45;}
+/* ── AI panel · statistics strip (single row, 3 cells) ── */
+.m-ai-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:8px;}
+.m-ai-st{background:var(--bg-2);padding:6px 8px;}
+.m-ai-st-l{font-family:var(--f-mono);font-size:0.46em;letter-spacing:0.08em;text-transform:uppercase;color:var(--tx-3);margin-bottom:3px;}
+.m-ai-st-v{font-family:var(--f-mono);font-size:0.72em;color:var(--tx);font-weight:600;}
+.m-ai-st-v small{color:var(--tx-3);font-weight:400;}
+.m-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:9px;overflow:hidden;margin-bottom:10px;}
+.m-cell{background:var(--bg-2);padding:9px 12px;}
 .m-cell-l{font-family:var(--f-mono);font-size:0.54em;letter-spacing:0.12em;text-transform:uppercase;color:var(--tx-3);margin-bottom:5px;}
 .m-cell-v{font-family:var(--f-mono);font-size:0.86em;color:var(--tx);font-weight:500;}
-.m-desc{font-size:0.9em;color:var(--tx-2);line-height:1.8;}
-.m-watch{margin-top:20px;padding-top:18px;border-top:1px solid var(--line);text-align:center;}
+.m-desc{font-size:0.9em;color:var(--tx-2);line-height:1.6;}
+.m-watch{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);text-align:center;}
 .m-watch a.ignition-btn{text-decoration:none;}
 /* ── Launch media player (centre) + side specs (Our Vehicles + mission) ── */
 #modal.has-stage{width:min(1010px,100%);}
@@ -993,6 +1004,7 @@ footer .foot-line{margin-top:6px;color:var(--tx-4);font-size:0.95em;}
   <div class="op-body">
     <div class="op-hero-title" data-i="launchSchedule">Launch Schedule</div>
     <div class="op-hero-sub" data-i="launchScheduleSub">Upcoming · Completed · Cancelled</div>
+    <div class="sch-forecast" id="sch-forecast"></div>
     <div class="manifest-controls">
       <div class="search-box">
         <svg viewBox="0 0 16 16"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
@@ -1397,7 +1409,7 @@ function applyLang(){
 function setLang(code){
   currentLang=code;lsSet('inspace_lang',code);applyLang();
   rebuildNav();rebuildStats();rebuildDaysSince();rebuildHeroQuick();renderLiveTicker();
-  rebuildScheduleTabs();renderScheduleRows();
+  rebuildScheduleTabs();renderScheduleRows();renderForecast();
   if(document.getElementById('ov-fleet').classList.contains('active')){renderFleet();}
   if(document.getElementById('ov-analytics').classList.contains('active')){renderAnalytics();}
   if(document.getElementById('ov-news').classList.contains('active')){renderNews(true);}
@@ -1940,7 +1952,7 @@ function liveTickerItems(){
   if(A.fleetLeader!==false&&s.mostFlown&&s.mostFlown.count>0)
     facts.push(ltFill(pick(3,[t('tkFleet1'),t('tkFleet2')]),{name:s.mostFlown.name,k:s.mostFlown.count}));
   if(A.landings!==false){
-    const k=ls.filter(l=>l.landing===true).length;
+    const k=ls.filter(l=>l.landing===true&&OUTCOME_LAUNCHED[l.status]===true).length;
     if(k>0)facts.push(ltFill(t('tkLand1'),{k}));
   }
   if(A.successStreak!==false){
@@ -2285,7 +2297,7 @@ const vehicles = [
       {
         title: 'Stage 1 — Booster',
         rows: [
-          { key: 'Engines', val: '42' },
+          { key: 'Engines', val: '36' },
           { key: 'Thrust (SL)', val: '484,000 kN' },
           { key: 'Burn time', val: '33.8 min' },
           { key: 'Propellant', val: '2,560 t' },
@@ -2296,7 +2308,7 @@ const vehicles = [
       {
         title: 'Stage 2 — Upper',
         rows: [
-          { key: 'Engines', val: '90' },
+          { key: 'Engines', val: '9' },
           { key: 'Thrust (vac)', val: '120,000 kN' },
           { key: 'Burn time', val: '1.6 min' },
           { key: 'Propellant', val: '2,330 t' },
@@ -2416,7 +2428,7 @@ const VEHICLE_VERSIONS = {
       ],
       stages: [
         { title: 'Stage 1 — Booster', rows: [
-          { key: 'Engines', val: '42' },
+          { key: 'Engines', val: '36' },
           { key: 'Thrust (SL)', val: '484,000 kN' },
           { key: 'Burn time', val: '33.8 min' },
           { key: 'Propellant', val: '2,560 t' },
@@ -2424,7 +2436,7 @@ const VEHICLE_VERSIONS = {
           { key: 'Reusable', val: 'Yes' }
         ]},
         { title: 'Stage 2 — Upper', rows: [
-          { key: 'Engines', val: '90' },
+          { key: 'Engines', val: '9' },
           { key: 'Thrust (vac)', val: '120,000 kN' },
           { key: 'Burn time', val: '1.6 min' },
           { key: 'Propellant', val: '2,330 t' },
@@ -2445,7 +2457,7 @@ const VEHICLE_VERSIONS = {
       ],
       stages: [
         { title: 'Stage 1 — Booster', rows: [
-          { key: 'Engines', val: '42' },
+          { key: 'Engines', val: '36' },
           { key: 'Thrust (SL)', val: '484,000 kN' },
           { key: 'Burn time', val: '33.8 min' },
           { key: 'Propellant', val: '2,560 t' },
@@ -2453,7 +2465,7 @@ const VEHICLE_VERSIONS = {
           { key: 'Reusable', val: 'Yes' }
         ]},
         { title: 'Stage 2 — Upper', rows: [
-          { key: 'Engines', val: '90' },
+          { key: 'Engines', val: '9' },
           { key: 'Thrust (vac)', val: '120,000 kN' },
           { key: 'Burn time', val: '1.6 min' },
           { key: 'Propellant', val: '2,330 t' },
@@ -2474,7 +2486,7 @@ const VEHICLE_VERSIONS = {
       ],
       stages: [
         { title: 'Stage 1 — Booster', rows: [
-          { key: 'Engines', val: '42' },
+          { key: 'Engines', val: '36' },
           { key: 'Thrust (SL)', val: '484,000 kN' },
           { key: 'Burn time', val: '33.8 min' },
           { key: 'Propellant', val: '2,560 t' },
@@ -2482,7 +2494,7 @@ const VEHICLE_VERSIONS = {
           { key: 'Reusable', val: 'Yes' }
         ]},
         { title: 'Stage 2 — Upper', rows: [
-          { key: 'Engines', val: '90' },
+          { key: 'Engines', val: '9' },
           { key: 'Thrust (vac)', val: '120,000 kN' },
           { key: 'Burn time', val: '1.6 min' },
           { key: 'Propellant', val: '2,330 t' },
@@ -2764,6 +2776,7 @@ if(!window.__vdKeyBound){window.__vdKeyBound=true;document.addEventListener('key
   if(!document.getElementById('vd-track'))return;
   if(e.key==='ArrowLeft')vdSlide(-1); else if(e.key==='ArrowRight')vdSlide(1);
 });}
+
 function showVehicleDetail(id){
   const v=vehicles.find(x=>x.id===id);if(!v)return;playSound('modal');
   const imgHTML=vdImgHTML(v);
@@ -2790,7 +2803,7 @@ function rebuildStats(){
   const completed=launches.filter(l=>l.status==='Success').length;
   const cutoff=Date.now()-365*86400000;
   const last365=launches.filter(l=>l.status==='Success'&&l.dateObj.getTime()>=cutoff).length;
-  const landingsOk=launches.filter(l=>l.landing===true).length;
+  const landingsOk=launches.filter(l=>l.landing===true&&OUTCOME_LAUNCHED[l.status]===true).length;
   const earliest=launches.reduce((a,b)=>a.dateObj<b.dateObj?a:b);
   const daysActive=Math.max(0,Math.floor((Date.now()-earliest.dateObj.getTime())/86400000));
   const cells=[
@@ -2999,6 +3012,33 @@ const I18N_EXT4={
 Object.keys(I18N_EXT4).forEach(l=>{ if(TRANSLATIONS[l])Object.assign(TRANSLATIONS[l],I18N_EXT4[l]); });
 Object.assign(TRANSLATIONS.en,{phasesLive:'Detailed phase timings will be available after the broadcast'});
 Object.assign(TRANSLATIONS.ru,{phasesLive:'Детальные тайминги этапов будут доступны после трансляции'});
+/* ── Enriched Flight-Analysis stats, launch cadence plaque (en fallback for all languages) ── */
+Object.assign(TRANSLATIONS.en,{
+  aiStVeh:'Vehicle Record',aiStLand:'Landing Rate',aiStStreak:'Streak',aiStModel:'Model',
+  aiFacStreak:'{k} consecutive successful flights on this vehicle',aiFacLand:'{k}/{n} successful landings recorded ({p}%)',aiFacLowN:'Small sample size — estimate carries wide uncertainty',
+  fcTitle:'Next Launch',fcNoData:'No launch currently scheduled',
+});
+Object.assign(TRANSLATIONS.ru,{
+  aiStVeh:'Рекорд аппарата',aiStLand:'Успех посадок',aiStStreak:'Серия',aiStModel:'Модель',
+  aiFacStreak:'{k} успешных полётов подряд на этом аппарате',aiFacLand:'{k}/{n} успешных посадок в журнале ({p}%)',aiFacLowN:'Малая выборка — оценка с широкой погрешностью',
+  fcTitle:'Следующий запуск',fcNoData:'Запуск пока не запланирован',
+});
+/* ── Next-launch plaque: relative countdown (d/h/m) + localized title/empty-state, all 12 languages ── */
+const I18N_FC={
+  en:{fcInD:'in {n}d',fcInH:'in {n}h',fcInM:'in {n}m'},
+  ru:{fcInD:'через {n} д',fcInH:'через {n} ч',fcInM:'через {n} м'},
+  de:{fcTitle:'Nächster Start',fcNoData:'Kein Start geplant',fcInD:'in {n} Tg.',fcInH:'in {n} Std.',fcInM:'in {n} Min.'},
+  es:{fcTitle:'Próximo Lanzamiento',fcNoData:'Ningún lanzamiento programado',fcInD:'en {n} d',fcInH:'en {n} h',fcInM:'en {n} min'},
+  fr:{fcTitle:'Prochain Lancement',fcNoData:'Aucun lancement prévu',fcInD:'dans {n} j',fcInH:'dans {n} h',fcInM:'dans {n} min'},
+  zh:{fcTitle:'下次发射',fcNoData:'暂无排定发射',fcInD:'{n}天后',fcInH:'{n}小时后',fcInM:'{n}分钟后'},
+  pt:{fcTitle:'Próximo Lançamento',fcNoData:'Nenhum lançamento agendado',fcInD:'em {n} d',fcInH:'em {n} h',fcInM:'em {n} min'},
+  hi:{fcTitle:'अगला प्रक्षेपण',fcNoData:'कोई प्रक्षेपण निर्धारित नहीं',fcInD:'{n} दिन में',fcInH:'{n} घंटे में',fcInM:'{n} मिनट में'},
+  pl:{fcTitle:'Następny Start',fcNoData:'Brak zaplanowanego startu',fcInD:'za {n} dni',fcInH:'za {n} godz.',fcInM:'za {n} min'},
+  ja:{fcTitle:'次の打ち上げ',fcNoData:'予定されている打ち上げなし',fcInD:'{n}日後',fcInH:'{n}時間後',fcInM:'{n}分後'},
+  af:{fcTitle:'Volgende Lansering',fcNoData:'Geen lansering geskeduleer nie',fcInD:'oor {n} d',fcInH:'oor {n} h',fcInM:'oor {n} min'},
+  hu:{fcTitle:'Következő Indítás',fcNoData:'Nincs tervezett indítás',fcInD:'{n} nap múlva',fcInH:'{n} óra múlva',fcInM:'{n} perc múlva'},
+};
+Object.keys(I18N_FC).forEach(l=>{ if(TRANSLATIONS[l])Object.assign(TRANSLATIONS[l],I18N_FC[l]); });
 /* ── Versions compare view labels (all 12 languages; English is the fallback) ── */
 const I18N_VERSIONS={
   versionsView:{en:'Versions',ru:'Версии',de:'Versionen',es:'Versiones',fr:'Versions',zh:'版本',pt:'Versões',hi:'संस्करण',pl:'Wersje',ja:'バージョン',af:'Weergawes',hu:'Verziók'},
@@ -3219,7 +3259,11 @@ function rebuildScheduleTabs(){
 function setSchedTab(id){if(id===currentSchedTab)return;currentSchedTab=id;playSound('tab');rebuildScheduleTabs();renderScheduleRows(true);}
 function schedFiltered(){
   const tb=SCHED_TABS.find(x=>x.id===currentSchedTab);
-  let list=launches.slice().sort((a,b)=>b.dateObj-a.dateObj);
+  const now=Date.now();
+  /* Sort by closeness to "now" — nearest upcoming launch (Planned) or most recent past launch
+     (Completed) always comes first. A plain descending-date sort put the FURTHEST future launch
+     first for Planned, which was the bug. */
+  let list=launches.slice().sort((a,b)=>Math.abs(a.dateObj-now)-Math.abs(b.dateObj-now));
   if(tb&&tb.status==='__LIVE__')list=list.filter(l=>effectiveStatus(l)==='LIVE');
   else if(tb&&tb.status)list=list.filter(l=>l.status===tb.status);
   if(schedQuery)list=list.filter(l=>(l.rocket+' '+l.vehicle+' '+l.status).toLowerCase().includes(schedQuery));
@@ -3246,6 +3290,23 @@ function renderScheduleRows(reset){
   document.getElementById('ov-manifest-meta').textContent=list.length+' '+t('launchesCount');
 }
 function onSearch(){schedQuery=(document.getElementById('sch-search').value||'').trim().toLowerCase();renderScheduleRows(true);}
+
+/* ── Launch Schedule · next-launch plaque ──
+   Purely factual: relative countdown (days/hours/minutes, whichever scale is appropriate),
+   then the rocket name. No exact date, no cadence math, no prediction. */
+function fcRelative(d){
+  const diffMs=d.getTime()-Date.now();
+  if(diffMs<3600000)return t('fcInM').replace('{n}',Math.max(1,Math.round(diffMs/60000)));
+  if(diffMs<86400000)return t('fcInH').replace('{n}',Math.max(1,Math.round(diffMs/3600000)));
+  return t('fcInD').replace('{n}',Math.max(1,Math.round(diffMs/86400000)));
+}
+function renderForecast(){
+  const host=document.getElementById('sch-forecast');if(!host)return;
+  const ic='<svg viewBox="0 0 24 24"><path d="M12 8v5l3 2"/><circle cx="12" cy="13" r="8"/><path d="M9 3h6M12 3v2"/></svg>';
+  const upcoming=launches.filter(l=>isUpcomingStatus(l.status)&&l.dateObj&&l.dateObj.getTime()>Date.now()).sort((a,b)=>a.dateObj-b.dateObj)[0];
+  const vHTML=upcoming?`${fcRelative(upcoming.dateObj)} · <b>${escAttr(upcoming.rocket||upcoming.nameId||'—')}</b>`:t('fcNoData');
+  host.innerHTML=`<div class="sch-fc"><div class="sch-fc-ic">${ic}</div><div class="sch-fc-main"><div class="sch-fc-l">${t('fcTitle')}</div><div class="sch-fc-v">${vHTML}</div></div></div>`;
+}
 
 /* ─────────── LAUNCH MODAL ─────────── */
 /* 7-stage mission profile. Liftoff is always at T-0; set the rest per launch in launches[].phases
@@ -3414,7 +3475,13 @@ function flightRisk(l){
   a+=verS;     b+=(verN-verS);                                      /* version history, full weight */
   const pS=a/(a+b), sd=Math.sqrt((a*b)/((a+b)*(a+b)*(a+b+1)));
   const sample=vehN+verN, conf=sample>=8?'high':(sample>=3?'med':'low');
-  return {pS,pFail:1-pS,sd,conf,vehN,vehS,verN,verS,vlab,sample};
+  /* landing record + current success streak, both derived from the same vehicle flight history */
+  const vehOrdered=veh.slice().sort((x,y)=>x.dateObj-y.dateObj);
+  const landAtt=vehOrdered.filter(x=>x.landing===true||x.landing===false);
+  const landOk=landAtt.filter(x=>x.landing===true).length;
+  const landRate=landAtt.length?Math.round(landOk/landAtt.length*100):null;
+  let streak=0;for(const x of vehOrdered){if(x.status==='Success')streak++;else if(x.status==='RUD')streak=0;}
+  return {pS,pFail:1-pS,sd,conf,vehN,vehS,verN,verS,vlab,sample,landOk,landN:landAtt.length,landRate,streak,a,b};
 }
 function aiRiskColor(p){return p>=0.75?'#37e0a0':(p>=0.5?'#ffc94d':'#ff5d5d');}
 function aiAnalysisHTML(l){
@@ -3429,20 +3496,24 @@ function aiAnalysisHTML(l){
     else {F.push({x:'\u2212',t:t('aiFacVerNew').replace('{v}',r.vlab)});F.push({x:'\u2212',t:t('aiFacNewRisk')});}
   }
   if(r.conf==='high'&&r.pS>=0.85)F.push({x:'+',t:t('aiFacStrong')});
-  const facHTML=F.map(f=>`<div class="m-ai-fac-i"><span class="fx" style="color:${f.x==='+'?'#37e0a0':(f.x==='\u2212'?'#ff5d5d':'var(--tx-4)')}">${f.x}</span><span>${f.t}</span></div>`).join('');
-  const seq=isSB?[t('aiSeqIgnition'),t('aiSeqHold'),t('aiSeqShutdown')]
-                :[t('aiSeqLiftoff'),t('aiSeqMeco'),t('aiSeqSep'),t('aiSeqBoostback'),t('aiSeqLanding')];
-  const seqHTML=seq.map((s,i)=>`${i?'<span class="ar">\u2192</span>':''}<span class="sq">${s}</span>`).join('');
+  if(r.streak>=2)F.push({x:'+',t:t('aiFacStreak').replace('{k}',r.streak)});
+  if(r.landN>0)F.push({x:r.landRate>=80?'+':(r.landRate>=50?'~':'\u2212'),t:t('aiFacLand').replace('{k}',r.landOk).replace('{n}',r.landN).replace('{p}',r.landRate)});
+  if(r.sample>0&&r.sample<3)F.push({x:'~',t:t('aiFacLowN')});
+  const facHTML=F.slice(0,2).map(f=>`<div class="m-ai-fac-i"><span class="fx" style="color:${f.x==='+'?'#37e0a0':(f.x==='\u2212'?'#ff5d5d':'var(--tx-4)')}">${f.x}</span><span>${f.t}</span></div>`).join('');
+  const statsHTML=`<div class="m-ai-stats">`
+    +`<div class="m-ai-st"><div class="m-ai-st-l">${t('aiStVeh')}</div><div class="m-ai-st-v">${r.vehN>0?(r.vehS+'/'+r.vehN):'—'}</div></div>`
+    +`<div class="m-ai-st"><div class="m-ai-st-l">${t('aiStLand')}</div><div class="m-ai-st-v">${r.landN>0?(r.landRate+'%'):'—'}</div></div>`
+    +`<div class="m-ai-st"><div class="m-ai-st-l">${t('aiStStreak')}</div><div class="m-ai-st-v">${r.streak}</div></div>`
+    +`</div>`;
   const confTxt=t(r.conf==='high'?'aiConfHigh':(r.conf==='med'?'aiConfMed':'aiConfLow'));
   const basedOn=r.sample===0?t('aiNoFlights'):(r.sample===1?t('aiOneFlight'):t('aiNFlights').replace('{n}',r.sample));
   const riskLbl=isSB?t('aiStaticRisk'):t('aiRisk');
   return `<div class="m-ai-hd"><div class="m-ai-ttl">${AI_ICON}${t('aiTitle')}</div><div class="m-ai-tag">${t('aiTag')}</div></div>`
     +`<div class="m-ai-prob"><span class="m-ai-prob-l">${t('aiSuccess')}</span><span class="m-ai-prob-v" style="color:${clr}">${pct}%</span></div>`
     +`<div class="m-ai-bar"><div class="m-ai-bar-f" style="width:${pct}%;background:${clr}"></div></div>`
-    +`<div class="m-ai-band">\u00b1 ${band}% \u00b7 ${riskLbl}: ${fpct}%</div>`
-    +`<div class="m-ai-conf">${t('aiConf')}: <b>${confTxt}</b> \u00b7 ${basedOn}</div>`
-    +`<div class="m-ai-sec">${t('aiFactors')}</div><div class="m-ai-fac">${facHTML}</div>`
-    +`<div class="m-ai-sec">${t('aiExpected')}</div><div class="m-ai-seq">${seqHTML}</div>`;
+    +`<div class="m-ai-conf">\u00b1${band}% \u00b7 ${riskLbl} ${fpct}% \u00b7 <b>${confTxt}</b> \u00b7 ${basedOn}</div>`
+    +statsHTML
+    +`<div class="m-ai-fac">${facHTML}</div>`;
 }
 function openLaunchModal(idx){
   const l=launches[idx];if(!l)return;playSound('modal');
@@ -3609,7 +3680,7 @@ function computeStats(){
   }).filter(v=>v.pts.length>0);
   const mostFlown=byVehLaunched.slice().sort((a,b)=>b.count-a.count)[0]||null;
   /* landings pie = touchdown outcome (l.landing true/false); missions pie = Success vs RUD (global mission outcome) */
-  const landingSplit=[{label:t('landSuccess'),color:'#37e0a0',count:L.filter(l=>l.landing===true).length},{label:t('landFail'),color:'#ff5d5d',count:L.filter(l=>l.landing===false).length}];
+  const landingSplit=[{label:t('landSuccess'),color:'#37e0a0',count:L.filter(l=>l.landing===true&&OUTCOME_LAUNCHED[l.status]===true).length},{label:t('landFail'),color:'#ff5d5d',count:L.filter(l=>l.landing===false&&OUTCOME_LAUNCHED[l.status]===true).length}];
   const missionSplit=[{label:t('statusCompleted'),color:'#37e0a0',count:comp.length},{label:t('missionFailed'),color:'#ff5d5d',count:L.filter(l=>l.status==='RUD').length}];
   return{comp,canc,plan,launched,total,successRate,byVehLaunched,byVehSuccess,outcomeCounts,byVehOutcome,cadence,busiest,cum,cumByVeh,mostFlown,landingSplit,missionSplit};
 }
@@ -3829,7 +3900,7 @@ function openOverlay(name){
   playSound('nav');
   if(name==='fleet'){renderFleet();showVehicleListSilent();}
   else if(name==='news'){renderNews(true);showNewsListSilent();setTimeout(renderLiveTicker,60);}   /* re-measure the pinned ticker once visible */
-  else if(name==='manifest'){rebuildScheduleTabs();renderScheduleRows(true);}
+  else if(name==='manifest'){rebuildScheduleTabs();renderScheduleRows(true);renderForecast();}
   else if(name==='analytics'){renderAnalytics();}
   else if(name==='game'){setTimeout(()=>{if(window.setupGameCanvas)window.setupGameCanvas();},90);}
   ov.classList.add('active');
@@ -3994,6 +4065,7 @@ renderLiveTicker();
 setInterval(renderLiveTicker,Math.max(15,(LIVE_TICKER.refreshSec||60))*1000);   /* self-refresh: facts re-derive + re-phrase */
 buildTrajectory();
 rebuildScheduleTabs();
+renderForecast();
 applyHashView();   /* open the section matching #hash on load (F5 / deep link) */
 if(__notifyOn&&notifyPerm()==='granted'){scheduleLaunchNotifications();checkScrubs();startNotifyReArm();}
 updateNotifyUI();
